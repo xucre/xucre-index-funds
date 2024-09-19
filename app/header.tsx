@@ -127,16 +127,16 @@ function Header() {
         <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '1px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
           <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
 
-            <Box sx={{ flexGrow: 2 }}>
+            <Box sx={{}}>
               {headerButton}
             </Box>
 
-            <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
+            <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
               {navItems.map((item) => (
                 <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
               ))}
             </ButtonGroup>
-            <Stack direction={'row'} sx={{ flexGrow: 1 }} alignContent={'end'} justifyContent={'end'}>
+            <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
               <Box sx={{}}>
                 {/*isAuthenticated && <Auth0Button />*/}
               </Box>
@@ -151,7 +151,7 @@ function Header() {
               </IconButton>
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                 {
-                  <AccountButton />
+                  /*<AccountButton />*/
                 }
 
                 <IconButton
@@ -194,46 +194,6 @@ function Header() {
 
           </Toolbar>
           {theme.palette.mode === 'light' && <Divider />}
-        </AppBar>
-      }
-
-      {wallet === 'xucre' && false &&
-        <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none' }}>
-          <Toolbar >
-
-            <Box sx={{ flexGrow: 1 }}>
-              {false &&
-                <IconButton
-                  color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
-                  aria-label="go back"
-                  edge="start"
-                  onClick={goBack}
-                  sx={{ mr: 2, display: { sm: 'none' }, }}
-                >
-                  <ArrowBack />
-                </IconButton>
-              }
-              {isConnected && false && <Check color={'success'} />}
-              {!isConnected && false && <XIcon color={'warning'} />}
-
-            </Box>
-
-            <Stack direction={'row'} sx={{ flexGrow: 1 }} alignContent={'end'} justifyContent={'end'}>
-              {!isConnected && <AccountButton />}
-              {isConnected && false && <Button onClick={() => { disconnect() }} variant={'contained'}>Desconectar</Button>}
-              {isConnected &&
-                <IconButton
-                  color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={handleDrawerToggle}
-                  sx={{ mr: 2, display: { sm: 'none' }, }}
-                >
-                  <MenuIcon />
-                </IconButton>
-              }
-            </Stack>
-          </Toolbar>
         </AppBar>
       }
 

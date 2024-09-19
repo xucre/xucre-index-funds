@@ -12,22 +12,12 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const router = useRouter();
-  const theme = useTheme();
-  const signer = useEthersSigner();
-  const client = useWalletClient();
-  const { language } = useLanguage();
-  const { open, close } = useWeb3Modal()
-  const { isConnected, address, connector } = useAccount();
-  const { disconnect } = useDisconnect();
-  const { walletInfo } = useWalletInfo();
-  const [mounted, setMounted] = useState(false);
-  /*useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated) {
-        router.replace('/dashboard')
-      }
+  const { isConnected } = useAccount();
+  useEffect(() => {
+    if (isConnected) {
+      router.replace('/index-fund')
     }
-  }, [isAuthenticated, isLoading]);*/
+  }, [isConnected]);
 
   return (
     <main>

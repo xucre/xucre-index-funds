@@ -1,4 +1,5 @@
 'use client';
+import AccountButton from '@/components/accountButton';
 import SocialIcons from '@/components/ui/socialIcons';
 import { AppBar, Avatar, Box, CssBaseline, Fab, IconButton, Stack, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -15,7 +16,7 @@ export default function Footer() {
   return (
     <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0, display: { xs: 'none', md: 'block' } }}>
       <Toolbar>
-        <></>
+        <AccountButton />
         <Box sx={{ flexGrow: 1 }} />
         <Social />
       </Toolbar>

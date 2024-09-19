@@ -17,18 +17,6 @@ const AccountButton = ({ }) => {
   const { isConnected, isConnecting, isReconnecting } = useAccount();
   const { open } = useWeb3Modal()
   const componentIsMounted = useRef(true);
-  useEffect(() => {
-    if (!isConnected && !isConnecting && !isReconnecting && wallet === 'xucre') {
-      setTimeout(() => {
-        if (componentIsMounted.current) open()
-      }, 1000)
-    }
-
-    return () => {
-      componentIsMounted.current = false
-    }
-  }, []);
-
 
   return (
     <Box>
