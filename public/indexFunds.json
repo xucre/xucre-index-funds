@@ -1,0 +1,1038 @@
+[
+  {
+    "name": {
+      "0": "Market Cap Fund",
+      "1": "Fondo de Capitalización de Mercado",
+      "2": "Fundo de Capitalização de Mercado"
+    },
+    "cardSubtitle": {
+      "0": "A curated selection of top-tier assets",
+      "1": "Una selección curada de activos de primer nivel",
+      "2": "Uma seleção cuidadosa de ativos de primeira linha"
+    },
+    "description": {
+      "0": "Discover our 'Market Cap Fund' on Polygon, featuring top-tier assets like MATIC, ChainLink and WETH. Designed for stability and growth, this fund targets seasoned investors seeking substantial, reliable market players. Ideal for those prioritizing long-term investment security.",
+      "1": "Descubra nuestro 'Fondo de capitalización de mercado' en Polygon, que incluye activos de primer nivel como MATIC, ChainLink y WETH. Diseñado para la estabilidad y el crecimiento, este fondo se dirige a inversores experimentados que buscan actores de mercado importantes y fiables. Ideal para quienes priorizan la seguridad de las inversiones a largo plazo.",
+      "2": "Descubra nosso 'Fundo de capitalização de mercado' no Polygon, que inclui ativos de primeira linha como MATIC, ChainLink e WETH. Concebido para estabilidade e crescimento, este fundo destina-se a investidores experientes que procuram intervenientes de mercado grandes e fiáveis. Ideal para quem prioriza a segurança dos investimentos de longo prazo."
+    },
+    "image": "/marketCap.png",
+    "imageSmall": "/marketCap-low.png",
+    "color": "#182157",
+    "chainId": 137,
+    "portfolio": [
+      {
+        "name": "WBTC",
+        "address": "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6",
+        "chainId": 137,
+        "weight": 910,
+        "decimals": 18,
+        "poolFee": 3000,
+        "active": true,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Wrapped Bitcoin (WBTC) is an ERC20 token pegged to the price of Bitcoin.",
+          "1": "Wrapped Bitcoin (WBTC) es un token ERC20 vinculado al precio de Bitcoin.",
+          "2": "Wrapped Bitcoin (WBTC) é um token ERC20 atrelado ao preço do Bitcoin."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/btc.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://www.centre.io/usdc"]
+      },
+      {
+        "name": "WETH",
+        "address": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 500
+        },
+        "chartColor": "#627EEA",
+        "description": {
+          "0": "WETH is the native token for the Ethereum blockchain.",
+          "1": "WETH es el token nativo de la cadena de bloques Ethereum.",
+          "2": "WETH é o token nativo da blockchain Ethereum."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://weth.io/"]
+      },
+      {
+        "name": "SOL",
+        "address": "0xd93f7e271cb87c23aaa73edc008a79646d1f9912",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#9945FF",
+        "description": {
+          "0": "SOL is the native token for the Solana blockchain.",
+          "1": "SOL es el token nativo de la cadena de bloques Solana.",
+          "2": "SOL é o token nativo do blockchain Solana."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/solana.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://portalbridge.com/"]
+      },
+      {
+        "name": "AAVE",
+        "address": "0xD6DF932A45C0f255f85145f286eA0b292B21C90B",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#2EBAC6",
+        "description": {
+          "0": "AAVE is a decentralized lending protocol.",
+          "1": "AAVE es un protocolo de préstamos descentralizado.",
+          "2": "AAVE é um protocolo de empréstimos descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/aave.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://aave.com/"]
+      },
+      {
+        "name": "LINK",
+        "address": "0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#0847F7",
+        "description": {
+          "0": "Chainlink is a decentralized oracle network that enables smart contracts to securely interact with real-world data.",
+          "1": "Chainlink es una red Oracle descentralizada que permite que los contratos inteligentes interactúen de forma segura con datos del mundo real.",
+          "2": "Chainlink é uma rede oracle descentralizada que permite que contratos inteligentes interajam de forma segura com dados do mundo real."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/chainlink.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://chain.link/"]
+      },
+      {
+        "name": "SHIB",
+        "address": "0x6f8a06447ff6fcf75d803135a7de15ce88c1d4ec",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 10000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 10000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Shiba Inu is a cryptocurrency token that allows users to hold trillions or even quadrillions of them.",
+          "1": "Shiba Inu es un token de criptomoneda que permite a los usuarios tener billones o incluso billones de ellas.",
+          "2": "Shiba Inu é um token de criptomoeda que permite aos usuários manter bilhões ou até bilhões deles."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/shib.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://shib.io/"]
+      },
+      {
+        "name": "Uniswap",
+        "address": "0xb33eaad8d922b1083446dc23f610c2567fb5180f",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Uniswap is a decentralized exchange protocol built on Ethereum.",
+          "1": "Uniswap es un protocolo de intercambio descentralizado construido sobre Ethereum.",
+          "2": "Uniswap é um protocolo de troca descentralizado construído sobre Ethereum."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/uniswap.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://uniswap.org/"]
+      },
+      {
+        "name": "Matic Token",
+        "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 500,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 500,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Matic Token is a cryptocurrency token used on the Polygon network.",
+          "1": "Matic Token es un token de criptomoneda utilizado en la red Polygon.",
+          "2": "Matic Token é um token de criptomoeda utilizado na rede Polygon."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://polygon.technology/"]
+      },
+      {
+        "name": "Fetch",
+        "address": "0x7583feddbcefa813dc18259940f76a02710a8905",
+        "chainId": 137,
+        "weight": 588,
+        "poolFee": 3000,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Fetch is a token used for decentralized data exchange.",
+          "1": "Fetch es un token utilizado para el intercambio de datos descentralizado.",
+          "2": "Fetch é um token utilizado para a troca de dados descentralizada."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/fetch.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://fetch.ai/"]
+      },
+      {
+        "name": "Cronos Coin",
+        "address": "0xada58df0f643d959c2a47c9d4d4c1a4defe3f11c",
+        "chainId": 137,
+        "weight": 588,
+        "poolFee": 3000,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Cronos Coin is a cryptocurrency token used on the Cronos network.",
+          "1": "Cronos Coin es un token de criptomoneda utilizado en la red Cronos.",
+          "2": "Cronos Coin é um token de criptomoeda utilizado na rede Cronos."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/cronos.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://cronos.org/"]
+      },
+      {
+        "name": "Render Token",
+        "address": "0x61299774020da444af134c82fa83e3810b309991",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Render Token is a token used for decentralized data exchange.",
+          "1": "Render Token es un token utilizado para el intercambio de datos descentralizado.",
+          "2": "Render Token é um token usado para troca descentralizada de dados."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/render.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://renderfoundation.com/"]
+      },
+      {
+        "name": "Injective Token",
+        "address": "0x4e8dc2149eac3f3def36b1c281ea466338249371",
+        "chainId": 137,
+        "weight": 588,
+        "poolFee": 3000,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Injective Token is a token used for decentralized data exchange.",
+          "1": "Injective Token es un token utilizado para el intercambio de datos descentralizado.",
+          "2": "Injective Token é um token usado para troca descentralizada de dados."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/injective.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://injective.com/"]
+      },
+      {
+        "name": "Maker",
+        "address": "0x6f7C932e7684666C9fd1d44527765433e01fF61d",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 10000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 10000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Maker is a decentralized lending protocol.",
+          "1": "Maker es un protocolo de préstamos descentralizado.",
+          "2": "Maker é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/maker.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://makerdao.com/"]
+      },
+      {
+        "name": "Rocket Pool",
+        "address": "0x0266F4F08D82372CF0FcbCCc0Ff74309089c74d1",
+        "chainId": 137,
+        "weight": 588,
+        "poolFee": 3000,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Rocket Pool is a decentralized lending protocol.",
+          "1": "Rocket Pool es un protocolo de préstamos descentralizado.",
+          "2": "Rocket Pool é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/rocket.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://rocketpool.net/"]
+      },
+      {
+        "name": "Graph Token",
+        "address": "0x5fe2b58c013d7601147dcdd68c143a77499f5531",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 10000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 10000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Graph is a token used for decentralized data exchange.",
+          "1": "Graph es un token utilizado para el intercambio de datos descentralizado.",
+          "2": "Graph é um token usado para troca descentralizada de dados."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/graph.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://thegraph.com/"]
+      },
+      {
+        "name": "Theta Token",
+        "address": "0xb46e0ae620efd98516f49bb00263317096c114b2",
+        "chainId": 137,
+        "weight": 588,
+        "poolFee": 3000,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": "Theta Token is a token used for decentralized data exchange.",
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/theta.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://www.thetatoken.org/"]
+      },
+      {
+        "name": "Fantom Token",
+        "address": "0xc9c1c1c20b3658f8787cc2fd702267791f224ce1",
+        "chainId": 137,
+        "weight": 588,
+        "poolFee": 3000,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": "Fantom Token is a token used for decentralized data exchange.",
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/fantom.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://fantom.foundation/"]
+      }
+    ]
+  },
+  {
+    "name": {
+      "0": "Classic Fund",
+      "1": "Fondo Clasico",
+      "2": "Fundo Clássico"
+    },
+    "cardSubtitle": {
+      "0": "A curated selection of foundational assets",
+      "1": "Una selección curada de activos fundamentales.",
+      "2": "Uma seleção com curadoria de ativos essenciais."
+    },
+    "description": {
+      "0": "Explore 'The Classics' index fund on Polygon, featuring a curated selection of foundational cryptocurrencies: Bitcoin (BTC), Ethereum (ETH), Solana (SOL). This fund offers a robust investment option, focusing on well-established digital assets with proven track records. Perfect for those seeking stability within the volatile crypto market.",
+      "1": "Explora el fondo indexado 'The Classics' en Polygon, que incluye una selección curada de criptomonedas fundamentales: Bitcoin (BTC), Ethereum (ETH), Solana (SOL). Este fondo ofrece una opción de inversión sólida, que se centra en activos digitales bien establecidos con antecedentes comprobados. Perfecto para quienes buscan estabilidad dentro del volátil mercado de criptomonedas.",
+      "2": "Explore o fundo de índice 'The Classics' no Polygon, apresentando uma seleção selecionada das principais criptomoedas: Bitcoin (BTC), Ethereum (ETH), Solana (SOL). Este fundo oferece uma opção de investimento sólida, com foco em ativos digitais bem estabelecidos e com histórico comprovado. Perfeito para quem procura estabilidade no volátil mercado de criptomoedas."
+    },
+    "image": "/classics.png",
+    "imageSmall": "/classics-low.png",
+    "chainId": 137,
+    "color": "#421155",
+    "portfolio": [
+      {
+        "name": "WBTC",
+        "address": "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6",
+        "chainId": 137,
+        "weight": 3400,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Wrapped Bitcoin (WBTC) is an ERC20 token pegged to the price of Bitcoin.",
+          "1": "Wrapped Bitcoin (WBTC) es un token ERC20 vinculado al precio de Bitcoin.",
+          "2": "Wrapped Bitcoin (WBTC) é um token ERC20 atrelado ao preço do Bitcoin."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/btc.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://www.centre.io/usdc"]
+      },
+      {
+        "name": "WETH",
+        "address": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+        "chainId": 137,
+        "weight": 3300,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 500
+        },
+        "chartColor": "#627EEA",
+        "description": {
+          "0": "WETH is the native token for the Ethereum blockchain.",
+          "1": "WETH es el token nativo de la cadena de bloques Ethereum.",
+          "2": "WETH é o token nativo da blockchain Ethereum."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://weth.io/"]
+      },
+      {
+        "name": "SOL",
+        "address": "0xd93f7e271cb87c23aaa73edc008a79646d1f9912",
+        "chainId": 137,
+        "weight": 3300,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#9945FF",
+        "description": {
+          "0": "SOL is the native token for the Solana blockchain.",
+          "1": "SOL es el token nativo de la cadena de bloques Solana.",
+          "2": "SOL é o token nativo do blockchain Solana."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/solana.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://portalbridge.com/"]
+      },
+      {
+        "name": "Matic Token",
+        "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        "chainId": 137,
+        "weight": 909,
+        "poolFee": 500,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 500,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Matic Token is a cryptocurrency token used on the Polygon network.",
+          "1": "Matic Token es un token de criptomoneda utilizado en la red Polygon.",
+          "2": "Matic Token é um token de criptomoeda utilizado na rede Polygon."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://polygon.technology/"]
+      }
+    ]
+  },
+  {
+    "name": {
+      "0": "GameFi Fund",
+      "1": "Fondo GameFi",
+      "2": "Fundo GameFi"
+    },
+    "cardSubtitle": {
+      "0": "A curated selection of top-tier GameFi assets on Polygon",
+      "1": "Una selección curada de activos GameFi de primer nivel en Polygon",
+      "2": "Uma seleção cuidadosa de ativos GameFi de primeira linha na Polygon"
+    },
+    "description": {
+      "0": "The Polygon GameFi Index Fund is a diversified crypto investment fund focused on GameFi tokens within the Polygon network. It offers exposure to top projects in decentralized gaming and virtual worlds, including Decentraland (MANA), Aavegotchi, Faraland, The Sandbox, and Render. These tokens power virtual economies and immersive experiences, positioning the fund to capture the rapid growth of blockchain gaming and GameFi on Polygon.",
+      "1": "El Fondo de Índice GameFi en Polygon es un fondo de inversión cripto diversificado enfocado en tokens de GameFi dentro de la red Polygon. Ofrece exposición a los principales proyectos en juegos descentralizados y mundos virtuales, incluyendo Decentraland (MANA), Aavegotchi, Faraland, The Sandbox y Render. Estos tokens impulsan economías virtuales y experiencias inmersivas, posicionando al fondo para aprovechar el rápido crecimiento de los juegos blockchain y GameFi en Polygon.",
+      "2": "O Fundo de Índice GameFi em Polygon é um fundo de investimento cripto diversificado focado em tokens de GameFi dentro da rede Polygon. Ele oferece exposição aos principais projetos em jogos descentralizados e mundos virtuais, incluindo Decentraland (MANA), Aavegotchi, Faraland, The Sandbox e Render. Esses tokens impulsionam economias virtuais e experiências imersivas, posicionando o fundo para aproveitar o rápido crescimento dos jogos blockchain e GameFi no Polygon."
+    },
+    "image": "/gameFi.png",
+    "imageSmall": "/gameFi.png",
+    "color": "#421155",
+    "chainId": 137,
+    "portfolio": [
+      {
+        "name": "MANA",
+        "address": "0xA1c57f48F0Deb89f569dFbE6E2B7f46D33606fD4",
+        "chainId": 137,
+        "weight": 3400,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Decentraland (MANA) is a virtual reality platform powered by the Ethereum blockchain.",
+          "1": "Decentraland (MANA) es una plataforma de realidad virtual impulsada por la cadena de bloques Ethereum.",
+          "2": "Decentraland (MANA) é uma plataforma de realidade virtual alimentada pela blockchain Ethereum."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/decentraland.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": [""]
+      },
+      {
+        "name": "NAKA",
+        "address": "0x311434160D7537be358930def317AfB606C0D737",
+        "chainId": 137,
+        "weight": 3400,
+        "poolFee": 3000,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Nakamoto games is a blockchain gaming platform.",
+          "1": "Nakamoto games es una plataforma de juegos blockchain.",
+          "2": "Nakamoto games é uma plataforma de jogos blockchain."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/nakamoto.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://axieinfinity.com/"]
+      },
+      {
+        "name": "GHST",
+        "address": "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7",
+        "chainId": 137,
+        "weight": 3400,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Aavegotchi (GHST) is a digital collectible game.",
+          "1": "Aavegotchi (GHST) es un juego de coleccionables digitales.",
+          "2": "Aavegotchi (GHST) é um jogo de colecionáveis digitais."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/aavegotchi.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://axieinfinity.com/"]
+      },
+      {
+        "name": "ITX",
+        "address": "0xE06Bd4F5aAc8D0aA337D13eC88dB6defC6eAEefE",
+        "chainId": 137,
+        "weight": 3400,
+        "poolFee": 3000,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "ITAM Games is a blockchain gaming platform.",
+          "1": "ITAM Games es una plataforma de juegos blockchain.",
+          "2": "ITAM Games é uma plataforma de jogos blockchain."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/itx.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://axieinfinity.com/"]
+      },
+      {
+        "name": "FAR",
+        "address": "0x5F32AbeeBD3c2fac1E7459A27e1AE9f1C16ccccA",
+        "chainId": 137,
+        "weight": 3400,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Faraland is a blockchain gaming platform.",
+          "1": "Faraland es una plataforma de juegos blockchain.",
+          "2": "Faraland é uma plataforma de jogos blockchain."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/farcana.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://axieinfinity.com/"]
+      },
+      {
+        "name": "SAND",
+        "address": "0xBbba073C31bF03b8ACf7c28EF0738DeCF3695683",
+        "chainId": 137,
+        "weight": 3400,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "The Sandbox is a virtual world and gaming platform.",
+          "1": "The Sandbox es un mundo virtual y plataforma de juegos.",
+          "2": "The Sandbox é um mundo virtual e plataforma de jogos."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/sandbox.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://axieinfinity.com/"]
+      },
+      {
+        "name": "AXL",
+        "address": "0x6e4e624106cb12e168e6533f8ec7c82263358940",
+        "chainId": 137,
+        "weight": 3400,
+        "poolFee": 3000,
+        "active": false,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 10000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Axie Infinity Land (AXL) is a token used in the Axie Infinity game.",
+          "1": "Axie Infinity Land (AXL) es un token utilizado en el juego Axie Infinity.",
+          "2": "Axie Infinity Land (AXL) é um token usado no jogo Axie Infinity."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/axelar.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://axieinfinity.com/"]
+      },
+      {
+        "name": "RNDR",
+        "address": "0x61299774020da444af134c82fa83e3810b309991",
+        "chainId": 137,
+        "weight": 3400,
+        "poolFee": 3000,
+        "active": true,
+        "decimals": 18,
+        "sourceFees": {
+          "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+          "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+        },
+        "chartColor": "#FFD700",
+        "description": {
+          "0": "Render Token is a token used for decentralized data exchange.",
+          "1": "Render Token es un token utilizado para el intercambio de datos descentralizado.",
+          "2": "Render Token é um token usado para troca descentralizada de dados."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/render.png",
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+        "links": ["https://axieinfinity.com/"]
+      }
+    ]
+  },
+  {
+    "name": {
+      "0": "Ethereum Market Cap Fund",
+      "1": "Fondo de Capitalización de Mercado en Ethereum",
+      "2": "Fundo de Capitalização de Mercado no Ethereum"
+    },
+    "cardSubtitle": {
+      "0": "A curated selection of top tokens on Ethereum",
+      "1": "Una selección curada de los principales tokens en Ethereum",
+      "2": "Uma seleção cuidadosa dos principais tokens no Ethereum"
+    },
+    "description": {
+      "0": "Explore the Ethereum Market Cap Fund, featuring top-tier assets like stETH, Worldcoin, and ChainLink. Designed for investors seeking exposure to leading decentralized assets, this fund offers long-term growth potential through a carefully selected portfolio.",
+      "1": "Explore el Fondo de Capitalización de Mercado de Ethereum, que incluye activos de primer nivel como stETH, Worldcoin y ChainLink. Diseñado para inversores que buscan exposición a activos descentralizados líderes, este fondo ofrece potencial de crecimiento a largo plazo a través de una cartera cuidadosamente seleccionada.",
+      "2": "Explore o Fundo de Capitalização de Mercado do Ethereum, que inclui ativos de primeira linha como stETH, Worldcoin e ChainLink. Concebido para investidores que procuram exposição a ativos descentralizados de ponta, este fundo oferece potencial de crescimento a longo prazo através de um portfólio cuidadosamente selecionado."
+    },
+    "image": "/marketCap.png",
+    "imageSmall": "/marketCap-low.png",
+    "color": "#627EEA",
+    "chainId": 1,
+    "portfolio": [
+      {
+        "name": "stETH",
+        "chainId": 1,
+        "address": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+        "weight": 0,
+        "description": {
+          "0": "stETH is a tokenized version of Ethereum staked ETH.",
+          "1": "stETH es una versión tokenizada de Ethereum staked ETH.",
+          "2": "stETH é uma versão tokenizada do Ethereum staked ETH."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/steth.png",
+        "active": true,
+        "poolFee": 3000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 3000
+        }
+      },
+      {
+        "name": "Worldcoin",
+        "chainId": 1,
+        "address": "0x163f8C2467924be0ae7B5347228CABF260318753",
+        "weight": 0,
+        "description": {
+          "0": "Worldcoin is a decentralized lending protocol.",
+          "1": "Worldcoin es un protocolo de préstamos descentralizado.",
+          "2": "Worldcoin é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/worldcoin.png",
+        "active": false,
+        "poolFee": 10000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 10000
+        }
+      },
+      {
+        "name": "SHIBA INU",
+        "chainId": 1,
+        "address": "0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE",
+        "weight": 0,
+        "description": {
+          "0": "Shiba Inu is a decentralized lending protocol.",
+          "1": "Shiba Inu es un protocolo de préstamos descentralizado.",
+          "2": "Shiba Inu é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/shib.png",
+        "active": true,
+        "poolFee": 3000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 3000
+        }
+      },
+      {
+        "name": "Chainlink",
+        "chainId": 1,
+        "address": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+        "weight": 0,
+        "description": {
+          "0": "Chainlink is a decentralized lending protocol.",
+          "1": "Chainlink es un protocolo de préstamos descentralizado.",
+          "2": "Chainlink é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/chainlink.png",
+        "active": true,
+        "poolFee": 3000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 3000
+        }
+      },
+      {
+        "name": "Wrapped Bitcoin",
+        "chainId": 1,
+        "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+        "weight": 0,
+        "description": {
+          "0": "Wrapped Bitcoin is a decentralized lending protocol.",
+          "1": "Wrapped Bitcoin es un protocolo de préstamos descentralizado.",
+          "2": "Wrapped Bitcoin é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/wbtc.png",
+        "active": true,
+        "poolFee": 3000,
+        "decimals": 8,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 3000
+        }
+      },
+      {
+        "name": "Uniswap",
+        "chainId": 1,
+        "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+        "weight": 0,
+        "description": {
+          "0": "Uniswap is a decentralized lending protocol.",
+          "1": "Uniswap es un protocolo de préstamos descentralizado.",
+          "2": "Uniswap é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/uniswap.png",
+        "active": true,
+        "poolFee": 3000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 3000
+        }
+      },
+      {
+        "name": "WETH",
+        "chainId": 1,
+        "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "weight": 0,
+        "description": {
+          "0": "WETH is a decentralized lending protocol.",
+          "1": "WETH es un protocolo de préstamos descentralizado.",
+          "2": "WETH é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/weth.png",
+        "active": true,
+        "poolFee": 3000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 3000
+        }
+      },
+      {
+        "name": "Ondo",
+        "chainId": 1,
+        "address": "0xfAbA6f8e4a5E8Ab82F62fe7C39859FA577269BE3",
+        "weight": 0,
+        "description": {
+          "0": "Ondo is a decentralized lending protocol.",
+          "1": "Ondo es un protocolo de préstamos descentralizado.",
+          "2": "Ondo é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/ondo.png",
+        "active": true,
+        "poolFee": 3000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 3000
+        }
+      },
+      {
+        "name": "Polygon Ecosystem Token",
+        "chainId": 1,
+        "address": "0x455e53CBB86018Ac2B8092FdCd39d8444aFFC3F6",
+        "weight": 0,
+        "description": {
+          "0": "Polygon Ecosystem Token is a decentralized lending protocol.",
+          "1": "Polygon Ecosystem Token es un protocolo de préstamos descentralizado.",
+          "2": "Polygon Ecosystem Token é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/pol.png",
+        "active": true,
+        "poolFee": 500,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 500
+        }
+      },
+      {
+        "name": "Mantle",
+        "chainId": 1,
+        "address": "0x3c3a81e81dc49A522A592e7622A7E711c06bf354",
+        "weight": 0,
+        "description": {
+          "0": "Mantle is a decentralized lending protocol.",
+          "1": "Mantle es un protocolo de préstamos descentralizado.",
+          "2": "Mantle é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/mantle.png",
+        "active": true,
+        "poolFee": 10000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 10000
+        }
+      },
+      {
+        "name": "ENA",
+        "chainId": 1,
+        "address": "0x57e114B691Db790C35207b2e685D4A43181e6061",
+        "weight": 0,
+        "description": {
+          "0": "ENA is a decentralized lending protocol.",
+          "1": "ENA es un protocolo de préstamos descentralizado.",
+          "2": "ENA é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/ethena.png",
+        "active": true,
+        "poolFee": 500,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 500
+        }
+      },
+      {
+        "name": "Pepe",
+        "chainId": 1,
+        "address": "0x6982508145454Ce325dDbE47a25d4ec3d2311933",
+        "weight": 0,
+        "description": {
+          "0": "Pepe is a decentralized lending protocol.",
+          "1": "Pepe es un protocolo de préstamos descentralizado.",
+          "2": "Pepe é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/pepe.png",
+        "active": true,
+        "poolFee": 10000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 10000
+        }
+      },
+      {
+        "name": "Render Token",
+        "chainId": 1,
+        "address": "0x6De037ef9aD2725EB40118Bb1702EBb27e4Aeb24",
+        "weight": 0,
+        "description": {
+          "0": "Render Token is a decentralized lending protocol.",
+          "1": "Render Token es un protocolo de préstamos descentralizado.",
+          "2": "Render Token é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/render.png",
+        "active": true,
+        "poolFee": 10000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 10000
+        }
+      },
+      {
+        "name": "Aave",
+        "chainId": 1,
+        "address": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+        "weight": 0,
+        "description": {
+          "0": "Aave is a decentralized lending protocol.",
+          "1": "Aave es un protocolo de préstamos descentralizado.",
+          "2": "Aave é um protocolo de empréstimo descentralizado."
+        },
+        "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/aave.png",
+        "active": true,
+        "poolFee": 3000,
+        "decimals": 18,
+        "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+        "chartColor": "",
+        "links": [],
+        "sourceFees": {
+          "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": 3000
+        }
+      }
+    ],
+    "custom": true,
+    "sourceToken": {
+      "name": "USD Coin",
+      "chainId": 1,
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "weight": 0,
+      "description": {
+        "0": "USDC is a stablecoin pegged to the US dollar.",
+        "1": "USDC es una stablecoin vinculada al dólar estadounidense.",
+        "2": "USDC é uma stablecoin atrelada ao dólar americano."
+      },
+      "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/usdc.png",
+      "active": true,
+      "poolFee": 3000,
+      "decimals": 6,
+      "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+      "chartColor": "",
+      "links": [],
+      "sourceFees": {}
+    }
+  }
+]

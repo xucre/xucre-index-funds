@@ -1,0 +1,1 @@
+export const playStoreAddress = 'https://play.google.com/store/apps/details?id=xucre.expo.client';
