@@ -4,7 +4,6 @@ import { SolanaMetadata } from '@/service/chains/solana';
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
 import { defineChain } from 'viem';
 
-import { type Chain } from 'viem'
 import { cookieStorage, createStorage } from 'wagmi'
 import { mainnet, polygon, polygonMumbai, celo, Chain } from 'wagmi/chains'
 import { createWeb3Modal, defaultSolanaConfig } from '@web3modal/solana/react'

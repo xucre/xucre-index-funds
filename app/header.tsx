@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { styled, alpha, useTheme, createTheme, ThemeProvider, useThemeProps } from '@mui/material/styles';
 import AccountButton from '../components/accountButton';
 import LogoDark from '../public/icon-green.png';
@@ -26,8 +25,6 @@ function Header() {
   const searchParams = useSearchParams()
   const { language } = useLanguage();
   const navItems = [
-    languageData[language].ui.swap_menu,
-    languageData[language].ui.ramp_menu,
     languageData[language].ui.index_fund_menu,
     languageData[language].Menu.faq
   ];
@@ -66,12 +63,8 @@ function Header() {
 
   const navigateTo = (type) => {
     if (type === navItems[0]) {
-      router.replace(`/swap?wallet=${wallet}&page=${type}`)
-    } else if (type === navItems[1]) {
-      router.replace(`/ramp?wallet=${wallet}&page=${type}`)
-    } else if (type === navItems[2]) {
       router.replace('/index-fund')
-    } else if (type === navItems[3]) {
+    } else if (type === navItems[1]) {
       router.replace('/about-us')
     }
   }
@@ -145,7 +138,7 @@ function Header() {
             </ButtonGroup>
             <Stack direction={'row'} sx={{ flexGrow: 1 }} alignContent={'end'} justifyContent={'end'}>
               <Box sx={{}}>
-                {isAuthenticated && <Auth0Button />}
+                {/*isAuthenticated && <Auth0Button />*/}
               </Box>
               <IconButton
                 color={theme.palette.mode === 'dark' ? 'warning' : 'info'}

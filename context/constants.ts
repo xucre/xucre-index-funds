@@ -1,4 +1,4 @@
-import { getAppMetadata } from "@walletconnect/utils";
+//import { getAppMetadata } from "@walletconnect/utils";
 
 if (!process.env.NEXT_PUBLIC_PROJECT_ID)
   throw new Error("`NEXT_PUBLIC_PROJECT_ID` env variable is missing.");
@@ -293,7 +293,7 @@ export const REGIONALIZED_RELAYER_ENDPOINTS: RelayerType[] = [
 
 export const ORIGIN_OPTIONS = [
   {
-    value: getAppMetadata().url,
+    value: '',//getAppMetadata().url,
     label: "VALID",
   },
   {

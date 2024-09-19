@@ -1,3 +1,6 @@
+import * as encoding from "@walletconnect/encoding";
+import { Theme } from "@mui/material";
+
 export function distributeWeights(items: any[]): any[] {
   const totalWeight = 10000;
   const itemCount = items.length;
@@ -38,9 +41,6 @@ export function getChainNameRainbowKit(_chainId: number) : string {
   const chainId = normalizeDevChains(_chainId);
   return chainId === 1 ? 'ethereum' : chainId === 137 ? 'polygon' : 'polygon';
 }
-import { BigNumber, BigNumberish, providers, utils } from "ethers";
-import * as encoding from "@walletconnect/encoding";
-import { Theme } from "@mui/material";
 // import { TypedDataUtils } from "eth-sig-util";
 // import * as ethUtil from "ethereumjs-util";
 

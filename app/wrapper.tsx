@@ -16,7 +16,6 @@ import CTA from '@/components/ui/cta';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useMemo } from 'react';
 import { ThemeSwitcherProvider } from '@/hooks/useThemeSwitcher';
-import { ThemeConfig } from '@lifi/widget';
 import { Language } from '@mui/icons-material';
 import { LanguageContextProvider } from '@/hooks/useLanguage';
 import Footer from './footer';
@@ -41,7 +40,8 @@ export default function Wrapper({
 }: {
   children: React.ReactNode;
 }) {
-
+  const searchParams = useSearchParams();
+  const color = searchParams.get('color');
   const darkTheme = createTheme({
     palette: {
       //mode: 'dark',
