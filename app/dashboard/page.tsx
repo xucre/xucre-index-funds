@@ -1,30 +1,81 @@
 'use client'
+import DashboardContainerDesktop from "@/components/dashboard/DashboardContainerDesktop";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import EmptyProfileState from "@/components/onboarding/EmptyProfile";
+import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
+import { useEthersSigner } from "@/hooks/useEthersSigner";
+import { useSFDC } from "@/hooks/useSFDC";
+import { getSafeAddress, setSafeAddress } from "@/service/db";
 import { getTextColor } from "@/service/helpers";
-import { useAuth0 } from "@auth0/auth0-react";
-import { Box, CircularProgress, Grid, Stack, Typography, useTheme } from "@mui/material"
+import { createAccount } from "@/service/safe";
+import { updateSafeWalletDetails } from "@/service/sfdc";
+import { useOrganization, useUser } from "@clerk/nextjs";
+import { Box, CircularProgress, Stack, Typography, useTheme } from "@mui/material"
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { useAccount, useClient, useConnectorClient, useWalletClient } from "wagmi";
+//import '@covalenthq/goldrush-kit/styles.css'
 
 // components/LoadingIndicator.tsx
 export default function Dashboard() {
   const theme = useTheme();
   const isSignedUp = false;
+  const { sfdcUser, isLoaded } = useSFDC();
+  const { address, chainId } = useAccount();
+  //const signer = useWalletClient({ chainId })
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuth0();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated && !isSignedUp) {
-        router.replace('/onboarding?step=1')
-      }
+  const { user } = useUser();
+  const [safeWallet, setSafeWallet] = useState<string | null>(null);
+
+  const createSafeWallet = async () => {
+    const safeAddress = await createAccount({
+      rpcUrl: 'https://endpoints.omniatech.io/v1/eth/sepolia/public',
+      owner: address,
+      threshold: 1,
+      //signer: '',
+    });
+    setSafeAddress(user.id, safeAddress);
+    updateSafeWalletDetails(user.id, safeAddress);
+    setSafeWallet(safeAddress);
+  }
+
+  const syncSafeWallet = async () => {
+    const walletAddress = await getSafeAddress(user.id);
+    if (walletAddress) {
+      console.log('safe address', walletAddress)
+      setSafeWallet(walletAddress);
+    } else {
+      setSafeWallet(null);
     }
-  }, [isAuthenticated, isLoading, isSignedUp]);
+
+  }
+
+  useEffect(() => {
+    if (user && user.id) {
+      syncSafeWallet();
+    }
+  }, [user])
+
+  const profileFilled = isLoaded && sfdcUser && sfdcUser.status === 'Active';
   return (
     <Suspense>
-      <Box height={'full'} width={'full'}>
-        <Stack direction={'column'} justifyContent={'center'} alignItems={'center'}>
-          <Typography variant={'h6'} color={getTextColor(theme)}>Muy Pronto</Typography>
-        </Stack>
+      <Box width={'full'}>
+        {!profileFilled &&
+          <EmptyProfileState onCreateProfile={(() => { router.push('/dashboard/edit') })} />
+        }
+
+        {profileFilled &&
+          <>
+            <DashboardHeader />
+            {!safeWallet &&
+              <EmptySafeWallet onCreateSafe={createSafeWallet} />
+            }
+            {safeWallet &&
+              <DashboardContainerDesktop address={safeWallet} />
+            }
+          </>
+        }
       </Box>
     </Suspense>
   );

@@ -1,0 +1,7 @@
+{
+  "search.exclude": {
+    "**/.next": true,
+    "**/.next/**": true,
+    "**/node_modules/**": true
+  }
+}

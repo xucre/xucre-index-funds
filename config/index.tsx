@@ -1,13 +1,13 @@
 'use client';
 import { ChainMetadata } from '@/context/types';
-import { SolanaMetadata } from '@/service/chains/solana';
+// import { SolanaMetadata } from '@/service/chains/solana';
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
 import { defineChain } from 'viem';
 
 import { cookieStorage, createStorage } from 'wagmi'
 import { mainnet, polygon, polygonMumbai, celo, Chain } from 'wagmi/chains'
-import { createWeb3Modal, defaultSolanaConfig } from '@web3modal/solana/react'
-import { solana, solanaTestnet, solanaDevnet } from '@web3modal/solana/chains'
+// import { createWeb3Modal, defaultSolanaConfig } from '@web3modal/solana/react'
+// import { solana, solanaTestnet, solanaDevnet } from '@web3modal/solana/chains'
 // Get projectId at https://cloud.walletconnect.com
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
 
@@ -78,7 +78,7 @@ const ethereumDev = defineChain({
 
 export function getChainMetadata(chainId: string): ChainMetadata {
   const reference = chainId.split(":")[1];
-  const metadata = SolanaMetadata[reference];
+  const metadata = undefined;// = SolanaMetadata[reference];
   if (typeof metadata === "undefined") {
     throw new Error(`No chain metadata found for chainId: ${chainId}`);
   }
@@ -91,16 +91,16 @@ export const config = defaultWagmiConfig({
   projectId, // required
   metadata, // required
   ssr: false,
-  storage: createStorage({
-    storage: cookieStorage
-  }),
+  // storage: createStorage({
+  //   storage: cookieStorage
+  // }),
 })
 
 // 0. Setup chains
-const chains = [solana, solanaTestnet]
+/*const chains = [solana, solanaTestnet]
 
 export const solanaConfig = defaultSolanaConfig({
   metadata,
   chains,
   projectId
-})
+})*/

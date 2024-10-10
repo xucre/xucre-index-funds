@@ -11,6 +11,7 @@ export const languages = [Language.EN, Language.ES, Language.PT];
 export interface TranslationType {
   App: any,
   Buttons_Header: any,
+  Billing: any,
   LanguagePage: any,
   FAQPage: any,
   Menu: any,

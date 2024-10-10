@@ -23,6 +23,9 @@ const values : TranslationType = {
     profile: "Perfil",
     ramp: "En rampa"
   },
+  Billing: {
+    manage_subscription: "Administrar suscripción",
+  },
   FAQPage: {
     title: "Fondos de Índices Xucre: Empoderando la Autogestión de Inversiones",
     header1: "En Xucre Inversiones, ofrecemos una variedad de fondos de índice autogestionados que te permiten tomar el control de tu estrategia de inversión sin comprometer la seguridad o la conformidad. Nuestros fondos están diseñados de manera única para asegurarse de que no cumplan los criterios especificados en la Prueba de Howey para ser considerados títulos:",
@@ -73,7 +76,18 @@ const values : TranslationType = {
     qr_scan_button: "ESCANER QR",
     requests_button: 'PETICIONES',
     wallet_button: "BILLETERAS",
-    faq: "Preguntas frecuentes",
+    faq: "FAQ",
+    settings: "Configurações",
+    support: "Suporte",
+    terms: "Termos e Condições",
+    privacy: "Privacidade",
+    billing: "FACTURACIÓN",
+    index_builder: "CREADOR DE ÍNDICES",
+    organization: "ORGANIZACION",
+    index_funds: "FONDO ÍNDICE",
+    dashboard: "SALPICADERO",
+    login: "INICIAR SESIÓN",
+    home: "INICIO",
   },
   SelectLanguage: {
     en: "Inglés",
@@ -103,6 +117,7 @@ const values : TranslationType = {
   ui: {
     open: "Abrir",
     close: "Cerrar",
+    edit : "Editar",
     cancel: "Cancelar",
     confirm: "Confirmar",
     featured: 'Presentado',

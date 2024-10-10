@@ -1,6 +1,5 @@
 'use client'
 import { getTextColor } from "@/service/helpers";
-import { useAuth0 } from "@auth0/auth0-react";
 import { Box, CircularProgress, Grid, Stack, TextField, Checkbox, Button, Typography, useTheme, FormGroup, FormControlLabel, Card, CardContent } from "@mui/material"
 import { useSearchParams } from "next/navigation";
 import router from "next/router";
@@ -9,20 +8,16 @@ import React, { Suspense, useEffect, useState } from "react";
 // components/LoadingIndicator.tsx
 export default function Step1Component() {
   const theme = useTheme();
-  const { user } = useAuth0();
 
-  useEffect(() => {
-    console.log(user);
-  }, [user])
 
   return (
     <Suspense>
       <Box height={'full'} width={'full'}>
         <Stack direction={'column'} justifyContent={'center'} alignItems={'center'}>
-          <Typography variant={'h6'} color={getTextColor(theme)}>Hello {user.name}</Typography>
+          <Typography variant={'h6'} color={getTextColor(theme)}>Hello {'l'}</Typography>
           <Card>
             <CardContent>
-              <KYCForm email={user.email} formUpdated={(data) => console.log(data)} />
+              <KYCForm email={''} formUpdated={(data) => console.log(data)} />
             </CardContent>
           </Card>
 

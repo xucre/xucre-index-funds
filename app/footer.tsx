@@ -1,6 +1,9 @@
 'use client';
 import AccountButton from '@/components/accountButton';
+import LanguageSelect from '@/components/ui/languageSelect';
+import SettingsButton from '@/components/ui/settingsButton';
 import SocialIcons from '@/components/ui/socialIcons';
+import { ThemeSwitcherElement } from '@/hooks/useThemeSwitcher';
 import { AppBar, Avatar, Box, CssBaseline, Fab, IconButton, Stack, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -14,9 +17,11 @@ export default function Footer() {
     <SocialIcons discordUrl={'https://discord.gg/F4gaehZ7'} emailUrl={'mailto:support@xucre.io'} twitterUrl={'https://x.com/WalletXucre'} githubUrl={null} instagramUrl={null} governanceUrl={null} websiteUrl={'https://linktr.ee/xucrewallet'} gitbookUrl={null} />
   );
   return (
-    <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0, display: { xs: 'none', md: 'block' } }}>
+    <AppBar position="fixed" color={'default'} sx={{ top: 'auto', bottom: 0, display: { xs: 'none', md: 'block' } }}>
       <Toolbar>
-        <AccountButton />
+        <SettingsButton />
+        <ThemeSwitcherElement />
+        <LanguageSelect type={'menu'} />
         <Box sx={{ flexGrow: 1 }} />
         <Social />
       </Toolbar>

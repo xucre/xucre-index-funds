@@ -4,15 +4,19 @@ import React, { ReactNode, useEffect } from 'react'
 import { config, projectId } from '@/config'
 
 import { createWeb3Modal } from '@web3modal/wagmi/react'
+import { WagmiAppKitOptions } from '@web3modal/wagmi'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { SnackbarProvider } from 'notistack';
-
+import { ClerkProvider } from '@clerk/nextjs'
 
 import { State, WagmiProvider } from 'wagmi'
 import { polygon } from 'wagmi/chains'
 import { useTheme } from '@mui/material'
+import { SFDCProvider } from '@/hooks/useSFDC'
+import { GoldRushProvider } from '@covalenthq/goldrush-kit'
+import '@covalenthq/goldrush-kit/styles.css'
 
 // Setup queryClient
 const queryClient = new QueryClient()
@@ -32,8 +36,10 @@ export function ContextProvider({
   const [isLoaded, setIsLoaded] = React.useState(false);
   const _config = config;
   const _initialState = { ...initialState, reconnectOnMount: true };
+  const [modalState, setModalState] = React.useState(null as any);
   useEffect(() => {
-    createWeb3Modal({
+    console.log('theme', theme.palette.mode)
+    const result = createWeb3Modal({
       defaultChain: polygon,
       projectId,
       wagmiConfig: _config,
@@ -51,15 +57,43 @@ export function ContextProvider({
         //'--w3m-color-mix-strength': 40
       }
     })
+    setModalState(result)
     setIsLoaded(true)
   }, [])
+
+
   if (!isLoaded) return null;
   return (
     <WagmiProvider config={_config} initialState={_initialState}>
       <QueryClientProvider client={queryClient}>
-        <SnackbarProvider maxSnack={3} >
-          {children}
-        </SnackbarProvider>
+        <ClerkProvider afterSignUpUrl="/home" afterSignInUrl="/home">
+          <SnackbarProvider maxSnack={3} >
+            <GoldRushProvider
+              apikey={process.env.NEXT_PUBLIC_COVALENT_API_KEY} //use your API key
+              theme={{
+                mode: theme.palette.mode,
+                colors: {
+                  light: {
+                    primary: '#1B1E3F',
+                    secondary: '#1B1E3F',
+                    background: '#ffffff',
+                    foreground: '#ffffff'
+                  },
+                  dark: {
+                    primary: '#D4E815',
+                    secondary: '#1B1E3F',
+                    background: '#121212 !important',
+                    foreground: '#ffffff'
+                  }
+                }
+              }}
+            >
+              <SFDCProvider>
+                {children}
+              </SFDCProvider>
+            </GoldRushProvider>
+          </SnackbarProvider>
+        </ClerkProvider>
       </QueryClientProvider>
     </WagmiProvider>
   )

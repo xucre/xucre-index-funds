@@ -42,7 +42,7 @@ export default function Default() {
         <Typography variant={'h6'} color={textColor}>{languageData[language].FAQPage.title2}</Typography>
         {
           languageData[language].FAQPage.qAndA.map((item, index) => {
-            return <Accordion key={item.question}>
+            return <Accordion key={item.question} sx={{ width: '100%' }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1-content"

@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@emotion/react';
-import { createTheme } from '@mui/material';
+import { DarkMode, LightMode } from '@mui/icons-material';
+import { createTheme, IconButton, useTheme } from '@mui/material';
 import React, { useEffect } from 'react';
 
 const ThemeSwitcherContext = React.createContext(function toggleColorMode() { });
@@ -24,7 +25,7 @@ export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
           //mode: 'dark',
           mode: mode,
           primary: {
-            main: '#D4E815',
+            main: mode === 'dark' ? '#D4E815' : '#1B1E3F',
           },
           secondary: {
             main: '#1B1E3F',
@@ -54,3 +55,21 @@ export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
 
   return <ThemeSwitcherContext.Provider value={toggleColorMode}><ThemeProvider theme={theme}>{children}</ThemeProvider></ThemeSwitcherContext.Provider>
 };
+
+
+export const ThemeSwitcherElement = () => {
+  const theme = useTheme();
+  const toggleColorMode = useThemeSwitcher();
+
+  return (
+    <IconButton
+      color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
+      aria-label="open drawer"
+      edge="start"
+      onClick={toggleColorMode}
+      sx={{ ml: 2, }}
+    >
+      {theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
+    </IconButton>
+  );
+}

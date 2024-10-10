@@ -6,6 +6,7 @@ import { Avatar, Box, Button, ButtonGroup, CircularProgress, Fab, IconButton, Me
 import { Menu as MenuIcon, ArrowBack, Check, X as XIcon, LightMode, DarkMode } from '@mui/icons-material'
 import { useState } from "react";
 import { Language, languages } from "@/metadata/translations";
+import React from "react";
 
 // components/LoadingIndicator.tsx
 export default function LanguageSelect({ type }: { type: 'button' | 'menu' }) {

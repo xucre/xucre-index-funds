@@ -78,7 +78,7 @@ export function useIndexFunds({ chainId }: { chainId: number }) {
 }
 
 export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
-  const { isConnected, address, chainId } = useAccount();
+  const { isConnected, address, chainId, chain } = useAccount();
   const { enqueueSnackbar } = useSnackbar();
   const { language } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
@@ -113,10 +113,13 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
         abi: erc20,
         address: getAddress(sourceToken.address),
         functionName: 'approve',
+        chainId,
         args: [
           contractAddressMap[chainId],
-          amount,
+          amount.toString(),
         ],
+        chain,
+        account: address
       })
       const receipt = await waitForTransactionReceipt(config, { hash: result });
       const receipt2 = receipt as TransactionReceipt;
@@ -159,6 +162,8 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
           getAddress(sourceToken.address),
           amount
         ],
+        chain: chain,
+        account: address
       })
       enqueueSnackbar(`${languageData[language].ui.transaction_successful}: ${result}`, { variant: 'success', autoHideDuration: 5000 });
       setConfirmationHash(result);

@@ -13,7 +13,7 @@ export const DEFAULT_MAIN_CHAINS = [
   "eip155:42161",
   "eip155:42220",
   "cosmos:cosmoshub-4",
-  "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+  //"solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
   "polkadot:91b171bb158e2d3848fa23a9f1c25182",
   "mvx:1",
   "tron:0x2b6653dc",
@@ -30,8 +30,8 @@ export const DEFAULT_TEST_CHAINS = [
   "eip155:80001",
   "eip155:421611",
   "eip155:44787",
-  "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
-  "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",
+  //"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+  //"solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",
   "polkadot:e143f23803ac50e8f6f8e62695d1ce9e",
   "near:testnet",
   "mvx:D",
@@ -187,12 +187,12 @@ export enum DEFAULT_COSMOS_EVENTS {}
 /**
  * SOLANA
  */
-export enum DEFAULT_SOLANA_METHODS {
-  SOL_SIGN_TRANSACTION = "solana_signTransaction",
-  SOL_SIGN_MESSAGE = "solana_signMessage",
-}
+// export enum DEFAULT_SOLANA_METHODS {
+//   SOL_SIGN_TRANSACTION = "solana_signTransaction",
+//   SOL_SIGN_MESSAGE = "solana_signMessage",
+// }
 
-export enum DEFAULT_SOLANA_EVENTS {}
+// export enum DEFAULT_SOLANA_EVENTS {}
 
 /**
  * POLKADOT

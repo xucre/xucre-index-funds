@@ -4,7 +4,7 @@ import { styled, alpha, useTheme, createTheme, ThemeProvider, useThemeProps } fr
 import AccountButton from '../components/accountButton';
 import LogoDark from '../public/icon-green.png';
 import Logo from '../assets/images/logo-black.png';
-import { Typography, InputBase, AppBar, Box, Button, Toolbar, FormControlLabel, FormGroup, Switch, Stack, Divider, List, ListItem, ListItemButton, ListItemText, Drawer, IconButton, useMediaQuery, CssBaseline, Menu, MenuItem, ButtonGroup } from '@mui/material';
+import { Typography, InputBase, AppBar, Box, Button, Toolbar, FormControlLabel, FormGroup, Switch, Stack, Divider, List, ListItem, ListItemButton, ListItemText, Drawer, IconButton, useMediaQuery, CssBaseline, Menu, MenuItem, ButtonGroup, ButtonBase, Avatar } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Menu as MenuIcon, ArrowBack, Check, X as XIcon, LightMode, DarkMode } from '@mui/icons-material'
 import CTA from '@/components/ui/cta';
@@ -16,18 +16,40 @@ import LanguageSelect from '@/components/ui/languageSelect';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData from '@/metadata/translations';
 import { useMixpanel } from '@/hooks/useMixpanel';
+import { SignedIn, SignedOut, useOrganization, UserButton, useUser, OrganizationSwitcher } from '@clerk/nextjs';
 //import HeaderSwitch from './ThemeMode';
+import { dark } from "@clerk/themes";
+import { useIsAdmin } from '../hooks/useIsAdmin';
+import { languages } from '../metadata/translations/index';
 
 
 const drawerWidth = 240;
 function Header() {
   const mixpanel = useMixpanel();
+  const { user } = useUser();
+  const { organization } = useOrganization();
   const searchParams = useSearchParams()
   const { language } = useLanguage();
   const navItems = [
-    languageData[language].ui.index_fund_menu,
+    languageData[language].Menu.home,
+    languageData[language].Menu.dashboard,
+    languageData[language].Menu.index_funds,
     languageData[language].Menu.faq
   ];
+  const adminNavItems = [
+    languageData[language].Menu.home,
+    languageData[language].Menu.dashboard,
+    languageData[language].Menu.index_funds,
+    //languageData[language].Menu.index_builder,
+    languageData[language].Menu.faq,
+    languageData[language].Menu.organization,
+    languageData[language].Menu.billing,
+  ];
+  const publicNavItems = [
+    languageData[language].Menu.home,
+    languageData[language].Menu.index_funds,
+    languageData[language].Menu.faq
+  ]
   const wallet = searchParams.get('wallet');
   const page = searchParams.get('page');
   const router = useRouter();
@@ -36,11 +58,13 @@ function Header() {
   const themeSwitcher = useThemeSwitcher();
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
+  const { isAdmin } = useIsAdmin();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const url = 'xucre.expo.client://ViewWallet';
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const isDarkTheme = theme.palette.mode === 'dark';
   const handleModeChange = () => {
     themeSwitcher();
   };
@@ -61,11 +85,23 @@ function Header() {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const handleUserOpen = (event: React.MouseEvent<HTMLButtonElement>) => { }
+
   const navigateTo = (type) => {
-    if (type === navItems[0]) {
+    if (type === languageData[language].Menu.index_funds) {
       router.replace('/index-fund')
-    } else if (type === navItems[1]) {
+    } else if (type === languageData[language].Menu.faq) {
       router.replace('/about-us')
+    } else if (type === languageData[language].Menu.organization) {
+      router.replace('/organization')
+    } else if (type === languageData[language].Menu.billing) {
+      router.replace('/billing')
+    } else if (type === languageData[language].Menu.index_builder) {
+      router.replace('/index-builder')
+    } else if (type === languageData[language].Menu.dashboard) {
+      router.replace('/dashboard')
+    } else if (type === languageData[language].Menu.home) {
+      router.replace('/')
     }
   }
 
@@ -74,6 +110,8 @@ function Header() {
       mixpanel.identify(address);
     }
   }, [mixpanel, address])
+
+
 
   const headerButton = (
     <Button variant="text" onClick={() => router.push('/')} >
@@ -89,40 +127,62 @@ function Header() {
   );
 
   const drawer = (
-    <Stack direction={'column'} justifyContent={'center'} alignItems={'center'} spacing={2} onClick={handleDrawerToggle} sx={{ textAlign: 'center', zIndex: 100000 }}>
-      {wallet !== 'xucre' && headerButton}
-      <Divider />
+    <Stack direction={'column'} justifyContent={'space-between'} alignItems={'center'} spacing={2} onClick={handleDrawerToggle} sx={{ textAlign: 'center', zIndex: 100000, height: '95vh' }}>
+      <Box width={'100%'}>
+        {wallet !== 'xucre' && headerButton}
+        <Divider />
 
-      <Stack direction={'row'} my={2} justifyItems={'center'} alignContent={'center'} mx={'auto'} display={'block'} width={'fit-content'}>
+        {/*<Stack direction={'row'} my={2} justifyItems={'center'} alignContent={'center'} mx={'auto'} display={'block'} width={'fit-content'}>
         <AccountButton />
-      </Stack>
+      </Stack>*/}
+        <SignedIn>
+          {isAdmin &&
+            <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
+              {adminNavItems.map((item) => (
+                <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
+              ))}
+            </ButtonGroup>
+          }
+          {!isAdmin &&
+            <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
+              {navItems.map((item) => (
+                <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
+              ))}
+            </ButtonGroup>
+          }
+        </SignedIn>
 
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }} onClick={() => navigateTo(item)}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <LanguageSelect type={'button'} />
-      <IconButton
-        color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
-        aria-label="change theme"
-        edge="start"
-        onClick={handleModeChange}
-        sx={{ ml: 2, }}
-      >
-        {theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
-      </IconButton>
-      <Social />
-      <CTA type={'sidebar'} />
+        <SignedOut>
+          <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
+            {publicNavItems.map((item) => (
+              <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
+            ))}
+          </ButtonGroup>
+        </SignedOut>
+
+      </Box>
+      <Stack direction={'column'} spacing={2} width={'100%'} alignItems={'center'}>
+
+        <LanguageSelect type={'button'} />
+
+        <IconButton
+          color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
+          aria-label="change theme"
+          edge="start"
+          onClick={handleModeChange}
+          sx={{ ml: 2, }}
+        >
+          {theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
+        </IconButton>
+
+        <Social />
+      </Stack>
+      {/*<CTA type={'sidebar'} />*/}
     </Stack>
   );
 
   return (
-    <>
+    <div>
       {wallet !== 'xucre' &&
         <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '1px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
           <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -131,14 +191,71 @@ function Header() {
               {headerButton}
             </Box>
 
-            <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-              {navItems.map((item) => (
-                <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
-              ))}
-            </ButtonGroup>
+            <SignedIn>
+              {isAdmin &&
+                <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
+                  {adminNavItems.map((item) => (
+                    <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
+                  ))}
+                </ButtonGroup>
+              }
+              {!isAdmin &&
+                <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
+                  {navItems.map((item) => (
+                    <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
+                  ))}
+                </ButtonGroup>
+              }
+            </SignedIn>
+            <SignedOut>
+              <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
+                {publicNavItems.map((item) => (
+                  <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
+                ))}
+              </ButtonGroup>
+            </SignedOut>
+
             <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
               <Box sx={{}}>
-                {/*isAuthenticated && <Auth0Button />*/}
+              </Box>
+              <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
+                <SignedIn>
+                  {false &&
+                    <OrganizationSwitcher
+                      appearance={{
+                        baseTheme: isDarkTheme ? dark : undefined,
+                      }}
+                      organizationProfileProps={{
+                        appearance: {
+                          baseTheme: isDarkTheme ? dark : undefined,
+                        }
+                      }}
+                      organizationProfileMode='navigation'
+                      organizationProfileUrl='/organization'
+                    />
+                  }
+                  {true &&
+                    <UserButton
+                      appearance={{
+                        baseTheme: isDarkTheme ? dark : undefined,
+                      }}
+                      userProfileProps={{
+                        appearance: {
+                          baseTheme: isDarkTheme ? dark : undefined,
+                        }
+                      }}
+                      userProfileUrl='/settings'
+                      userProfileMode='navigation'
+                    />
+                  }
+                </SignedIn>
+                <SignedOut>
+                  <Button variant="text" onClick={() => router.push('/login')} >
+                    <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                      <Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >{languageData[language].Menu.login}</Typography>
+                    </Stack>
+                  </Button>
+                </SignedOut>
               </Box>
               <IconButton
                 color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
@@ -147,25 +264,54 @@ function Header() {
                 onClick={handleDrawerToggle}
                 sx={{ mr: 2, display: { md: 'none' }, }}
               >
-                {theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
+                <MenuIcon />
               </IconButton>
+
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                 {
                   /*<AccountButton />*/
                 }
 
-                <IconButton
-                  color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={handleModeChange}
-                  sx={{ ml: 2, }}
-                >
-                  {theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
-                </IconButton>
+                <SignedIn>
+                  {false &&
+                    <OrganizationSwitcher
+                      appearance={{
+                        baseTheme: isDarkTheme ? dark : undefined,
 
-                <LanguageSelect type={'menu'} />
+                      }}
+                      organizationProfileProps={{
+                        appearance: {
+                          baseTheme: isDarkTheme ? dark : undefined,
+                        }
+                      }}
+                      organizationProfileMode='navigation'
+                      organizationProfileUrl='/organization'
 
+                    />
+                  }
+                  {true &&
+                    <UserButton
+                      appearance={{
+                        baseTheme: isDarkTheme ? dark : undefined,
+                      }}
+                      userProfileProps={{
+                        appearance: {
+                          baseTheme: isDarkTheme ? dark : undefined,
+                        }
+                      }}
+                      userProfileUrl='/settings'
+                      userProfileMode='navigation'
+                    />
+                  }
+                </SignedIn>
+
+                <SignedOut>
+                  <Button variant="contained" onClick={() => router.push('/dashboard')} >
+                    <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                      <Typography >{languageData[language].Menu.login}</Typography>
+                    </Stack>
+                  </Button>
+                </SignedOut>
                 <IconButton
                   color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
                   aria-label="open drawer"
@@ -175,6 +321,7 @@ function Header() {
                 >
                   <MenuIcon />
                 </IconButton>
+
                 <Menu
                   id="basic-menu"
                   anchorEl={anchorEl}
@@ -212,7 +359,7 @@ function Header() {
       >
         {drawer}
       </Drawer>
-    </>
+    </div>
 
   );
 }

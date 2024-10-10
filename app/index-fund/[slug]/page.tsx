@@ -23,6 +23,7 @@ import languageData, { languages } from '@/metadata/translations';
 import { Language } from "@mui/icons-material";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation, normalizeDevChains } from "@/service/helpers";
+import React from "react";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 

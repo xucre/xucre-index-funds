@@ -67,6 +67,15 @@
     --callout-border-rgb: 108, 108, 108;
     --card-rgb: 100, 100, 100;
     --card-border-rgb: 200, 200, 200;
+  };
+  body {
+    background-color: #121212 !important;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #FFFFFF !important;
   }
 }
 
@@ -83,6 +92,10 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
+}
+
+body.dark {
+  background-color: #121212 !important;
 }
 
 a {

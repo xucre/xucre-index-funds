@@ -11,7 +11,7 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
 
-const AccountButton = ({ }) => {
+const AccountButton = ({ showBalance = true }) => {
   const searchParams = useSearchParams();
   const wallet = searchParams.get('wallet');
   const { isConnected, isConnecting, isReconnecting } = useAccount();
@@ -20,7 +20,7 @@ const AccountButton = ({ }) => {
 
   return (
     <Box>
-      {<w3m-button balance='hide' />}
+      {<w3m-button balance={showBalance ? 'show' : 'hide'} />}
     </Box>
   )
 }

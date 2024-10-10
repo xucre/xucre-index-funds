@@ -1,7 +1,7 @@
 import { JsonRpcRequest } from "@walletconnect/jsonrpc-utils";
 
 import * as eip155 from "./eip155";
-import * as solana from "./solana";
+//import * as solana from "./solana";
 
 import { ChainMetadata, ChainRequestRender } from "../../context/types";
 
@@ -11,7 +11,8 @@ export function getChainMetadata(chainId: string): ChainMetadata {
     case "eip155":
       return eip155.getChainMetadata(chainId);
     case "solana":
-      return solana.getChainMetadata(chainId);
+      //return solana.getChainMetadata(chainId);
+      throw new Error(`No metadata handler for namespace ${namespace}`);
     default:
       throw new Error(`No metadata handler for namespace ${namespace}`);
   }

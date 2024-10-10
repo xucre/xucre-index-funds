@@ -1,4 +1,4 @@
-import { PublicKey } from "@solana/web3.js";
+/*import { PublicKey } from "@solana/web3.js";
 import { NamespaceMetadata, ChainMetadata, ChainsMap } from "../../context/types";
 
 export function getPublicKeysFromAccounts(accounts: string[]) {
@@ -74,3 +74,4 @@ export function getChainMetadata(chainId: string): ChainMetadata {
   }
   return metadata;
 }
+*/

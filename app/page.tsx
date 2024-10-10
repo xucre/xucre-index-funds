@@ -15,7 +15,7 @@ export default function Home() {
   const { isConnected } = useAccount();
   useEffect(() => {
     if (isConnected) {
-      router.replace('/index-fund')
+      //router.replace('/index-fund')
     }
   }, [isConnected]);
 

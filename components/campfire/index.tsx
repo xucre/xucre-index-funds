@@ -129,7 +129,7 @@ function CampfireLogs({ setIsLocked }: { setIsLocked: Function }) {
 export default function Campfire({ setIsLocked }: { setIsLocked: Function }) {
 
   return (
-    <Box>
+    <Box height={'75vh'}>
       <CampfireLogs setIsLocked={setIsLocked} />
       <Typography textAlign={'center'}>&#9786; Use the secret code to unlock</Typography>
     </Box>

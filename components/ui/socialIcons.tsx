@@ -8,6 +8,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import GavelIcon from '@mui/icons-material/Gavel';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import { SiDiscord } from "react-icons/si";
+import React from 'react';
 
 export default function SocialIcons({ discordUrl, emailUrl, twitterUrl, githubUrl, instagramUrl, governanceUrl, websiteUrl, gitbookUrl }) {
   return (

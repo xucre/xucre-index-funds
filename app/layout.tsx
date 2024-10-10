@@ -11,7 +11,7 @@ import './globals.css';
 
 import { cookieToInitialState } from 'wagmi'
 
-import Wrapper from './wrapper';
+import Wrapper from './clientWrapper';
 import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });

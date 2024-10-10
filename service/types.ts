@@ -16,3 +16,21 @@ export type PriceData = {
   symbol: string,
   currency: string,
 }
+
+export type SFDCUserData = {
+  userEmail: string,
+  userId: string,
+  role: string,
+  riskTolerance: string,
+  status: string,
+  organizationId: string,
+  salaryContribution: number,
+  wallets : SFDCWallet[]
+}
+
+export type SFDCWallet = {
+  walletAddress: string,
+  primary: boolean,
+  chainId: string,
+  signedMessage: string
+}

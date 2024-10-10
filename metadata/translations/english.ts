@@ -66,6 +66,9 @@ const values : TranslationType = {
     select_language: "ENGLISH",
     title_language: "SELECT YOUR LANGUAGE"
   },
+  Billing: {
+    manage_subscription: "Manage Subscription",
+  },
   Menu: {
     connections_button: 'CONNECTIONS',
     network_button: "NETWORKS",
@@ -75,6 +78,13 @@ const values : TranslationType = {
     requests_button: 'REQUESTS',
     wallet_button: "WALLETS",
     faq: "FAQ",
+    billing: "BILLING",
+    index_builder: "INDEX BUILDER",
+    organization: "ORGANIZATION",
+    index_funds: "INDEX FUNDS",
+    dashboard: "DASHBOARD",
+    login: 'LOGIN',
+    home: 'HOME'
   },
   SelectLanguage: {
     en: "English",
@@ -104,6 +114,7 @@ const values : TranslationType = {
   ui: {
     open: "Open",
     close: "Close",
+    edit: "Edit",
     cancel: "Cancel",
     confirm: "Confirm",
     featured: 'Featured',
