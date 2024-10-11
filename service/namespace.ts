@@ -4,8 +4,6 @@ import {
   DEFAULT_COSMOS_METHODS,
   DEFAULT_EIP155_METHODS,
   DEFAULT_EIP_155_EVENTS,
-  DEFAULT_SOLANA_EVENTS,
-  DEFAULT_SOLANA_METHODS,
   DEFAULT_POLKADOT_EVENTS,
   DEFAULT_POLKADOT_METHODS,
   DEFAULT_NEAR_METHODS,
@@ -39,8 +37,6 @@ export const getSupportedRequiredMethodsByNamespace = (namespace: string) => {
       return Object.values(DEFAULT_EIP155_METHODS);
     case "cosmos":
       return Object.values(DEFAULT_COSMOS_METHODS);
-    case "solana":
-      return Object.values(DEFAULT_SOLANA_METHODS);
     case "polkadot":
       return Object.values(DEFAULT_POLKADOT_METHODS);
     case "near":
@@ -86,8 +82,6 @@ export const getSupportedEventsByNamespace = (namespace: string) => {
       return Object.values(DEFAULT_EIP_155_EVENTS);
     case "cosmos":
       return Object.values(DEFAULT_COSMOS_EVENTS);
-    case "solana":
-      return Object.values(DEFAULT_SOLANA_EVENTS);
     case "polkadot":
       return Object.values(DEFAULT_POLKADOT_EVENTS);
     case "near":

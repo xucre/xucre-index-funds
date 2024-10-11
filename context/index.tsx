@@ -53,7 +53,7 @@ export function ContextProvider({
       ],
       themeMode: theme.palette.mode,
       themeVariables: {
-        //'--w3m-color-mix': '#78D217',
+        '--w3m-color-mix': theme.palette.mode === 'dark' ? '#D4E815' : '#1B1E3F',
         //'--w3m-color-mix-strength': 40
       }
     })
