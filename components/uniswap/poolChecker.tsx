@@ -1,18 +1,19 @@
+'use client'
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Typography, CircularProgress, Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { Tick, computePoolAddress, Pool, TickMath } from '@uniswap/v3-sdk'
+import { Button, Typography, CircularProgress, Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { computePoolAddress } from '@uniswap/v3-sdk'
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
 //import { POOL_FACTORY_CONTRACT_ADDRESS } from './constants'
-import { WETH9, Token as UniswapToken } from '@uniswap/sdk-core';
+import { Token as UniswapToken } from '@uniswap/sdk-core';
 import truncateEthAddress from 'truncate-eth-address'
 import { FeeAmount } from '@uniswap/v3-sdk';
 import { readContract } from 'wagmi/actions';
 
 import TokenAutocomplete from './autocomplete';
 import { Token } from '@/hooks/useTokenList';
-import { useAccount, useClient, usePublicClient, useWalletClient } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { config } from '@/config';
-import { formatUnits, getAddress, parseUnits } from 'viem';
+import { getAddress } from 'viem';
 import { normalizeDevChains } from '@/service/helpers';
 
 export interface PoolData {

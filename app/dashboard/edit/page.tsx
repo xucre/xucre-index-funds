@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, TextField, MenuItem } from '@mui/material';
 import { useAccount, useSignMessage } from 'wagmi';
-import { useUser } from '@clerk/nextjs';
 import AccountButton from '@/components/accountButton';
 import { useSFDC } from '@/hooks/useSFDC';
 import { useIsAdmin } from '@/hooks/useIsAdmin';

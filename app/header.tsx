@@ -1,13 +1,9 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { styled, alpha, useTheme, createTheme, ThemeProvider, useThemeProps } from '@mui/material/styles';
-import AccountButton from '../components/accountButton';
-import LogoDark from '../public/icon-green.png';
-import Logo from '../assets/images/logo-black.png';
-import { Typography, InputBase, AppBar, Box, Button, Toolbar, FormControlLabel, FormGroup, Switch, Stack, Divider, List, ListItem, ListItemButton, ListItemText, Drawer, IconButton, useMediaQuery, CssBaseline, Menu, MenuItem, ButtonGroup, ButtonBase, Avatar } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Typography, AppBar, Box, Button, Toolbar, Stack, Divider, Drawer, IconButton, Menu, MenuItem, ButtonGroup } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Menu as MenuIcon, ArrowBack, Check, X as XIcon, LightMode, DarkMode } from '@mui/icons-material'
-import CTA from '@/components/ui/cta';
+import { Menu as MenuIcon, LightMode, DarkMode } from '@mui/icons-material'
 import { useAccount, useDisconnect } from 'wagmi';
 import { useThemeSwitcher } from '@/hooks/useThemeSwitcher';
 import { getTextColor } from '@/service/theme';
@@ -20,7 +16,6 @@ import { SignedIn, SignedOut, useOrganization, UserButton, useUser, Organization
 //import HeaderSwitch from './ThemeMode';
 import { dark } from "@clerk/themes";
 import { useIsAdmin } from '../hooks/useIsAdmin';
-import { languages } from '../metadata/translations/index';
 
 
 const drawerWidth = 240;

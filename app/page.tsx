@@ -1,13 +1,7 @@
 'use client';
-import { useEthersSigner, walletClientToSigner } from '@/hooks/useEthersSigner';
-import { useWalletInfo, useWeb3Modal } from '@web3modal/wagmi/react'
-import { Box, CssBaseline, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useAccount, useDisconnect, useWalletClient } from 'wagmi';
-import AccountButton from '@/components/accountButton';
+import { useEffect } from 'react';
+import { useAccount } from 'wagmi';
 import WalletNotConnected from '@/components/walletNotConnected';
-import { useLanguage } from '@/hooks/useLanguage';
-import languageData, { Language } from '@/metadata/translations';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {

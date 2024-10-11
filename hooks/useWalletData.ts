@@ -1,5 +1,5 @@
 'use client';
-import { getWalletHistory, getWalletTransactions } from '@/service/lambda';
+import { getWalletTransactions } from '@/service/lambda';
 import { useEffect, useMemo, useState } from 'react';
 
 export type QuoteValue = { date: string; totalQuote: number; isTokenValue: boolean; }

@@ -1,16 +1,12 @@
 'use client'
 import BillingHeader from "@/components/billing/BillingHeader";
 import StripePricingTable from "@/components/billing/StripePricingTable";
-import HorizontalLinearStepper from "@/components/onboarding/horizontalStepper";
-import Step1Component from "@/components/onboarding/step1";
 import { useStripeBilling } from "@/hooks/useStripeBilling";
 import { updateOrganizationLicenses } from "@/service/clerk";
-import { getTextColor } from "@/service/helpers";
 import { upsertOrganization } from "@/service/sfdc";
 import { checkoutSuccess } from "@/service/stripe";
-import { Box, CircularProgress, Grid, Stack, Typography, useTheme } from "@mui/material"
+import { Box, useTheme } from "@mui/material"
 import { useSearchParams } from "next/navigation";
-import router from "next/router";
 import { Suspense, useEffect, useState } from "react";
 
 // components/LoadingIndicator.tsx

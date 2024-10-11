@@ -1,17 +1,17 @@
-'use client';
+
 import type { Metadata } from 'next';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import { headers } from 'next/headers'
 import { Inter } from 'next/font/google';
 import './globals.css';
 
-import { cookieToInitialState } from 'wagmi'
 
+import { headers } from 'next/headers' // added
 import Wrapper from './clientWrapper';
+import { ContextProvider } from '@/context'
 import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -28,6 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
 
+  const cookies = headers().get('cookie')
 
   return (
     <html lang="en">
@@ -40,7 +41,9 @@ export default function RootLayout({
       </head>
       <body>
         <Suspense>
-          <Wrapper children={children} />
+          <ContextProvider cookies={cookies}>
+            <Wrapper children={children} />
+          </ContextProvider>
         </Suspense>
       </body>
     </html>

@@ -1,19 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { writeContract, waitForTransactionReceipt } from '@wagmi/core'
-import { type BaseError, useAccount, useClient, useReadContract, useWriteContract, useChains, useWaitForTransactionReceipt } from "wagmi";
+import { type BaseError, useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import erc20 from "@/public/erc20.json";
 import XucreETF from "@/public/XucreETF.json";
 import indexFundJson from "@/public/indexFunds.json";
 import sourceTokensJson from "@/public/sourceTokens.json";
-import { getAddress, Chain, TransactionReceipt, zeroAddress } from "viem";
-import { polygon } from 'wagmi/chains'
-import { readContract } from "wagmi/actions";
-import { VariantType, useSnackbar } from 'notistack';
+import { getAddress, TransactionReceipt, zeroAddress } from "viem";
+import { useSnackbar } from 'notistack';
 import { config } from "@/config";
-import { Alert, Snackbar } from "@mui/material";
 import { distributeWeights, normalizeDevChains } from "@/service/helpers";
 import { useLanguage } from "./useLanguage";
-import languageData, { Language, languages } from '@/metadata/translations'
+import languageData, { Language } from '@/metadata/translations'
 
 export type PortfolioItem = {
   name: string;

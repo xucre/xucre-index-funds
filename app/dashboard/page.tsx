@@ -3,17 +3,15 @@ import DashboardContainerDesktop from "@/components/dashboard/DashboardContainer
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import EmptyProfileState from "@/components/onboarding/EmptyProfile";
 import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
-import { useEthersSigner } from "@/hooks/useEthersSigner";
 import { useSFDC } from "@/hooks/useSFDC";
 import { getSafeAddress, setSafeAddress } from "@/service/db";
-import { getTextColor } from "@/service/helpers";
 import { createAccount } from "@/service/safe";
 import { updateSafeWalletDetails } from "@/service/sfdc";
-import { useOrganization, useUser } from "@clerk/nextjs";
-import { Box, CircularProgress, Stack, Typography, useTheme } from "@mui/material"
+import { useUser } from "@clerk/nextjs";
+import { Box, useTheme } from "@mui/material"
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { useAccount, useClient, useConnectorClient, useWalletClient } from "wagmi";
+import { useAccount } from "wagmi";
 //import '@covalenthq/goldrush-kit/styles.css'
 
 // components/LoadingIndicator.tsx

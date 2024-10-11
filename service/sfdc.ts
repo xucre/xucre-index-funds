@@ -1,7 +1,6 @@
 'use server'
 
-import { create } from "domain";
-import { Connection, DescribeSObjectResult, Field, Query, QueryResult, Record, Schema } from 'jsforce';
+import { Connection, Query, Record, Schema } from 'jsforce';
 import {objectFields} from './constants'
 import { SFDCUserData } from "./types";
 

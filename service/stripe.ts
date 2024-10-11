@@ -1,7 +1,6 @@
 
 'use server'
 
-import {loadStripe} from '@stripe/stripe-js';
 import Stripe from 'stripe';
 
 const STRIPE_API_URL = 'https://api.stripe.com/v1';

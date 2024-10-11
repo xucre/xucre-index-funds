@@ -1,17 +1,12 @@
 'use client'
 import { useLanguage } from "@/hooks/useLanguage";
-import { playStoreAddress } from "@/service/constants";
-import { Avatar, Box, Button, CircularProgress, Fab, IconButton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Box, IconButton, Stack, Typography, useTheme } from "@mui/material"
 import SettingsIcon from '@mui/icons-material/Settings';
 //import AccountButton from "./accountButton";
 import languageData from '@/metadata/translations'
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { } from "react";
 import { getTextColor } from "@/service/helpers";
-import { useAccount } from "wagmi";
-import { useUser } from "@clerk/nextjs";
-import { getSafeAddress } from "@/service/db";
-import EmptySafeWallet from "../onboarding/EmptySafeWallet";
 import { toTitleCase } from '../../service/helpers';
 // components/LoadingIndicator.tsx
 export default function DashboardHeader() {

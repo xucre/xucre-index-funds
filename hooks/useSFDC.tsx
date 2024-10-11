@@ -4,7 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useMemo } from 'react';
 import { useLanguage } from './useLanguage';
-import languageData, { Language, languages } from '@/metadata/translations'
+import languageData from '@/metadata/translations'
 import { useTheme } from '@mui/material';
 import { useGoldRush } from '@covalenthq/goldrush-kit';
 

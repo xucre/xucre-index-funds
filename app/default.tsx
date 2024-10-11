@@ -2,12 +2,11 @@
 import { useRouter } from "next/navigation";
 import { getTextColor } from "@/service/theme";
 import { useTheme } from "@mui/material";
-import { Box, Stack, Typography } from "@mui/material"
+import { Box, Stack } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import Campfire from "@/components/campfire";
 import WalletNotConnected from "@/components/walletNotConnected";
-import languageData from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation } from "@/service/helpers";

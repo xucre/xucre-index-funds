@@ -1,9 +1,7 @@
 'use client'
 import { getTextColor } from "@/service/helpers";
-import { Box, CircularProgress, Grid, Stack, TextField, Checkbox, Button, Typography, useTheme, FormGroup, FormControlLabel, Card, CardContent } from "@mui/material"
-import { useSearchParams } from "next/navigation";
-import router from "next/router";
-import React, { Suspense, useEffect, useState } from "react";
+import { Box, Stack, TextField, Checkbox, Button, Typography, useTheme, FormGroup, FormControlLabel, Card, CardContent } from "@mui/material"
+import React, { Suspense, useState } from "react";
 
 // components/LoadingIndicator.tsx
 export default function Step1Component() {

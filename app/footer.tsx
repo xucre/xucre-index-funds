@@ -1,11 +1,9 @@
 'use client';
-import AccountButton from '@/components/accountButton';
 import LanguageSelect from '@/components/ui/languageSelect';
 import SettingsButton from '@/components/ui/settingsButton';
 import SocialIcons from '@/components/ui/socialIcons';
 import { ThemeSwitcherElement } from '@/hooks/useThemeSwitcher';
-import { AppBar, Avatar, Box, CssBaseline, Fab, IconButton, Stack, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { AppBar, Box, Toolbar } from '@mui/material';
 
 import { useSearchParams } from 'next/navigation';
 

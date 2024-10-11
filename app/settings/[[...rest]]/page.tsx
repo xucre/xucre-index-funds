@@ -1,13 +1,8 @@
 'use client'
-import HorizontalLinearStepper from "@/components/onboarding/horizontalStepper";
-import Step1Component from "@/components/onboarding/step1";
-import { getTextColor } from "@/service/helpers";
-import { OrganizationProfile, UserProfile, useUser } from "@clerk/nextjs";
-import { Avatar, Box, CircularProgress, Grid, Stack, Typography, useTheme } from "@mui/material"
+import { UserProfile } from "@clerk/nextjs";
+import { Box, useTheme } from "@mui/material"
 import LinkIcon from '@mui/icons-material/Link';
-import { useSearchParams } from "next/navigation";
-import router from "next/router";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { dark } from "@clerk/themes";
 import WalletManagement from "@/components/settings/WalletManagement";
 

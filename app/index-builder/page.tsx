@@ -2,13 +2,11 @@
 import { useRouter } from "next/navigation";
 import { getTextColor } from "@/service/theme";
 import { TextareaAutosize, useTheme } from "@mui/material";
-import { Box, CircularProgress, Grid2 as Grid, Stack, Typography } from "@mui/material"
-import { Suspense, useEffect, useState } from "react";
-import { useAccount, useBalance, useReadContract } from "wagmi";
-import erc20 from "@/public/erc20.json";
+import { Grid2 as Grid } from "@mui/material"
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 import Campfire from "@/components/campfire";
-import { IndexFund, useIndexFunds } from "@/hooks/useIndexFunds";
-import CustomCard from "@/components/portfolio/customCard";
+import { IndexFund } from "@/hooks/useIndexFunds";
 import WalletNotConnected from "@/components/walletNotConnected";
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";

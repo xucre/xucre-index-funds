@@ -1,9 +1,7 @@
 'use client'
 import { useLanguage } from "@/hooks/useLanguage";
-import { playStoreAddress } from "@/service/constants";
-import { Avatar, Box, Button, ButtonGroup, CircularProgress, Fab, IconButton, Menu, MenuItem, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Button, ButtonGroup, Menu, MenuItem, useMediaQuery, useTheme } from "@mui/material"
 
-import { Menu as MenuIcon, ArrowBack, Check, X as XIcon, LightMode, DarkMode } from '@mui/icons-material'
 import { useState } from "react";
 import { Language, languages } from "@/metadata/translations";
 import React from "react";

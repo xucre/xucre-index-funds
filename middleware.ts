@@ -1,5 +1,4 @@
-import { clerkMiddleware, ClerkMiddlewareAuth, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse, NextMiddleware, NextRequest } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isPublicRoute = createRouteMatcher(['/', '/about-us(.*)', '/index-fund(.*)'])
 const isAdminRoute = createRouteMatcher(['/index-builder(.*)', '/organization(.*)', '/billing(.*)'])
@@ -18,7 +17,7 @@ export default clerkMiddleware((_auth, req) => {
       )
     })
   } else if (isProtectedRoute(req)) {
-    auth.protect((has) => {
+    auth.protect(() => {
       return (
         auth.orgId !== undefined && auth.orgId !== null
       )

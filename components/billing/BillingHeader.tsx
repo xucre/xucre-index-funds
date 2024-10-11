@@ -1,12 +1,10 @@
 'use client'
 import { useLanguage } from "@/hooks/useLanguage";
-import { playStoreAddress } from "@/service/constants";
-import { Avatar, Box, Button, CircularProgress, Fab, Grid, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Button, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 //import AccountButton from "./accountButton";
 import languageData from '@/metadata/translations'
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useStripeBilling } from "@/hooks/useStripeBilling";
 import Stripe from "stripe";
 // components/LoadingIndicator.tsx
 export default function BillingHeader({ portalSession }: { portalSession: Stripe.BillingPortal.Session }) {

@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import mixpanelFull, { Mixpanel } from 'mixpanel-browser';
-import { useOrganization, useUser } from '@clerk/nextjs';
+import { useEffect, useMemo, useState } from 'react';
+import { useUser } from '@clerk/nextjs';
 
 export function useIsAdmin() {
   const { user } = useUser();

@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import AccountButton from '../accountButton';
 import { Box, Divider, Stack, Typography } from '@mui/material';

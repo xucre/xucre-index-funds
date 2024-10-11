@@ -1,12 +1,13 @@
-import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, Avatar } from '@mui/material';
+'use client'
+import { Autocomplete, TextField, ListItemText } from '@mui/material';
 import { debounce } from '@mui/material/utils';
-import { use, useEffect, useMemo, useState } from 'react';
-import { ASSETURL, fetchInfo } from '@/service/lambda';
+import { useEffect, useMemo, useState } from 'react';
+import { fetchInfo } from '@/service/lambda';
 import truncateEthAddress from 'truncate-eth-address'
-import { Token, useTokenList, useTokenListRaw } from '@/hooks/useTokenList';
+import { Token, useTokenListRaw } from '@/hooks/useTokenList';
 import { useAccount } from 'wagmi';
 import { getChainNameRainbowKit } from '@/service/helpers';
-import { getAddress, isAddress, isAddressEqual } from 'viem';
+import { getAddress, isAddress } from 'viem';
 
 interface RainbowKitToken {
   name: string;

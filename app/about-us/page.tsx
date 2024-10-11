@@ -3,17 +3,13 @@ import { useRouter } from "next/navigation";
 import { getTextColor } from "@/service/theme";
 import { Box, Stack, Typography, Accordion, AccordionSummary, Divider, List, ListItem, useTheme, AccordionDetails } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
-import Campfire from "@/components/campfire";
-import WalletNotConnected from "@/components/walletNotConnected";
+import { useEffect } from "react";
 import languageData from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
-import { chainValidation } from "@/service/helpers";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
-export default function Default() {
+export default function AboutUs() {
   const mixpanel = useMixpanel();
   const theme = useTheme();
   const textColor = getTextColor(theme);

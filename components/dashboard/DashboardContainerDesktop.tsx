@@ -1,16 +1,12 @@
 'use client'
 import { useLanguage } from "@/hooks/useLanguage";
 import React, { useEffect } from 'react';
-import IFrame from '@uiw/react-iframe';
-import { playStoreAddress } from "@/service/constants";
-import { Avatar, Box, CircularProgress, Divider, Fab, Grid, Grid2, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 //import AccountButton from "./accountButton";
-import languageData from '@/metadata/translations'
 import AccountButton from '@/components/accountButton';
 import DashboardNews from "./DashboardNews";
 import { getDashboardBorderColor } from "@/service/helpers";
 import { TokenBalancesList, useGoldRush } from "@covalenthq/goldrush-kit";
-import { getWalletHistory, getWalletTransactions } from "@/service/lambda";
 import { useWalletData } from "@/hooks/useWalletData";
 
 //import '../../public/tailwind-output.css'

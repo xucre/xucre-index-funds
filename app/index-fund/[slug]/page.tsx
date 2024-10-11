@@ -1,26 +1,19 @@
 'use client'
 import { getTextColor } from "@/service/theme";
 
-import LoadingButton from '@mui/lab/LoadingButton';
-import { Avatar, Button, ButtonBase, ButtonGroup, Divider, IconButton, Menu, MenuItem, TextField, useTheme } from "@mui/material";
-import { Box, CircularProgress, Grid2 as Grid, Stack, Typography } from "@mui/material"
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Suspense, useEffect, useState } from "react";
-import { useAccount, useBalance, useReadContract } from "wagmi";
-import { getAddress, formatEther, parseEther, parseUnits, formatUnits } from "viem";
-import erc20 from "@/public/erc20.json";
-import Campfire from "@/components/campfire";
-import { IndexFund, useConnectedIndexFund, useIndexFunds } from "@/hooks/useIndexFunds";
-import CustomCard from "@/components/portfolio/customCard";
+import { Divider, useTheme } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material"
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { parseUnits, formatUnits } from "viem";
+import { useConnectedIndexFund, useIndexFunds } from "@/hooks/useIndexFunds";
 import WalletNotConnected from "@/components/walletNotConnected";
 import PortfolioItemList from "@/components/portfolio/portfolioItemList";
 import { getTokenPrices } from "@/service/lambda";
-import FundChart from "@/components/portfolio/fundChart";
 import { PriceData } from "@/service/types";
 import { BuyItem } from "@/components/portfolio/buyItem";
 import { useLanguage } from "@/hooks/useLanguage";
 import languageData, { languages } from '@/metadata/translations';
-import { Language } from "@mui/icons-material";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation, normalizeDevChains } from "@/service/helpers";
 import React from "react";

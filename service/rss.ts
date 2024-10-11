@@ -1,9 +1,6 @@
 'use server';
 import Parser from 'rss-parser';
 
-type CustomFeed = {foo: string};
-type CustomItem = {bar: number};
-
 const parser = new Parser();
 
 export const getFeed = async () => {

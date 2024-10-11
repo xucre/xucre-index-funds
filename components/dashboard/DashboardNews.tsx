@@ -1,9 +1,8 @@
 'use client'
 import { useLanguage } from "@/hooks/useLanguage";
-import { playStoreAddress } from "@/service/constants";
 import { getTextColor } from "@/service/helpers";
 import { getFeed } from "@/service/rss";
-import { Avatar, Box, CircularProgress, Fab, Grid, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEffect, useState } from "react";
 //import AccountButton from "./accountButton";
 

@@ -1,3 +1,4 @@
+'use client'
 import { useOrganization, useUser } from "@clerk/nextjs";
 import React, { useEffect } from "react";
 const StripePricingTable = () => {

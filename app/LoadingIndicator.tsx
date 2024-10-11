@@ -1,5 +1,5 @@
 'use client'
-import { Box, Grid, Typography, useTheme } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 
 // components/LoadingIndicator.tsx
 export const LoadingIndicator = () => {

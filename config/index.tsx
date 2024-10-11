@@ -1,24 +1,15 @@
-'use client';
+import { cookieStorage, createStorage } from '@wagmi/core'
 import { ChainMetadata } from '@/context/types';
-// import { SolanaMetadata } from '@/service/chains/solana';
-import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
+import { mainnet, celo, type AppKitNetwork } from '@reown/appkit/networks'
 import { defineChain } from 'viem';
 
-import { cookieStorage, createStorage } from 'wagmi'
-import { mainnet, polygon, polygonMumbai, celo, Chain } from 'wagmi/chains'
-// import { createWeb3Modal, defaultSolanaConfig } from '@web3modal/solana/react'
-// import { solana, solanaTestnet, solanaDevnet } from '@web3modal/solana/chains'
 // Get projectId at https://cloud.walletconnect.com
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
 
 if (!projectId) throw new Error('Project ID is not defined')
 
-const metadata = {
-  name: 'Xucre Crypto Index Fund',
-  description: 'dApp enabling users to invest in a diversified portfolio of cryptocurrencies',
-  url: 'https://fund.xucre.net', // origin must match your domain & subdomain
-  icons: ['https://swap.xucre.net/icon-green.png']
-}
+
 
 const customChain = defineChain({
   id: 19819,
@@ -85,16 +76,19 @@ export function getChainMetadata(chainId: string): ChainMetadata {
   return metadata;
 }
 
-// Create wagmiConfig
-export const config = defaultWagmiConfig({
-  chains: [mainnet, ethereumDev, polygon2, polygonMumbai, celo, customChain], // required
-  projectId, // required
-  metadata, // required
-  ssr: false,
-  // storage: createStorage({
-  //   storage: cookieStorage
-  // }),
+export const networks = [mainnet, ethereumDev, polygon2, celo, customChain] as [AppKitNetwork, ...AppKitNetwork[]]
+
+// Set up the Wagmi Adapter (Config)
+export const wagmiAdapter = new WagmiAdapter({
+  storage: createStorage({
+    storage: cookieStorage
+  }),
+  ssr: true,
+  projectId,
+  networks
 })
+
+export const config = wagmiAdapter.wagmiConfig
 
 // 0. Setup chains
 /*const chains = [solana, solanaTestnet]

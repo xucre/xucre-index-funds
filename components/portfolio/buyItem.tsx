@@ -1,9 +1,9 @@
+'use client'
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Stack, ButtonBase, Avatar, Typography, Menu, MenuItem, TextField, Button, Card, CardActions, CardContent, CardMedia, Collapse, Stepper, StepLabel, Step } from "@mui/material";
+import { Stack, ButtonBase, Avatar, Typography, Menu, MenuItem, TextField, Card, CardActions, CardContent, CardMedia, Collapse, Stepper, StepLabel, Step } from "@mui/material";
 import { useEffect, useState } from "react";
 import { formatUnits } from "viem";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useWaitForTransactionReceipt } from 'wagmi'
 import { useLanguage } from "@/hooks/useLanguage";
 import languageData from '@/metadata/translations';
 import { useMixpanel } from "@/hooks/useMixpanel";

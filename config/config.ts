@@ -1,10 +1,9 @@
 import { defaultWagmiConfig } from "@web3modal/wagmi/react";
-import { ChainMetadata } from '@/context/types';
 // import { SolanaMetadata } from '@/service/chains/solana';
 import { defineChain } from 'viem';
 
 import { cookieStorage, createStorage } from 'wagmi'
-import { mainnet, polygon, polygonMumbai, celo, Chain } from 'wagmi/chains'
+import { mainnet, polygonMumbai, celo } from 'wagmi/chains'
 // Get projectId at https://cloud.walletconnect.com
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
 
