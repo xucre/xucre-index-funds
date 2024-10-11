@@ -1,4 +1,3 @@
-import * as encoding from "@walletconnect/encoding";
 import { Theme } from "@mui/material";
 
 export function distributeWeights(items: any[]): any[] {
@@ -46,7 +45,7 @@ export function getChainNameRainbowKit(_chainId: number) : string {
 
 export function convertHexToNumber(hex: string) {
   try {
-    return encoding.hexToNumber(hex);
+    //return encoding.hexToNumber(hex);
   } catch (e) {
     return hex;
   }
@@ -54,7 +53,7 @@ export function convertHexToNumber(hex: string) {
 
 export function convertHexToUtf8(hex: string) {
   try {
-    return encoding.hexToUtf8(hex);
+    //return encoding.hexToUtf8(hex);
   } catch (e) {
     return hex;
   }

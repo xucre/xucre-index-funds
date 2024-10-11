@@ -1,7 +1,6 @@
 'use client'
 
 import React, { ReactNode, useEffect } from 'react'
-import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SnackbarProvider } from 'notistack';
 import { ClerkProvider } from '@clerk/nextjs'
