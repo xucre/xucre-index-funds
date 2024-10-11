@@ -7,6 +7,7 @@ import Stripe from 'stripe';
 const STRIPE_API_URL = 'https://api.stripe.com/v1';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const DOMAIN = process.env.DOMAIN ? process.env.DOMAIN : 'app.xucre.net';
 //const logging = require('../loaders/logging');
 
 const priceId = 'price_1Q63ihK2fAEU0BHqUSxmvnqZ';
@@ -31,7 +32,7 @@ export async function getCustomerSubscription (organization) {
 
             const portalSession = await stripe.billingPortal.sessions.create({
                 customer: subscription.customer as string,
-                return_url: `http://localhost:3000/api/stripe/callback?organization=${organization}`
+                return_url: `http://${DOMAIN}/api/stripe/callback?organization=${organization}`
             });
             //console.log(portalSession);
             return JSON.parse(JSON.stringify({ subscription, invoices: invoices.data, portal: portalSession }));
