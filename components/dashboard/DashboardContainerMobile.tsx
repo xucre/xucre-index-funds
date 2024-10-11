@@ -43,7 +43,7 @@ export default function DashboardContainerDesktop({ address }: { address: string
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   //const { updateThemeHandler } = useGoldRush();
   const _address = '0x358eB621894B55805CE16225b2504523d421d3A6';
-  const { transactions, history, balance, change } = useWalletData({ address: _address });
+  const { transactions, history, balance } = useWalletData({ address: _address });
   useEffect(() => {
     if (transactions.length > 0) {
       console.log(transactions);
@@ -56,13 +56,11 @@ export default function DashboardContainerDesktop({ address }: { address: string
     }
   }, [history])
   const _transactions = transactions.length > 5 ? transactions.slice(0, 5) : transactions;
-  const percentChange = change === 0 ? 0 : (change / balance) * 100;
-  const isPositive = percentChange > 0;
   return (
-    <Stack direction={matches ? 'row' : 'column'} spacing={8} justifyContent={'space-between'} px={5}>
+    <Stack direction={'row'} spacing={8} justifyContent={'space-between'} px={5}>
       <Stack direction={'column'} spacing={2} flexGrow={2}>
         <Box sx={{ border: 'solid 1px', borderColor: borderColor }} p={4}>
-          <Typography variant={'h3'} textAlign={'center'}>Balance: ${balance.toFixed(2)} <span style={{ color: isPositive ? '#00B21F' : '$FF0000' }}>{isPositive && '+'}{percentChange.toFixed(0)}%</span></Typography>
+          <Typography variant={'h3'} textAlign={'center'}>Balance: ${balance.toFixed(2)} <span style={{ color: '#00B21F' }}>+24%</span></Typography>
         </Box>
 
         <Box sx={{ border: 'solid 1px', borderColor: borderColor }} p={2}>

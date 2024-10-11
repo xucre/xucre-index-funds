@@ -2,3 +2,5 @@
 node_modules
 .yarn
 .next
+.env.local
+.env.production
