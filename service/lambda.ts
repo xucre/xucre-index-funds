@@ -54,7 +54,8 @@ export const fetchLogo = async (chainName: string, address: string) => {
 
 export const fetchInfo = async (chainName: string, address: string) => {
   try {
-    const infoUrl = ASSETURL(chainName, address) + '/info.json';
+    const infoUrl = (await ASSETURL(chainName, address)) + '/info.json';
+    console.log(infoUrl);
     const response = await fetch(infoUrl);
     return await response.json();
   } catch (error) {
@@ -62,3 +63,13 @@ export const fetchInfo = async (chainName: string, address: string) => {
     return null;
   }
 };
+
+export const getTokenInfo = async (chaindId: number, address: string) => {
+  const chainName = chaindId === 1 ? 'eth-mainnet' : 'matic-mainnet';
+  try {
+    const response = await superagent.get(`${BASEURL}tokens/metadata?chainName=${chainName}&address=${address}`).withCredentials();
+    return response.body;
+  } catch (error) {
+    return null;
+  }
+}

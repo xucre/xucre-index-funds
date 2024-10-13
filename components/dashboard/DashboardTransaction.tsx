@@ -25,14 +25,12 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
     if (details.erc20Transfers.length > 0) {
       const received = details.erc20Transfers.find((transfer) => transfer.to === address);
       const sent = details.erc20Transfers.find((transfer) => transfer.from === address);
-
       if (received) {
         return 'Deposit';
       }
       if (sent) {
         return 'Withdrawal';
       }
-      return 'Unknown';
     }
     return 'Unknown';
   }

@@ -19,7 +19,6 @@ export default function DashboardBalances() {
     } else {
       setSafeWallet(null);
     }
-
   }
 
   useEffect(() => {

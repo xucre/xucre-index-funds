@@ -64,7 +64,6 @@ export default function DashboardLayout({
     } else {
       setSafeWallet(null);
     }
-
   }
 
   useEffect(() => {

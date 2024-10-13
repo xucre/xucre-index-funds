@@ -24,8 +24,6 @@ export default function DashboardNews() {
 
   const refresh = async () => {
     const feed = await getFeed();
-    console.log(feed);
-    console.log(dayjs(feed[0].isoDate).format('DD/MM/YYYY'));
     setNews(feed);
   }
 

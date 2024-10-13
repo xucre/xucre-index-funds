@@ -20,7 +20,6 @@ export default function DashboardTransactions() {
     } else {
       setSafeWallet(null);
     }
-
   }
 
   useEffect(() => {

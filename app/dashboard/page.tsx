@@ -32,7 +32,6 @@ export default function Dashboard() {
     } else {
       setSafeWallet(null);
     }
-
   }
 
   useEffect(() => {
@@ -42,8 +41,6 @@ export default function Dashboard() {
   }, [user])
 
   return (
-
     <DashboardContainer address={safeWallet} />
-
   );
 };

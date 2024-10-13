@@ -75,3 +75,11 @@ export function toTitleCase(str) {
     text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
   );
 }
+
+export const coinIconNames = {
+  1: 'eth',
+  137: 'matic',
+  80001: 'matic',
+  42220: 'celo',
+  20090103: 'btc'
+}
