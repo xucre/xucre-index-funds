@@ -27,7 +27,7 @@ export default function Wrapper({
         <ThemeSwitcherProvider>
           <LanguageContextProvider>
             <Suspense >
-              <CssBaseline />
+              <CssBaseline enableColorScheme />
               <Header />
               {children}
               <CTA type={'main'} />

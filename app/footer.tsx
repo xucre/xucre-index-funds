@@ -17,7 +17,7 @@ export default function Footer() {
   return (
     <AppBar position="fixed" color={'default'} sx={{ top: 'auto', bottom: 0, display: { xs: 'none', md: 'block' } }}>
       <Toolbar>
-        <SettingsButton />
+        {/*<SettingsButton />*/}
         <ThemeSwitcherElement />
         <LanguageSelect type={'menu'} />
         <Box sx={{ flexGrow: 1 }} />

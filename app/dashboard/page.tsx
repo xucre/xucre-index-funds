@@ -1,5 +1,5 @@
 'use client'
-import DashboardContainerDesktop from "@/components/dashboard/DashboardContainerDesktop";
+import DashboardContainer from "@/components/dashboard/DashboardContainer";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import EmptyProfileState from "@/components/onboarding/EmptyProfile";
 import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
@@ -25,23 +25,9 @@ export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
   const { user } = useUser();
   const [safeWallet, setSafeWallet] = useState<string | null>(null);
-
-  const createSafeWallet = async () => {
-    const safeAddress = await createAccount({
-      rpcUrl: 'https://endpoints.omniatech.io/v1/eth/sepolia/public',
-      owner: address,
-      threshold: 1,
-      //signer: '',
-    });
-    setSafeAddress(user.id, safeAddress);
-    updateSafeWalletDetails(user.id, safeAddress);
-    setSafeWallet(safeAddress);
-  }
-
   const syncSafeWallet = async () => {
     const walletAddress = await getSafeAddress(user.id);
     if (walletAddress) {
-      console.log('safe address', walletAddress)
       setSafeWallet(walletAddress);
     } else {
       setSafeWallet(null);
@@ -55,26 +41,9 @@ export default function Dashboard() {
     }
   }, [user])
 
-  const profileFilled = isLoaded && sfdcUser && sfdcUser.status === 'Active';
   return (
-    <Suspense>
-      <Box width={'full'}>
-        {!profileFilled &&
-          <EmptyProfileState onCreateProfile={(() => { router.push('/dashboard/edit') })} />
-        }
 
-        {profileFilled &&
-          <>
-            <DashboardHeader />
-            {!safeWallet &&
-              <EmptySafeWallet onCreateSafe={createSafeWallet} />
-            }
-            {safeWallet &&
-              <DashboardContainerDesktop address={safeWallet} />
-            }
-          </>
-        }
-      </Box>
-    </Suspense>
+    <DashboardContainer address={safeWallet} />
+
   );
 };

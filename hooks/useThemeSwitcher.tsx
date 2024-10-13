@@ -37,10 +37,22 @@ export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
             main: '#000000'
           }
         },
+        components: {
+          MuiCssBaseline: {
+            styleOverrides: {
+              body: {
+                minHeight: '100vh',
+                backgroundColor: mode === 'dark' ? '#010101' : '#ffffff', // '#1b6756'
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                backgroundImage: mode === 'dark' ? 'radial-gradient(at left top, #010101, #084D3E)' : 'radial-gradient(at left top, #77af3a, #ffffff, #77af3a)',
+              },
+            },
+          },
+        }
       }),
     [mode],
   );
-
   useEffect(() => {
     const existingItem = localStorage.getItem('color-mode');
     if (existingItem) {
