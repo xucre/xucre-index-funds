@@ -160,6 +160,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
   const [history, setHistory] = useState({} as WalletHistory);
   const [balance, setBalance] = useState(0);
   const [change, setChange] = useState(0);
+  const [loaded, setLoaded] = useState(false);
 
   const computeTotals = async (_history: WalletHistory) => {
     const _balance = _history.data.items.reduce((acc, item) => {
@@ -173,10 +174,13 @@ export function useWalletData({ address }: { address?: string } = {}) {
     }, 0);
     const difference = _balance - _previousDayBalance;
     setChange(difference);
+
+    setLoaded(true);
   }
 
   useEffect(() => {
     const runAsync = async () => {
+      setLoaded(false);
       const result = (await getWalletTransactions(address, 'matic-mainnet'));
       
       if (result && result.covalent) setTransactions(result.covalent.items as CovalentTransactionV3[]);
@@ -189,7 +193,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
   }, [address])
 
   return useMemo(
-    () => ({ transactions, history, balance, change }),
-    [transactions, history, balance, change],
+    () => ({ transactions, history, balance, change, loaded }),
+    [transactions, history, balance, change, loaded],
   );
 }

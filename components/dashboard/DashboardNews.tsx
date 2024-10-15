@@ -2,7 +2,7 @@
 import { useLanguage } from "@/hooks/useLanguage";
 import { getTextColor } from "@/service/helpers";
 import { getFeed } from "@/service/rss";
-import { Link, Paper, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Link, Paper, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEffect, useState } from "react";
 import DashboardNewsCard from "./DashboardNewsCard";
 //import AccountButton from "./accountButton";
@@ -34,10 +34,15 @@ export default function DashboardNews() {
   return (
     <Stack direction={'column'} spacing={2} pt={0}>
       {/*<Typography variant={'h6'} color={textColor}>News</Typography>*/}
-      {news.length > 0 &&
+      {news.length > 0 ?
         newsList.map((item, index) => (
           <DashboardNewsCard key={index} publishDate={dayjs(item.isoDate).format('DD/MM/YYYY')} title={item.title} text={item.content} url={item.link} />
-        ))
+        )) :
+        <>
+          <Skeleton variant="rounded" width={210} height={100} />
+          <Skeleton variant="rounded" width={210} height={100} />
+          <Skeleton variant="rounded" width={210} height={100} />
+        </>
       }
     </Stack>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Stack, Typography, Divider, useTheme, Box } from '@mui/material';
+import { Stack, Typography, Divider, useTheme, Box, Skeleton } from '@mui/material';
 import dayjs from 'dayjs';
 import { retrieveTransactionDetails, TransactionDetails } from '@/service/eip155';
 import { CovalentTransactionV3 } from '@/hooks/useWalletData';
@@ -46,7 +46,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
   }, [transaction, address]);
 
   if (!transactionDetails) {
-    return <Typography>Loading...</Typography>;
+    return <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
   }
 
   return (
@@ -61,7 +61,6 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
             <Typography fontWeight={'bold'}>{`-${formatUnits(BigInt(transactionDetails.erc20Transfers[0].value), 6)}`}</Typography>
           }
         </Stack>
-
       }
     </Box>
 

@@ -1,7 +1,7 @@
 'use client'
 import { useLanguage } from "@/hooks/useLanguage";
 import React, { useEffect, useState } from 'react';
-import { Alert, Box, CardContent, CardHeader, Chip, Divider, Link, List, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Alert, Box, CardContent, CardHeader, Chip, Divider, Link, List, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import AccountButton from '@/components/accountButton';
 import languageData from '@/metadata/translations'
 import { coinIconNames, getDashboardBorderColor } from "@/service/helpers";
@@ -28,10 +28,12 @@ export default function DashboardBalanceList({ address }: { address: string }) {
   const _address = '0x358eB621894B55805CE16225b2504523d421d3A6';
   const { transactions, history, balance, change } = useWalletData({ address: _address });
   const [tokenMap, setTokenMap] = useState(null as [string, TokenDetails] | null);
+  const [loaded, setLoaded] = useState(false);
 
   const balances = history.data ? history.data.items : [];
 
   const syncTokenDetails = async () => {
+    setLoaded(false);
     const tokenDetails = await Promise.all(balances.map(async (balance) => {
       const token = await getTokenInfo(137, balance.contract_address);
       if (isAddressEqual(balance.contract_address, '0x924442A46EAC25646b520Da8D78218Ae8FF437C2')) {
@@ -49,6 +51,7 @@ export default function DashboardBalanceList({ address }: { address: string }) {
       return { ...acc, [balances[index].contract_address]: token };
     }, {} as [string, TokenDetails]);
     setTokenMap(_tokenMap);
+    setLoaded(true);
   }
 
   useEffect(() => {
@@ -61,14 +64,20 @@ export default function DashboardBalanceList({ address }: { address: string }) {
       <CardHeader sx={{ py: 1, mb: 0 }} title={<Typography variant="body1" color="text.secondary">Balances</Typography>} />
       <CardContent sx={{ py: 0 }} >
         <List>
-          {tokenMap && balances.map((balance, index) => {
+          {tokenMap ? balances.map((balance, index) => {
             const metadata = tokenMap[balance.contract_address];
             return (
               <Box key={index} width={'100%'}>
                 <DashboardBalanceItem key={index} details={balance} address={balance.contract_address} metadata={metadata} />
               </Box>
             )
-          })}
+          }) :
+            <>
+              <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+              <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+              <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+            </>
+          }
         </List>
       </CardContent>
     </OpaqueCard>
