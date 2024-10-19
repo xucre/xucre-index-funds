@@ -106,7 +106,7 @@ export default function IndexBuilder() {
     return <Campfire setIsLocked={setIsLocked} />;
   }
 
-  if (!isConnected) return <WalletNotConnected />;
+  //if (!isConnected) return <WalletNotConnected />;
   //if (!isSubscribed) return <Campfire setIsLocked={() => { }} />;
   if (!chainValidation(chainId)) return <WalletNotConnected />;
   return (
