@@ -17,6 +17,7 @@ import languageData, { languages } from '@/metadata/translations';
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation, normalizeDevChains } from "@/service/helpers";
 import React from "react";
+import OpaqueCard from "@/components/ui/OpaqueCard";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 
@@ -37,7 +38,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
       return encodeURIComponent(fund.name[lang]) === slugString || normalizeDevChains(chainId) === fund.chainId;
     }, false);
   });
-  const { balance, allowance, hash, error, loading, confirmationHash, approveContract, initiateSpot, sourceToken, sourceTokens, setSourceToken, status } = useConnectedIndexFund({ fund: _indexFund });
+  const { balance, allowance, hash, error, loading, isNativeToken, confirmationHash, approveContract, initiateSpot, sourceToken, sourceTokens, setSourceToken, status } = useConnectedIndexFund({ fund: _indexFund });
   const [amount, setAmount] = useState<BigInt>(BigInt(0));
   const [rawAmount, setRawAmount] = useState<string>('');
   const [priceData, setPriceData] = useState([] as PriceData[]);
@@ -112,23 +113,27 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
     <Box mt={{ xs: 0, sm: 4 }} pb={4}>
 
       <Stack direction={'row'} mt={2} mx={2} spacing={2} justifyContent={'space-evenly'} alignItems={'start'} sx={{ display: { md: 'flex', xs: 'none' } }}>
-        <Stack maxWidth={'50vw'} direction={'column'} justifyContent={'center'} alignItems={'center'}>
-          <PortfolioDescription />
-          <PortfolioItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
-        </Stack>
+        <OpaqueCard>
+          <Stack maxWidth={'50vw'} direction={'column'} justifyContent={'center'} alignItems={'center'}>
+            <PortfolioDescription />
+            <PortfolioItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
+          </Stack>
+        </OpaqueCard>
         <Box maxWidth={'50vw'}>
-          <BuyItem confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
+          <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
         </Box>
 
       </Stack>
 
       <Stack direction={'column'} m={2} spacing={4} justifyContent={'center'} alignItems={'center'} sx={{ display: { md: 'none', xs: 'flex' } }}>
-        <PortfolioDescription />
-        <PortfolioItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
+        <OpaqueCard>
+          <PortfolioDescription />
+          <PortfolioItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
+        </OpaqueCard>
         <Divider sx={{ color: textColor, width: '80vw' }} />
 
         {/**BUY ITEM  */}
-        <BuyItem confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
+        <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
       </Stack>
     </Box>
   );

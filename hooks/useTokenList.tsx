@@ -27,6 +27,8 @@ export function TokenListProvider({ children, chainId }: { children: any, chainI
     const dataRaw = await getTokenList(chainId);
     const data: Token[] = dataRaw.tokens;
     const _chainId = normalizeDevChains(chainId);
+    console.log('chainId', chainId, _chainId);
+    console.log('data', data);
     const filteredData = data.filter((token) => token.chainId === _chainId);
     setTokens(filteredData);
   }

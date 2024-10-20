@@ -1034,5 +1034,208 @@
       "links": [],
       "sourceFees": {}
     }
+  },
+  {
+    "name": {
+      "0": "Market Cap Fund"
+    },
+    "cardSubtitle": {
+      "0": "A curated selection of top-tier assets on Base"
+    },
+    "description": {
+      "0": "Discover our 'Market Cap Fund' on Base, featuring top-tier assets like MANTRA, BRETT and AERO. Designed for stability and growth, this fund targets seasoned investors seeking substantial, reliable market players. Ideal for those prioritizing long-term investment security."
+    },
+    "image": "/marketCap.png",
+    "imageSmall": "/marketCap-low.png",
+    "color": "#182157",
+    "chainId": 8453,
+    "sourceToken": {
+        "name": "ETH",
+        "address": "0x4200000000000000000000000000000000000006",
+        "weight": 1,
+        "decimals": 6,
+        "poolFee": 3000,
+        "chartColor": "#FFD700",
+        "sourceFees": {
+            "0x4200000000000000000000000000000000000006": 500
+        },
+        "description": {
+          "0" : "ETH is a decentralized lending protocol."
+        },
+        "logo": "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=035",
+        "chain_logo": "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=035",
+        "links": [
+            "https://www.usdc.com/"
+        ]
+    },
+    "portfolio": [
+        {
+            "name": "Brett (BRETT)",
+            "address": "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+            "weight": 1250,
+            "active": true,
+            "decimals": 18,
+            "poolFee": 3000,
+            "sourceFees": {
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000
+            },
+            "chartColor": "#FFD700",
+            "description": {
+              "0":"A meme coin centered around community hype with limited utility, typical of speculative tokens in the DeFi space."
+            },
+            "logo": "https://cryptologos.cc/logos/based-brett-brett-logo.png?v=035",
+            "chain_logo": "https://cryptologos.cc/logos/based-brett-brett-logo.png?v=035",
+            "links": [
+                "https://www.basedbrett.com/"
+            ]
+        },
+        {
+            "name": "Aerodrome (AERO)",
+            "address": "0x940181a94A35A4569E4529A3CDfB74e38FD98631",
+            "weight": 1250,
+            "active": true,
+            "decimals": 18,
+            "poolFee": 3000,
+            "sourceFees": {
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000,
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+            },
+            "chartColor": "#FFD700",
+            "description": {
+              "0":"A central liquidity hub on the Base network, offering efficient trading and liquidity provision for DeFi users."
+            },
+            "logo": "https://aerodrome.finance/svg/aero.svg",
+            "chain_logo": "https://aerodrome.finance/svg/aero.svg",
+            "links": [
+                "https://aerodrome.finance/"
+            ]
+        },
+        {
+            "name": "Wormhole Token (W)",
+            "address": "0xB0fFa8000886e57F86dd5264b9582b2Ad87b2b91",
+            "weight": 1250,
+            "active": false,
+            "decimals": 18,
+            "poolFee": 3000,
+            "sourceFees": {
+                "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+            },
+            "chartColor": "#FFD700",
+            "description": {
+              "0":"Cross-chain interoperability token enabling seamless transfers and communication between multiple blockchains."
+            },
+            "logo": "https://wormhole.com/token.png",
+            "chain_logo": "https://wormhole.com/token.png",
+            "links": [
+                "https://wormhole.com/"
+            ]
+        },
+        {
+            "name": "Compound (COMP)",
+            "address": "0x9e1028F5F1D5eDE59748FFceE5532509976840E0",
+            "weight": 1250,
+            "active": false,
+            "decimals": 18,
+            "poolFee": 3000,
+            "sourceFees": {
+                "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+            },
+            "chartColor": "#FFD700",
+            "description": {
+              "0":"Governance token for Compound, a decentralized lending platform allowing users to earn interest on crypto assets."
+            },
+            "logo": "https://compound.finance/images/comp-icn.svg",
+            "chain_logo": "https://compound.finance/images/comp-icn.svg",
+            "links": [
+                "https://compound.finance/"
+            ]
+        },
+        {
+            "name": "Reserve Rights (RSR)",
+            "address": "0xaB36452DbAC151bE02b16Ca17d8919826072f64a",
+            "weight": 1250,
+            "active": false,
+            "decimals": 18,
+            "poolFee": 3000,
+            "sourceFees": {
+                "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+            },
+            "chartColor": "#FFD700",
+            "description": {
+              "0":"A governance and utility token supporting Reserve Protocol, focused on decentralized stablecoin issuance."
+            },
+            "logo": "https://reserve.org/assets/img/icons/r-token.png?v=0.2",
+            "chain_logo": "https://reserve.org/assets/img/icons/r-token.png?v=0.2",
+            "links": [
+                "https://reserve.org/"
+            ]
+        },
+        {
+            "name": "LayerZero (ZRO)",
+            "address": "0x6985884C4392D348587B19cb9eAAf157F13271cd",
+            "weight": 1250,
+            "active": true,
+            "decimals": 18,
+            "poolFee": 3000,
+            "sourceFees": {
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000,
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+            },
+            "chartColor": "#FFD700",
+            "description": {
+              "0":"Cross-chain communication protocol providing seamless connectivity between different blockchain ecosystems."
+            },
+            "logo": "https://layerzero.network/static/logo-small.svg",
+            "chain_logo": "https://layerzero.network/static/logo-small.svg",
+            "links": [
+                "https://layerzero.network/"
+            ]
+        },
+        {
+            "name": "Non-Playable Coin (NPC)",
+            "address": "0xB166E8B140D35D9D8226E40C09f757BAC5A4d87d",
+            "weight": 1250,
+            "active": true,
+            "decimals": 18,
+            "poolFee": 3000,
+            "sourceFees": {
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000,
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+            },
+            "chartColor": "#FFD700",
+            "description": {
+              "0":"A meme coin inspired by the NPC internet culture, often speculative with little to no underlying utility."
+            },
+            "logo": "https://www.npc.com/npc-logo.svg",
+            "chain_logo": "https://www.npc.com/npc-logo.svg",
+            "links": [
+                "https://npccoin.org/"
+            ]
+        },
+        {
+            "name": "SPX6900 (SPX)",
+            "address": "0x50dA645f148798F68EF2d7dB7C1CB22A6819bb2C",
+            "weight": 1250,
+            "active": false,
+            "decimals": 18,
+            "poolFee": 3000,
+            "sourceFees": {
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000,
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+            },
+            "chartColor": "#FFD700",
+            "description": {
+              "0":"A speculative meme token with little real-world application, driven mostly by community and market hype."
+            },
+            "logo": "https://s2.coinmarketcap.com/static/img/coins/200x200/28081.png",
+            "chain_logo": "https://s2.coinmarketcap.com/static/img/coins/200x200/28081.png",
+            "links": [
+                "https://spx6900.com/"
+            ]
+        }
+    ]
   }
 ]

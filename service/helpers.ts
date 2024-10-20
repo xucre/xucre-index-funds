@@ -30,7 +30,7 @@ export function distributeWeights(items: any[]): any[] {
 }
 
 export function chainValidation(chainId:number): boolean {
-  return chainId === 137 || chainId === 19819 || chainId === 20208 || chainId === 1;
+  return chainId === 137 || chainId === 19819 || chainId === 20208 || chainId === 1 || chainId === 8453;
 }
 
 export function normalizeDevChains(chainId: number) : number {

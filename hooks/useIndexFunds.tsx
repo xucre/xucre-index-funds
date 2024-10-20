@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { writeContract, waitForTransactionReceipt } from '@wagmi/core'
-import { type BaseError, useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { type BaseError, useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useBalance } from "wagmi";
 import erc20 from "@/public/erc20.json";
 import XucreETF from "@/public/XucreETF.json";
 import indexFundJson from "@/public/indexFunds.json";
@@ -56,6 +56,7 @@ const initialFunds = indexFundJson as IndexFund[];
 const contractAddressMap = {
   1: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_ETH,
   137: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+  8453: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_BASE
 };
 
 //console.log(initialFunds[0].portfolio.reduce((acc, item) => acc + item.weight, 0))
@@ -76,6 +77,7 @@ export function useIndexFunds({ chainId }: { chainId: number }) {
 
 export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
   const { isConnected, address, chainId, chain } = useAccount();
+  const { data :nativeBalance } = useBalance({address});
   const { enqueueSnackbar } = useSnackbar();
   const { language } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
@@ -180,21 +182,6 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
       setIsLoading(false);
     }
 
-    if (!isPending && status === 'success') {
-      //runAsync()
-    }
-  }, [isPending, status])
-
-
-  useEffect(() => {
-    const runAsync = async () => {
-      setIsLoading(true);
-      await allowanceRefetch()
-      await balanceRefetch()
-      //await getPrices();
-      setIsLoading(false);
-    }
-
     if (confirmationHash.length > 0) {
       runAsync()
     }
@@ -215,6 +202,10 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
   }, [isConnected, address, sourceToken])
 
   useEffect(() => {
+    console.log(nativeBalance);
+  }, [nativeBalance])
+
+  useEffect(() => {
     if (error && error as BaseError) {
       const err = error as BaseError;
       console.log(err.details);
@@ -226,6 +217,8 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
   }, [chainId]);
 
   const loading = isLoading || isPending;
+  const balance = getAddress(sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006') ? nativeBalance.value : sourceBalance;
+  const isNativeToken = getAddress(sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006');
 
-  return { balance: sourceBalance, allowance: sourceAllowance, sourceToken, sourceTokens: initialSourceTokens.filter((token) => token.chainId === normalizeDevChains(chainId)), setSourceToken, approveContract, initiateSpot, hash, error, loading, status, confirmationHash }
+  return { balance: balance, isNativeToken, allowance: sourceAllowance, sourceToken, sourceTokens: initialSourceTokens.filter((token) => token.chainId === normalizeDevChains(chainId)), setSourceToken, approveContract, initiateSpot, hash, error, loading, status, confirmationHash }
 }
