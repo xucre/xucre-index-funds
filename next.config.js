@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  swcMinify: true,
+  swcMinify: false,
   webpack: (config) => {
     config.experiments = { ...config.experiments, topLevelAwait: true };
     config.resolve.fallback = { fs: false, net: false, tls: false };
