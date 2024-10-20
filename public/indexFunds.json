@@ -1050,17 +1050,18 @@
     "color": "#182157",
     "chainId": 8453,
     "sourceToken": {
-        "name": "ETH",
-        "address": "0x4200000000000000000000000000000000000006",
+        "name": "USDC",
+        "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
         "weight": 1,
         "decimals": 6,
         "poolFee": 3000,
         "chartColor": "#FFD700",
         "sourceFees": {
-            "0x4200000000000000000000000000000000000006": 500
+            "0x4200000000000000000000000000000000000006": 500,
+            "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 0
         },
         "description": {
-          "0" : "ETH is a decentralized lending protocol."
+          "0" : "USDC is a stablecoin pegged to the US Dollar."
         },
         "logo": "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=035",
         "chain_logo": "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=035",
@@ -1077,7 +1078,8 @@
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
-                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000
+                "0x4200000000000000000000000000000000000006": 3000,
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 10000
             },
             "chartColor": "#FFD700",
             "description": {
@@ -1114,12 +1116,13 @@
             "name": "Wormhole Token (W)",
             "address": "0xB0fFa8000886e57F86dd5264b9582b2Ad87b2b91",
             "weight": 1250,
-            "active": false,
+            "active": true,
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
                 "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
-                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000,
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 10000
             },
             "chartColor": "#FFD700",
             "description": {
@@ -1140,7 +1143,8 @@
             "poolFee": 3000,
             "sourceFees": {
                 "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
-                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000,
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 10000
             },
             "chartColor": "#FFD700",
             "description": {
@@ -1161,7 +1165,8 @@
             "poolFee": 3000,
             "sourceFees": {
                 "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
-                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+                "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000,
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 10000
             },
             "chartColor": "#FFD700",
             "description": {
@@ -1181,7 +1186,7 @@
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
-                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000,
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 10000,
                 "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
             },
             "chartColor": "#FFD700",
@@ -1198,11 +1203,11 @@
             "name": "Non-Playable Coin (NPC)",
             "address": "0xB166E8B140D35D9D8226E40C09f757BAC5A4d87d",
             "weight": 1250,
-            "active": true,
+            "active": false,
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
-                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000,
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 10000,
                 "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
             },
             "chartColor": "#FFD700",
@@ -1219,11 +1224,11 @@
             "name": "SPX6900 (SPX)",
             "address": "0x50dA645f148798F68EF2d7dB7C1CB22A6819bb2C",
             "weight": 1250,
-            "active": false,
+            "active": true,
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
-                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000,
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 10000,
                 "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
             },
             "chartColor": "#FFD700",
