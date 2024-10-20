@@ -56,7 +56,8 @@ const initialFunds = indexFundJson as IndexFund[];
 const contractAddressMap = {
   1: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_ETH,
   137: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-  8453: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_BASE
+  8453: '0x79A7D6722A186a8851872917bb155500b4a1C2Ae',//process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_BASE,
+  31337 : '0xCBBe2A5c3A22BE749D5DDF24e9534f98951983e2'
 };
 
 //console.log(initialFunds[0].portfolio.reduce((acc, item) => acc + item.weight, 0))
@@ -217,7 +218,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
   }, [chainId]);
 
   const loading = isLoading || isPending;
-  const balance = getAddress(sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006') ? nativeBalance.value : sourceBalance;
+  const balance = nativeBalance && getAddress(sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006') ? nativeBalance.value : sourceBalance;
   const isNativeToken = getAddress(sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006');
 
   return { balance: balance, isNativeToken, allowance: sourceAllowance, sourceToken, sourceTokens: initialSourceTokens.filter((token) => token.chainId === normalizeDevChains(chainId)), setSourceToken, approveContract, initiateSpot, hash, error, loading, status, confirmationHash }

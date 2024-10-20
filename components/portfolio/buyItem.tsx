@@ -23,7 +23,7 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
   const [isLoading, setIsLoading] = useState(false);
   const [currentAction, setCurrentAction] = useState('');
   const isReadyToApprove = amount > BigInt(0);
-  const isReadyToBuy = isReadyToApprove && (BigInt(allowance) >= BigInt(amount) || (isNativeToken && BigInt(balance) >= BigInt(amount)));
+  const isReadyToBuy = isReadyToApprove && ((allowance && BigInt(allowance) >= BigInt(amount)) || (isNativeToken && BigInt(balance) >= BigInt(amount)));
   const step = isReadyToBuy ? 1 : 0;
 
   useEffect(() => { setIsLoading(false) }, []);

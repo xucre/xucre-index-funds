@@ -1078,7 +1078,7 @@
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
-                "0x4200000000000000000000000000000000000006": 3000,
+                "0x4200000000000000000000000000000000000006": 10000,
                 "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 10000
             },
             "chartColor": "#FFD700",
@@ -1095,7 +1095,7 @@
             "name": "Aerodrome (AERO)",
             "address": "0x940181a94A35A4569E4529A3CDfB74e38FD98631",
             "weight": 1250,
-            "active": true,
+            "active": false,
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
@@ -1116,7 +1116,7 @@
             "name": "Wormhole Token (W)",
             "address": "0xB0fFa8000886e57F86dd5264b9582b2Ad87b2b91",
             "weight": 1250,
-            "active": true,
+            "active": false,
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
@@ -1182,11 +1182,11 @@
             "name": "LayerZero (ZRO)",
             "address": "0x6985884C4392D348587B19cb9eAAf157F13271cd",
             "weight": 1250,
-            "active": true,
+            "active": false,
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
-                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 10000,
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000,
                 "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
             },
             "chartColor": "#FFD700",
@@ -1224,7 +1224,7 @@
             "name": "SPX6900 (SPX)",
             "address": "0x50dA645f148798F68EF2d7dB7C1CB22A6819bb2C",
             "weight": 1250,
-            "active": true,
+            "active": false,
             "decimals": 18,
             "poolFee": 3000,
             "sourceFees": {
