@@ -91,7 +91,7 @@
   },
   {
     "name": "ETH",
-    "active": true,
+    "active": false,
     "chainId": 8453,
     "address": "0x4200000000000000000000000000000000000006", 
     "weight": 1,
