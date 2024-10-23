@@ -108,7 +108,7 @@ export default function IndexBuilder() {
 
   //if (!isConnected) return <WalletNotConnected />;
   //if (!isSubscribed) return <Campfire setIsLocked={() => { }} />;
-  if (!chainValidation(chainId)) return <WalletNotConnected />;
+  //if (!chainValidation(chainId)) return <WalletNotConnected />;
   return (
     <Grid container pb={4}>
       <Grid size={{ xs: 12, sm: 8 }} sx={{ overFlowY: 'scroll', mb: 20 }} height={{ sm: '85vh' }}>

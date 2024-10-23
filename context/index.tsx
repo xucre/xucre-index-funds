@@ -1,7 +1,6 @@
 'use client'
 
 import React, { ReactNode, useEffect } from 'react'
-import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SnackbarProvider } from 'notistack';
 import { ClerkProvider } from '@clerk/nextjs'
@@ -12,8 +11,6 @@ import { cookieToInitialState, State, WagmiProvider, type Config } from 'wagmi'
 
 import { useTheme } from '@mui/material'
 import { SFDCProvider } from '@/hooks/useSFDC'
-import { GoldRushProvider } from '@covalenthq/goldrush-kit'
-import '@covalenthq/goldrush-kit/styles.css'
 
 // Setup queryClient
 const queryClient = new QueryClient()
@@ -79,9 +76,24 @@ export function ContextProvider({
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
-        <ClerkProvider >
+        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
           <SnackbarProvider maxSnack={3} >
-            <GoldRushProvider
+
+            <SFDCProvider>
+              {children}
+            </SFDCProvider>
+          </SnackbarProvider>
+        </ClerkProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  )
+}
+
+/*
+
+import { GoldRushProvider } from '@covalenthq/goldrush-kit'
+import '@covalenthq/goldrush-kit/styles.css'
+<GoldRushProvider
               apikey={process.env.NEXT_PUBLIC_COVALENT_API_KEY} //use your API key
               theme={{
                 mode: theme.palette.mode,
@@ -100,14 +112,4 @@ export function ContextProvider({
                   }
                 }
               }}
-            >
-              <SFDCProvider>
-                {children}
-              </SFDCProvider>
-            </GoldRushProvider>
-          </SnackbarProvider>
-        </ClerkProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-  )
-}
+            ></GoldRushProvider>*/

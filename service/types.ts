@@ -34,3 +34,11 @@ export type SFDCWallet = {
   chainId: string,
   signedMessage: string
 }
+
+export type TokenDetails = {
+  decimals: number,
+  logo: string,
+  name: string,
+  symbol: string,
+  defaultLogo: boolean
+}

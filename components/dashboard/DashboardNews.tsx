@@ -2,21 +2,28 @@
 import { useLanguage } from "@/hooks/useLanguage";
 import { getTextColor } from "@/service/helpers";
 import { getFeed } from "@/service/rss";
-import { Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Link, Paper, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEffect, useState } from "react";
+import DashboardNewsCard from "./DashboardNewsCard";
 //import AccountButton from "./accountButton";
+import dayjs from 'dayjs';
 
+export interface NewsItem {
+  title: string;
+  content: string;
+  link: string;
+  isoDate: string;
+}
 // components/LoadingIndicator.tsx
 export default function DashboardNews() {
   const theme = useTheme();
   const { language } = useLanguage();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const textColor = getTextColor(theme);
-  const [news, setNews] = useState([]);
+  const [news, setNews] = useState([] as NewsItem[]);
 
   const refresh = async () => {
     const feed = await getFeed();
-
     setNews(feed);
   }
 
@@ -25,14 +32,17 @@ export default function DashboardNews() {
   }, [])
   const newsList = news.length < 4 ? news : news.slice(0, 3);
   return (
-    <Stack direction={'column'} spacing={2}>
-      <Typography variant={'h6'} textAlign={'center'}>Xucre News</Typography>
-      {news.length > 0 &&
+    <Stack direction={'column'} spacing={2} pt={0}>
+      {/*<Typography variant={'h6'} color={textColor}>News</Typography>*/}
+      {news.length > 0 ?
         newsList.map((item, index) => (
-          <Link key={index} href={'#'} underline="hover" color={textColor}>
-            <Typography variant={'subtitle1'} color={textColor}>{item.title}</Typography>
-          </Link>
-        ))
+          <DashboardNewsCard key={index} publishDate={dayjs(item.isoDate).format('DD/MM/YYYY')} title={item.title} text={item.content} url={item.link} />
+        )) :
+        <>
+          <Skeleton variant="rounded" width={210} height={100} />
+          <Skeleton variant="rounded" width={210} height={100} />
+          <Skeleton variant="rounded" width={210} height={100} />
+        </>
       }
     </Stack>
   );
