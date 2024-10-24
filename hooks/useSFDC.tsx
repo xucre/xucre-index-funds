@@ -6,7 +6,6 @@ import React, { useEffect, useMemo } from 'react';
 import { useLanguage } from './useLanguage';
 import languageData from '@/metadata/translations'
 import { useTheme } from '@mui/material';
-import { useGoldRush } from '@covalenthq/goldrush-kit';
 
 const SFDCContext = React.createContext({ sfdcUser: {} as SFDCUserData, updateUser: (user: SFDCUserData) => { }, refresh: () => { }, isLoaded: false });
 
@@ -19,32 +18,6 @@ export const SFDCProvider = ({ children }: { children: any }) => {
   const { language } = useLanguage();
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [sfdcUser, setSfdcUser] = React.useState(null as SFDCUserData | null);
-
-
-  /// JANK ASS - TODO - Refactor this somewhere else
-  const { updateThemeHandler } = useGoldRush();
-  useEffect(() => {
-    const updatedTheme = {
-      mode: theme.palette.mode,
-      colors: {
-        light: {
-          primary: '#1B1E3F',
-          secondary: '#1B1E3F',
-          background: '#ffffff',
-          foreground: '#ffffff'
-        },
-        dark: {
-          primary: '#D4E815',
-          secondary: '#1B1E3F',
-          background: '#121212 !important',
-          foreground: '#ffffff'
-        }
-      }
-    };
-    updateThemeHandler(updatedTheme);
-
-  }, [theme])
-  // INDEED I AM JANK
 
 
   const refresh = async () => {

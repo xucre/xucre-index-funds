@@ -53,7 +53,6 @@ export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
       }),
     [mode],
   );
-
   useEffect(() => {
     const existingItem = localStorage.getItem('color-mode');
     if (existingItem) {

@@ -1,5 +1,5 @@
 'use client';
-import { getWalletTransactions } from '@/service/lambda';
+import { getWalletHistory, getWalletTransactions } from '@/service/lambda';
 import { useEffect, useMemo, useState } from 'react';
 
 export type QuoteValue = { date: string; totalQuote: number; isTokenValue: boolean; }
@@ -158,21 +158,42 @@ export type CovalentTransactionV3 = {
 export function useWalletData({ address }: { address?: string } = {}) {
   const [transactions, setTransactions] = useState([] as CovalentTransactionV3[]);
   const [history, setHistory] = useState({} as WalletHistory);
+  const [balance, setBalance] = useState(0);
+  const [change, setChange] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+
+  const computeTotals = async (_history: WalletHistory) => {
+    const _balance = _history.data.items.reduce((acc, item) => {
+      const latest = item.holdings[0];
+      return acc + latest.close.quote;
+    }, 0);
+    setBalance(_balance);
+    const _previousDayBalance = _history.data.items.reduce((acc, item) => {
+      const previousDay = item.holdings[1];
+      return acc + previousDay.close.quote;
+    }, 0);
+    const difference = _balance - _previousDayBalance;
+    setChange(difference);
+
+    setLoaded(true);
+  }
 
   useEffect(() => {
     const runAsync = async () => {
+      setLoaded(false);
       const result = (await getWalletTransactions(address, 'matic-mainnet'));
       
       if (result && result.covalent) setTransactions(result.covalent.items as CovalentTransactionV3[]);
-      //const result2 = await getWalletHistory(address, 'eth-sepolia');
+      const result2 = await getWalletHistory(address, 'matic-mainnet');
       //console.log(result2);
-      //if (result2) setHistory(result2 as WalletHistory);
+      if (result2) setHistory(result2 as WalletHistory);
+      if (result2) computeTotals(result2);
     }
     if (address) runAsync()
   }, [address])
 
   return useMemo(
-    () => ({ transactions, history }),
-    [transactions, history],
+    () => ({ transactions, history, balance, change, loaded }),
+    [transactions, history, balance, change, loaded],
   );
 }

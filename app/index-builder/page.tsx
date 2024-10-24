@@ -14,6 +14,7 @@ import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation, normalizeDevChains } from "@/service/helpers";
 import UniswapPoolChecker, { PoolData } from "@/components/uniswap/poolChecker";
 import { useSnackbar } from "notistack";
+import IndexFundForm from "@/components/uniswap/indexFundForm";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 export default function IndexBuilder() {
@@ -108,7 +109,13 @@ export default function IndexBuilder() {
 
   //if (!isConnected) return <WalletNotConnected />;
   //if (!isSubscribed) return <Campfire setIsLocked={() => { }} />;
-  if (!chainValidation(chainId)) return <WalletNotConnected />;
+  //if (!chainValidation(chainId)) return <WalletNotConnected />;
+  
+  return (
+    <IndexFundForm />
+  )
+  
+  
   return (
     <Grid container pb={4}>
       <Grid size={{ xs: 12, sm: 8 }} sx={{ overFlowY: 'scroll', mb: 20 }} height={{ sm: '85vh' }}>

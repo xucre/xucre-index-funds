@@ -9,13 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const DOMAIN = process.env.DOMAIN ? process.env.DOMAIN : 'app.xucre.net';
 //const logging = require('../loaders/logging');
 
-const priceId = 'price_1Q63ihK2fAEU0BHqUSxmvnqZ';
-
-const getUserInfo = () => {
-    //console.log(NAMESPACE, `Get account service`);
-    // if auth has not been set, redirect to index
-    //console.log('$$REQUEST HEADERS$$: ' + JSON.stringify(req.headers));
-};
+const priceId = process.env.STRIPE_PRICE_ID;
 
 export async function getCustomerSubscription (organization) {
     try {
