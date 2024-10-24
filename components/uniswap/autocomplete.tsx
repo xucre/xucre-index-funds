@@ -80,6 +80,7 @@ const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
       if (query && isAddress(query)) {
         try {
           const additionalToken = await getTokenMetadata(query, chainId);
+          console.log(additionalToken);
           if (additionalToken) {
             setAdditionalToken(additionalToken);
           }
