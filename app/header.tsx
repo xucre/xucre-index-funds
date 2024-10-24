@@ -46,7 +46,6 @@ function Header() {
     languageData[language].Menu.index_funds,
     languageData[language].Menu.faq
   ]
-  const wallet = searchParams.get('wallet');
   const page = searchParams.get('page');
   const router = useRouter();
   const theme = useTheme();
@@ -125,7 +124,7 @@ function Header() {
   const drawer = (
     <Stack direction={'column'} justifyContent={'space-between'} alignItems={'center'} spacing={2} onClick={handleDrawerToggle} sx={{ textAlign: 'center', zIndex: 100000, height: '95vh' }}>
       <Box width={'100%'}>
-        {wallet !== 'xucre' && headerButton}
+        {headerButton}
         <Divider />
 
         {/*<Stack direction={'row'} my={2} justifyItems={'center'} alignContent={'center'} mx={'auto'} display={'block'} width={'fit-content'}>
@@ -179,151 +178,150 @@ function Header() {
 
   return (
     <div>
-      {wallet !== 'xucre' &&
-        <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '1px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
-          <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+      
+      <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '1px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
+        <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
 
-            <Box sx={{}}>
-              {headerButton}
-            </Box>
+          <Box sx={{}}>
+            {headerButton}
+          </Box>
 
-            {/*<SignedIn>
-              {isAdmin &&
-                <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-                  {adminNavItems.map((item) => (
-                    <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
-                  ))}
-                </ButtonGroup>
-              }
-              {!isAdmin &&
-                <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-                  {navItems.map((item) => (
-                    <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
-                  ))}
-                </ButtonGroup>
-              }
-            </SignedIn>*/}
-            <SignedOut>
+          {/*<SignedIn>
+            {isAdmin &&
               <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-                {publicNavItems.map((item) => (
+                {adminNavItems.map((item) => (
                   <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
                 ))}
               </ButtonGroup>
-            </SignedOut>
+            }
+            {!isAdmin &&
+              <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
+                {navItems.map((item) => (
+                  <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
+                ))}
+              </ButtonGroup>
+            }
+          </SignedIn>*/}
+          <SignedOut>
+            <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
+              {publicNavItems.map((item) => (
+                <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
+              ))}
+            </ButtonGroup>
+          </SignedOut>
 
-            <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
-              <Box sx={{}}>
-              </Box>
-              <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
-                {/*<SignedIn>
-                  {false &&
-                    <OrganizationSwitcher
-                      appearance={{
+          <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
+            <Box sx={{}}>
+            </Box>
+            <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
+              {/*<SignedIn>
+                {false &&
+                  <OrganizationSwitcher
+                    appearance={{
+                      baseTheme: isDarkTheme ? dark : undefined,
+                    }}
+                    organizationProfileProps={{
+                      appearance: {
                         baseTheme: isDarkTheme ? dark : undefined,
-                      }}
-                      organizationProfileProps={{
-                        appearance: {
-                          baseTheme: isDarkTheme ? dark : undefined,
-                        }
-                      }}
-                      organizationProfileMode='navigation'
-                      organizationProfileUrl='/organization'
-                    />
-                  }
-                  {true &&
-                    <UserButton
-                      appearance={{
+                      }
+                    }}
+                    organizationProfileMode='navigation'
+                    organizationProfileUrl='/organization'
+                  />
+                }
+                {true &&
+                  <UserButton
+                    appearance={{
+                      baseTheme: isDarkTheme ? dark : undefined,
+                    }}
+                    userProfileProps={{
+                      appearance: {
                         baseTheme: isDarkTheme ? dark : undefined,
-                      }}
-                      userProfileProps={{
-                        appearance: {
-                          baseTheme: isDarkTheme ? dark : undefined,
-                        }
-                      }}
-                      userProfileUrl='/settings'
-                      userProfileMode='navigation'
-                    />
-                  }
-                </SignedIn>
-                <SignedOut>
-                  <Button variant="text" onClick={() => router.push('/login')} >
-                    <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
-                      <Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >{languageData[language].Menu.login}</Typography>
-                    </Stack>
-                  </Button>
-                </SignedOut>*/}
-              </Box>
+                      }
+                    }}
+                    userProfileUrl='/settings'
+                    userProfileMode='navigation'
+                  />
+                }
+              </SignedIn>
+              <SignedOut>
+                <Button variant="text" onClick={() => router.push('/login')} >
+                  <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                    <Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >{languageData[language].Menu.login}</Typography>
+                  </Stack>
+                </Button>
+              </SignedOut>*/}
+            </Box>
+            <IconButton
+              color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { md: 'none' }, }}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              {
+                /*<AccountButton />*/
+              }
+
+              {/*<SignedIn>
+                {true &&
+                  <UserButton
+                    appearance={{
+                      baseTheme: isDarkTheme ? dark : undefined,
+                    }}
+                    userProfileProps={{
+                      appearance: {
+                        baseTheme: isDarkTheme ? dark : undefined,
+                      }
+                    }}
+                    userProfileUrl='/settings'
+                    userProfileMode='navigation'
+                  />
+                }
+              </SignedIn>
+
+              <SignedOut>
+                <Button variant="contained" onClick={() => router.push('/dashboard')} >
+                  <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                    <Typography >{languageData[language].Menu.login}</Typography>
+                  </Stack>
+                </Button>
+              </SignedOut>*/}
+              <AccountButton />
               <IconButton
                 color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
                 aria-label="open drawer"
                 edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { md: 'none' }, }}
+                onClick={handleMenuOpen}
+                sx={{ ml: 2, display: { xs: 'block', sm: 'none' }, }}
               >
                 <MenuIcon />
               </IconButton>
 
-              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                {
-                  /*<AccountButton />*/
-                }
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleMenuClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+              >
+                {navItems.map((item) => (
+                  <MenuItem onClick={() => navigateTo(item)} key={item}>{item}</MenuItem>
+                ))}
+              </Menu>
+            </Box>
 
-                {/*<SignedIn>
-                  {true &&
-                    <UserButton
-                      appearance={{
-                        baseTheme: isDarkTheme ? dark : undefined,
-                      }}
-                      userProfileProps={{
-                        appearance: {
-                          baseTheme: isDarkTheme ? dark : undefined,
-                        }
-                      }}
-                      userProfileUrl='/settings'
-                      userProfileMode='navigation'
-                    />
-                  }
-                </SignedIn>
+          </Stack>
 
-                <SignedOut>
-                  <Button variant="contained" onClick={() => router.push('/dashboard')} >
-                    <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
-                      <Typography >{languageData[language].Menu.login}</Typography>
-                    </Stack>
-                  </Button>
-                </SignedOut>*/}
-                <AccountButton />
-                <IconButton
-                  color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={handleMenuOpen}
-                  sx={{ ml: 2, display: { xs: 'block', sm: 'none' }, }}
-                >
-                  <MenuIcon />
-                </IconButton>
-
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleMenuClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                >
-                  {navItems.map((item) => (
-                    <MenuItem onClick={() => navigateTo(item)} key={item}>{item}</MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-
-            </Stack>
-
-          </Toolbar>
-          {theme.palette.mode === 'light' && <Divider />}
-        </AppBar>
-      }
+        </Toolbar>
+        {theme.palette.mode === 'light' && <Divider />}
+      </AppBar>    
 
       <Drawer
         variant="temporary"

@@ -10,6 +10,7 @@ export interface Token {
   decimals: number;
   name: string;
   symbol: string;
+  logo?: string;
 }
 
 export type TokenListResponse = {
