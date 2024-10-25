@@ -130,7 +130,7 @@ function Header() {
         {/*<Stack direction={'row'} my={2} justifyItems={'center'} alignContent={'center'} mx={'auto'} display={'block'} width={'fit-content'}>
         <AccountButton />
       </Stack>*/}
-        {/*<SignedIn>
+        <SignedIn>
           {isAdmin &&
             <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
               {adminNavItems.map((item) => (
@@ -145,7 +145,7 @@ function Header() {
               ))}
             </ButtonGroup>
           }
-        </SignedIn>*/}
+        </SignedIn>
 
         <SignedOut>
           <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
@@ -186,7 +186,7 @@ function Header() {
             {headerButton}
           </Box>
 
-          {/*<SignedIn>
+          <SignedIn>
             {isAdmin &&
               <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
                 {adminNavItems.map((item) => (
@@ -201,7 +201,7 @@ function Header() {
                 ))}
               </ButtonGroup>
             }
-          </SignedIn>*/}
+          </SignedIn>
           <SignedOut>
             <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
               {publicNavItems.map((item) => (
@@ -214,7 +214,7 @@ function Header() {
             <Box sx={{}}>
             </Box>
             <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
-              {/*<SignedIn>
+              <SignedIn>
                 {false &&
                   <OrganizationSwitcher
                     appearance={{
@@ -250,7 +250,7 @@ function Header() {
                     <Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >{languageData[language].Menu.login}</Typography>
                   </Stack>
                 </Button>
-              </SignedOut>*/}
+              </SignedOut>
             </Box>
             <IconButton
               color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
@@ -267,7 +267,7 @@ function Header() {
                 /*<AccountButton />*/
               }
 
-              {/*<SignedIn>
+              <SignedIn>
                 {true &&
                   <UserButton
                     appearance={{
@@ -290,8 +290,8 @@ function Header() {
                     <Typography >{languageData[language].Menu.login}</Typography>
                   </Stack>
                 </Button>
-              </SignedOut>*/}
-              <AccountButton />
+              </SignedOut>
+              {/* <AccountButton /> */}
               <IconButton
                 color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
                 aria-label="open drawer"

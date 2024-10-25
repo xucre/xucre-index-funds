@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import DashboardNewsCard from "./DashboardNewsCard";
 //import AccountButton from "./accountButton";
 import dayjs from 'dayjs';
+import { Language } from "@/metadata/translations";
 
 export interface NewsItem {
   title: string;
@@ -24,7 +25,19 @@ export default function DashboardNews() {
 
   const refresh = async () => {
     const feed = await getFeed();
-    setNews(feed);
+    console.log(feed);
+    const _feed = feed.reduce((acc: NewsItem[], item: NewsItem) => {
+      if (item.link.includes(`https://www.xucre.net/en/`)) {
+        console.log('EN')
+        if (language === Language.EN) return [...acc, item];
+        return acc;
+      } else {
+        if (language !== Language.EN) return [...acc, item];
+      }
+      return acc;
+    }, []);
+    console.log(_feed);
+    setNews(_feed);
   }
 
   useEffect(() => {
