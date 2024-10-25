@@ -8,6 +8,7 @@ import { wagmiAdapter, config, projectId, networks } from '@/config'
 import { createAppKit } from '@reown/appkit/react'
 import { mainnet, polygon, type AppKitNetwork } from '@reown/appkit/networks'
 import { cookieToInitialState, State, WagmiProvider, type Config } from 'wagmi'
+import { dark, shadesOfPurple, experimental_createTheme } from '@clerk/themes'
 
 import { useTheme } from '@mui/material'
 import { SFDCProvider } from '@/hooks/useSFDC'
@@ -50,33 +51,26 @@ export function ContextProvider({
   //const [modalState, setModalState] = React.useState(null as any);
   useEffect(() => {
     console.log('theme', theme.palette.mode)
-    /*const result = createWeb3Modal({
-      defaultChain: polygon,
-      projectId,
-      wagmiConfig: _config,
-      enableAnalytics: true,
-      excludeWalletIds: [
-        //'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
-        //'4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0'
-      ],
-      includeWalletIds: [
-        //'3e2f036d9c513d07af5468ad7672e42a27432a54eb1242e498d1a1be1f488c4d',
-      ],
-      themeMode: theme.palette.mode,
-      themeVariables: {
-        '--w3m-color-mix': theme.palette.mode === 'dark' ? '#D4E815' : '#1B1E3F',
-        //'--w3m-color-mix-strength': 40
-      }
-    })*/
-    //setModalState(result)
     setIsLoaded(true)
   }, [])
-
+  const customTheme = experimental_createTheme({})
   if (!isLoaded) return null;
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
-        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+        <ClerkProvider 
+          signInUrl={'/sign-in'}
+          signInFallbackRedirectUrl={'/sign-in'}
+          signInForceRedirectUrl={'/sign-in'}
+          signUpFallbackRedirectUrl={'/sign-up'}
+          signUpForceRedirectUrl={'/sign-up'} 
+          signUpUrl={'/sign-up'} 
+          afterSignOutUrl={'/'} 
+          appearance={{
+            baseTheme: dark
+          }}
+          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        >
           <SnackbarProvider maxSnack={3} >
 
             <SFDCProvider>

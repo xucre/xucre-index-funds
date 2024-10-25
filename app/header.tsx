@@ -245,7 +245,7 @@ function Header() {
                 }
               </SignedIn>
               <SignedOut>
-                <Button variant="text" onClick={() => router.push('/login')} >
+                <Button variant="text" onClick={() => router.push('/sign-in')} >
                   <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
                     <Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >{languageData[language].Menu.login}</Typography>
                   </Stack>
@@ -285,7 +285,7 @@ function Header() {
               </SignedIn>
 
               <SignedOut>
-                <Button variant="contained" onClick={() => router.push('/dashboard')} >
+                <Button variant="contained" onClick={() => router.push('/sign-in')} >
                   <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
                     <Typography >{languageData[language].Menu.login}</Typography>
                   </Stack>
