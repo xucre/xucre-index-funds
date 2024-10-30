@@ -80,7 +80,7 @@ const AppMenu: React.FC = () => {
     let currentItemRef: React.RefObject<HTMLButtonElement> | null = null;
     menuGroups.forEach((group) => {
       group.items.forEach((item) => {
-        if (pathname.includes(item.path)) {
+        if (pathname.includes(item.path) || (pathname === '/edit' && item.path === '/dashboard')) {
           currentItemRef = item.ref;
         }
       });
@@ -155,7 +155,7 @@ const AppMenu: React.FC = () => {
               FabProps={{
                 sx: {
                   padding: theme.spacing(1),
-                  color: pathname.includes(item.path)
+                  color: pathname.includes(item.path) || (pathname === '/edit' && item.path === '/dashboard')
                     ? theme.palette.success.main
                     : 'default',
                   backgroundColor: 'transparent',

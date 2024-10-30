@@ -38,7 +38,7 @@ const EditProfile = ({ }) => {
   useEffect(() => {
     if (!sfdcUser) return;
     setRiskTolerance(sfdcUser.riskTolerance);
-    setSalaryContribution(sfdcUser.salaryContribution.toString());
+    setSalaryContribution(String(sfdcUser.salaryContribution));
     if (sfdcUser.wallets && sfdcUser.wallets.length > 0) {
       setSignedMessage(sfdcUser.wallets[0].signedMessage || '');
     }

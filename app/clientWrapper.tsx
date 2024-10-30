@@ -16,6 +16,7 @@ import Footer from './footer';
 import { MixpanelProvider } from '@/hooks/useMixpanel';
 import AppMenu from '@/components/ui/AppMenu';
 import { SignedIn } from '@clerk/nextjs';
+import { usePathname } from 'next/navigation';
 //import { TokenListProvider } from '@/hooks/useTokenList';
 
 export default function Wrapper({
@@ -23,6 +24,8 @@ export default function Wrapper({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const hideLoginButton = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email'
   return (
     <Box>
       <MixpanelProvider>
@@ -33,9 +36,12 @@ export default function Wrapper({
               <Header />
               <Stack spacing={2} direction="row" width={'full'}>
                 <SignedIn>
-                <Box minWidth={200}>
-                  <AppMenu />
-                </Box>
+                  {!hideLoginButton && 
+                    <Box minWidth={200}>
+                      <AppMenu />
+                    </Box>
+                  }
+                  
                 </SignedIn>
                 <Box flexGrow={1}>
                   {children}
