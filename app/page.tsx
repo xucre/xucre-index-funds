@@ -4,6 +4,7 @@ import { useAccount } from 'wagmi';
 import WalletNotConnected from '@/components/walletNotConnected';
 import { useRouter } from 'next/navigation';
 import { Avatar, Box, Button, Chip, Stack, Typography } from '@mui/material';
+import { SignedIn, SignedOut } from '@clerk/nextjs';
 
 export default function Home() {
   const router = useRouter();
@@ -27,7 +28,12 @@ export default function Home() {
         </Stack>
         <Stack direction={'column'} spacing={2} justifyContent={'center'} alignItems={'flex-start'}>
           <Typography variant={'body2'} color={'textSecondary'}>¿Ya eres miembro?</Typography>
-          <Chip label="Iniciar sesión" onClick={() => { router.push('/sign-in') }} sx={{color: 'white',bgcolor: '#00872a', fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} />
+          <SignedIn>
+          <Chip label="Iniciar sesión" onClick={() => { router.push('/dashboard') }} sx={{color: 'white',bgcolor: '#00872a', fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} />
+          </SignedIn>
+          <SignedOut>
+            <Chip label="Iniciar sesión" onClick={() => { router.push('/sign-in') }} sx={{color: 'white',bgcolor: '#00872a', fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} />
+          </SignedOut>
         </Stack>
       </Stack>
     </main>
