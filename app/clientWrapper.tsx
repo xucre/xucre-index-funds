@@ -6,7 +6,7 @@ import '@fontsource/roboto/700.css';
 
 import './globals.css';
 import Header from './header';
-import { Box, CssBaseline } from '@mui/material';
+import { Box, CssBaseline, Stack } from '@mui/material';
 
 import CTA from '@/components/ui/cta';
 import { Suspense } from 'react';
@@ -14,6 +14,8 @@ import { ThemeSwitcherProvider } from '@/hooks/useThemeSwitcher';
 import { LanguageContextProvider } from '@/hooks/useLanguage';
 import Footer from './footer';
 import { MixpanelProvider } from '@/hooks/useMixpanel';
+import AppMenu from '@/components/ui/AppMenu';
+import { SignedIn } from '@clerk/nextjs';
 //import { TokenListProvider } from '@/hooks/useTokenList';
 
 export default function Wrapper({
@@ -29,8 +31,17 @@ export default function Wrapper({
             <Suspense >
               <CssBaseline enableColorScheme />
               <Header />
-              {children}
-              <CTA type={'main'} />
+              <Stack spacing={2} direction="row" width={'full'}>
+                <SignedIn>
+                <Box minWidth={200}>
+                  <AppMenu />
+                </Box>
+                </SignedIn>
+                <Box flexGrow={1}>
+                  {children}
+                </Box>
+              </Stack>              
+              {/* <CTA type={'main'} /> */}
               <Footer />
             </Suspense>
           </LanguageContextProvider>

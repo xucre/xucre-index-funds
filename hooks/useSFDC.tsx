@@ -21,7 +21,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
 
 
   const refresh = async () => {
-    const org = user.organizationMemberships.length > 0 ? user.organizationMemberships[0].id : '';
+    const org = user?.organizationMemberships?.length > 0 ? user?.organizationMemberships[0].id : '';
     const response = await getUser(org, user.id);
     setSfdcUser(response);
     setIsLoaded(true);
@@ -43,7 +43,12 @@ export const SFDCProvider = ({ children }: { children: any }) => {
 
   useEffect(() => {
     if (!user) return;
-    refresh();
+    try {
+      refresh();
+    } catch (err) {
+      console.error(err);
+    }
+    //refresh();
   }, [user])
 
   const value = useMemo(() => ({ sfdcUser, updateUser, refresh, isLoaded }), [sfdcUser]);

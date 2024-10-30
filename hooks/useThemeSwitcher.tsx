@@ -45,7 +45,7 @@ export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
                 backgroundColor: mode === 'dark' ? '#010101' : '#ffffff', // '#1b6756'
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
-                backgroundImage: mode === 'dark' ? 'radial-gradient(at left top, #010101, #084D3E)' : 'radial-gradient(at left top, #77af3a, #ffffff, #77af3a)',
+                backgroundImage: mode === 'dark' ? 'radial-gradient(at left top, #010101, #084D3E)' : 'radial-gradient(at left top, #C2EB96, #084D3E, #C2EB96)',
               },
             },
           },

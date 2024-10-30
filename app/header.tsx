@@ -1,8 +1,8 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, AppBar, Box, Button, Toolbar, Stack, Divider, Drawer, IconButton, Menu, MenuItem, ButtonGroup } from '@mui/material';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Menu as MenuIcon, LightMode, DarkMode } from '@mui/icons-material'
 import { useAccount, useDisconnect } from 'wagmi';
 import { useThemeSwitcher } from '@/hooks/useThemeSwitcher';
@@ -24,20 +24,21 @@ function Header() {
   const mixpanel = useMixpanel();
   const { user } = useUser();
   const { organization } = useOrganization();
+  const pathname = usePathname()
   const searchParams = useSearchParams()
   const { language } = useLanguage();
   const navItems = [
-    languageData[language].Menu.home,
+    //languageData[language].Menu.home,
     languageData[language].Menu.dashboard,
-    languageData[language].Menu.index_funds,
-    languageData[language].Menu.faq
+    languageData[language].Menu.index_funds//,
+    //languageData[language].Menu.faq
   ];
   const adminNavItems = [
-    languageData[language].Menu.home,
+    //languageData[language].Menu.home,
     languageData[language].Menu.dashboard,
     languageData[language].Menu.index_funds,
     //languageData[language].Menu.index_builder,
-    languageData[language].Menu.faq,
+    //languageData[language].Menu.faq,
     languageData[language].Menu.organization,
     languageData[language].Menu.billing,
   ];
@@ -58,8 +59,12 @@ function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const url = 'xucre.expo.client://ViewWallet';
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
   const open = Boolean(anchorEl);
   const isDarkTheme = theme.palette.mode === 'dark';
+  const hideLoginButton =  pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email'
+  const isHome = pathname === '/';
+
   const handleModeChange = () => {
     themeSwitcher();
   };
@@ -111,8 +116,8 @@ function Header() {
   const headerButton = (
     <Button variant="text" onClick={() => router.push('/')} >
       <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
-        <img src={'/icon-green.png'} className="side-image" alt="menuLogo" />
-        {/*<Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} ></Typography>*/}
+        <img src={'/icon_new2.png'} className="side-image" alt="menuLogo" />
+        {<Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >Xucre Investments</Typography>}
       </Stack>
     </Button>
   );
@@ -124,9 +129,6 @@ function Header() {
   const drawer = (
     <Stack direction={'column'} justifyContent={'space-between'} alignItems={'center'} spacing={2} onClick={handleDrawerToggle} sx={{ textAlign: 'center', zIndex: 100000, height: '95vh' }}>
       <Box width={'100%'}>
-        {headerButton}
-        <Divider />
-
         {/*<Stack direction={'row'} my={2} justifyItems={'center'} alignContent={'center'} mx={'auto'} display={'block'} width={'fit-content'}>
         <AccountButton />
       </Stack>*/}
@@ -146,18 +148,14 @@ function Header() {
             </ButtonGroup>
           }
         </SignedIn>
-
-        <SignedOut>
-          <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-            {publicNavItems.map((item) => (
-              <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
-            ))}
-          </ButtonGroup>
-        </SignedOut>
-
       </Box>
       <Stack direction={'column'} spacing={2} width={'100%'} alignItems={'center'}>
 
+        <SignedOut>
+          {!hideLoginButton &&
+            <AccountButton />
+          }          
+        </SignedOut>
         <LanguageSelect type={'button'} />
 
         <IconButton
@@ -172,21 +170,19 @@ function Header() {
 
         <Social />
       </Stack>
-      {/*<CTA type={'sidebar'} />*/}
     </Stack>
   );
 
   return (
     <div>
       
-      <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '1px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
+      <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '0px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
         <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-
           <Box sx={{}}>
-            {headerButton}
+            {!isHome && headerButton}
           </Box>
 
-          <SignedIn>
+          {/* <SignedIn>
             {isAdmin &&
               <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
                 {adminNavItems.map((item) => (
@@ -208,14 +204,14 @@ function Header() {
                 <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
               ))}
             </ButtonGroup>
-          </SignedOut>
+          </SignedOut> */}
 
           <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
             <Box sx={{}}>
             </Box>
             <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
               <SignedIn>
-                {false &&
+                {user && user.publicMetadata.superAdmin &&
                   <OrganizationSwitcher
                     appearance={{
                       baseTheme: isDarkTheme ? dark : undefined,
@@ -229,7 +225,7 @@ function Header() {
                     organizationProfileUrl='/organization'
                   />
                 }
-                {true &&
+                {user && !user.publicMetadata.superAdmin &&
                   <UserButton
                     appearance={{
                       baseTheme: isDarkTheme ? dark : undefined,
@@ -244,13 +240,6 @@ function Header() {
                   />
                 }
               </SignedIn>
-              <SignedOut>
-                <Button variant="text" onClick={() => router.push('/sign-in')} >
-                  <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
-                    <Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >{languageData[language].Menu.login}</Typography>
-                  </Stack>
-                </Button>
-              </SignedOut>
             </Box>
             <IconButton
               color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
@@ -268,7 +257,8 @@ function Header() {
               }
 
               <SignedIn>
-                {true &&
+                
+                {user &&
                   <UserButton
                     appearance={{
                       baseTheme: isDarkTheme ? dark : undefined,
@@ -283,14 +273,6 @@ function Header() {
                   />
                 }
               </SignedIn>
-
-              <SignedOut>
-                <Button variant="contained" onClick={() => router.push('/sign-in')} >
-                  <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
-                    <Typography >{languageData[language].Menu.login}</Typography>
-                  </Stack>
-                </Button>
-              </SignedOut>
               {/* <AccountButton /> */}
               <IconButton
                 color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
@@ -320,7 +302,7 @@ function Header() {
           </Stack>
 
         </Toolbar>
-        {theme.palette.mode === 'light' && <Divider />}
+        {/* {theme.palette.mode === 'light' && <Divider />} */}
       </AppBar>    
 
       <Drawer

@@ -3,7 +3,7 @@
 import React, { ReactNode, useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SnackbarProvider } from 'notistack';
-import { ClerkProvider } from '@clerk/nextjs'
+import { ClerkLoaded, ClerkProvider } from '@clerk/nextjs'
 import { wagmiAdapter, config, projectId, networks } from '@/config'
 import { createAppKit } from '@reown/appkit/react'
 import { mainnet, polygon, type AppKitNetwork } from '@reown/appkit/networks'
@@ -60,10 +60,8 @@ export function ContextProvider({
       <QueryClientProvider client={queryClient}>
         <ClerkProvider 
           signInUrl={'/sign-in'}
-          signInFallbackRedirectUrl={'/sign-in'}
-          signInForceRedirectUrl={'/sign-in'}
-          signUpFallbackRedirectUrl={'/sign-up'}
-          signUpForceRedirectUrl={'/sign-up'} 
+          signInFallbackRedirectUrl={'/dashboard'}
+          signUpFallbackRedirectUrl={'/dashboard'}
           signUpUrl={'/sign-up'} 
           afterSignOutUrl={'/'} 
           appearance={{
@@ -72,10 +70,11 @@ export function ContextProvider({
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
         >
           <SnackbarProvider maxSnack={3} >
-
+          <ClerkLoaded>
             <SFDCProvider>
               {children}
             </SFDCProvider>
+          </ClerkLoaded>
           </SnackbarProvider>
         </ClerkProvider>
       </QueryClientProvider>

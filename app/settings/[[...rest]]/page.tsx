@@ -1,5 +1,5 @@
 'use client'
-import { UserProfile } from "@clerk/nextjs";
+import { SignOutButton, UserProfile } from "@clerk/nextjs";
 import { Box, useTheme } from "@mui/material"
 import LinkIcon from '@mui/icons-material/Link';
 import { Suspense } from "react";
@@ -21,6 +21,9 @@ export default function Settings() {
             <UserProfile.Page label="Web3" labelIcon={<LinkIcon fontSize="small" />} url="web3">
               <WalletManagement />
             </UserProfile.Page>
+            {/* <UserProfile.Page label="Logout" labelIcon={<LinkIcon fontSize="small" />} url="logout">
+              <SignOutButton />
+            </UserProfile.Page> */}
 
           </UserProfile>
         }

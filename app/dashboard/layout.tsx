@@ -5,6 +5,7 @@ import DashboardNavigation from "@/components/dashboard/DashboardNavigation";
 import DashboardNews from "@/components/dashboard/DashboardNews";
 import EmptyProfileState from "@/components/onboarding/EmptyProfile";
 import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
+import OpaqueCard from "@/components/ui/OpaqueCard";
 import { useSFDC } from "@/hooks/useSFDC";
 import { getSafeAddress, setSafeAddress } from "@/service/db";
 import { getDashboardBorderColor } from "@/service/helpers";
@@ -75,9 +76,9 @@ export default function DashboardLayout({
   const profileFilled = isLoaded && sfdcUser && sfdcUser.status === 'Active';
   return (
     <Suspense>
-      <Box width={'full'} px={5}>
+      <Box width={'full'} px={5} py={4}>
         {!profileFilled &&
-          <EmptyProfileState onCreateProfile={(() => { router.push('/edit') })} />
+          <OpaqueCard><EmptyProfileState onCreateProfile={(() => { router.push('/edit') })} /></OpaqueCard>
         }
 
         {profileFilled &&

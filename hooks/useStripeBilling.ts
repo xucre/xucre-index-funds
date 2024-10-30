@@ -14,7 +14,7 @@ export function useStripeBilling() {
   const reset = async () => {
     if (!organization) return;
     const data = (await getCustomerSubscription(organization.id));
-    const _subscription = data.subscription as Stripe.Subscription;
+    const _subscription = data ? data.subscription as Stripe.Subscription : null;
     if (_subscription && (_subscription.status === 'active' || _subscription.status === 'trialing')) {
       setPortalSession(data.portal);
       setSubscription(_subscription);
