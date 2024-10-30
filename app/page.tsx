@@ -18,7 +18,7 @@ export default function Home() {
     <main>
       <Stack direction={{xs: 'column', sm: 'row'}} spacing={{xs: 4, sm: 20}} justifyContent={'center'} alignItems={'center'} minHeight={'80vh'}>
         <Stack direction={'row'} spacing={2} justifyContent={'center'} alignItems={'center'} >
-          <Avatar sx={{ width: 80, height: 80 }} src={'/icon_new2.png'} alt="menuLogo" />
+          <Avatar sx={{ width: 80, height: 80 }} src={'/icon_new2.png'} alt="menuLogo" variant={'square'} />
           <Stack direction={'column'} spacing={0}>
             <Typography variant={'body2'} color={'textSecondary'}>Bienvenido a</Typography>
             <Typography variant={'h4'}>Xucre Investments</Typography>
