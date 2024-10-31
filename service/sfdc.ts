@@ -87,7 +87,7 @@ export async function upsertUserDetails(user: SFDCUserData) {
       const conn = await createConnection();
       //const requestType = new URL(req.url).searchParams.get('type');
       if (user.userId.length > 0) {
-        const userDetails = await conn.apex.post(`/appAccess`, user);
+        const userDetails = await conn.apex.post(`/userData`, user);
         //console.log(userDetails);
         //await conn.sobject('Organization_User__c').upsert({User_Id__c: userId, Email__c: email }, 'User_Id__c');
       } else {
@@ -96,7 +96,7 @@ export async function upsertUserDetails(user: SFDCUserData) {
       }
   } catch (err) {
     console.log('error :/', err);
-    //throw new Error('Error creating connection');
+    throw new Error('Error creating connection');
   }
 }
 

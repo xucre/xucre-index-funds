@@ -16,10 +16,10 @@ const EmptyProfileState = ({ onCreateProfile }) => {
     >
       <AccountCircleIcon color="action" fontSize="large" />
       <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-        No profile found
+        No se encontró perfil
       </Typography>
       <Typography variant="body1" color="textSecondary">
-        It seems you haven’t created your profile yet. Let's set it up to get started!
+        Parece que aún no has creado tu perfil. ¡Vamos a configurarlo para empezar!
       </Typography>
       <Button
         variant="contained"
@@ -27,7 +27,7 @@ const EmptyProfileState = ({ onCreateProfile }) => {
         sx={{ mt: 3 }}
         onClick={onCreateProfile}
       >
-        Create Profile
+        Crear Perfil
       </Button>
     </Box>
   );

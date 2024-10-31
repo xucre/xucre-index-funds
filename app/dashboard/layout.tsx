@@ -85,7 +85,7 @@ export default function DashboardLayout({
           <>
             <DashboardHeader />
             {!safeWallet ?
-              <EmptySafeWallet onCreateSafe={createSafeWallet} /> :
+              <OpaqueCard><EmptySafeWallet onCreateSafe={createSafeWallet} /></OpaqueCard> :
               <>
                 <Stack direction={matches ? 'row' : 'column'} spacing={8} justifyContent={'space-between'} px={5}>
                   <Stack direction={'column'} spacing={2} flexGrow={2}>

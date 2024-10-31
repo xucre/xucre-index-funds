@@ -1,12 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, TextField, MenuItem } from '@mui/material';
+import { Box, Typography, Button, TextField, MenuItem, Chip, Stack } from '@mui/material';
 import { useAccount, useSignMessage } from 'wagmi';
 import AccountButton from '@/components/accountButton';
 import { useSFDC } from '@/hooks/useSFDC';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { SFDCUserData, SFDCWallet } from '@/service/types';
 import { useRouter } from 'next/navigation';
+import OpaqueCard from '@/components/ui/OpaqueCard';
 
 const riskOptions = [
   { label: 'Aggressive', value: 'Aggressive' },
@@ -62,7 +63,7 @@ const EditProfile = ({ }) => {
       userEmail: user.emailAddresses[0].emailAddress,
       userId: user.id,
       role: isAdmin ? 'Administrator' : 'User',
-      organizationId: user.organizationMemberships[0].id,
+      organizationId: user.organizationMemberships[0].organization.id,
       status: 'Active',
       wallets: []
     } as SFDCUserData;
@@ -82,75 +83,80 @@ const EditProfile = ({ }) => {
     router.push('/dashboard')
   };
 
+  const WalletSection = () => {
+    return (
+      <>
+        {isConnected &&
+          <Button
+            variant="outlined"
+            onClick={() => signMessage({ account: address, message })}
+            sx={{ mt: 2 }}
+          >
+            Firmar Mensaje
+          </Button>
+        }
+        {!isConnected &&
+          <AccountButton />
+        }
+        {signedMessage && (
+          <Typography variant="body2" sx={{ mt: 2, color: 'green' }}>
+            ¡Mensaje firmado exitosamente!
+          </Typography>
+        )}
+      </>
+    )
+  }
+
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      textAlign="center"
-      p={4}
-      maxWidth="400px"
-      margin="auto"
-    >
-      <Typography variant="h5" gutterBottom>
-        Set up your investment profile
-      </Typography>
+      <OpaqueCard sx={{
+        p: 4,
+        my: 4,
+        ml: 6
+      }}>
+        <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
+          <Stack direction={'column'} spacing={2} justifyContent={'center'} alignItems={'center'} >
+            <Typography variant="h5" gutterBottom>
+              Configura tu perfil de inversión
+            </Typography>
 
-      <TextField
-        select
-        label="Risk Tolerance"
-        value={riskTolerance}
-        onChange={(e) => setRiskTolerance(e.target.value)}
-        fullWidth
-        margin="normal"
-      >
-        {riskOptions.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
+            <TextField
+              select
+              label="Tolerancia al riesgo"
+              value={riskTolerance}
+              onChange={(e) => setRiskTolerance(e.target.value)}
+              fullWidth
+              margin="normal"
+            >
+              {riskOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
 
-      <TextField
-        label="Salary Contribution (%)"
-        type="number"
-        value={salaryContribution}
-        onChange={(e) => setSalaryContribution(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-
-      {isConnected &&
-        <Button
-          variant="outlined"
-          onClick={() => signMessage({ account: address, message })}
-          sx={{ mt: 2 }}
-        >
-          Sign Message
-        </Button>
-      }
-      {!isConnected &&
-        <AccountButton />
-      }
-
-
-      {signedMessage && (
-        <Typography variant="body2" sx={{ mt: 2, color: 'green' }}>
-          Message signed successfully!
-        </Typography>
-      )}
-
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleSaveProfile}
-        sx={{ mt: 3 }}
-        disabled={!riskTolerance || !salaryContribution}
-      >
-        Save Profile
-      </Button>
-    </Box>
+            <TextField
+              label="Contribución salarial (%)"
+              type="number"
+              value={salaryContribution}
+              onChange={(e) => setSalaryContribution(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+          </Stack>
+          <Stack direction={'column'} minHeight={'20vh'}  height={'fill-content'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
+            <WalletSection />
+            <Stack direction={'row'} spacing={2} justifyContent={'flex-end'} alignItems={'flex-end'} >
+              <Chip 
+                label="Ahorrar" 
+                onClick={handleSaveProfile} 
+                disabled={!riskTolerance || !salaryContribution}
+                sx={{color: 'white',bgcolor: '#00872a', fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
+              />
+            </Stack>
+          </Stack>
+        </Stack>
+      </OpaqueCard>
+      
   );
 };
 

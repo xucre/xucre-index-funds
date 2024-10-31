@@ -16,10 +16,10 @@ const EmptySafeWallet = ({ onCreateSafe }) => {
     >
       <AccountCircleIcon color="action" fontSize="large" />
       <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-        No Safe Found
+        No se encontró Safe
       </Typography>
       <Typography variant="body1" color="textSecondary">
-        It seems you haven’t created your Safe wallet yet. Let's set it up to get started!
+        Parece que aún no has creado tu Safe wallet. ¡Vamos a configurarlo para comenzar!
       </Typography>
       <Button
         variant="contained"
@@ -27,7 +27,7 @@ const EmptySafeWallet = ({ onCreateSafe }) => {
         sx={{ mt: 3 }}
         onClick={onCreateSafe}
       >
-        Create Safe
+        Crear Safe
       </Button>
     </Box>
   );
