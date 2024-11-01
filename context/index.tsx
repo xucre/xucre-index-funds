@@ -9,9 +9,12 @@ import { createAppKit } from '@reown/appkit/react'
 import { mainnet, polygon, type AppKitNetwork } from '@reown/appkit/networks'
 import { cookieToInitialState, State, WagmiProvider, type Config } from 'wagmi'
 import { dark, shadesOfPurple, experimental_createTheme } from '@clerk/themes'
+import { esMX, enUS, ptBR } from '@clerk/localizations'
 
 import { useTheme } from '@mui/material'
 import { SFDCProvider } from '@/hooks/useSFDC'
+import { useLanguage } from '@/hooks/useLanguage';
+import { Language } from '@/metadata/translations/index';
 
 // Setup queryClient
 const queryClient = new QueryClient()
@@ -45,6 +48,7 @@ export function ContextProvider({
   children: ReactNode
   cookies?: string | null
 }) {
+  const {language} = useLanguage();
   const theme = useTheme();
   const [isLoaded, setIsLoaded] = React.useState(false);
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
@@ -54,6 +58,7 @@ export function ContextProvider({
     setIsLoaded(true)
   }, [])
   const customTheme = experimental_createTheme({})
+  const activeLanguage = language === Language.EN ? enUS : language === Language.PT ? ptBR : esMX;
   if (!isLoaded) return null;
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
@@ -68,6 +73,7 @@ export function ContextProvider({
             baseTheme: dark
           }}
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          localization={activeLanguage}
         >
           <SnackbarProvider maxSnack={3} >
           <ClerkLoaded>

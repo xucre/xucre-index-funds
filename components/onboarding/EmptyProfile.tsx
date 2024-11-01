@@ -2,8 +2,11 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useLanguage } from '@/hooks/useLanguage';
+import languageData, { Language } from '@/metadata/translations';
 
 const EmptyProfileState = ({ onCreateProfile }) => {
+  const {language}= useLanguage();
   return (
     <Box
       display="flex"
@@ -16,10 +19,10 @@ const EmptyProfileState = ({ onCreateProfile }) => {
     >
       <AccountCircleIcon color="action" fontSize="large" />
       <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-        No se encontró perfil
+        {languageData[language as Language].Onboarding.empty_profile}
       </Typography>
       <Typography variant="body1" color="textSecondary">
-        Parece que aún no has creado tu perfil. ¡Vamos a configurarlo para empezar!
+        {languageData[language as Language].Onboarding.empty_profile_description}
       </Typography>
       <Button
         variant="contained"
@@ -27,7 +30,7 @@ const EmptyProfileState = ({ onCreateProfile }) => {
         sx={{ mt: 3 }}
         onClick={onCreateProfile}
       >
-        Crear Perfil
+        {languageData[language as Language].Onboarding.create_profile}
       </Button>
     </Box>
   );

@@ -30,7 +30,6 @@ export default function Wrapper({
     <Box>
       <MixpanelProvider>
         <ThemeSwitcherProvider>
-          <LanguageContextProvider>
             <Suspense >
               <CssBaseline enableColorScheme />
               <Header />
@@ -50,7 +49,6 @@ export default function Wrapper({
               {/* <CTA type={'main'} /> */}
               <Footer />
             </Suspense>
-          </LanguageContextProvider>
         </ThemeSwitcherProvider>
       </MixpanelProvider>
     </Box>

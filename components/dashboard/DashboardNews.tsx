@@ -25,10 +25,8 @@ export default function DashboardNews() {
 
   const refresh = async () => {
     const feed = await getFeed();
-    console.log(feed);
     const _feed = feed.reduce((acc: NewsItem[], item: NewsItem) => {
       if (item.link.includes(`https://www.xucre.net/en/`)) {
-        console.log('EN')
         if (language === Language.EN) return [...acc, item];
         return acc;
       } else {

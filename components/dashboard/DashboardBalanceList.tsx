@@ -16,6 +16,7 @@ import { getChainNameRainbowKit } from '../../service/helpers';
 import { TokenDetails } from "@/service/types";
 import DashboardBalanceItem from "./DashboardBalanceItem";
 import { isAddressEqual } from "viem";
+import Dashboard from '../../app/dashboard/page';
 
 const BASEURL = 'https://xucre-public.s3.sa-east-1.amazonaws.com/';// + coinIconNames[token.chainId as keyof typeof coinIconNames].toLowerCase() + '.png'
 
@@ -61,7 +62,7 @@ export default function DashboardBalanceList({ address }: { address: string }) {
   }, [balances])
   return (
     <OpaqueCard>
-      <CardHeader sx={{ py: 1, mb: 0 }} title={<Typography variant="body1" color="text.secondary">Balances</Typography>} />
+      <CardHeader sx={{ py: 1, mb: 0 }} title={<Typography variant="body1" color="text.secondary">{languageData[language].Dashboard.balances}</Typography>} />
       <CardContent sx={{ py: 0 }} >
         <List>
           {tokenMap ? balances.map((balance, index) => {

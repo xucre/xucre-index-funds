@@ -5,7 +5,6 @@ import EmptyProfileState from "@/components/onboarding/EmptyProfile";
 import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
 import { useSFDC } from "@/hooks/useSFDC";
 import { getSafeAddress, setSafeAddress } from "@/service/db";
-import { createAccount } from "@/service/safe";
 import { updateSafeWalletDetails } from "@/service/sfdc";
 import { useUser } from "@clerk/nextjs";
 import { Box, useTheme } from "@mui/material"

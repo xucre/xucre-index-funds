@@ -18,14 +18,14 @@ export interface CreateAccountOptions {
 
 export async function createAccount(options: CreateAccountOptions): Promise<string> {
   const { owner, threshold, rpcUrl } = options;
-
+  console.log(owner, threshold, rpcUrl);
   const safeAccountConfig: SafeAccountConfig = {
     owners: [owner, CORP_PUBLIC_ADDRESS],
     threshold: 1,
   };
 
-  const paymasterUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
-  const bundlerUrl = `https://api.pimlico.io/v1/sepolia/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
+  const paymasterUrl = `https://api.pimlico.io/v2/11155111/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
+  const bundlerUrl = `https://api.pimlico.io/v2/11155111/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
   //console.log(paymasterUrl, safeAccountConfig);
   const packData = {
       provider: rpcUrl,

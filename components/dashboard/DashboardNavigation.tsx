@@ -28,9 +28,9 @@ export default function DashboardNavigation() {
 
   return (
     <Stack direction={'row'} justifyContent={'start'} alignItems={'center'} my={4} px={0} mb={2} spacing={2}>
-      <Chip label="Home" onClick={() => { handleNavigation('/dashboard') }} sx={{ bgcolor: isHome ? '#00872a' : '', fontSize: isHome ? 18 : 14, fontWeight: isHome ? 'bold' : '', py: 2, px: 1 }} />
-      <Chip label="Balances" onClick={() => { handleNavigation('/dashboard/balances') }} sx={{ bgcolor: isBalance ? '#00872a' : '', fontSize: isBalance ? 18 : 16, fontWeight: isBalance ? 'bold' : '', py: 2, px: 1 }} />
-      <Chip label="Transactions" onClick={() => { handleNavigation('/dashboard/transactions') }} sx={{ bgcolor: isTransactions ? '#00872a' : '', fontSize: isTransactions ? 18 : 16, fontWeight: isTransactions ? 'bold' : '', py: 2, px: 1 }} />
+      <Chip label={languageData[language].Dashboard.home} onClick={() => { handleNavigation('/dashboard') }} sx={{ bgcolor: isHome ? '#00872a' : '', fontSize: isHome ? 18 : 14, fontWeight: isHome ? 'bold' : '', py: 2, px: 1 }} />
+      <Chip label={languageData[language].Dashboard.balances} onClick={() => { handleNavigation('/dashboard/balances') }} sx={{ bgcolor: isBalance ? '#00872a' : '', fontSize: isBalance ? 18 : 16, fontWeight: isBalance ? 'bold' : '', py: 2, px: 1 }} />
+      <Chip label={languageData[language].Dashboard.transactions} onClick={() => { handleNavigation('/dashboard/transactions') }} sx={{ bgcolor: isTransactions ? '#00872a' : '', fontSize: isTransactions ? 18 : 16, fontWeight: isTransactions ? 'bold' : '', py: 2, px: 1 }} />
       {/*<Chip label="Deposit" variant="outlined" onClick={handleNavigation} />*/}
     </Stack>
   );

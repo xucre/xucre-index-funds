@@ -9,9 +9,12 @@ import { styled, useTheme } from '@mui/material/styles';
 import { getTextColor } from '@/service/theme';
 import { CardHeader, Link } from '@mui/material';
 import OpaqueCard from '../ui/OpaqueCard';
+import languageData from '@/metadata/translations';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const DashboardNewsCard = ({ title, text, publishDate, url }) => {
   const theme = useTheme();
+  const {language} = useLanguage();
   const textColor = getTextColor(theme);
   return (
     <OpaqueCard>
@@ -24,7 +27,7 @@ const DashboardNewsCard = ({ title, text, publishDate, url }) => {
       {url && (
         <CardActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', py: 0 }}>
           <Link href={url} textTransform={'none'} underline='none' target="_blank" rel="noopener noreferrer" sx={{ color: textColor, display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
-            <Typography color="text.secondary" fontSize={15}>Read More </Typography><KeyboardArrowRight color="disabled" />
+            <Typography color="text.secondary" fontSize={15}>{languageData[language].Dashboard.read_more} </Typography><KeyboardArrowRight color="disabled" />
           </Link>
         </CardActions>
       )}

@@ -2,8 +2,11 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useLanguage } from '@/hooks/useLanguage';
+import languageData, { Language } from '@/metadata/translations';
 
 const EmptySafeWallet = ({ onCreateSafe }) => {
+  const {language} = useLanguage();
   return (
     <Box
       display="flex"
@@ -16,10 +19,10 @@ const EmptySafeWallet = ({ onCreateSafe }) => {
     >
       <AccountCircleIcon color="action" fontSize="large" />
       <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-        No se encontró Safe
+        {languageData[language as Language].Onboarding.empty_safe}
       </Typography>
       <Typography variant="body1" color="textSecondary">
-        Parece que aún no has creado tu Safe wallet. ¡Vamos a configurarlo para comenzar!
+        {languageData[language as Language].Onboarding.empty_safe_description}
       </Typography>
       <Button
         variant="contained"
@@ -27,7 +30,7 @@ const EmptySafeWallet = ({ onCreateSafe }) => {
         sx={{ mt: 3 }}
         onClick={onCreateSafe}
       >
-        Crear Safe
+        {languageData[language as Language].Onboarding.create_safe}
       </Button>
     </Box>
   );

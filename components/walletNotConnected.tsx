@@ -3,6 +3,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 //import AccountButton from "./accountButton";
 import AccountButton from "@/components/accountButton";
+import languageData, { Language } from '@/metadata/translations';
 // components/LoadingIndicator.tsx
 export default function WalletNotConnected() {
   const theme = useTheme();
@@ -16,7 +17,7 @@ export default function WalletNotConnected() {
       }
 
       <Stack  direction={'row'} justifyContent={'center'} alignItems={'center'} spacing={2}>
-        <Typography >La billetera debe estar conectada para usar esta función.</Typography>
+        <Typography >{languageData[language].Onboarding.wallet_not_connected}</Typography>
       </Stack>
     </Stack>
   );

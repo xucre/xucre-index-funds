@@ -60,7 +60,7 @@ export default function FundChart({ prices, portfolio }: { prices: PriceData[], 
   });
 
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div>...</div>
 
   return (
     <LineChart

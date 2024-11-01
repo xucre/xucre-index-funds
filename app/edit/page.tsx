@@ -8,11 +8,13 @@ import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { SFDCUserData, SFDCWallet } from '@/service/types';
 import { useRouter } from 'next/navigation';
 import OpaqueCard from '@/components/ui/OpaqueCard';
+import languageData, { Language } from '@/metadata/translations';
+import { useLanguage } from "@/hooks/useLanguage";
 
 const riskOptions = [
-  { label: 'Aggressive', value: 'Aggressive' },
-  { label: 'Moderate', value: 'Moderate' },
-  { label: 'Conservative', value: 'Conservative' },
+  { label: 'risk_aggressive', value: 'Aggressive' },
+  { label: 'risk_moderate', value: 'Moderate' },
+  { label: 'risk_conservative', value: 'Conservative' },
 ];
 
 interface ProfileData {
@@ -22,6 +24,7 @@ interface ProfileData {
 }
 
 const EditProfile = ({ }) => {
+  const {language} = useLanguage();
   const [riskTolerance, setRiskTolerance] = useState('');
   const [salaryContribution, setSalaryContribution] = useState('');
   const [signedMessage, setSignedMessage] = useState('');
@@ -92,7 +95,7 @@ const EditProfile = ({ }) => {
             onClick={() => signMessage({ account: address, message })}
             sx={{ mt: 2 }}
           >
-            Firmar Mensaje
+            {languageData[language].Edit.sign_button}
           </Button>
         }
         {!isConnected &&
@@ -100,7 +103,7 @@ const EditProfile = ({ }) => {
         }
         {signedMessage && (
           <Typography variant="body2" sx={{ mt: 2, color: 'green' }}>
-            ¡Mensaje firmado exitosamente!
+            {languageData[language].Edit.sign_message}
           </Typography>
         )}
       </>
@@ -116,12 +119,12 @@ const EditProfile = ({ }) => {
         <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
           <Stack direction={'column'} spacing={2} justifyContent={'center'} alignItems={'center'} >
             <Typography variant="h5" gutterBottom>
-              Configura tu perfil de inversión
+              {languageData[language].Edit.title}
             </Typography>
 
             <TextField
               select
-              label="Tolerancia al riesgo"
+              label={languageData[language].Edit.tolerance_label}
               value={riskTolerance}
               onChange={(e) => setRiskTolerance(e.target.value)}
               fullWidth
@@ -129,13 +132,13 @@ const EditProfile = ({ }) => {
             >
               {riskOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+                  {languageData[language].Edit[option.label]}
                 </MenuItem>
               ))}
             </TextField>
 
             <TextField
-              label="Contribución salarial (%)"
+              label={languageData[language].Edit.salary_label}
               type="number"
               value={salaryContribution}
               onChange={(e) => setSalaryContribution(e.target.value)}

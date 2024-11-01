@@ -16,7 +16,7 @@ const BalanceBlock = ({ balance, change, address, loaded }: { balance: number, c
       {loaded ?
         <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} borderRadius={8} bgcolor={'#00872a'} width={'full'} py={2} px={3} >
           <Stack direction={'column'} spacing={0}>
-            <Typography variant={'body1'} color={'text.secondary'} fontSize={14} py={0} mb={0}>Total Balance</Typography>
+            <Typography variant={'body1'} color={'text.secondary'} fontSize={14} py={0} mb={0}>{languageData[language].Dashboard.total_balance}</Typography>
             <Typography variant={'h4'} fontSize={30} fontWeight={'bold'} color={'white'} py={0} mt={0}>${balance.toFixed(2)}</Typography>
           </Stack>
           <Chip label={changeLabel} color={'warning'} style={{ color: isPositive ? '#00872a' : '$FF0000' }}></Chip>
