@@ -25,6 +25,15 @@ export type SFDCUserData = {
   status: string,
   organizationId: string,
   salaryContribution: number,
+  firstName: string,
+  middleName: string,
+  lastName: string,
+  address: string,
+  placeId: string,
+  idCardNumber: string,
+  idExpirationDate: number,
+  frontImage: string,
+  backImage: string,
   wallets : SFDCWallet[]
 }
 

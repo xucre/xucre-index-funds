@@ -1,6 +1,6 @@
 'use client'
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, TextField, MenuItem, Chip, Stack } from '@mui/material';
+import React, { use, useEffect, useState } from 'react';
+import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid } from '@mui/material';
 import { useAccount, useSignMessage } from 'wagmi';
 import AccountButton from '@/components/accountButton';
 import { useSFDC } from '@/hooks/useSFDC';
@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import OpaqueCard from '@/components/ui/OpaqueCard';
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
+import KYC from '@/components/onboarding/KYC';
 
 const riskOptions = [
   { label: 'risk_aggressive', value: 'Aggressive' },
@@ -28,47 +29,95 @@ const EditProfile = ({ }) => {
   const [riskTolerance, setRiskTolerance] = useState('');
   const [salaryContribution, setSalaryContribution] = useState('');
   const [signedMessage, setSignedMessage] = useState('');
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
   const { address, isConnected } = useAccount();
   const router = useRouter();
   const { user, isAdmin } = useIsAdmin();
+  
   const { sfdcUser, updateUser } = useSFDC();
+  const [modifiedUser, setModifiedUser] = useState<SFDCUserData>(sfdcUser ? {
+    firstName: sfdcUser.firstName,
+    middleName: sfdcUser.middleName,
+    lastName: sfdcUser.lastName,
+    address: sfdcUser.address,
+    placeId: sfdcUser.placeId,
+    idCardNumber: sfdcUser.idCardNumber,
+    idExpirationDate: sfdcUser.idExpirationDate,
+    frontImage: sfdcUser.frontImage,
+    backImage: sfdcUser.backImage,
+    riskTolerance: sfdcUser.riskTolerance,
+    salaryContribution: sfdcUser.salaryContribution,
+    role: sfdcUser.role,
+    userId: sfdcUser.userId,
+    organizationId: sfdcUser.organizationId,
+    userEmail: sfdcUser.userEmail,
+    status: sfdcUser.status,
+    wallets: sfdcUser.wallets
+  } : {
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      address: '',
+      placeId: '',
+      idCardNumber: '',
+      idExpirationDate: 0,
+      frontImage: '',
+      backImage: '',
+      riskTolerance: '',
+      salaryContribution: 0,
+      role: '',
+      userId: user.id,
+      organizationId: user.organizationMemberships[0].organization.id,
+      userEmail: '',
+      status: '',
+      wallets: [] as SFDCWallet[]
+  });
 
-  useEffect(() => {
-    if (!isConnected || !user) return;
-    setMessage(`${address}:${user.id}`)
-  }, [isConnected, address, user])
+  // useEffect(() => {
+  //   if (!isConnected || !user) return;
+  //   setMessage(`${address}:${user.id}`)
+  // }, [isConnected, address, user])
 
   useEffect(() => {
     if (!sfdcUser) return;
-    setRiskTolerance(sfdcUser.riskTolerance);
+    setModifiedUser(sfdcUser);
+    //setRiskTolerance(sfdcUser.riskTolerance);
     setSalaryContribution(String(sfdcUser.salaryContribution));
-    if (sfdcUser.wallets && sfdcUser.wallets.length > 0) {
-      setSignedMessage(sfdcUser.wallets[0].signedMessage || '');
-    }
+    // if (sfdcUser.wallets && sfdcUser.wallets.length > 0) {
+    //   setSignedMessage(sfdcUser.wallets[0].signedMessage || '');
+    // }
   }, [sfdcUser])
 
-  const { signMessage } = useSignMessage({
-    mutation: {
-      onSuccess: (data) => {
-        setSignedMessage(data);
-      },
-      onError: (error) => {
-        console.error(error);
-      },
-    }
-  });
+  // const { signMessage } = useSignMessage({
+  //   mutation: {
+  //     onSuccess: (data) => {
+  //       setSignedMessage(data);
+  //     },
+  //     onError: (error) => {
+  //       console.error(error);
+  //     },
+  //   }
+  // });
 
   const handleSaveProfile = async () => {
     const profileData = {
-      riskTolerance,
-      salaryContribution: parseFloat(salaryContribution),
       userEmail: user.emailAddresses[0].emailAddress,
       userId: user.id,
       role: isAdmin ? 'Administrator' : 'User',
       organizationId: user.organizationMemberships[0].organization.id,
       status: 'Active',
-      wallets: []
+      wallets: [],
+      firstName: modifiedUser.firstName,
+      middleName: modifiedUser.middleName,
+      lastName: modifiedUser.lastName,
+      address: modifiedUser.address,
+      placeId: modifiedUser.placeId,
+      idCardNumber: modifiedUser.idCardNumber,
+      idExpirationDate: modifiedUser.idExpirationDate,
+      frontImage: modifiedUser.frontImage,
+      backImage: modifiedUser.backImage,
+      riskTolerance: modifiedUser.riskTolerance,
+      salaryContribution: modifiedUser.salaryContribution,
     } as SFDCUserData;
 
     if (signedMessage) {
@@ -76,7 +125,7 @@ const EditProfile = ({ }) => {
         walletAddress: address,
         primary: true,
         chainId: 'EVM',
-        signedMessage: signedMessage
+        //signedMessage: signedMessage
       } as SFDCWallet];
       //profileData.signedMessage = signedMessage;
     }
@@ -86,76 +135,108 @@ const EditProfile = ({ }) => {
     router.push('/dashboard')
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === 'salaryContribution') {
+      if (isNaN(Number(value))) return;
+      setModifiedUser((prevData) => ({
+        ...prevData,
+        salaryContribution: Number(value),
+      }));
+    } else {
+      setModifiedUser((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+
+  const isNull = (value: any) => {
+    return value === null || value === undefined || value === '';
+  }
+
+  const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.address) && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
+
   const WalletSection = () => {
-    return (
-      <>
-        {isConnected &&
-          <Button
-            variant="outlined"
-            onClick={() => signMessage({ account: address, message })}
-            sx={{ mt: 2 }}
-          >
-            {languageData[language].Edit.sign_button}
-          </Button>
-        }
-        {!isConnected &&
-          <AccountButton />
-        }
-        {signedMessage && (
-          <Typography variant="body2" sx={{ mt: 2, color: 'green' }}>
-            {languageData[language].Edit.sign_message}
-          </Typography>
-        )}
-      </>
-    )
+    return <></>
+    // return (
+    //   <>
+    //     {isConnected &&
+    //       <Button
+    //         variant="outlined"
+    //         onClick={() => signMessage({ account: address, message })}
+    //         sx={{ mt: 2 }}
+    //       >
+    //         {languageData[language].Edit.sign_button}
+    //       </Button>
+    //     }
+    //     {!isConnected &&
+    //       <AccountButton />
+    //     }
+    //     {signedMessage && (
+    //       <Typography variant="body2" sx={{ mt: 2, color: 'green' }}>
+    //         {languageData[language].Edit.sign_message}
+    //       </Typography>
+    //     )}
+    //   </>
+    // )
   }
 
   return (
       <OpaqueCard sx={{
         p: 4,
         my: 4,
-        ml: 6
+        mx: 6,
+        mb: 10
       }}>
         <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
-          <Stack direction={'column'} spacing={2} justifyContent={'center'} alignItems={'center'} >
-            <Typography variant="h5" gutterBottom>
-              {languageData[language].Edit.title}
-            </Typography>
+          <Typography variant="h5" gutterBottom>
+            {languageData[language].Edit.title}
+          </Typography>
+          <Chip 
+            label={languageData[language].Edit.save}
+            onClick={handleSaveProfile} 
+            disabled={!isProfileComplete}
+            color={'primary'}
+            sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
+          />
+        </Stack>
+      
+        <Stack direction={'row-reverse'} spacing={2} my={3} justifyContent={'space-between'} alignItems={'flex-start'} >
+          <Stack direction={'column'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
 
-            <TextField
-              select
-              label={languageData[language].Edit.tolerance_label}
-              value={riskTolerance}
-              onChange={(e) => setRiskTolerance(e.target.value)}
-              fullWidth
-              margin="normal"
-            >
-              {riskOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {languageData[language].Edit[option.label]}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              label={languageData[language].Edit.salary_label}
-              type="number"
-              value={salaryContribution}
-              onChange={(e) => setSalaryContribution(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
+            <Grid container spacing={2}>
+              <Grid size={12}><Typography fontWeight={'bold'}>{languageData[language].Edit.porfolio_section}</Typography></Grid>
+              <Grid size={12}>
+                <TextField
+                  select
+                  label={languageData[language].Edit.tolerance_label}
+                  value={modifiedUser.riskTolerance}
+                  name={'riskTolerance'}
+                  onChange={handleChange}
+                  fullWidth
+                >
+                  {riskOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {languageData[language].Edit[option.label]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid size={12}>
+                <TextField
+                  label={languageData[language].Edit.salary_label}
+                  type="number"
+                  name={'salaryContribution'}
+                  value={modifiedUser.salaryContribution}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
           </Stack>
-          <Stack direction={'column'} minHeight={'20vh'}  height={'fill-content'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
-            <WalletSection />
-            <Stack direction={'row'} spacing={2} justifyContent={'flex-end'} alignItems={'flex-end'} >
-              <Chip 
-                label="Ahorrar" 
-                onClick={handleSaveProfile} 
-                disabled={!riskTolerance || !salaryContribution}
-                sx={{color: 'white',bgcolor: '#00872a', fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
-              />
-            </Stack>
+          <Stack direction={'column'} maxWidth={'50%'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
+            <KYC user={modifiedUser} updateUser={setModifiedUser}/>
           </Stack>
         </Stack>
       </OpaqueCard>

@@ -117,7 +117,7 @@ function Header() {
     <Button variant="text" onClick={() => router.push('/')} >
       <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
         <img src={'/icon_new2.png'} className="side-image" alt="menuLogo" />
-        {<Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >Xucre Investments</Typography>}
+        {<Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >{languageData[language].Home.title_2}</Typography>}
       </Stack>
     </Button>
   );

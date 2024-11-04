@@ -27,6 +27,7 @@ export interface TranslationType {
   termsConditions: any,
   ui: any,
   Edit: any,
+  Settings: any,
 }
 
 

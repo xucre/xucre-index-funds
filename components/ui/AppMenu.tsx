@@ -12,6 +12,8 @@ import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlin
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import anime from 'animejs';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -19,15 +21,12 @@ import languageData, { Language } from '@/metadata/translations';
 
 const AppMenu: React.FC = () => {
   const {language} = useLanguage();
-  const {isAdmin} = useIsAdmin();
-  const [isOpen, setIsOpen] = React.useState(false);
+  //const {isAdmin} = useIsAdmin();
+  const isAdmin = false;
+  const [isOpen, setIsOpen] = React.useState(true);
   const router = useRouter();
   const theme = useTheme();
   const pathname = usePathname();
-
-  useEffect(() => {
-      setIsOpen(true);
-  }, []);
 
   const menuGroups = React.useMemo(
     () => [
@@ -39,7 +38,21 @@ const AppMenu: React.FC = () => {
             apiName: 'dashboard',
             path: '/dashboard',
             ref: React.createRef<HTMLButtonElement>(),
-          }
+          },
+          {
+            icon: <AccountBalanceWalletOutlinedIcon />,
+            name: 'Balance',
+            apiName: 'balance',
+            path: '/dashboard/balances',
+            ref: React.createRef<HTMLButtonElement>(),
+          },
+          {
+            icon: <FormatListBulletedOutlinedIcon />,
+            name: 'Transactions',
+            apiName: 'transactions',
+            path: '/dashboard/transactions',
+            ref: React.createRef<HTMLButtonElement>(),
+          },
         ],
       },
       {
@@ -142,8 +155,7 @@ const AppMenu: React.FC = () => {
 
     if (currentItemRef?.current && backgroundRef.current) {
       const itemRect = currentItemRef.current.getBoundingClientRect();
-      const containerRect =
-        backgroundRef.current.parentElement!.getBoundingClientRect();
+      const containerRect = backgroundRef.current.parentElement!.getBoundingClientRect();
       const translateY = itemRect.top - containerRect.top;
 
       anime({
@@ -157,14 +169,21 @@ const AppMenu: React.FC = () => {
 
   useEffect(() => {
     computeHighlightPosition();
-  }, [pathname, menuGroups, adminMenuGroups, isAdmin, isOpen]);
+  }, [pathname, isAdmin, isOpen]);
   
   useEffect(() => {
-    setTimeout(() => {
-      //
-    }, 6000)
-    computeHighlightPosition();
+    // const id = setInterval(() => {
+    //   computeHighlightPosition();
+    // }, 2000)
+
+    // return () => {
+    //   clearInterval(id)
+    // }
   }, [])  
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, []);
 
   return (
     <Stack
@@ -210,7 +229,7 @@ const AppMenu: React.FC = () => {
               FabProps={{
                 sx: {
                   padding: theme.spacing(1),
-                  color: pathname.includes(item.path) || (pathname === '/edit' && item.path === '/dashboard')
+                  color: pathname === item.path || (item.path === '/settings' && pathname.includes(item.path)) || (pathname === '/edit' && item.path === '/dashboard')
                     ? theme.palette.success.main
                     : 'default',
                   backgroundColor: 'transparent',

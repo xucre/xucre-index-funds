@@ -37,6 +37,17 @@ const values : TranslationType = {
     total_balance: 'Saldo total',
   },
   Edit: {
+    image_upload: 'Subir imagen',
+    porfolio_section: 'Información de la cartera',
+    personal_section: 'Información personal',
+    firstName_label: 'Nombre',
+    middleName_label: 'Segundo Nombre',
+    lastName_label: 'Apellido',
+    address_section: 'Dirección',
+    address_label: 'Dirección',
+    id_section: 'Identificación',
+    idNumber_label: 'Número de identificación',
+    idExpiration_label: 'Fecha de expiración',
     title: 'Configura tu perfil de inversión',
     tolerance_label: 'Tolerancia al riesgo',
     salary_label: 'Contribución salarial (%)',
@@ -127,6 +138,10 @@ const values : TranslationType = {
   },
   Profile: {
     wallet_management : 'Gestión de Wallets',
+  },
+  Settings: {
+    connect_wallet: 'Conectar Wallet',
+    view_wallet: 'Ver Wallet',
   },
   SelectLanguage: {
     en: "Inglés",

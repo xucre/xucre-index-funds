@@ -1,6 +1,7 @@
 'use server'
 import { kv } from '@vercel/kv'
 import { TransactionDetails } from './eip155';
+import { SFDCUserData } from './types';
 
 
 export const setSafeAddress = async (userId: string, walletAddress: string) => {
@@ -29,3 +30,12 @@ export const getTransactionDetailsDb = async (kvKey: string) => {
 export const setTransactionDetailsDb = async (kvKey: string, transactionDetails: TransactionDetails) => {
   return await kv.hmset(kvKey, {transactionDetails: JSON.stringify(transactionDetails)});
 } 
+
+export const setUserDetails = async (userId: string, userDetails: SFDCUserData) => {
+  return await kv.hmset(`user:${userId}`, userDetails);
+}
+
+export const getUserDetails = async (userId: string) => {
+  const data = await kv.hgetall(`user:${userId}`) as SFDCUserData;
+  return data;
+}

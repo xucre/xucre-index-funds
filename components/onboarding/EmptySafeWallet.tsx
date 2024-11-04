@@ -4,9 +4,12 @@ import { Box, Typography, Button } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
+import { useAccount } from 'wagmi';
+import AccountButton from '../accountButton';
 
 const EmptySafeWallet = ({ onCreateSafe }) => {
   const {language} = useLanguage();
+  const { address, isConnected } = useAccount();
   return (
     <Box
       display="flex"
@@ -19,19 +22,26 @@ const EmptySafeWallet = ({ onCreateSafe }) => {
     >
       <AccountCircleIcon color="action" fontSize="large" />
       <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-        {languageData[language as Language].Onboarding.empty_safe}
+        {languageData[language].Onboarding.empty_safe}
       </Typography>
       <Typography variant="body1" color="textSecondary">
-        {languageData[language as Language].Onboarding.empty_safe_description}
+        {languageData[language].Onboarding.empty_safe_description}
       </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ mt: 3 }}
-        onClick={onCreateSafe}
-      >
-        {languageData[language as Language].Onboarding.create_safe}
-      </Button>
+      {isConnected && 
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mt: 3 }}
+          onClick={onCreateSafe}
+        >
+          {languageData[language].Onboarding.create_safe}
+        </Button>  
+      } 
+      {
+        !isConnected &&
+        <AccountButton />
+      }
+      
     </Box>
   );
 };

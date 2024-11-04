@@ -32,10 +32,10 @@ export default function Home() {
         <Stack direction={'column'} spacing={2} justifyContent={'center'} alignItems={'flex-start'}>
           <Typography variant={'body2'} color={'textSecondary'}>{languageData[language].Home.button_header}</Typography>
           <SignedIn>
-          <Chip label={languageData[language].Home.button} onClick={() => { router.push('/dashboard') }} sx={{color: 'white',bgcolor: '#00872a', fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} />
+          <Chip label={languageData[language].Home.button} onClick={() => { router.push('/dashboard') }} color={'primary'} sx={{fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} />
           </SignedIn>
           <SignedOut>
-            <Chip label={languageData[language].Home.button} onClick={() => { router.push('/sign-in') }} sx={{color: 'white',bgcolor: '#00872a', fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} />
+            <Chip label={languageData[language].Home.button} onClick={() => { router.push('/sign-in') }} color={'primary'} sx={{fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} />
           </SignedOut>
         </Stack>
       </Stack>

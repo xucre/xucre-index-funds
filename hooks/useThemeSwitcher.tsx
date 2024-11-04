@@ -2,6 +2,7 @@ import { ThemeProvider } from '@emotion/react';
 import { DarkMode, LightMode } from '@mui/icons-material';
 import { createTheme, IconButton, useTheme } from '@mui/material';
 import React, { useEffect } from 'react';
+import { useAppKitTheme } from '@reown/appkit/react'
 
 const ThemeSwitcherContext = React.createContext(function toggleColorMode() { });
 
@@ -9,14 +10,7 @@ export const useThemeSwitcher = () => React.useContext(ThemeSwitcherContext);
 
 export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
   const [mode, setMode] = React.useState<'light' | 'dark'>('dark');
-  const colorMode = React.useMemo(
-    () => ({
-      toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-      },
-    }),
-    [],
-  );
+  const { themeMode, themeVariables, setThemeMode, setThemeVariables } = useAppKitTheme()
 
   const theme = React.useMemo(
     () =>
@@ -25,7 +19,8 @@ export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
           //mode: 'dark',
           mode: mode,
           primary: {
-            main: mode === 'dark' ? '#D4E815' : '#1B1E3F',
+            //main: mode === 'dark' ? '#D4E815' : '#1B1E3F',
+            main: '#00872a'
           },
           secondary: {
             main: '#1B1E3F',
@@ -57,12 +52,20 @@ export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
     const existingItem = localStorage.getItem('color-mode');
     if (existingItem) {
       setMode(existingItem as 'light' | 'dark');
+      setThemeMode(existingItem as 'light' | 'dark')
     }
+
+    // setThemeVariables({
+    //   '--w3m-color-mix': '#00872a',
+    //   '--w3m-color-mix-strength': 40
+    // })
   }, [])
 
   const toggleColorMode = () => {
-    localStorage.setItem('color-mode', mode === 'light' ? 'dark' : 'light');
+    const colorMode = mode === 'light' ? 'dark' : 'light';
+    localStorage.setItem('color-mode', colorMode);
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+    setThemeMode(colorMode);
   }
 
   return <ThemeSwitcherContext.Provider value={toggleColorMode}><ThemeProvider theme={theme}>{children}</ThemeProvider></ThemeSwitcherContext.Provider>
