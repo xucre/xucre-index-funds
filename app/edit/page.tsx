@@ -1,8 +1,10 @@
 'use client'
 import React, { use, useEffect, useState } from 'react';
-import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid } from '@mui/material';
+import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid, Slider, useTheme, Tooltip, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
 import { useAccount, useSignMessage } from 'wagmi';
+import CircleIcon from '@mui/icons-material/Circle';
 import AccountButton from '@/components/accountButton';
+
 import { useSFDC } from '@/hooks/useSFDC';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { SFDCUserData, SFDCWallet } from '@/service/types';
@@ -11,6 +13,8 @@ import OpaqueCard from '@/components/ui/OpaqueCard';
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
 import KYC from '@/components/onboarding/KYC';
+import NumberInput from '@/components/ui/NumberInput';
+import { getTextColor } from '@/service/helpers';
 
 const riskOptions = [
   { label: 'risk_aggressive', value: 'Aggressive' },
@@ -33,6 +37,8 @@ const EditProfile = ({ }) => {
   const { address, isConnected } = useAccount();
   const router = useRouter();
   const { user, isAdmin } = useIsAdmin();
+  const theme = useTheme();
+  const textColor = getTextColor(theme);
   
   const { sfdcUser, updateUser } = useSFDC();
   const [modifiedUser, setModifiedUser] = useState<SFDCUserData>(sfdcUser ? {
@@ -151,12 +157,48 @@ const EditProfile = ({ }) => {
     }
   };
 
+  const NumberHelpText = () => {
+    return (
+      <>
+        <Typography variant="h6">
+          {languageData[language].Edit.risk_help_text_title}
+        </Typography>
+        <Typography variant="body2">
+          {languageData[language].Edit.risk_help_text_body1}
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemIcon>
+              <CircleIcon />
+            </ListItemIcon>
+            <ListItemText primary={languageData[language].Edit.risk_help_text_bullet1} />
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <CircleIcon />
+            </ListItemIcon>
+            <ListItemText primary={languageData[language].Edit.risk_help_text_bullet2} />
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <CircleIcon />
+            </ListItemIcon>
+            <ListItemText primary={languageData[language].Edit.risk_help_text_bullet3} />
+          </ListItem>
+        </List>
+        <Typography variant="body1">
+          {languageData[language].Edit.risk_help_text_body2}
+        </Typography>
+      </>
+      
+    )
+  }
+
   const isNull = (value: any) => {
     return value === null || value === undefined || value === '';
   }
-
   const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.address) && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
-
+  
   const WalletSection = () => {
     return <></>
     // return (
@@ -224,14 +266,48 @@ const EditProfile = ({ }) => {
                 </TextField>
               </Grid>
               <Grid size={12}>
-                <TextField
+                <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
+                  {/* <Tooltip title={<NumberHelpText />}> */}
+                    <Typography color={'text.secondary'} variant={'caption'}>{languageData[language].Edit.salary_label}</Typography>
+                  {/* </Tooltip> */}
+                </Stack>
+                <NumberInput onChange={(_, value) => {
+                    setModifiedUser((prevData) => ({
+                      ...prevData,
+                      salaryContribution: Math.round(value as number * 10) / 10,
+                    }));
+                  }} 
+                  aria-label={languageData[language].Edit.salary_label} 
+                  min={0} 
+                  max={50} 
+                  step={.1}
+                  value={modifiedUser.salaryContribution} 
+                />    
+                {/* <Slider
+                  aria-label={languageData[language].Edit.salary_label}
+                  value={modifiedUser.salaryContribution}
+                  getAriaValueText={(value) => `${value}%`}
+                  step={0.1}
+                  marks
+                  min={0}
+                  max={50}
+                  valueLabelDisplay="auto"
+                  onChange={(e, value) => {
+                    setModifiedUser((prevData) => ({
+                      ...prevData,
+                      salaryContribution: value as number,
+                    }));
+                  }}
+                /> */}
+                {/* <TextField
                   label={languageData[language].Edit.salary_label}
                   type="number"
                   name={'salaryContribution'}
                   value={modifiedUser.salaryContribution}
                   onChange={handleChange}
                   fullWidth
-                />
+                /> */}
+                
               </Grid>
             </Grid>
           </Stack>

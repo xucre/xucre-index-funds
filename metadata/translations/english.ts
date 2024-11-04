@@ -55,6 +55,12 @@ const values : TranslationType = {
     risk_conservative: 'Conservative',
     risk_aggressive: 'Aggressive',
     risk_moderate: 'Moderate',
+    risk_help_text_title: 'Understanding Risk Tolerance and Investment Tiers in Crypto',
+    risk_help_text_body1: 'Risk tolerance is key in navigating the dynamic world of cryptocurrency. It represents your comfort level with market volatility and potential losses when pursuing growth. We’ve designed three main investment tiers in our app to align with different risk profiles: Aggressive, Moderate, and Conservative. Here’s what each tier includes:',
+    risk_help_text_bullet1: '**Aggressive**: This tier is for those with a high risk tolerance who are ready to embrace substantial market swings for the potential of significant gains. Aggressive crypto investors might hold a large portion of their portfolio in newer, high-potential altcoins, DeFi projects, NFTs, and emerging blockchain technologies. While these assets can offer massive upside, they also come with considerable risk.',
+    risk_help_text_bullet2: '**Moderate**: Suited for those seeking a balance between growth and security, the Moderate tier includes a diversified mix of established and promising crypto assets. Portfolios may feature major cryptocurrencies like Ethereum and Binance Coin, complemented by stable DeFi protocols and select utility tokens. This approach aims for solid growth potential while tempering exposure to extreme market fluctuations.',
+    risk_help_text_bullet3: '**Conservative**: For those with low risk tolerance, the Conservative tier focuses on minimizing volatility and protecting capital. These portfolios are heavily weighted toward well-established digital assets like Bitcoin and stablecoins such as USDC or DAI. The goal is to achieve steady, predictable performance with reduced exposure to market downturns, ensuring a more stable investment experience.',
+    risk_help_text_body2: 'Choosing the right investment tier helps you align your crypto strategy with your financial goals and comfort with risk, enabling informed and confident decisions in this fast-paced market.'
   },
   FAQPage: {
     title: 'Xucre Index Funds: Empowering Self-Custody Investments',
@@ -175,6 +181,8 @@ const values : TranslationType = {
     featured: 'Featured',
     all: 'All',
     error: 'Error',
+    add: 'Add',
+    subtract: 'Subtract',
     coming_soon: 'Coming Soon',
     no_items: "No items found",
     address_not_found: "Address not found",
