@@ -67,8 +67,11 @@ export function ContextProvider({
           signInUrl={'/sign-in'}
           signInFallbackRedirectUrl={'/dashboard'}
           signUpFallbackRedirectUrl={'/dashboard'}
+          signUpForceRedirectUrl={'/dashboard'}
+          signInForceRedirectUrl={'/dashboard'}
           signUpUrl={'/sign-up'} 
-          afterSignOutUrl={'/'} 
+          afterSignOutUrl={'/sign-in'} 
+          afterSignInUrl={'/dashboard'}
           appearance={{
             baseTheme: dark
           }}

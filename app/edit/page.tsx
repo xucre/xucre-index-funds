@@ -1,8 +1,9 @@
 'use client'
 import React, { use, useEffect, useState } from 'react';
-import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid, Slider, useTheme, Tooltip, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
+import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid, Slider, useTheme, Tooltip, List, ListItem, ListItemText, ListItemIcon, IconButton } from '@mui/material';
 import { useAccount, useSignMessage } from 'wagmi';
 import CircleIcon from '@mui/icons-material/Circle';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AccountButton from '@/components/accountButton';
 
 import { useSFDC } from '@/hooks/useSFDC';
@@ -15,6 +16,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import KYC from '@/components/onboarding/KYC';
 import NumberInput from '@/components/ui/NumberInput';
 import { getTextColor } from '@/service/helpers';
+import ReusableModal from '@/components/ui/ReusableModal';
 
 const riskOptions = [
   { label: 'risk_aggressive', value: 'Aggressive' },
@@ -157,39 +159,76 @@ const EditProfile = ({ }) => {
     }
   };
 
-  const NumberHelpText = () => {
+  const RiskToleranceHelpText = () => {
     return (
-      <>
-        <Typography variant="h6">
+      <Box p={5}>
+        <Typography variant="h6" sx={{pb:2}}>
           {languageData[language].Edit.risk_help_text_title}
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="body1">
           {languageData[language].Edit.risk_help_text_body1}
         </Typography>
         <List>
           <ListItem>
-            <ListItemIcon>
-              <CircleIcon />
-            </ListItemIcon>
+            {/* <ListItemIcon>
+              <CircleIcon fontSize="small" />
+            </ListItemIcon> */}
             <ListItemText primary={languageData[language].Edit.risk_help_text_bullet1} />
           </ListItem>
           <ListItem>
-            <ListItemIcon>
-              <CircleIcon />
-            </ListItemIcon>
+            {/* <ListItemIcon>
+              <CircleIcon fontSize="small"  sx={{fontSize: 10}}/>
+            </ListItemIcon> */}
             <ListItemText primary={languageData[language].Edit.risk_help_text_bullet2} />
           </ListItem>
           <ListItem>
-            <ListItemIcon>
-              <CircleIcon />
-            </ListItemIcon>
+            {/* <ListItemIcon>
+              <CircleIcon fontSize="small" />
+            </ListItemIcon> */}
             <ListItemText primary={languageData[language].Edit.risk_help_text_bullet3} />
           </ListItem>
         </List>
         <Typography variant="body1">
           {languageData[language].Edit.risk_help_text_body2}
         </Typography>
-      </>
+      </Box>
+      
+    )
+  }
+
+  const SalaryContributionHelpText = () => {
+    return (
+      <Box p={5}>
+        <Typography variant="h6" sx={{pb:2}}>
+          {languageData[language].Edit.salary_help_text_title}
+        </Typography>
+        <Typography variant="body1">
+          {languageData[language].Edit.salary_help_text_body1}
+        </Typography>
+        <List>
+          <ListItem>
+            {/* <ListItemIcon>
+              <CircleIcon fontSize="small" />
+            </ListItemIcon> */}
+            <ListItemText primary={languageData[language].Edit.salary_help_text_bullet1} />
+          </ListItem>
+          <ListItem>
+            {/* <ListItemIcon>
+              <CircleIcon fontSize="small"  sx={{fontSize: 10}}/>
+            </ListItemIcon> */}
+            <ListItemText primary={languageData[language].Edit.salary_help_text_bullet2} />
+          </ListItem>
+          <ListItem>
+            {/* <ListItemIcon>
+              <CircleIcon fontSize="small" />
+            </ListItemIcon> */}
+            <ListItemText primary={languageData[language].Edit.salary_help_text_bullet3} />
+          </ListItem>
+        </List>
+        <Typography variant="body1">
+          {languageData[language].Edit.salary_help_text_body2}
+        </Typography>
+      </Box>
       
     )
   }
@@ -252,7 +291,14 @@ const EditProfile = ({ }) => {
               <Grid size={12}>
                 <TextField
                   select
-                  label={languageData[language].Edit.tolerance_label}
+                  label={<>
+                    <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
+                      <Typography color={'text.secondary'} variant={'body2'}>{languageData[language].Edit.tolerance_label}</Typography>
+                      <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
+                        <RiskToleranceHelpText />
+                      </ReusableModal>
+                    </Stack>
+                  </>}
                   value={modifiedUser.riskTolerance}
                   name={'riskTolerance'}
                   onChange={handleChange}
@@ -266,10 +312,11 @@ const EditProfile = ({ }) => {
                 </TextField>
               </Grid>
               <Grid size={12}>
-                <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
-                  {/* <Tooltip title={<NumberHelpText />}> */}
-                    <Typography color={'text.secondary'} variant={'caption'}>{languageData[language].Edit.salary_label}</Typography>
-                  {/* </Tooltip> */}
+                <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
+                  <Typography color={'text.secondary'} variant={'caption'}>{languageData[language].Edit.salary_label}</Typography>
+                  <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
+                    <SalaryContributionHelpText />
+                  </ReusableModal>
                 </Stack>
                 <NumberInput onChange={(_, value) => {
                     setModifiedUser((prevData) => ({

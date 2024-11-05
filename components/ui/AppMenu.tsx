@@ -21,8 +21,8 @@ import languageData, { Language } from '@/metadata/translations';
 
 const AppMenu: React.FC = () => {
   const {language} = useLanguage();
-  //const {isAdmin} = useIsAdmin();
-  const isAdmin = false;
+  const {isAdmin} = useIsAdmin();
+  //const isAdmin = false;
   const [isOpen, setIsOpen] = React.useState(true);
   const router = useRouter();
   const theme = useTheme();

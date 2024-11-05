@@ -19,7 +19,7 @@ export default clerkMiddleware((_auth, req) => {
   } else if (isProtectedRoute(req)) {
     auth.protect(() => {
       return (
-        auth.orgId !== undefined && auth.orgId !== null
+        auth.userId !== undefined && auth.userId !== null
       )
     })
   }
