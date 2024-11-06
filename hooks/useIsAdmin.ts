@@ -5,6 +5,7 @@ export function useIsAdmin() {
   const { user } = useUser();
   //const { organization } = useOrganization();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   useEffect(() => {
     const runAsync = async () => {
       //console.log(memberships);
@@ -16,6 +17,12 @@ export function useIsAdmin() {
           setIsAdmin(false);
         }
       }
+
+      if (user.publicMetadata.superAdmin) {
+        setIsSuperAdmin(true);
+      } else {
+        setIsSuperAdmin(false);
+      }
     }
 
     if (user) {
@@ -24,7 +31,7 @@ export function useIsAdmin() {
   }, [user])
 
   return useMemo(
-    () => ({ isAdmin, user }),
+    () => ({ isAdmin, isSuperAdmin, user }),
     [user, isAdmin],
   );
 }

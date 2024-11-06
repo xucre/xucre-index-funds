@@ -126,3 +126,11 @@ html {
   align-items: center;
   padding-top:33px !important;
 }
+
+.transparent--header{
+  background-color: transparent;
+}
+
+.MuiDataGrid-columnHeaders > first-child {
+  background-color: transparent;
+}

@@ -24,6 +24,7 @@
     "@mui/lab": "^6.0.0-beta.9",
     "@mui/material": "^6.0.2",
     "@mui/x-charts": "^7.16.0",
+    "@mui/x-data-grid": "^7.22.1",
     "@reown/appkit": "^1.1.2",
     "@reown/appkit-adapter-wagmi": "^1.1.2",
     "@reown/appkit-ui": "^1.1.2",

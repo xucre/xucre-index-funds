@@ -51,3 +51,10 @@ export type TokenDetails = {
   symbol: string,
   defaultLogo: boolean
 }
+
+export type OrganizationUserData = {
+  id: string,
+  firstName: string,
+  lastName: string,
+  emailAddress: string
+}

@@ -7,6 +7,7 @@ import {
   Stack,
   useTheme,
 } from '@mui/material';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
@@ -21,7 +22,7 @@ import languageData, { Language } from '@/metadata/translations';
 
 const AppMenu: React.FC = () => {
   const {language} = useLanguage();
-  const {isAdmin} = useIsAdmin();
+  const {isAdmin, isSuperAdmin} = useIsAdmin();
   //const isAdmin = false;
   const [isOpen, setIsOpen] = React.useState(true);
   const router = useRouter();
@@ -126,6 +127,23 @@ const AppMenu: React.FC = () => {
     []
   );
 
+  const superAdminMenuGroups = React.useMemo(
+    () => [
+      {
+        items: [
+          {
+            icon: <PeopleOutlineIcon />,
+            name: 'Organizations',
+            apiName: 'organizations',
+            path: '/organizations',
+            ref: React.createRef<HTMLButtonElement>(),
+          }
+        ],
+      }
+    ],
+    []
+  );
+
   const handleNavigation = (path: string) => {
     router.push(path);
   };
@@ -151,6 +169,16 @@ const AppMenu: React.FC = () => {
         });
       });
     }
+
+    if (isSuperAdmin) {
+      superAdminMenuGroups.forEach((group) => {
+        group.items.forEach((item) => {
+          if (pathname.includes(item.path)) {
+            currentItemRef = item.ref;
+          }
+        });
+      });
+    }
     
 
     if (currentItemRef?.current && backgroundRef.current) {
@@ -169,7 +197,7 @@ const AppMenu: React.FC = () => {
 
   useEffect(() => {
     computeHighlightPosition();
-  }, [pathname, isAdmin, isOpen]);
+  }, [pathname, isAdmin, isSuperAdmin, isOpen]);
   
   useEffect(() => {
     // const id = setInterval(() => {
@@ -229,7 +257,7 @@ const AppMenu: React.FC = () => {
               FabProps={{
                 sx: {
                   padding: theme.spacing(1),
-                  color: pathname === item.path || (item.path === '/settings' && pathname.includes(item.path)) || (pathname === '/edit' && item.path === '/dashboard')
+                  color: !pathname.startsWith('/organizations') && pathname === item.path || (item.path === '/settings' && pathname.includes(item.path)) || (pathname === '/edit' && item.path === '/dashboard') 
                     ? theme.palette.success.main
                     : 'default',
                   backgroundColor: 'transparent',
@@ -262,7 +290,40 @@ const AppMenu: React.FC = () => {
               FabProps={{
                 sx: {
                   padding: theme.spacing(1),
-                  color: pathname.includes(item.path) || (pathname === '/edit' && item.path === '/dashboard')
+                  color: !pathname.startsWith('/organizations') && pathname.includes(item.path) || (pathname === '/edit' && item.path === '/dashboard')
+                    ? theme.palette.success.main
+                    : 'default',
+                  backgroundColor: 'transparent',
+                  boxShadow: 'none',
+                },
+              }}
+            />
+          ))}
+        </SpeedDial>
+      ))}
+
+      {isSuperAdmin && superAdminMenuGroups.map((group, groupIndex) => (
+        <SpeedDial
+          key={groupIndex}
+          ariaLabel={`SpeedDial navigation menu group ${groupIndex}`}
+          direction="down"
+          sx={{ borderRadius: 25 }}
+          className={'opaqueMenu'}
+          icon={null}
+          FabProps={{ sx: { display: 'none' } }}
+          open={isOpen}
+        >
+          {group.items.map((item, itemIndex) => (
+            <SpeedDialAction
+              key={`superAdmin-${groupIndex}-${itemIndex}`}
+              icon={item.icon}
+              tooltipTitle={languageData[language].Menu[item.apiName]}
+              onClick={() => handleNavigation(item.path)}
+              ref={item.ref} // Move ref here
+              FabProps={{
+                sx: {
+                  padding: theme.spacing(1),
+                  color: pathname.includes(item.path)
                     ? theme.palette.success.main
                     : 'default',
                   backgroundColor: 'transparent',

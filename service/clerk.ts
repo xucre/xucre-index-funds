@@ -1,3 +1,4 @@
+'use server'
 import { createClerkClient } from '@clerk/backend'
 
 const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY })
@@ -9,5 +10,16 @@ export async function updateOrganizationLicenses(organizationId: string, seatCou
 }
 
 export async function getOrganization(organizationId: string) {
-  return await clerkClient.organizations.getOrganization({organizationId})
+  return JSON.parse(JSON.stringify(await clerkClient.organizations.getOrganization({organizationId})))
+}
+
+export async function getAllOrganizations() {
+  return JSON.parse(JSON.stringify(await clerkClient.organizations.getOrganizationList()));
+}
+
+
+export async function getOrganizationMembers(organizationId: string) {
+  return JSON.parse(JSON.stringify(await clerkClient.organizations.getOrganizationMembershipList({
+    organizationId
+  })));
 }
