@@ -1,3 +1,6 @@
+import { OrganizationMembership } from "@clerk/backend";
+import { ReactElement } from "react";
+
 export type PriceItem = {
   date: string,
   price: number,
@@ -58,3 +61,57 @@ export type OrganizationUserData = {
   lastName: string,
   emailAddress: string
 }
+
+export enum Roles {
+  Admin = 'org:admin',
+  Member = 'org:member',
+  SuperAdmin = 'org:superadmin',
+}
+
+export type InvoiceMember = OrganizationMembership & {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  active: boolean;
+  salaryContribution: number;
+  safeWalletAddress: string;
+};
+
+export enum InvoiceStatuses {
+  New = 'New',
+  Draft = 'Draft',
+  Sent = 'Sent',
+  Paid = 'Paid',
+  Disbursed = 'Disbursed',
+  Cancelled = 'Cancelled',
+}
+
+
+export type Invoice = {
+  id: string;
+  organizationId: string;
+  escrowWallet: string;
+  status: InvoiceStatuses;
+  dueDate: string;
+  paymentTransction: string;
+  totalPaid: number;
+  totalDue: number;
+  members: InvoiceMember[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaymentOptionProps {
+  option: PaymentOption;
+  openProvider: (providerId: string) => void;
+}
+
+export type PaymentOption = {
+  id: string;
+  image: string;
+  color: string;
+  component: ReactElement; //React.FC<PaymentOptionProps>;
+  countries: string[];
+  limit: number;
+};

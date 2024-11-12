@@ -17,6 +17,7 @@ import { SignedIn, SignedOut, useOrganization, UserButton, useUser, Organization
 import { dark } from "@clerk/themes";
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import AccountButton from '@/components/accountButton';
+import {useOrganizationWallet} from '@/hooks/useOrganizationWallet';
 
 
 const drawerWidth = 240;
@@ -53,7 +54,7 @@ function Header() {
   const textColor = getTextColor(theme);
   const themeSwitcher = useThemeSwitcher();
   const { isConnected, address } = useAccount();
-  const { disconnect } = useDisconnect();
+  const { hasEscrowAddress, loading : isOrganizationWalletLoading } = useOrganizationWallet();
   const { isAdmin } = useIsAdmin();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -111,7 +112,11 @@ function Header() {
     }
   }, [mixpanel, address])
 
-
+  useEffect(() => {
+    if (isAdmin && !hasEscrowAddress && !isOrganizationWalletLoading) {
+      router.replace('/organization')
+    }
+  }, [isAdmin, hasEscrowAddress, isOrganizationWalletLoading])
 
   const headerButton = (
     <Button variant="text" onClick={() => router.push('/')} >
@@ -159,7 +164,7 @@ function Header() {
         <LanguageSelect type={'button'} />
 
         <IconButton
-          color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
+          color={theme.palette.mode === 'dark' ? 'default' : 'default'}
           aria-label="change theme"
           edge="start"
           onClick={handleModeChange}
@@ -243,7 +248,7 @@ function Header() {
                   </SignedIn>
                 </Box>
                 <IconButton
-                  color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
+                  color={theme.palette.mode === 'dark' ? 'default' : 'default'}
                   aria-label="open drawer"
                   edge="start"
                   onClick={handleDrawerToggle}
@@ -258,25 +263,42 @@ function Header() {
                   }
 
                   <SignedIn>
-                    
-                    {user &&
-                      <UserButton
-                        appearance={{
-                          baseTheme: isDarkTheme ? dark : undefined,
-                        }}
-                        userProfileProps={{
-                          appearance: {
+                    <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                      {user && user.publicMetadata.superAdmin &&
+                        <OrganizationSwitcher
+                          appearance={{
                             baseTheme: isDarkTheme ? dark : undefined,
-                          }
-                        }}
-                        userProfileUrl='/settings'
-                        userProfileMode='navigation'
-                      />
-                    }
+                          }}
+                          organizationProfileProps={{
+                            appearance: {
+                              baseTheme: isDarkTheme ? dark : undefined,
+                            }
+                          }}
+                          hidePersonal={true}
+                          organizationProfileMode='navigation'
+                          organizationProfileUrl='/organization'
+                        />
+                      }
+                      <Box sx={{width: 20}}/>
+                      {user &&
+                        <UserButton
+                          appearance={{
+                            baseTheme: isDarkTheme ? dark : undefined,
+                          }}
+                          userProfileProps={{
+                            appearance: {
+                              baseTheme: isDarkTheme ? dark : undefined,
+                            }
+                          }}
+                          userProfileUrl='/settings'
+                          userProfileMode='navigation'
+                        />
+                      }
+                    </Stack>
                   </SignedIn>
                   {/* <AccountButton /> */}
                   <IconButton
-                    color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
+                    color={theme.palette.mode === 'dark' ? 'default' : 'default'}
                     aria-label="open drawer"
                     edge="start"
                     onClick={handleMenuOpen}

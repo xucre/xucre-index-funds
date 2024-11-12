@@ -12,9 +12,11 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation } from "@/service/helpers";
 import OpaqueCard from "@/components/ui/OpaqueCard";
-import { getOrganization, getOrganizationMembers } from "@/service/clerk";
+import { getOrganization, getOrganizationMembers, updateOrganizationMetadata } from "@/service/clerk";
 import { OrganizationUserData } from "@/service/types";
 import UserDetails from "@/components/admin/UserDetails";
+import EditOrganization from "@/components/admin/EditOrganization";
+import { Organization } from "@clerk/backend";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 const OrganizationDetails: React.FC = () => {
@@ -27,30 +29,30 @@ const OrganizationDetails: React.FC = () => {
   const { isConnected, address, chainId } = useAccount();
   const params = useParams();
   const organizationId = params['organization-id'] as string;
-  const [organization, setOrganization] = useState(null);
+  const [organization, setOrganization] = useState(null as Organization | null);
   const [members, setMembers] = useState([]);
   const [selectedMember, setSelectedMember] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      const org = await getOrganization(organizationId);
+      setOrganization(org);
+
+      const orgMembers = await getOrganizationMembers(organizationId);
+      setMembers(orgMembers.data.map((member: any) => ({
+          id: member.publicUserData.userId,
+          firstName: member.publicUserData.firstName,
+          lastName: member.publicUserData.lastName,
+          emailAddress: member.publicUserData.identifier,
+      } as OrganizationUserData)));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
     if (!organizationId) return;
-
-    const fetchData = async () => {
-      try {
-        const org = await getOrganization(organizationId);
-        setOrganization(org);
-
-        const orgMembers = await getOrganizationMembers(organizationId);
-        setMembers(orgMembers.data.map((member: any) => ({
-            id: member.publicUserData.userId,
-            firstName: member.publicUserData.firstName,
-            lastName: member.publicUserData.lastName,
-            emailAddress: member.publicUserData.identifier,
-        } as OrganizationUserData)));
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
 
     fetchData();
   }, [organizationId]);
@@ -85,11 +87,21 @@ const OrganizationDetails: React.FC = () => {
     <Box>
       {organization && (
         <OpaqueCard>
-          <Typography variant="h5">{organization.name}</Typography>
-          <Typography variant="body1">ID: {organization.id}</Typography>
-          <Typography variant="body1">
-            Max Members: {organization.maxAllowedMemberships}
-          </Typography>
+          <Stack direction="row" spacing={2} alignItems="center" justifyContent={'space-between'}>
+            <>
+              <Typography variant="h5">{organization.name}</Typography>
+              <Typography variant="body1">ID: {organization.id}</Typography>
+              <Typography variant="body1">
+                Max Members: {organization.maxAllowedMemberships}
+              </Typography>
+            </>
+            <EditOrganization
+              publicMetadata={JSON.stringify(organization.publicMetadata)}
+              save={async (updatedMetadata: string) => {
+                await updateOrganizationMetadata(organizationId, updatedMetadata);
+                fetchData();
+              }} />
+          </Stack>
           {/* Additional organization details */}
         </OpaqueCard>
       )}

@@ -10,6 +10,7 @@ const BalanceBlock = ({ balance, change, address, loaded }: { balance: number, c
   const { language } = useLanguage();
   const isPositive = change > 0;
   const isLessThan1 = change < 1 && change > -1;
+  console.log('balanceblock', isPositive)
   const changeLabel = `${isPositive ? '+' : ''}${change.toFixed(isLessThan1 ? 2 : 0)}% ${(languageData[language].totalBalance.dashboard_change as string)}`;
   return (
     <a href={`https://app.safe.global/home?safe=matic:${address}`} color="inherit" target={'_blank'} >
@@ -19,7 +20,10 @@ const BalanceBlock = ({ balance, change, address, loaded }: { balance: number, c
             <Typography variant={'body1'} color={'text.secondary'} fontSize={14} py={0} mb={0}>{languageData[language].Dashboard.total_balance}</Typography>
             <Typography variant={'h4'} fontSize={30} fontWeight={'bold'} color={'white'} py={0} mt={0}>${balance.toFixed(2)}</Typography>
           </Stack>
-          <Chip label={changeLabel} color={'warning'} style={{ color: isPositive ? '#00872a' : '$FF0000' }}></Chip>
+          
+          <Chip label={changeLabel} color={'default'} style={{ backgroundColor: 'white', color: isPositive ? '#00872a' : '#FF0000' }} />
+          
+          
         </Stack> :
         <Skeleton variant="rounded" width={'full'} height={100} />
       }

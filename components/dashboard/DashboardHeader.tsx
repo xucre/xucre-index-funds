@@ -1,7 +1,7 @@
 'use client'
 import { useLanguage } from "@/hooks/useLanguage";
 import { Box, IconButton, Stack, Typography, useTheme } from "@mui/material"
-import SettingsIcon from '@mui/icons-material/Settings';
+import EditIcon from '@mui/icons-material/Edit';
 //import AccountButton from "./accountButton";
 import languageData from '@/metadata/translations'
 import { useRouter } from "next/navigation";
@@ -23,7 +23,7 @@ export default function DashboardHeader() {
         {<Typography color={textColor} variant={'h5'}>{`${(languageData[language].ui.welcome_message_1 as string)}`}<b>{`${user.firstName || 'Usuario'}`}</b>{`${(languageData[language].ui.welcome_message_2 as string)}`}</Typography>}
         <></>
         <IconButton sx={{ color: textColor }} onClick={() => { router.push('/edit') }}>
-          <SettingsIcon />
+          <EditIcon />
         </IconButton>
       </Stack>
 

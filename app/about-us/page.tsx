@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import languageData from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
+import OpaqueCard from "@/components/ui/OpaqueCard";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 export default function AboutUs() {
@@ -24,7 +25,7 @@ export default function AboutUs() {
 
 
   return (
-    <Box p={4} pb={10}>
+    <OpaqueCard sx={{m:4, pb:10}}>
       <Stack justifyContent={'start'} alignItems={'center'} spacing={2}>
         <Typography variant={'h6'} color={textColor}>{languageData[language].FAQPage.title}</Typography>
         <Typography variant={'body1'} color={textColor}>{languageData[language].FAQPage.header1}</Typography>
@@ -51,6 +52,6 @@ export default function AboutUs() {
         <Typography variant={'body1'} color={textColor}>{languageData[language].FAQPage.closing}</Typography>
       </Stack>
 
-    </Box>
+    </OpaqueCard>
   );
 };

@@ -5,3 +5,5 @@ export const objectFields = {
   'Organization_User__c': ['Id', 'Organization__c', 'Email__c', 'Role__c'],
   'Wallet__c' : ['Id', 'Address__c	', 'Chain__c', 'Organization_User__c']
 }
+
+export const BASEURL = 'https:/localhost:3000';

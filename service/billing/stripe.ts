@@ -2,13 +2,19 @@
 'use server'
 
 import Stripe from 'stripe';
+import superagent from 'superagent';
 
 const STRIPE_API_URL = 'https://api.stripe.com/v1';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const DOMAIN = process.env.DOMAIN ? process.env.DOMAIN : 'app.xucre.net';
 //const logging = require('../loaders/logging');
-
+const OnrampSessionResource = Stripe.StripeResource.extend({
+    create: Stripe.StripeResource.method({
+      method: 'POST',
+      path: 'crypto/onramp_sessions',
+    }),
+  });
 const priceId = process.env.STRIPE_PRICE_ID;
 
 export async function getCustomerSubscription (organization) {
@@ -30,7 +36,6 @@ export async function getCustomerSubscription (organization) {
             //console.log(portalSession);
             return JSON.parse(JSON.stringify({ subscription, invoices: invoices.data, portal: portalSession }));
         } else {
-          console.log('no subscription found');
             //return subscriptionData.data[0];
             return null;
         }
@@ -82,3 +87,40 @@ export async function checkoutSuccess (sessionId) {
       return null;
   }
 };
+
+export async function generateToken (invoiceId: string, organizationId: string, escrowWallet: string, amount: number) {
+    try {      
+
+        // const onrampSession = await new OnrampSessionResource(stripe).create({
+        //     transaction_details: {
+        //         'wallet_addresses[polygon]': escrowWallet,
+        //         source_currency: 'usd',
+
+        //       destination_currency: 'usdc',
+        //       destination_network: 'polygon',
+        //     }
+        //   });
+        
+        //   console.log(onrampSession);
+        //   return null;
+        //   return onrampSession;
+          
+        const response = await superagent
+            .post(`${STRIPE_API_URL}/crypto/onramp_sessions`)
+            .auth(process.env.STRIPE_SECRET_KEY, '')
+            .send(`
+                wallet_addresses[polygon]=${escrowWallet}&
+                source_currency=usd&
+                destination_currency=usdc&
+                destination_network=polygon&
+                source_amount=${amount}&
+                metadata[organization]=${organizationId}&
+                metadata[invoiceId]=${invoiceId}&
+                lock_wallet_address=true`)
+            .withCredentials();
+        return response.body.client_secret;
+    } catch (error) {
+        console.log(error);
+        //return null;
+    }
+}

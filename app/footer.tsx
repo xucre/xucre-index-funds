@@ -23,7 +23,7 @@ export default function Footer() {
   return (
     <AppBar position="fixed" color={'default'} sx={{ top: 'auto', bottom: 0, display: { xs: 'none', md: 'block' } }}>
       <Toolbar>
-        <SignedIn><SettingsButton /></SignedIn>
+        {/* <SignedIn><SettingsButton /></SignedIn> */}
         {!hideWalletConnectButton && 
           <SignedOut>
             <AccountButton />

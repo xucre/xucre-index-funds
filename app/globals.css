@@ -127,10 +127,15 @@ html {
   padding-top:33px !important;
 }
 
-.transparent--header{
-  background-color: transparent;
+#onramp-message {
+  color: rgb(105, 115, 134);
+  font-size: 16px;
+  line-height: 20px;
+  padding-top: 12px;
+  text-align: center;
 }
 
-.MuiDataGrid-columnHeaders > first-child {
-  background-color: transparent;
+#onramp-element {
+  min-width: min(450px, 60vw);
+  margin-bottom: 24px;
 }

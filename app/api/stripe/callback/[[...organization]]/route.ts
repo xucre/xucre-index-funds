@@ -1,6 +1,6 @@
 import { getOrganization, updateOrganizationLicenses } from "@/service/clerk";
 import { upsertOrganization } from "@/service/sfdc";
-import { getCustomerSubscription } from "@/service/stripe";
+import { getCustomerSubscription } from "@/service/billing/stripe";
 import { NextRequest } from "next/server"
 import Stripe from "stripe";
 

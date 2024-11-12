@@ -4,10 +4,11 @@ import StripePricingTable from "@/components/billing/StripePricingTable";
 import { useStripeBilling } from "@/hooks/useStripeBilling";
 import { updateOrganizationLicenses } from "@/service/clerk";
 import { upsertOrganization } from "@/service/sfdc";
-import { checkoutSuccess } from "@/service/stripe";
+import { checkoutSuccess } from "@/service/billing/stripe";
 import { Box, useTheme } from "@mui/material"
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import InvoiceTable from "@/components/billing/InvoiceTable";
 
 // components/LoadingIndicator.tsx
 export default function Billing() {
@@ -44,12 +45,15 @@ export default function Billing() {
     <Suspense>
       {hasLoaded &&
         <Box m={5} pb={10}>
-          {!hasSignedUp &&
+          {!hasSignedUp && false && 
             <StripePricingTable />
           }
 
-          {hasSignedUp &&
-            <BillingHeader portalSession={portalSession} />
+          {(hasSignedUp || true) &&
+            <>
+              <BillingHeader portalSession={portalSession} />
+              <InvoiceTable />
+            </>
           }
         </Box>
       }

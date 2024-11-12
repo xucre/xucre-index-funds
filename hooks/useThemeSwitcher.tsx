@@ -24,12 +24,6 @@ export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
           },
           secondary: {
             main: '#1B1E3F',
-          },
-          warning: {
-            main: '#ffffff'
-          },
-          info: {
-            main: '#000000'
           }
         },
         components: {
@@ -78,7 +72,7 @@ export const ThemeSwitcherElement = () => {
 
   return (
     <IconButton
-      color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
+      color={theme.palette.mode === 'dark' ? 'default' : 'default'}
       aria-label="open drawer"
       edge="start"
       onClick={toggleColorMode}

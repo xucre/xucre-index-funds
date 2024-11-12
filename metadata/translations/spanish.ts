@@ -147,6 +147,9 @@ const values : TranslationType = {
     empty_safe: 'No se encontró Safe',
     empty_safe_description: 'Parece que aún no has creado tu Safe wallet. ¡Vamos a configurarlo para comenzar!',
     create_safe: 'Crear Safe',
+    empty_escrow: 'No se encontró Escrow Safe',
+    empty_escrow_description: 'Parece que aún no has creado tu Escrow Safe wallet. ¡Vamos a configurarlo para comenzar!',
+    create_escrow: 'Crear Escrow Safe',
   },
   Profile: {
     wallet_management : 'Gestión de Wallets',
@@ -188,6 +191,7 @@ const values : TranslationType = {
     confirm: "Confirmar",
     featured: 'Presentado',
     all: 'Todo',
+    save: 'Ahorrar',
     error: 'Error',
     add: 'Añadir',
     subtract: 'Restar',

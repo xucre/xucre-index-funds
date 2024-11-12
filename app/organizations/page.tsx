@@ -52,14 +52,14 @@ const OrganizationsTable: React.FC = () => {
   }, []);
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Organization Name', flex: 1, headerClassName: 'transparent--header', },
-    { field: 'slug', headerName: 'Slug', flex: 1, headerClassName: 'transparent--header', },
-    { field: 'maxAllowedMemberships', headerName: 'Max Members', flex: 1, headerClassName: 'transparent--header', },
+    { field: 'name', headerName: 'Organization Name', flex: 1, headerClassName: 'primaryBackground--header', },
+    { field: 'slug', headerName: 'Slug', flex: 1, headerClassName: 'primaryBackground--header', },
+    { field: 'maxAllowedMemberships', headerName: 'Max Members', flex: 1, headerClassName: 'primaryBackground--header', },
     {
       field: 'view',
       headerName: '',
       sortable: false,
-      headerClassName: 'transparent--header',
+      headerClassName: 'primaryBackground--header',
       renderCell: (params: GridRenderCellParams) => (
         <IconButton 
           aria-label={params.row.name}
@@ -86,12 +86,11 @@ const OrganizationsTable: React.FC = () => {
           }}
           pageSizeOptions={[10, 25]}
           getRowId={(row) => row.id}
-          sx={{
-            '& .super-app-theme--header': {
-              backgroundColor: 'transparent',
-            },
-            '& .MuiDataGrid-columnHeaders > first-child': {
-              backgroundColor: 'transparent',
+          sx={{    
+            '& .primaryBackground--header': {
+              backgroundColor: 'rgb(5,46,37)',
+              '--DataGrid-containerBackground' : 'rgb(5,46,37)',
+              '--DataGrid-pinnedBackground' : 'rgb(5,46,37)'
             },
           }}
         />

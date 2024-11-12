@@ -318,7 +318,7 @@ const EditProfile = ({ }) => {
                     <SalaryContributionHelpText />
                   </ReusableModal>
                 </Stack>
-                <NumberInput onChange={(_, value) => {
+                {/* <NumberInput onChange={(_, value) => {
                     setModifiedUser((prevData) => ({
                       ...prevData,
                       salaryContribution: Math.round(value as number * 10) / 10,
@@ -327,17 +327,17 @@ const EditProfile = ({ }) => {
                   aria-label={languageData[language].Edit.salary_label} 
                   min={0} 
                   max={50} 
-                  step={.1}
+                  step={1}
                   value={modifiedUser.salaryContribution} 
-                />    
-                {/* <Slider
+                />     */}
+                {<Slider
                   aria-label={languageData[language].Edit.salary_label}
                   value={modifiedUser.salaryContribution}
-                  getAriaValueText={(value) => `${value}%`}
-                  step={0.1}
-                  marks
+                  getAriaValueText={(value) => `$${value}`}
+                  step={10}
+                  marks={[50,100,150,200].map((value) => ({value, label: `$${value}`}))}
                   min={0}
-                  max={50}
+                  max={250}
                   valueLabelDisplay="auto"
                   onChange={(e, value) => {
                     setModifiedUser((prevData) => ({
@@ -345,7 +345,7 @@ const EditProfile = ({ }) => {
                       salaryContribution: value as number,
                     }));
                   }}
-                /> */}
+                />}
                 {/* <TextField
                   label={languageData[language].Edit.salary_label}
                   type="number"

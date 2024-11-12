@@ -147,6 +147,9 @@ const values : TranslationType  = {
     empty_safe: 'Seguro não encontrado',
     empty_safe_description: 'Parece que você ainda não criou sua carteira segura. Vamos configurá-la para começar!',
     create_safe: 'Criar seguro',
+    empty_escrow: 'Escrow não encontrado',
+    empty_escrow_description: 'Parece que você ainda não criou sua carteira de garantia. Vamos configurá-la para começar!',
+    create_escrow: 'Criar escrow seguro',
   },
   Profile: {
     wallet_management: 'Gerenciamento de carteira',
@@ -188,6 +191,7 @@ const values : TranslationType  = {
     confirm: "Confirmar",
     featured: 'Apresentou',
     all: 'Todos',
+    save: 'Salvar',
     error: 'Erro',
     add: 'Adicionar',
     subtract: 'Subtrair',

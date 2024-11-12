@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import mixpanelFull, { Mixpanel } from 'mixpanel-browser';
 import { useOrganization, useUser } from '@clerk/nextjs';
-import { getCustomerSubscription } from '@/service/stripe';
+import { getCustomerSubscription } from '@/service/billing/stripe';
 import Stripe from 'stripe';
 
 export function useStripeBilling() {

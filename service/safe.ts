@@ -13,13 +13,17 @@ export interface CreateAccountOptions {
   rpcUrl: string;
   owner: string;
   threshold: number;
+  singleOwner?: boolean;
   //signer: SafeSigner;
 }
 
 export async function createAccount(options: CreateAccountOptions): Promise<string> {
   const { owner, threshold, rpcUrl } = options;
-  console.log(owner, threshold, rpcUrl);
-  const safeAccountConfig: SafeAccountConfig = {
+  console.log('createSafe',owner, threshold, rpcUrl);
+  const safeAccountConfig: SafeAccountConfig = options.singleOwner ? {
+    owners: [CORP_PUBLIC_ADDRESS],
+    threshold: 1,
+  } :{
     owners: [owner, CORP_PUBLIC_ADDRESS],
     threshold: 1,
   };
