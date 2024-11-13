@@ -71,6 +71,7 @@ export function ContextProvider({
           signInForceRedirectUrl={'/dashboard'}
           signUpUrl={'/sign-up'} 
           afterSignOutUrl={'/sign-in'} 
+          afterMultiSessionSingleSignOutUrl={'/sign-in'}
           afterSignInUrl={'/dashboard'}
           appearance={{
             baseTheme: dark

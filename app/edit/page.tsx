@@ -335,9 +335,9 @@ const EditProfile = ({ }) => {
                   value={modifiedUser.salaryContribution}
                   getAriaValueText={(value) => `$${value}`}
                   step={10}
-                  marks={[50,100,150,200].map((value) => ({value, label: `$${value}`}))}
+                  marks={[100,200,300,400,500].map((value) => ({value, label: `$${value}`}))}
                   min={0}
-                  max={250}
+                  max={500}
                   valueLabelDisplay="auto"
                   onChange={(e, value) => {
                     setModifiedUser((prevData) => ({

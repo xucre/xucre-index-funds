@@ -292,6 +292,7 @@ function Header() {
                           }}
                           userProfileUrl='/settings'
                           userProfileMode='navigation'
+                          
                         />
                       }
                     </Stack>
