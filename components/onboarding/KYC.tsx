@@ -23,7 +23,7 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name === 'idExpirationDate') {
+    if (false && name === 'idExpirationDate') {
       return updateUser((prevData) => ({
         ...prevData,
         idExpirationDate: new Date(value).getTime(),

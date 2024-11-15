@@ -30,7 +30,7 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
     const membersData = await organizationMembers.reduce(async (accumulator: InvoiceMember[], member: OrganizationMembership) => {
       const userDetails = await getUserDetails(member.publicUserData.userId);
       if (!userDetails) {
-        return accumulator;
+        return await accumulator;
       }
       const salaryContribution = userDetails?.salaryContribution || 0;
       const firstName = userDetails?.firstName || '';
@@ -38,7 +38,8 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
       const email = userDetails?.userEmail || '';
       const id = userDetails?.userId || '';
       const safeWalletAddress = await getSafeAddress(member.publicUserData.userId);
-      return [...accumulator, {
+      const _accumulator = await accumulator;
+      return [..._accumulator, {
         ...member,
         id,
         email,
@@ -63,11 +64,13 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(existingMembers);
       if (existingMembers) {
         setMembers(existingMembers);
         setInitialMembers(existingMembers);
         return;
       }
+      console.log('fetchingMembers')
       const data = await fetchMembers();
       setMembers(data);
     };
@@ -77,7 +80,7 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
   useEffect(() => {
     const hasChanges = JSON.stringify(members) !== JSON.stringify(initialMembers);
     setHasChanges(hasChanges);
-  }, [members, initialMembers]);
+  }, [members, initialMembers]); 
 
   return (
     <Box sx={{
@@ -88,12 +91,19 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
       },
     }}>
       {showButtons && 
-        <Fade in={hasChanges}>
-          <Stack  direction="row" alignItems={'center'} justifyContent={'end'} spacing={1} sx={{mb:1}}>
-            <Chip color={'primary'}  sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={executeSave} label={languageData[language].ui.save} />
-            <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={cancelSave} label={languageData[language].ui.cancel} />
+        <>
+          <Stack  direction="row" alignItems={'center'} justifyContent={'space-between'} spacing={1} sx={{mb:1}}>
+          <Chip color={'secondary'} sx={{fontWeight: 'bold', px: 3, py: 1}} label={'Refresh Members'} onClick={fetchMembers} />
+            <Fade in={hasChanges}>
+              <Stack  direction="row" alignItems={'center'} justifyContent={'end'} spacing={1} >
+                <Chip color={'primary'}  sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={executeSave} label={languageData[language].ui.save} />
+                <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={cancelSave} label={languageData[language].ui.cancel} />
+              </Stack>
+            </Fade>
+            
           </Stack>
-        </Fade>
+        </>
+        
       }
       <DataGrid
         rows={members}

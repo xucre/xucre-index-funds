@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import { getOrganizationSafeAddress, setOrganizationSafeAddress } from '@/service/db';
-import { createAccount, CreateAccountOptions, createAccountSelfSign } from '@/service/safe';
+import { createAccount, CreateAccountOptions } from '@/service/safe';
 import { isDev } from '@/service/constants';
 
 export function useOrganizationWallet() {

@@ -39,7 +39,7 @@ const buildbear = defineChain({
 
 const CORP_PUBLIC_ADDRESS = process.env.NEXT_PUBLIC_DEVACCOUNTADDRESS;
 //const corpAccount = parseAccount(CORP_PUBLIC_ADDRESS) as LocalAccount;
-const CORP_ACCOUNT = privateKeyToAccount(process.env.DEVACCOUNTKEY as `0x${string}`);
+//const CORP_ACCOUNT = privateKeyToAccount(process.env.DEVACCOUNTKEY as `0x${string}`);
 
 export interface CreateAccountOptions {
   //ownerPrivateKey: string;
@@ -52,9 +52,9 @@ export interface CreateAccountOptions {
 }
 
 export async function createAccount(options: CreateAccountOptions): Promise<string> {
-  const { owner, threshold, rpcUrl } = options;
+  const { owner, threshold, rpcUrl, singleOwner, chainid } = options;
   console.log('createSafe',owner, threshold, rpcUrl);
-  const safeAccountConfig: SafeAccountConfig = options.singleOwner ? {
+  const safeAccountConfig: SafeAccountConfig = singleOwner || owner === '' ? {
     owners: [CORP_PUBLIC_ADDRESS],
     threshold: 1,
   } :{
@@ -62,8 +62,8 @@ export async function createAccount(options: CreateAccountOptions): Promise<stri
     threshold: 1,
   };
 
-  const paymasterUrl = `https://api.pimlico.io/v2/${options.chainid ? options.chainid : '11155111'}/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
-  const bundlerUrl = `https://api.pimlico.io/v2/${options.chainid ? options.chainid : '11155111'}/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
+  const paymasterUrl = `https://api.pimlico.io/v2/${chainid ? chainid : '11155111'}/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
+  const bundlerUrl = `https://api.pimlico.io/v2/${chainid ? chainid : '11155111'}/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
   //console.log(paymasterUrl, safeAccountConfig);
   const packData = {
       provider: rpcUrl,
@@ -86,8 +86,6 @@ export async function createAccount(options: CreateAccountOptions): Promise<stri
   const safeOperation = await safe4337Pack.createTransaction({ transactions: [noOpTransaction] })
   
   const signedSafeOperation = await safe4337Pack.signSafeOperation(safeOperation)
-  
-
   return safeAddress;
 }
 

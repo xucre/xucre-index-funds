@@ -104,18 +104,24 @@ export const getERC20Balance = async (
   tokenAddress: string,
   rpcUrl: string
 ) => {
-  const publicClient = createPublicClient({
-    transport: http(rpcUrl),
-  });
-  const balance = await publicClient.readContract({
-    address: tokenAddress as Address,
-    abi: abi.abi,
-    functionName: 'balanceOf',
-    args: [walletAddress as Address],
-  });
-  const decimals = 6; // USDC has 6 decimals
-  const balanceFormatted = Number(balance) / 10 ** decimals;
-  return balanceFormatted;
+  try {
+    const publicClient = createPublicClient({
+      transport: http(rpcUrl),
+    });
+    const balance = await publicClient.readContract({
+      address: tokenAddress as Address,
+      abi: abi.abi,
+      functionName: 'balanceOf',
+      args: [walletAddress as Address],
+    });
+    const decimals = 6; // USDC has 6 decimals
+    const balanceFormatted = Number(balance) / 10 ** decimals;
+    return balanceFormatted;
+  } catch (err) {
+    // console.error(err);
+    return 0;
+  }
+  
 };
 
 
