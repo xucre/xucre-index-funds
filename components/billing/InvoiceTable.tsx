@@ -8,6 +8,9 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Invoice } from '@/service/types';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/navigation';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+dayjs.extend(localizedFormat);
 
 const InvoiceTable = () => {
   const { organization } = useOrganization();
@@ -47,7 +50,12 @@ const InvoiceTable = () => {
           { field: 'status', headerName: 'Status', flex: 1, headerClassName: 'primaryBackground--header' },
           { field: 'dueDate', headerName: 'Due Date', flex: 1, headerClassName: 'primaryBackground--header' },
           { field: 'totalDue', headerName: 'Total Due', flex: 1, headerClassName: 'primaryBackground--header' },
-          { field: 'createdAt', headerName: 'Created At', flex: 1, headerClassName: 'primaryBackground--header' },
+          { field: 'createdAt', headerName: 'Created At', flex: 1, headerClassName: 'primaryBackground--header',
+
+            renderCell: (params) => (
+              <span>{dayjs(params.row.createdAt).format('L')}</span>
+            )
+          },
           {
             field: 'action',
             headerName: 'Action',

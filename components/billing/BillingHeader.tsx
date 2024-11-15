@@ -6,11 +6,15 @@ import languageData from '@/metadata/translations'
 import { useRouter } from "next/navigation";
 import React from "react";
 import Stripe from "stripe";
+import { useOrganization } from "@clerk/nextjs";
+import { setOrganizationSafeAddress } from "@/service/db";
+import { isDev } from "@/service/constants";
 // components/LoadingIndicator.tsx
 export default function BillingHeader({ portalSession }: { portalSession: Stripe.BillingPortal.Session }) {
   const theme = useTheme();
   const router = useRouter();
   const { language } = useLanguage();
+  const { organization } = useOrganization();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const createNewDisbursement = () => {
@@ -21,10 +25,16 @@ export default function BillingHeader({ portalSession }: { portalSession: Stripe
     router.push(portalSession.url)
   }
 
+  const clearSafewallet = async () => {
+    await setOrganizationSafeAddress(organization.id, null, 'escrow');
+  }
+
+  
   return (
     <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} my={4}>
-      {<Typography color={theme.palette.mode === 'dark' ? 'white' : 'gray'} variant={'h5'}>{(languageData[language].Menu.billing as string).toLowerCase()}</Typography>}
+      {<Typography color={theme.palette.mode === 'dark' ? 'white' : 'gray'} variant={'h5'}>{(languageData[language].Menu.billing as string)}</Typography>}
       <Chip color={'primary'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={createNewDisbursement} label={'New Disbursement'} />
+      {isDev && <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} /> }
       <Chip color={'primary'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={openStripePortal} label={languageData[language].Billing.manage_subscription} />
     </Stack>
   );

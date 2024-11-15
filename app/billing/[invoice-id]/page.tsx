@@ -13,6 +13,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { uid } from 'uid-promise'
 import InvoiceDetail from "@/components/billing/InvoiceDetail";
+import { useEscrowBalance } from "@/hooks/useEscrowBalance";
 
 // components/LoadingIndicator.tsx
 export default function InvoicePage() {
@@ -20,11 +21,11 @@ export default function InvoicePage() {
   const router = useRouter();
   const params = useParams();
   const { organization } = useOrganization();
-  console.log(params['invoice-id'])
   const invoiceId = params['invoice-id'] as string;
   const [invoiceDetails, setInvoiceDetailsState] = useState(null as Invoice | null);
   const [escrowWallet, setEscrowWallet] = useState('');
   const [trigger, setTrigger] = useState(false);
+  const {balance: usdcBalance, refresh} = useEscrowBalance(organization.id);
   //const billingOnboarded = false;
 
   const saveMembers = async (members) => {
@@ -63,7 +64,7 @@ export default function InvoicePage() {
     };
     await setInvoiceDetails(organization.id, newInvoice.id, newInvoice);
     setInvoiceDetailsState(newInvoice);
-    router.push(`/billing/id/${newInvoice.id}`);
+    router.push(`/billing/${newInvoice.id}`);
   }
 
   useEffect(() => {
@@ -80,7 +81,7 @@ export default function InvoicePage() {
     <Suspense>
       {invoiceDetails && 
         <Stack direction={'column'} spacing={2} mx={2}>
-          <InvoiceDetail invoice={invoiceDetails} />
+          <InvoiceDetail invoice={invoiceDetails} usdcBalance={usdcBalance}/>
           <InvoiceDetailTable
             saveMembers={saveMembers}
             showButtons={showButtons}

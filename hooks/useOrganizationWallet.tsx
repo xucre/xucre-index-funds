@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import { getOrganizationSafeAddress, setOrganizationSafeAddress } from '@/service/db';
-import { createAccount } from '@/service/safe';
+import { createAccount, CreateAccountOptions, createAccountSelfSign } from '@/service/safe';
+import { isDev } from '@/service/constants';
 
 export function useOrganizationWallet() {
     const {organization} = useOrganization();
@@ -29,13 +30,19 @@ export function useOrganizationWallet() {
     const createEscrowAddress = async () => {
         setLoading(true);
         // create escrow address
-        const safeAddress = await createAccount({
-            rpcUrl: 'https://endpoints.omniatech.io/v1/eth/sepolia/public',
+        const safePayload = isDev ? { 
+            rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
+            owner: '',
+            threshold: 1
+          } as CreateAccountOptions : {
+            rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
             owner: '',
             threshold: 1,
-            singleOwner: true,
-            //signer: '',
-        });
+            chainid: 137
+          } as CreateAccountOptions;
+        console.log('createEscrowAddress', isDev);
+        //const safeAddress = isDev ? await createAccountSelfSign(safePayload) : await createAccount(safePayload);
+        const safeAddress = await createAccount(safePayload);
         setOrganizationSafeAddress(organization.id, safeAddress, 'escrow');
         setEscrowAddress(safeAddress);
 
@@ -45,7 +52,7 @@ export function useOrganizationWallet() {
         setLoading(true);
         // create escrow address
         const safeAddress = await createAccount({
-            rpcUrl: 'https://endpoints.omniatech.io/v1/eth/sepolia/public',
+            rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
             owner: '',
             threshold: 1,
             singleOwner: true,

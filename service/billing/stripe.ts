@@ -89,22 +89,7 @@ export async function checkoutSuccess (sessionId) {
 };
 
 export async function generateToken (invoiceId: string, organizationId: string, escrowWallet: string, amount: number) {
-    try {      
-
-        // const onrampSession = await new OnrampSessionResource(stripe).create({
-        //     transaction_details: {
-        //         'wallet_addresses[polygon]': escrowWallet,
-        //         source_currency: 'usd',
-
-        //       destination_currency: 'usdc',
-        //       destination_network: 'polygon',
-        //     }
-        //   });
-        
-        //   console.log(onrampSession);
-        //   return null;
-        //   return onrampSession;
-          
+    try {                
         const response = await superagent
             .post(`${STRIPE_API_URL}/crypto/onramp_sessions`)
             .auth(process.env.STRIPE_SECRET_KEY, '')
@@ -118,7 +103,8 @@ export async function generateToken (invoiceId: string, organizationId: string, 
                 metadata[invoiceId]=${invoiceId}&
                 lock_wallet_address=true`)
             .withCredentials();
-        return response.body.client_secret;
+            //console.log(response.body);
+        return response.body;
     } catch (error) {
         console.log(error);
         //return null;

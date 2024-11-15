@@ -9,6 +9,9 @@ import { Box, useTheme } from "@mui/material"
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import InvoiceTable from "@/components/billing/InvoiceTable";
+import { setOrganizationSafeAddress } from "@/service/db";
+import { useOrganizationWallet } from "@/hooks/useOrganizationWallet";
+import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
 
 // components/LoadingIndicator.tsx
 export default function Billing() {
@@ -17,6 +20,8 @@ export default function Billing() {
   const { hasSignedUp, seatCount, organization, portalSession, reset } = useStripeBilling();
   const session = params.get('session');
   const [trigger, setTrigger] = useState(false);
+  const { escrowAddres, hasEscrowAddress, createEscrowAddress } = useOrganizationWallet();
+  
   //const billingOnboarded = false;
 
   const handleCheckoutComplete = async (sessionId) => {
@@ -49,7 +54,11 @@ export default function Billing() {
             <StripePricingTable />
           }
 
-          {(hasSignedUp || true) &&
+          {hasLoaded && true && !hasEscrowAddress && 
+            <EmptyEscrowWallet onCreateSafe={createEscrowAddress} />
+          }
+
+          {hasLoaded && true && hasEscrowAddress &&
             <>
               <BillingHeader portalSession={portalSession} />
               <InvoiceTable />

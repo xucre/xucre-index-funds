@@ -13,6 +13,7 @@ import { useOrganization } from "@clerk/nextjs";
 import { generateToken } from "@/service/billing/stripe";
 import { CryptoElements, OnrampElement } from "./StripeCryptoElements";
 import { loadStripeOnramp } from "@stripe/crypto";
+import { setStripePaymentId } from "@/service/db";
 
 const stripeOnrampPromise = loadStripeOnramp(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -27,11 +28,19 @@ export default function Stripe({ invoiceId, destination, amount }: { invoiceId: 
     const { language } = useLanguage();
     const [isLocked, setIsLocked] = useState(true);
     const [token, setToken] = useState('');
+    const [redirectUrl, setRedirectUrl] = useState('');
     const { isConnected, address, chainId } = useAccount();
     
     const handlePaymentLoad = async () => {
-        const _token = await generateToken(invoiceId, organization.id, destination, amount);
-        setToken(_token);
+        console.log(destination);
+        const session = await generateToken(invoiceId, organization.id, destination, amount);
+        //await setStripePaymentId(organization.id, invoiceId, session.id);
+
+        const _token = session.client_secret;
+        //setToken(_token);
+        const _redirectUrl = session.redirect_url;
+        setRedirectUrl(_redirectUrl);
+        window.open(_redirectUrl, "_blank")
     }   
 
     const onChange = useCallback(({ session }) => {
@@ -64,6 +73,8 @@ export default function Stripe({ invoiceId, destination, amount }: { invoiceId: 
                     />
                 )}
             </CryptoElements>
+
+
         </Stack>
 
         </Box>

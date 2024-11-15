@@ -32,17 +32,20 @@ export async function updateOrganizationMetadata(organizationId: string, metadat
 }
 
 export async function createUserWithRole(email: string, role: Roles, organizationId: string) {
+  console.log('create user', email);
   const user = await clerkClient.users.createUser({
+    firstName: '',
+    lastName: '',
     emailAddress: [email],
   });
+  console.log(user);
+  // await clerkClient.organizations.createOrganizationMembership({
+  //   userId: user.id,
+  //   organizationId,
+  //   role: role,
+  // });
 
-  await clerkClient.organizations.createOrganizationMembership({
-    userId: user.id,
-    organizationId,
-    role: role,
-  });
-
-  return user;
+  return;
 }
 
 export async function removeUserFromOrganization(userId: string, organizationId: string) {

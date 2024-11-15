@@ -60,3 +60,12 @@ export const setInvoiceDetails = async (organizationId: string, invoiceId: strin
   await kv.sadd(`organization:invoices:${organizationId}`, invoiceId);
   return await kv.hmset(`invoice:${organizationId}:${invoiceId}`, invoice);
 }
+
+
+export const getStripePaymentId = async (organizationId: string, invoiceId: string) => {
+  return await kv.hget(`invoice:payment:${organizationId}:${invoiceId}`, 'safeWalletAddress') as string;
+}
+
+export const setStripePaymentId = async (organizationId: string, invoiceId: string, paymentId: string) => {
+  await kv.hmset(`invoice:payment:${organizationId}:${invoiceId}`, {invoiceId: paymentId});
+}

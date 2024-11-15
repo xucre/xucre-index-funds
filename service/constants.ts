@@ -7,3 +7,4 @@ export const objectFields = {
 }
 
 export const BASEURL = 'https:/localhost:3000';
+export const isDev = process.env.NEXT_PUBLIC_TEST_ENV === 'true';

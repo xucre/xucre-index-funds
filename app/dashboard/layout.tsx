@@ -7,9 +7,10 @@ import EmptyProfileState from "@/components/onboarding/EmptyProfile";
 import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import { useSFDC } from "@/hooks/useSFDC";
+import { isDev } from "@/service/constants";
 import { getSafeAddress, setSafeAddress } from "@/service/db";
 import { getDashboardBorderColor } from "@/service/helpers";
-import { createAccount } from "@/service/safe";
+import { createAccount, CreateAccountOptions, createAccountSelfSign } from "@/service/safe";
 import { updateSafeWalletDetails } from "@/service/sfdc";
 import { useUser } from "@clerk/nextjs";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/material"
@@ -47,12 +48,19 @@ export default function DashboardLayout({
   const [safeWallet, setSafeWallet] = useState<string | null>(null);
 
   const createSafeWallet = async () => {
-    const safeAddress = await createAccount({
-      rpcUrl: 'https://endpoints.omniatech.io/v1/eth/sepolia/public',
+    
+    const safePayload = isDev ? { 
+      rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
+      owner: address,
+      threshold: 1
+    } as CreateAccountOptions : {
+      rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
       owner: address,
       threshold: 1,
-      //signer: '',
-    });
+      chainid: 137
+    } as CreateAccountOptions;
+    console.log('createSafeWallet', isDev);
+    const safeAddress = await createAccount(safePayload);
     setSafeAddress(user.id, safeAddress);
     updateSafeWalletDetails(user.id, safeAddress);
     setSafeWallet(safeAddress);

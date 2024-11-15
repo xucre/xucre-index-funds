@@ -8,9 +8,10 @@ import { useRouter } from 'next/navigation';
 
 interface InvoiceDetailProps {
   invoice: Invoice;
+  usdcBalance: number | null;
 }
 
-const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice }) => {
+const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance }) => {
     const router = useRouter();
     const handleFundClick = () => {
        router.push(`/billing/${invoice.id}/pay`);
@@ -22,8 +23,8 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice }) => {
             <Typography variant="h6">Invoice Details</Typography>
             <Box sx={{maxWidth: 100}}><InvoiceStatus status={invoice.status} /></Box>
             <Typography>Escrow Wallet: {invoice.escrowWallet}</Typography>
-            <Typography>Total Due: {invoice.totalDue}</Typography>
-            <Typography>Total Paid: {invoice.totalPaid}</Typography>
+            <Typography>Total Due: ${invoice.totalDue}</Typography>
+            <Typography>Escrow Amount Available: ${usdcBalance || 0}</Typography>
             </Stack>
             <Chip onClick={handleFundClick} color={'primary'} sx={{fontWeight: 'bold'}} label="Fund Disbursement" disabled={invoice.status != InvoiceStatuses.New} />
         </Box>

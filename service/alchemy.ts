@@ -1,7 +1,9 @@
 'use server';
 import { Token } from '@/hooks/useTokenList';
 import { Alchemy, Network } from 'alchemy-sdk';
-import { getAddress, isAddress } from 'viem';
+import { getAddress, isAddress, createPublicClient, http, Address } from 'viem';
+import abi from '@openzeppelin/contracts/build/contracts/ERC20.json';
+import { isDev } from './constants';
 
 // Map chainId to Alchemy Network
 const getAlchemyNetwork = (chainId: number): Network => {
@@ -60,3 +62,60 @@ export const getTokenMetadata = async (address: string, chainId: number) => {
   } 
   return null;
 }
+
+export const getUSDCBalance = async (address: string) => {
+  const alchemyApiKey = process.env.ALCHEMY_API_KEY;
+  if (isDev) return getERC20Balance(
+    address,
+    process.env.NEXT_PUBLIC_USDC_ADDRESS,
+    process.env.NEXT_PUBLIC_SAFE_RPC_URL
+  )
+  if (!alchemyApiKey) {
+    console.error('Alchemy API key not set');
+    return;
+  }
+
+  const alchemySettings = {
+    apiKey: alchemyApiKey,
+    network: Network.MATIC_MAINNET,
+    connectionInfoOverrides: {
+      skipFetchSetup: true,
+    },
+  };
+  const alchemy = new Alchemy(alchemySettings);
+
+  const tokenAddress = process.env.NEXT_PUBLIC_USDC_ADDRESS; // USDC address on Polygon
+
+  const balances = await alchemy.core.getTokenBalances(address, [tokenAddress]);
+
+  if (balances && balances.tokenBalances && balances.tokenBalances.length > 0) {
+    const tokenBalance = balances.tokenBalances[0];
+    const balance = BigInt(tokenBalance.tokenBalance);
+    const decimals = 6; // USDC has 6 decimals
+    const balanceFormatted = Number(balance) / 10 ** decimals;
+    return balanceFormatted;
+  }
+
+  return 0;
+};
+
+export const getERC20Balance = async (
+  walletAddress: string,
+  tokenAddress: string,
+  rpcUrl: string
+) => {
+  const publicClient = createPublicClient({
+    transport: http(rpcUrl),
+  });
+  const balance = await publicClient.readContract({
+    address: tokenAddress as Address,
+    abi: abi.abi,
+    functionName: 'balanceOf',
+    args: [walletAddress as Address],
+  });
+  const decimals = 6; // USDC has 6 decimals
+  const balanceFormatted = Number(balance) / 10 ** decimals;
+  return balanceFormatted;
+};
+
+

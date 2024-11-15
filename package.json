@@ -46,6 +46,7 @@
     "@web3modal/wagmi": "^5.1.11",
     "alchemy-sdk": "^3.4.4",
     "animejs": "^3.2.2",
+    "c-kzg": "^4.0.1",
     "color": "^4.2.3",
     "dayjs": "^1.11.13",
     "intuit-oauth": "^4.1.3",
