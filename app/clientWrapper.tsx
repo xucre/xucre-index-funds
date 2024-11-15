@@ -32,22 +32,26 @@ export default function Wrapper({
         <ThemeSwitcherProvider>
             <Suspense >
               <CssBaseline enableColorScheme />
-              <Header />
-              <Stack spacing={2} direction="row" width={'full'}>
-                <SignedIn>
-                  {!hideLoginButton && 
-                    <Box minWidth={200}>
-                      <AppMenu />
+              
+                <Header />
+                <Stack direction={'column'} justifyContent={'space-between'} minHeight={'full'}>
+                  <Stack spacing={2} direction="row" width={'full'} alignItems={'top'}>
+                    <SignedIn>
+                      {!hideLoginButton && 
+                        <Box minWidth={200}>
+                          <AppMenu />
+                        </Box>
+                      }
+                      
+                    </SignedIn>
+                    <Box flexGrow={1}>
+                      {children}
                     </Box>
-                  }
-                  
-                </SignedIn>
-                <Box flexGrow={1}>
-                  {children}
-                </Box>
-              </Stack>              
-              {/* <CTA type={'main'} /> */}
-              <Footer />
+                  </Stack>              
+                  {/* <CTA type={'main'} /> */}
+                </Stack>
+
+                {/* <Footer /> */}
             </Suspense>
         </ThemeSwitcherProvider>
       </MixpanelProvider>

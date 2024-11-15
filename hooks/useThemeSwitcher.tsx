@@ -72,7 +72,7 @@ export const ThemeSwitcherElement = () => {
 
   return (
     <IconButton
-      color={theme.palette.mode === 'dark' ? 'default' : 'default'}
+      color={theme.palette.mode === 'dark' ? 'inherit' : 'inherit'}
       aria-label="open drawer"
       edge="start"
       onClick={toggleColorMode}

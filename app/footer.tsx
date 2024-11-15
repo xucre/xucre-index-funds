@@ -21,7 +21,7 @@ export default function Footer() {
   const hideWalletConnectButton = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email'
   
   return (
-    <AppBar position="fixed" color={'default'} sx={{ top: 'auto', bottom: 0, display: { xs: 'none', md: 'block' } }}>
+    <AppBar position={'relative'} color={'default'} sx={{ mt:4, top: 'auto', bottom: 0, display: { xs: 'none', md: 'block' } }}>
       <Toolbar>
         {/* <SignedIn><SettingsButton /></SignedIn> */}
         {!hideWalletConnectButton && 
