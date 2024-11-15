@@ -34,7 +34,7 @@ export type SFDCUserData = {
   address: string,
   placeId: string,
   idCardNumber: string,
-  idExpirationDate: number,
+  idExpirationDate: string,
   frontImage: string,
   backImage: string,
   wallets : SFDCWallet[]

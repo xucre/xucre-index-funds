@@ -86,7 +86,7 @@ export default function DashboardLayout({
     <Suspense>
       <Box width={'full'} px={5} py={4}>
         {!profileFilled &&
-          <OpaqueCard><EmptyProfileState onCreateProfile={(() => { router.push('/edit') })} /></OpaqueCard>
+          <OpaqueCard><EmptyProfileState onCreateProfile={(() => { router.push('/settings/portfolio') })} /></OpaqueCard>
         }
 
         {profileFilled &&

@@ -13,7 +13,7 @@ interface KYCFormData {
   lastName: string;
   address: string;
   idCardNumber: string;
-  idExpirationDate: number;
+  idExpirationDate: string;
   frontImage: string;
   backImage: string;
 }
@@ -77,7 +77,7 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
               apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY}
               label={languageData[language].Edit.address_label}
               autoComplete={false}
-              value={user ? { description: user.address, place_id: user.placeId, components: {}, structured_formatting: { main_text: user.address, secondary_text: "", main_text_matched_substrings: []} }: null}
+              value={user ? { description: user.address, place_id: user.placeId, components: {}, structured_formatting: { main_text: user.address, secondary_text: "", main_text_matched_substrings: []} }: { description: '', place_id: '', components: {}, structured_formatting: { main_text: '', secondary_text: "", main_text_matched_substrings: []} }} 
               //value={null}
               fields={[]} // fields will always contain address_components and formatted_address, no need to repeat them
               onChange={(_, value) => {
@@ -109,7 +109,7 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
               type="date"
               fullWidth
               InputLabelProps={{ shrink: true }}
-              value={user.idExpirationDate}
+              value={user.idExpirationDate || ''}
               onChange={handleChange}
             />
           </Grid>

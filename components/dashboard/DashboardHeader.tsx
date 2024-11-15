@@ -22,7 +22,7 @@ export default function DashboardHeader() {
       <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} my={4} px={5} mb={2}>
         {<Typography color={textColor} variant={'h5'}>{`${(languageData[language].ui.welcome_message_1 as string)}`}<b>{`${user.firstName || 'Usuario'}`}</b>{`${(languageData[language].ui.welcome_message_2 as string)}`}</Typography>}
         <></>
-        <IconButton sx={{ color: textColor }} onClick={() => { router.push('/edit') }}>
+        <IconButton sx={{ color: textColor }} onClick={() => { router.push('/settings/portfolio') }}>
           <EditIcon />
         </IconButton>
       </Stack>

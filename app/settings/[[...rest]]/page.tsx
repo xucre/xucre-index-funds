@@ -9,6 +9,8 @@ import { ThemeSwitcherElement } from "@/hooks/useThemeSwitcher";
 import LanguageSelect from "@/components/ui/languageSelect";
 import SocialIcons from "@/components/ui/socialIcons";
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
+import WalletIcon from '@mui/icons-material/Wallet';
+import EditUserProfile from "@/components/onboarding/EditUserProfile";
 
 // components/LoadingIndicator.tsx
 export default function Settings() {
@@ -24,6 +26,9 @@ export default function Settings() {
           <UserProfile
             appearance={{ baseTheme: isDarkTheme ? dark : undefined, }}
           >
+            <UserProfile.Page label="Portfolio" labelIcon={<WalletIcon fontSize="small" />} url="portfolio">
+              <EditUserProfile />
+            </UserProfile.Page>
             <UserProfile.Page label="Web3" labelIcon={<LinkIcon fontSize="small" />} url="web3">
               <WalletManagement />
             </UserProfile.Page>

@@ -155,7 +155,7 @@ const AppMenu: React.FC = () => {
     if (isAdmin) {
       adminMenuGroups.forEach((group) => {
         group.items.forEach((item) => {
-          if (pathname.includes(item.path) || (pathname === '/edit' && item.path === '/dashboard')) {
+          if (pathname.includes(item.path)) {
             currentItemRef = item.ref;
           }
         });
@@ -163,7 +163,7 @@ const AppMenu: React.FC = () => {
     } else {
       menuGroups.forEach((group) => {
         group.items.forEach((item) => {
-          if (pathname.includes(item.path) || (pathname === '/edit' && item.path === '/dashboard')) {
+          if (pathname.includes(item.path)) {
             currentItemRef = item.ref;
           }
         });
@@ -257,7 +257,7 @@ const AppMenu: React.FC = () => {
               FabProps={{
                 sx: {
                   padding: theme.spacing(1),
-                  color: !pathname.startsWith('/organizations') && pathname === item.path || (item.path === '/settings' && pathname.includes(item.path)) || (pathname === '/edit' && item.path === '/dashboard') 
+                  color: !pathname.startsWith('/organizations') && pathname === item.path || (item.path === '/settings' && pathname.includes(item.path)) 
                     ? theme.palette.success.main
                     : 'default',
                   backgroundColor: 'transparent',
@@ -290,7 +290,7 @@ const AppMenu: React.FC = () => {
               FabProps={{
                 sx: {
                   padding: theme.spacing(1),
-                  color: !pathname.startsWith('/organizations') && pathname.includes(item.path) || (pathname === '/edit' && item.path === '/dashboard')
+                  color: !pathname.startsWith('/organizations') && pathname.includes(item.path)
                     ? theme.palette.success.main
                     : 'default',
                   backgroundColor: 'transparent',
