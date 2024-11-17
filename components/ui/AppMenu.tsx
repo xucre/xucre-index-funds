@@ -151,7 +151,7 @@ const AppMenu: React.FC = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   const computeHighlightPosition = () => {
-    let currentItemRef: React.RefObject<HTMLButtonElement> | null = null;
+    let currentItemRef: React.RefObject<HTMLButtonElement> = {} as React.RefObject<HTMLButtonElement>;
     if (isAdmin) {
       adminMenuGroups.forEach((group) => {
         group.items.forEach((item) => {
@@ -180,8 +180,9 @@ const AppMenu: React.FC = () => {
       });
     }
     
+    if (!currentItemRef) return;
 
-    if (currentItemRef?.current && backgroundRef.current) {
+    if (currentItemRef.current && backgroundRef.current) {
       const itemRect = currentItemRef.current.getBoundingClientRect();
       const containerRect = backgroundRef.current.parentElement!.getBoundingClientRect();
       const translateY = itemRect.top - containerRect.top;

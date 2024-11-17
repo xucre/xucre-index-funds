@@ -21,7 +21,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
   const theme = useTheme();
   const {language} = useLanguage();
   const borderColor = getDashboardBorderColor(theme);
-  const [transactionDetails, setTransactionDetails] = useState<TransactionDetails>(null);
+  const [transactionDetails, setTransactionDetails] = useState<TransactionDetails | null>(null);
   const [transactionType, setTransactionType] = useState<String>(languageData[language].Dashboard.unknown);
 
   const computeTransactionType = (details) => {

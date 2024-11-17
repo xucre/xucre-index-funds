@@ -25,9 +25,13 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
   const { language } = useLanguage();
 
   const fetchMembers = async () => {
+    if (!organization) return;
     const organizationMembers = (await getOrganizationMembers(organization.id)).data;
    
     const membersData = await organizationMembers.reduce(async (accumulator: InvoiceMember[], member: OrganizationMembership) => {
+      if (!member.publicUserData) {
+        return await accumulator;
+      }
       const userDetails = await getUserDetails(member.publicUserData.userId);
       if (!userDetails) {
         return await accumulator;

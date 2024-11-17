@@ -10,7 +10,7 @@ import { useOrganization } from "@clerk/nextjs";
 import { setOrganizationSafeAddress } from "@/service/db";
 import { isDev } from "@/service/constants";
 // components/LoadingIndicator.tsx
-export default function BillingHeader({ portalSession }: { portalSession: Stripe.BillingPortal.Session }) {
+export default function BillingHeader({ portalSession }: { portalSession: Stripe.BillingPortal.Session | null }) {
   const theme = useTheme();
   const router = useRouter();
   const { language } = useLanguage();
@@ -22,11 +22,14 @@ export default function BillingHeader({ portalSession }: { portalSession: Stripe
   };
 
   const openStripePortal = () => {
+    if (!portalSession) return;
     router.push(portalSession.url)
   }
 
   const clearSafewallet = async () => {
-    await setOrganizationSafeAddress(organization.id, null, 'escrow');
+    if (!organization) return;
+    await setOrganizationSafeAddress(organization.id, '', 'escrow');
+    router.refresh()
   }
 
   
@@ -34,7 +37,7 @@ export default function BillingHeader({ portalSession }: { portalSession: Stripe
     <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} my={4}>
       {<Typography color={theme.palette.mode === 'dark' ? 'white' : 'gray'} variant={'h5'}>{(languageData[language].Menu.billing as string)}</Typography>}
       <Chip color={'primary'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={createNewDisbursement} label={'New Disbursement'} />
-      {isDev && <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} /> }
+      {true && <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} /> }
       <Chip color={'primary'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={openStripePortal} label={languageData[language].Billing.manage_subscription} />
     </Stack>
   );

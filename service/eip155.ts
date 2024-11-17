@@ -35,7 +35,7 @@ export async function retrieveTransactionDetails(address: string, txHash: string
     }
 
     // Initialize an empty array to store ERC20 token transfers and a flag for contract creation
-    const erc20Transfers = [];
+    let erc20Transfers = [] as {from:string, to:string, value:string}[];
     let contractCreated = false;
 
     // Parse the logs from the transaction receipt to extract ERC20 transfer events
@@ -52,13 +52,13 @@ export async function retrieveTransactionDetails(address: string, txHash: string
       if (log.topics && log.topics[0] === transferEventSignature) {
         // Different ERC20 implementations may use different argument names (e.g., 'owner' vs 'from')
         if ('owner' in log.args) {
-          const from = log.args.owner;
-          const to = log.args.spender;
+          const from = log.args.owner as string;
+          const to = log.args.spender as string;
           const value = BigInt(log.data).toString(); // Convert the value from hexadecimal to a string
-          erc20Transfers.push({ from, to, value }); // Add the transfer details to the array
+          erc20Transfers = [...erc20Transfers, { from, to, value }]; // Add the transfer details to the array
         } else {
-          const from = log.args.from;
-          const to = log.args.to;
+          const from = log.args.from as string;
+          const to = log.args.to as string;
           const value = BigInt(log.data).toString(); // Convert the value from hexadecimal to a string
           erc20Transfers.push({ from, to, value }); // Add the transfer details to the array
         }
@@ -77,7 +77,6 @@ export async function retrieveTransactionDetails(address: string, txHash: string
       erc20Transfers,
       contractCreated,
     };
-    console.log(transactionDetails);
     // Save the transaction details to Vercel KV for future retrieval
     await setTransactionDetailsDb(kvKey, transactionDetails);
 

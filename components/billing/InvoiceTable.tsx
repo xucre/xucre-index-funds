@@ -20,6 +20,7 @@ const InvoiceTable = () => {
 
   useEffect(() => {
     const fetchInvoices = async () => {
+      if (!organization) return;
       const invoiceIds = await getAllOrganizationInvoices(organization.id);
       const invoicePromises = invoiceIds.map(async (invoiceId: string) => {
         const invoiceData = await getInvoiceDetails(organization.id, invoiceId);

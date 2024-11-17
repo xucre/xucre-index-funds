@@ -9,14 +9,14 @@ import { BASEURL } from '@/service/constants';
 export default function Unlimit({ invoiceId, destination, amount }: { invoiceId: string, destination: string, amount: number }) {
   const theme = useTheme();
   const { language } = useLanguage();
-  const [instance, setGatefiInstance] = useState<GateFiSDK>(null);
+  const [instance, setGatefiInstance] = useState<GateFiSDK | null>(null);
 
   useEffect(() => {
-    let _instance = null;
+    let _instance = {} as GateFiSDK;
     //if (instance) {
 
     _instance = new GateFiSDK({
-      merchantId: process.env.NEXT_PUBLIC_UNLIMIT_KEY_TEST,
+      merchantId: process.env.NEXT_PUBLIC_UNLIMIT_KEY_TEST as string,
       displayMode: GateFiDisplayModeEnum.Embedded,
       nodeSelector: "#container",
       walletAddress: destination,

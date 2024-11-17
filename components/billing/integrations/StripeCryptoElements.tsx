@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 
 // ReactContext to simplify access of StripeOnramp object
 const CryptoElementsContext =
-  React.createContext(null);
+  React.createContext({
+    onramp: {} as any,
+  });
 CryptoElementsContext.displayName = 'CryptoElementsContext';
 
 export const CryptoElements = ({
@@ -10,7 +12,7 @@ export const CryptoElements = ({
   children,
 }) => {
   const [ctx, setContext] = React.useState(() => ({
-    onramp: null,
+    onramp: {} as any,
   }));
 
   React.useEffect(() => {
@@ -66,16 +68,16 @@ export const OnrampElement = ({
   ...props
 }) => {
   const stripeOnramp = useStripeOnramp();
-  const onrampElementRef = React.useRef(null);
+  const onrampElementRef = React.useRef({} as RefObject<HTMLDivElement>);
   const [session, setSession] = React.useState();
 
   const appearanceJSON = JSON.stringify(appearance);
   React.useEffect(() => {
     const containerRef = onrampElementRef.current;
-    if (containerRef) {
+    if (containerRef && containerRef.current) {
       // NB: ideally we want to be able to hot swap/update onramp iframe
       // This currently results a flash if one needs to mint a new session when they need to udpate fixed transaction details
-      containerRef.innerHTML = '';
+      containerRef.current.innerHTML = '';
 
       if (clientSecret && stripeOnramp) {
         setSession(
@@ -92,6 +94,6 @@ export const OnrampElement = ({
 
   useOnrampSessionListener('onramp_ui_loaded', session, onReady);
   useOnrampSessionListener('onramp_session_updated', session, onChange);
-
-  return <div {...props} ref={onrampElementRef}></div>;
+  if (!onrampElementRef) return;
+  return <div {...props} ref={onrampElementRef.current}></div>;
 };

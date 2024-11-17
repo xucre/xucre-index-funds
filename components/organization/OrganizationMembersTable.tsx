@@ -15,6 +15,7 @@ const OrganizationMembersTable: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const getMembers = async () => {
+    if (!organization) return;
     const members2 = await getOrganizationMembers(organization.id);
     setMembers(members2.data);
   }
@@ -27,12 +28,13 @@ const OrganizationMembersTable: React.FC = () => {
 
   const handleRemoveClick = (member) => {
     const currentMember = members.find((m) => m.id === member.id);
+    if (!currentMember) return;
     setSelectedMember(currentMember);
     setModalOpen(true);
   };
 
   const handleConfirmRemove = async () => {
-    if (selectedMember && organization) {
+    if (selectedMember && selectedMember.publicUserData && organization) {
       await removeUserFromOrganization(selectedMember.publicUserData.userId, organization.id);
         //   setMembers(members.filter((m) => m.userId !== selectedMember.userId));
       setModalOpen(false);
@@ -42,8 +44,8 @@ const OrganizationMembersTable: React.FC = () => {
   const rows = members.map((member) => {
     return {
       id: member.id,
-      userId: member.publicUserData.userId,
-      identifier: member.publicUserData.identifier,
+      userId: member.publicUserData ? member.publicUserData.userId : '',
+      identifier: member.publicUserData ? member.publicUserData.identifier : '',
     };
   });
   const columns: GridColDef[] = [
@@ -76,7 +78,7 @@ const OrganizationMembersTable: React.FC = () => {
       <DataGrid rows={rows} rowSelection={false} columns={columns} getRowId={(row) => row.id} />
       <Dialog open={modalOpen} onClose={() => setModalOpen(false)}>
         <>
-        {selectedMember && 
+        {selectedMember && selectedMember.publicUserData &&
             <Box>
             <Typography variant="h5">{selectedMember.publicUserData.identifier}</Typography>
             <Typography>Are you sure you want to remove this user?</Typography>

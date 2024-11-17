@@ -11,13 +11,14 @@ export default function DashboardBalances() {
   const theme = useTheme();
   const isSignedUp = false;
   const { user } = useUser();
-  const [safeWallet, setSafeWallet] = useState<string | null>(null);
+  const [safeWallet, setSafeWallet] = useState<string>('');
   const syncSafeWallet = async () => {
+    if (!user) return;
     const walletAddress = await getSafeAddress(user.id);
     if (walletAddress) {
       setSafeWallet(walletAddress);
     } else {
-      setSafeWallet(null);
+      setSafeWallet('');
     }
   }
 

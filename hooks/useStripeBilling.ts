@@ -19,7 +19,7 @@ export function useStripeBilling() {
       setPortalSession(data.portal);
       setSubscription(_subscription);
       setHasSignedUp(true);
-      setSeatCount(_subscription.items.data[0].quantity);
+      setSeatCount(_subscription.items.data[0].quantity as number);
     } else {
       setHasSignedUp(false);
     }

@@ -26,10 +26,10 @@ export default function InvoicePaymentPage() {
   const { isConnected, address, chainId } = useAccount();
   const params = useParams();
   const { organization } = useOrganization();
-  const [invoiceDetails, setInvoiceDetailsState] = useState(null as Invoice | null);
+  const [invoiceDetails, setInvoiceDetailsState] = useState({} as Invoice);
   const invoiceId = params['invoice-id'][0] as string;
   const paymentResult = params['invoice-id'][1] as string;
-  const [selectedProvider, setSelectedProvider] = useState(null as ReactElement | null);
+  const [selectedProvider, setSelectedProvider] = useState({} as ReactElement);
   const openProvider = selectedProvider !== null;
   const paymentOptions = () => {
     return [
@@ -45,17 +45,19 @@ export default function InvoicePaymentPage() {
   }
 
   const fetchInvoiceDetails = async () => {
+    if (!organization) return;
     const details = (await getInvoiceDetails(organization.id, invoiceId)) as Invoice;
     setInvoiceDetailsState(details);
   }
 
   const handleOpenProvider = (providerId: string) => {
     const provider = paymentOptions().find(p => p.id === providerId);
+    if (!provider) return;
     setSelectedProvider(provider.component);
   }
 
   const handleCloseProvider = () => {
-    setSelectedProvider(null);
+    setSelectedProvider({} as ReactElement);
   }
 
   useEffect(() => {

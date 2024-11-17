@@ -12,11 +12,12 @@ import DashboardTransactionList from "./DashboardTransactionList";
 
 export default function DashboardContainer({ address }: { address: string }) {
   const theme = useTheme();
+
   const { language } = useLanguage();
   const borderColor = getDashboardBorderColor(theme);
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const _address = '0x358eB621894B55805CE16225b2504523d421d3A6';
-  const { transactions, history, balance, change, loaded } = useWalletData({ address: _address });
+  const { transactions, history, balance, change, loaded } = useWalletData({ address });
   return (
     <Stack direction={'column'} spacing={2}>
       <BalanceBlock balance={balance} change={change} address={_address} loaded={loaded} />

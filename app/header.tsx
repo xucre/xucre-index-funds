@@ -114,7 +114,7 @@ function Header() {
 
   useEffect(() => {
     if (isAdmin && !hasEscrowAddress && !isOrganizationWalletLoading) {
-      router.replace('/organization')
+      //router.replace('/organization')
     }
   }, [isAdmin, hasEscrowAddress, isOrganizationWalletLoading])
 
@@ -217,7 +217,7 @@ function Header() {
                 </Box>
                 <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
                   <SignedIn>
-                    {user && user.publicMetadata.superAdmin &&
+                    {user && user.publicMetadata.superAdmin as boolean &&
                       <OrganizationSwitcher
                         appearance={{
                           baseTheme: isDarkTheme ? dark : undefined,
@@ -264,7 +264,7 @@ function Header() {
 
                   <SignedIn>
                     <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
-                      {user && user.publicMetadata.superAdmin &&
+                      {user && user.publicMetadata.superAdmin as boolean &&
                         <OrganizationSwitcher
                           appearance={{
                             baseTheme: isDarkTheme ? dark : undefined,

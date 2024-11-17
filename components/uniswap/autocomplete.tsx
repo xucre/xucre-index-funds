@@ -26,7 +26,7 @@ const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
   const sourceToken = {
     address: zeroAddress,
     chainId,
-    decimals: chain.nativeCurrency.decimals,
+    decimals: chain?.nativeCurrency.decimals,
     name: chain?.nativeCurrency.name,
     symbol: chain?.nativeCurrency.symbol,
   } as Token;
@@ -79,7 +79,7 @@ const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
       console.log('Fetching token metadata for', query);
       if (query && isAddress(query)) {
         try {
-          const additionalToken = await getTokenMetadata(query, chainId);
+          const additionalToken = await getTokenMetadata(query, chainId || 137);
           console.log(additionalToken);
           if (additionalToken) {
             setAdditionalToken(additionalToken);
@@ -120,7 +120,7 @@ const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
         />
       )}
       renderOption={(props, option) => (
-        <li key={option.address} {...props}>
+        <li {...props} key={option.address}>
           <ListItemText
             primary={option.name}
             secondary={truncateEthAddress(option.address)}

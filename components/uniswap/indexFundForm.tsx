@@ -42,10 +42,10 @@ const IndexFundForm = () => {
     image: '',
     imageSmall: '',
     color: '',
-    chainId: chainId,
+    chainId: chainId || 137,
     portfolio: [],
     custom: true,
-    sourceToken: null,
+    sourceToken: undefined,
   });
 
   const [currentLanguage, setCurrentLanguage] = useState<Language>(Language.EN);
@@ -125,7 +125,7 @@ const IndexFundForm = () => {
         ...fund.portfolio,
         {
           name: pool.targetToken.name,
-          chainId: chainId,
+          chainId: chainId || 137,
           address: pool.targetToken.address,
           weight: 0,
           description: {
@@ -149,8 +149,8 @@ const IndexFundForm = () => {
         name: pool.sourceToken.name,
         address: pool.sourceToken.address,
         decimals: pool.sourceToken.decimals,
-        logo: pool.sourceToken.logo,
-        chainId: chainId,
+        logo: pool.sourceToken.logo as string,
+        chainId: chainId || 137,
         weight: 0,
         description: {
           [Language.EN]: 'Pool Description',
@@ -322,7 +322,7 @@ const IndexFundForm = () => {
               return (<OpaqueCard key={index}>
                 <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
                   {/* <Avatar src={fund.sourceToken.logo} sx={{ width: 24, height: 24 }}/> */}
-                  <strong> {fund.sourceToken.name} / {item.name}</strong>
+                  <strong> {fund.sourceToken ? fund.sourceToken.name : ''} / {item.name}</strong>
                   {/* <Avatar src={item.logo} sx={{ width: 24, height: 24 }}/>  */}
                   <Chip label={`${item.poolFee / 10000}%`} color={'default'} />
                 </Stack>

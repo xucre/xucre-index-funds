@@ -33,7 +33,7 @@ export default function Default() {
 
   if (!isConnected) return <WalletNotConnected />;
   //if (!isSubscribed) return <Campfire setIsLocked={() => { }} />;
-  if (!chainValidation(chainId)) return <WalletNotConnected />;
+  if (!chainValidation(chainId || 137)) return <WalletNotConnected />;
   return (
     <Box pb={4}>
       <Stack justifyContent={'center'} alignItems={'center'}>

@@ -25,7 +25,7 @@ export default function IndexFunds() {
   const [isLocked, setIsLocked] = useState(true);
   const [selectedFund, setSelectedFund] = useState(null as IndexFund | null);
   const { isConnected, address, chainId } = useAccount();
-  const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId) });
+  const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || 137) });
   //const { isSubscribed } = usePaidPlanCheck();
 
 
@@ -51,7 +51,7 @@ export default function IndexFunds() {
 
   if (!isConnected) return <WalletNotConnected />;
   //if (!isSubscribed) return <Campfire setIsLocked={() => { }} />;
-  if (!chainValidation(chainId)) return <WalletNotConnected />;
+  if (!chainValidation(chainId || 137)) return <WalletNotConnected />;
   return (
     <Box pb={4}>
       <Stack justifyContent={'center'} alignItems={'center'}>

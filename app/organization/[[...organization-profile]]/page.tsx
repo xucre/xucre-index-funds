@@ -22,15 +22,12 @@ export default function Organization() {
   const isDarkTheme = theme.palette.mode === 'dark';
 
   useEffect(() => {
+    if (!userMemberships || !userMemberships.count || !setActive) return;
     if (userMemberships.count > 0) {
       const org = userMemberships.data[0];
       setActive({organization: org.id});
     }
   }, [organization, userMemberships])
-
-  const clearSafewallet = async () => {
-    await setOrganizationSafeAddress(organization.id, null, 'escrow');
-  }
   
   return (
     <>
@@ -41,7 +38,6 @@ export default function Organization() {
               
               <Stack direction={'row'} alignItems={'center'} width={'100%'} justifyContent={'space-between'} mb={2}>
                 <Typography variant={'h5'}>Members</Typography>
-                {isDev && <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} /> }
               </Stack>
               <OrganizationMembersTable />
             </Stack>

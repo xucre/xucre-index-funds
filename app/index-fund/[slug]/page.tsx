@@ -31,11 +31,11 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   //const _indexFund = JSON.parse(atob(decodeURIComponent(slugString))) as IndexFund;
   const textColor = getTextColor(theme);
   const { isConnected, chainId, isConnecting, isReconnecting } = useAccount();
-  const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId) });
+  const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || 137) });
   const _indexFund = indexFunds.find((fund) => {
     return languages.reduce((returnVal, lang) => {
       if (returnVal) return returnVal;
-      return encodeURIComponent(fund.name[lang]) === slugString || normalizeDevChains(chainId) === fund.chainId;
+      return encodeURIComponent(fund.name[lang]) === slugString || normalizeDevChains(chainId || 137) === fund.chainId;
     }, false);
   });
   const { balance, allowance, hash, error, loading, isNativeToken, confirmationHash, approveContract, initiateSpot, sourceToken, sourceTokens, setSourceToken, status } = useConnectedIndexFund({ fund: _indexFund });
@@ -45,8 +45,9 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const [priceMap, setPriceMap] = useState({} as { [key: string]: PriceData });
   //const { isSubscribed } = usePaidPlanCheck();
   const getPrices = async () => {
+    if (!_indexFund) return;
     const addresses = _indexFund.portfolio.map((item) => item.address).join(',');
-    const _chainId = normalizeDevChains(chainId);
+    const _chainId = normalizeDevChains(chainId || 137);
     const prices = await getTokenPrices(`addresses=${addresses}&chainId=${_chainId}`);
     try {
       setPriceData(prices as PriceData[]);
@@ -71,6 +72,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   }, [mixpanel]);
 
   const handleAmountUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!sourceToken) return;
     setRawAmount(event.target.value);
     setAmount(parseUnits(event.target.value, sourceToken.decimals));
   }
@@ -83,7 +85,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const handleSpot = () => {
     initiateSpot(amount);
   }
-  const allowanceString = allowance ? formatUnits(allowance as bigint, sourceToken.decimals) : 0;
+  const allowanceString = allowance && sourceToken ? formatUnits(allowance as bigint, sourceToken.decimals) : 0;
   const allowanceAmount = allowance ? (allowance as BigInt) <= amount : true;
   //console.log(allowanceAmount, allowanceString)
 
@@ -95,8 +97,8 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
 
   const PortfolioDescription = () => (
     <Stack direction={'column'} spacing={2}>
-      <Typography variant={'h5'} color={textColor} textAlign={'center'}>{_indexFund.name[language]}</Typography>
-      <Typography variant={'body1'} color={textColor}>{_indexFund.description[language]}</Typography>
+      <Typography variant={'h5'} color={textColor} textAlign={'center'}>{_indexFund ? _indexFund.name[language] : ''}</Typography>
+      <Typography variant={'body1'} color={textColor}>{_indexFund ? _indexFund.description[language] : ''}</Typography>
     </Stack>
   )
 
@@ -107,7 +109,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
     return <WalletNotConnected />
   }
 
-  if (!chainValidation(chainId)) return <Typography textAlign={'center'}>{languageData[language].ui.wrong_network}</Typography>;
+  if (!chainValidation(chainId || 137)) return <Typography textAlign={'center'}>{languageData[language].ui.wrong_network}</Typography>;
   if (_indexFund === undefined) return <></>;
   return (
     <Box mt={{ xs: 0, sm: 4 }} pb={4}>

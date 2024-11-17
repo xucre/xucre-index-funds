@@ -12,13 +12,14 @@ export default function DashboardTransactions() {
   const theme = useTheme();
   const isSignedUp = false;
   const { user } = useUser();
-  const [safeWallet, setSafeWallet] = useState<string | null>(null);
+  const [safeWallet, setSafeWallet] = useState<string>('');
   const syncSafeWallet = async () => {
+    if (!user) return;
     const walletAddress = await getSafeAddress(user.id);
     if (walletAddress) {
       setSafeWallet(walletAddress);
     } else {
-      setSafeWallet(null);
+      setSafeWallet('');
     }
   }
 
@@ -29,7 +30,7 @@ export default function DashboardTransactions() {
   }, [user])
 
   const _address = '0x358eB621894B55805CE16225b2504523d421d3A6';
-  const { transactions } = useWalletData({ address: _address });
+  const { transactions } = useWalletData({ address: safeWallet || '' });
 
   return (
     <DashboardTransactionList address={safeWallet} transactions={transactions} truncate={false} />

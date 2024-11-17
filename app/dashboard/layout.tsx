@@ -48,15 +48,17 @@ export default function DashboardLayout({
   const [safeWallet, setSafeWallet] = useState<string | null>(null);
 
   const createSafeWallet = async () => {
-    
+    if (!user) return;
     const safePayload = isDev ? { 
       rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
       owner: address,
-      threshold: 1
+      threshold: 1,
+      id: user.id,
     } as CreateAccountOptions : {
       rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
       owner: address,
       threshold: 1,
+      id: user.id,
       chainid: 137
     } as CreateAccountOptions;
     console.log('createSafeWallet', isDev);
@@ -67,6 +69,7 @@ export default function DashboardLayout({
   }
 
   const syncSafeWallet = async () => {
+    if (!user) return;
     const walletAddress = await getSafeAddress(user.id);
     if (walletAddress) {
       setSafeWallet(walletAddress);
@@ -78,6 +81,8 @@ export default function DashboardLayout({
   useEffect(() => {
     if (user && user.id) {
       syncSafeWallet();
+
+      //setSafeAddress(user.id, '');
     }
   }, [user])
 

@@ -74,8 +74,8 @@ const EditProfile = ({ }) => {
       riskTolerance: 'Moderate',
       salaryContribution: 0,
       role: '',
-      userId: user.id,
-      organizationId: user.organizationMemberships[0].organization.id,
+      userId: user ? user.id : '',
+      organizationId: user ? user.organizationMemberships[0].organization.id : '',
       userEmail: '',
       status: '',
       wallets: [] as SFDCWallet[]
@@ -94,6 +94,7 @@ const EditProfile = ({ }) => {
   }, [sfdcUser])
 
   const handleSaveProfile = async () => {
+    if (!user) return;
     const profileData = {
       userEmail: user.emailAddresses[0].emailAddress,
       userId: user.id,

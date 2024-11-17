@@ -11,16 +11,16 @@ const createConnection = async () => {
     //loginUrl : 'https://test.salesforce.com'
   });
   
-  await conn.login(process.env.SALESFORCE_USERNAME, process.env.SALESFORCE_PASSWORD+process.env.SALESFORCE_SECURITY_TOKEN);
+  await conn.login(process.env.SALESFORCE_USERNAME as string, process.env.SALESFORCE_PASSWORD as string+process.env.SALESFORCE_SECURITY_TOKEN as string);
   return conn;
 }
 
 const query = async (conn: Connection, q: string): Promise<Query<Schema, string, Record, "QueryResult">> => {
-  let records = [];
+  let records = [] as any[];
   const qry = conn
       .query(q)
       .on('record', function (record) {
-          records.push(record);
+        if (record) records.push(record);
       })
       .on('error', function (err) {
           console.log('QUERY ERROR : ' + err.message);

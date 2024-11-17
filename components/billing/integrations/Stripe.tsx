@@ -15,7 +15,7 @@ import { CryptoElements, OnrampElement } from "./StripeCryptoElements";
 import { loadStripeOnramp } from "@stripe/crypto";
 import { setStripePaymentId } from "@/service/db";
 
-const stripeOnrampPromise = loadStripeOnramp(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+const stripeOnrampPromise = loadStripeOnramp(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
@@ -32,7 +32,7 @@ export default function Stripe({ invoiceId, destination, amount }: { invoiceId: 
     const { isConnected, address, chainId } = useAccount();
     
     const handlePaymentLoad = async () => {
-        console.log(destination);
+        if (!organization) return;
         const session = await generateToken(invoiceId, organization.id, destination, amount);
         //await setStripePaymentId(organization.id, invoiceId, session.id);
 

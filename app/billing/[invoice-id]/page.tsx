@@ -25,11 +25,12 @@ export default function InvoicePage() {
   const [invoiceDetails, setInvoiceDetailsState] = useState(null as Invoice | null);
   const [escrowWallet, setEscrowWallet] = useState('');
   const [trigger, setTrigger] = useState(false);
-  const {balance: usdcBalance, refresh} = useEscrowBalance(organization.id);
+  const {balance: usdcBalance, refresh} = useEscrowBalance(organization ? organization.id : '');
   //const billingOnboarded = false;
 
   const saveMembers = async (members) => {
     console.log('saveMembers');
+    if (!invoiceDetails || !organization) return;
     const total = members.reduce((acc, member) => acc + Number(member.salaryContribution), 0);
     const _invoice = {
       ...invoiceDetails,
@@ -43,11 +44,13 @@ export default function InvoicePage() {
   }
 
   const fetchInvoiceDetails = async () => {
+    if (!organization) return;
     const details = (await getInvoiceDetails(organization.id, invoiceId)) as Invoice;
     setInvoiceDetailsState(details);
   }
 
   const createInvoice = async () => {
+    if (!organization) return;
     const escrowWallet = await getOrganizationSafeAddress(organization.id, 'escrow');
     const newInvoice: Invoice = {
       id: await uid(16),
@@ -75,7 +78,7 @@ export default function InvoicePage() {
     }
   }, [invoiceId])
 
-  const showButtons = invoiceDetails && (invoiceDetails.status === InvoiceStatuses.Draft || invoiceDetails.status === InvoiceStatuses.New)
+  const showButtons = (invoiceDetails && (invoiceDetails.status === InvoiceStatuses.Draft || invoiceDetails.status === InvoiceStatuses.New)) as boolean;
 
   return (
     <Suspense>

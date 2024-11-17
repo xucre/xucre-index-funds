@@ -51,7 +51,7 @@ export type IndexFund = {
   portfolio: PortfolioItem[]
 };
 
-const initialSourceTokens = sourceTokensJson as PortfolioItem[];
+const initialSourceTokens = sourceTokensJson as unknown as PortfolioItem[];
 const initialFunds = indexFundJson as IndexFund[];
 const contractAddressMap = {
   1: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_ETH,
@@ -76,13 +76,13 @@ export function useIndexFunds({ chainId }: { chainId: number }) {
   );
 }
 
-export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
+export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined }) {
   const { isConnected, address, chainId, chain } = useAccount();
   const { data :nativeBalance } = useBalance({address});
   const { enqueueSnackbar } = useSnackbar();
   const { language } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
-  const [sourceToken, setSourceToken] = useState(initialSourceTokens.find((item) => item.chainId === normalizeDevChains(chainId) && item.active));
+  const [sourceToken, setSourceToken] = useState(initialSourceTokens.find((item) => item.chainId === normalizeDevChains(chainId || 137) && item.active));
   const [confirmationHash, setConfirmationHash] = useState('');
   const { data: hash, error, writeContractAsync, isPending, status, } = useWriteContract()
   const { data: sourceBalance, refetch: balanceRefetch } = useReadContract({
@@ -97,7 +97,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
     address: sourceToken ? getAddress(sourceToken.address) : zeroAddress,
     abi: erc20,
     functionName: 'allowance',
-    args: [address, contractAddressMap[chainId]],
+    args: [address, contractAddressMap[chainId || 137]],
     query: { enabled: false }
   })
 
@@ -108,6 +108,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
   const approveContract = async (amount: BigInt) => {
     setIsLoading(true);
     try {
+      if (!sourceToken) return;
       //console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS, amount)
       const result = await writeContract(config, {
         abi: erc20,
@@ -115,7 +116,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
         functionName: 'approve',
         chainId,
         args: [
-          contractAddressMap[chainId],
+          contractAddressMap[chainId || 137],
           amount.toString(),
         ],
         chain,
@@ -144,6 +145,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
   const initiateSpot = async (amount: BigInt) => {
     //const runSwap = await xucre.spotExecution(signerAddress, [ethers.utils.getAddress(DAI), ethers.utils.getAddress(WBTC), UNI_CONTRACT.address], [6000, 2000, 2000], [3000, 3000, 3000], USDT_CONTRACT.address, balanceUSDT.div(100));
     try {
+      if (!sourceToken || !fund) return;
       setIsLoading(true);
       const portfolio = fund.portfolio.filter((item) => item.active);
       const tokenAllocations = distributeWeights(portfolio);
@@ -152,7 +154,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
       const tokenPoolFees = portfolio.map((item) => item.sourceFees[sourceToken.address] ? item.sourceFees[sourceToken.address] : item.poolFee);
       const result = await writeContractAsync({
         abi: XucreETF.abi,
-        address: getAddress(contractAddressMap[chainId]),
+        address: getAddress(contractAddressMap[chainId || 137]),
         functionName: 'spotExecution',
         args: [
           address,
@@ -214,12 +216,13 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund }) {
   }, [error])
 
   useEffect(() => {
+    if (!chainId) return;
     setSourceToken(initialSourceTokens.find((item) => item.chainId === normalizeDevChains(chainId) && item.active));
   }, [chainId]);
 
   const loading = isLoading || isPending;
-  const balance = nativeBalance && getAddress(sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006') ? nativeBalance.value : sourceBalance;
-  const isNativeToken = getAddress(sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006');
+  const balance = nativeBalance && getAddress(!sourceToken ? '' : sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006') ? nativeBalance.value : sourceBalance;
+  const isNativeToken = getAddress(!sourceToken ? '' : sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006');
 
-  return { balance: balance, isNativeToken, allowance: sourceAllowance, sourceToken, sourceTokens: initialSourceTokens.filter((token) => token.chainId === normalizeDevChains(chainId)), setSourceToken, approveContract, initiateSpot, hash, error, loading, status, confirmationHash }
+  return { balance: balance, isNativeToken, allowance: sourceAllowance, sourceToken, sourceTokens: initialSourceTokens.filter((token) => token.chainId === normalizeDevChains(chainId || 137)), setSourceToken, approveContract, initiateSpot, hash, error, loading, status, confirmationHash }
 }

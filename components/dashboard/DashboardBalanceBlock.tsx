@@ -10,7 +10,6 @@ const BalanceBlock = ({ balance, change, address, loaded }: { balance: number, c
   const { language } = useLanguage();
   const isPositive = change > 0;
   const isLessThan1 = change < 1 && change > -1;
-  console.log('balanceblock', isPositive)
   const changeLabel = `${isPositive ? '+' : ''}${change.toFixed(isLessThan1 ? 2 : 0)}% ${(languageData[language].totalBalance.dashboard_change as string)}`;
   return (
     <a href={`https://app.safe.global/home?safe=matic:${address}`} color="inherit" target={'_blank'} >

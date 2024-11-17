@@ -63,6 +63,8 @@ const UniswapPoolChecker = ({ registerPortfolioItem }: { registerPortfolioItem: 
     setPoolData(null);
     setLoading(true);
     try {
+      if (!sourceToken || !targetToken) return;
+      if (!chainId) return;
       const souceAddress = sourceToken.address === zeroAddress ? nativeTokens[chainId] : sourceToken.address;
       const targetAddress = targetToken.address === zeroAddress ? nativeTokens[chainId] : targetToken.address;
 
@@ -106,6 +108,7 @@ const UniswapPoolChecker = ({ registerPortfolioItem }: { registerPortfolioItem: 
   };*/
 
   const addToPortfolio = () => {
+    if (!poolData) return;
     registerPortfolioItem(poolData);
   }
 

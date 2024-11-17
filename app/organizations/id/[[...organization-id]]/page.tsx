@@ -31,7 +31,7 @@ const OrganizationDetails: React.FC = () => {
   const organizationId = params['organization-id'] as string;
   const [organization, setOrganization] = useState(null as Organization | null);
   const [members, setMembers] = useState([]);
-  const [selectedMember, setSelectedMember] = useState(null);
+  const [selectedMember, setSelectedMember] = useState(null as OrganizationUserData | null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const fetchData = async () => {

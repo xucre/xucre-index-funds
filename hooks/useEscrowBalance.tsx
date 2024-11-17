@@ -9,6 +9,7 @@ export function useEscrowBalance(organizationId: string) {
     const safeAddress = await getOrganizationSafeAddress(organizationId, 'escrow');
     if (safeAddress && safeAddress.length > 0) {
       const usdcBalance = await getUSDCBalance(safeAddress);
+      if (!usdcBalance) return;
       setBalance(usdcBalance);
     }
   };

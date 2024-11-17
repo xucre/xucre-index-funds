@@ -7,8 +7,8 @@ import { useLanguage } from './useLanguage';
 import languageData from '@/metadata/translations'
 import { useTheme } from '@mui/material';
 import { getUserDetails, setUserDetails } from '@/service/db';
-
-const SFDCContext = React.createContext({ sfdcUser: {} as SFDCUserData, updateUser: (user: SFDCUserData) => { }, refresh: () => { }, isLoaded: false });
+const defaultContext = { sfdcUser: {} as SFDCUserData, updateUser: (user: SFDCUserData) => { }, refresh: () => { }, isLoaded: false };
+const SFDCContext = React.createContext(defaultContext);
 
 export const useSFDC = () => React.useContext(SFDCContext);
 
@@ -18,7 +18,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { language } = useLanguage();
   const [isLoaded, setIsLoaded] = React.useState(false);
-  const [sfdcUser, setSfdcUser] = React.useState(null as SFDCUserData | null);
+  const [sfdcUser, setSfdcUser] = React.useState({} as SFDCUserData);
 
 
   const refresh = async () => {
@@ -40,9 +40,10 @@ export const SFDCProvider = ({ children }: { children: any }) => {
       lastName: user.lastName || '',
       address: '',
       idCardNumber: '',
-      idExpirationDate: null,
+      idExpirationDate: '',
       frontImage: '',
-      backImage: ''
+      backImage: '',
+      placeId: ''
     } as SFDCUserData);
     setIsLoaded(true);
   }
@@ -73,7 +74,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
     //refresh();
   }, [user])
 
-  const value = useMemo(() => ({ sfdcUser, updateUser, refresh, isLoaded }), [sfdcUser]);
+  const value = useMemo(() => ({ sfdcUser , updateUser, refresh, isLoaded }), [sfdcUser]);
 
-  return <SFDCContext.Provider value={value}>{children}</SFDCContext.Provider>;
+  return <SFDCContext.Provider value={!value ? defaultContext : value}>{children}</SFDCContext.Provider>;
 };

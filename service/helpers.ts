@@ -83,3 +83,15 @@ export const coinIconNames = {
   42220: 'celo',
   20090103: 'btc'
 }
+
+
+export function encodeStringToBigInt(str: string): bigint {
+  let sum = BigInt(0);
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    if (/^[a-zA-Z0-9_-]$/.test(c)) {
+      sum += BigInt(c.charCodeAt(0));
+    }
+  }
+  return sum;
+}

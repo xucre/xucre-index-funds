@@ -45,8 +45,28 @@ export default function IndexBuilder() {
     image: '',
     imageSmall: '',
     color: '',
-    chainId: normalizeDevChains(chainId),
+    chainId: normalizeDevChains(chainId || 137),
     portfolio: [],
+    custom: true,
+    sourceToken: {
+      name: 'Source Token',
+      chainId: chainId,
+      address: '',
+      weight: 0,
+      description: {
+        [Language.EN]: 'Source Token Description',
+        [Language.ES]: '',
+        [Language.PT]: ''
+      },
+      logo: '',
+      active: true,
+      poolFee: 0,
+      decimals: 18,
+      chain_logo: '',
+      chartColor: '',
+      links: [],
+      sourceFees: {},
+    }
   } as IndexFund);
 
   const handlePortfolioItemRegister = (pool: PoolData) => {
@@ -55,7 +75,7 @@ export default function IndexBuilder() {
       custom: true,
       sourceToken: {
         name: pool.sourceToken.name,
-        chainId: chainId,
+        chainId: chainId || 137,
         address: pool.sourceToken.address,
         weight: 0,
         description: {
@@ -74,7 +94,7 @@ export default function IndexBuilder() {
       },
       portfolio: [...fund.portfolio, {
         name: pool.targetToken.name,
-        chainId: chainId,
+        chainId: chainId || 137,
         address: pool.targetToken.address,
         weight: 0,
         description: {

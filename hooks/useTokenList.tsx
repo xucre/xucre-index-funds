@@ -25,6 +25,7 @@ export function TokenListProvider({ children, chainId }: { children: any, chainI
   const [tokens, setTokens] = useState([] as Token[]);
 
   const getTokens = async () => {
+    if (!chainId) return;
     const dataRaw = await getTokenList(chainId);
     const data: Token[] = dataRaw.tokens;
     const _chainId = normalizeDevChains(chainId);
@@ -52,6 +53,7 @@ export function useTokenListRaw({ chainId }: { chainId?: number }) {
   const [tokens, setTokens] = useState([] as Token[]);
 
   const getTokens = async () => {
+    if (!chainId) return;
     const dataRaw = await getTokenList(chainId);
     const data: Token[] = dataRaw.tokens;
     const _chainId = normalizeDevChains(chainId);

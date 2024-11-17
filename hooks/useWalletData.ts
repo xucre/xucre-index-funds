@@ -181,6 +181,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
   useEffect(() => {
     const runAsync = async () => {
       setLoaded(false);
+      if (!address) return;
       const result = (await getWalletTransactions(address, 'matic-mainnet'));
       
       if (result && result.covalent) setTransactions(result.covalent.items as CovalentTransactionV3[]);

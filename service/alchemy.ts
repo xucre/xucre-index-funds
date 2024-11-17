@@ -67,8 +67,8 @@ export const getUSDCBalance = async (address: string) => {
   const alchemyApiKey = process.env.ALCHEMY_API_KEY;
   if (isDev) return getERC20Balance(
     address,
-    process.env.NEXT_PUBLIC_USDC_ADDRESS,
-    process.env.NEXT_PUBLIC_SAFE_RPC_URL
+    process.env.NEXT_PUBLIC_USDC_ADDRESS as string,
+    process.env.NEXT_PUBLIC_SAFE_RPC_URL as string
   )
   if (!alchemyApiKey) {
     console.error('Alchemy API key not set');
@@ -86,11 +86,11 @@ export const getUSDCBalance = async (address: string) => {
 
   const tokenAddress = process.env.NEXT_PUBLIC_USDC_ADDRESS; // USDC address on Polygon
 
-  const balances = await alchemy.core.getTokenBalances(address, [tokenAddress]);
+  const balances = await alchemy.core.getTokenBalances(address, [tokenAddress as string]);
 
   if (balances && balances.tokenBalances && balances.tokenBalances.length > 0) {
     const tokenBalance = balances.tokenBalances[0];
-    const balance = BigInt(tokenBalance.tokenBalance);
+    const balance = BigInt(tokenBalance.tokenBalance as string);
     const decimals = 6; // USDC has 6 decimals
     const balanceFormatted = Number(balance) / 10 ** decimals;
     return balanceFormatted;
