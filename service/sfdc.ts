@@ -96,7 +96,7 @@ export async function upsertUserDetails(user: SFDCUserData) {
       }
   } catch (err) {
     console.log('error :/', err);
-    throw new Error('Error creating connection');
+    //throw new Error('Error creating connection');
   }
 }
 

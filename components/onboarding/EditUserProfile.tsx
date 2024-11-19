@@ -261,8 +261,8 @@ const EditProfile = ({ }) => {
                       </ReusableModal>
                     </Stack>
                   </>}
-                  defaultValue={'Moderate'}
-                  value={modifiedUser.riskTolerance || 'Moderate'}
+                  defaultValue={''}
+                  value={modifiedUser.riskTolerance || ''}
                   name={'riskTolerance'}
                   onChange={handleChange}
                   fullWidth
