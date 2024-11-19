@@ -6,7 +6,7 @@ import {
 } from '@safe-global/relay-kit'
 import { isDev } from './constants';
 import { polygon, sepolia } from 'viem/chains'
-import { ByteArray, defineChain, encodeFunctionData, getAddress } from 'viem';
+import { ByteArray, defineChain, encodeFunctionData, getAddress, parseUnits } from 'viem';
 import { mainnetTrustedSetupPath } from 'viem/node'
 import { privateKeyToAccount } from 'viem/accounts';
 import { createSmartAccountClient,  } from "permissionless"
@@ -22,8 +22,11 @@ import {
 import { toSafeSmartAccount } from "permissionless/accounts"
 //const kzg = setupKzg(cKzg, mainnetTrustedSetupPath)
 import ERC20_ABI from '../public/erc20.json'; // Ensure you have the ERC20 ABI JSON file
+import XUCREINDEXFUNDS_ABI from '../public/XucreETF.json'; // Ensure you have the ERC20 ABI JSON file
+import DEMO_PORTFOLIO from '../public/demoPortfolio.json'; // Ensure you have the ERC20 ABI JSON file
 import { writeContract } from 'viem/actions';
-import { encodeStringToBigInt } from './helpers';
+import { distributeWeights, encodeStringToBigInt } from './helpers';
+import { Invoice, InvoiceMember } from './types';
 
 const buildbear = defineChain({
   id: 19819,
@@ -63,6 +66,7 @@ const contractAddressMap = {
 };
 
 const USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS as string;
+const USDT_ADDRESS = process.env.NEXT_PUBLIC_USDT_ADDRESS as string;
 const MAX_UINT256 = `0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`;
 const CORP_PUBLIC_ADDRESS = process.env.NEXT_PUBLIC_DEVACCOUNTADDRESS;
 //const corpAccount = parseAccount(CORP_PUBLIC_ADDRESS) as LocalAccount;
@@ -103,45 +107,8 @@ export interface CreateAccountOptions {
   singleOwner?: boolean;
   chainid?: number;
   id: string;
+  //salt: string; might need to add salt as a persistent value
   //signer: SafeSigner;
-}
-
-export async function createAccount_new(options: CreateAccountOptions): Promise<string> {
-  const { owner, threshold, rpcUrl, singleOwner, chainid } = options;
-  console.log('createSafe',owner, threshold, rpcUrl);
-  const safeAccountConfig: SafeAccountConfig = singleOwner || owner === '' ? {
-    owners: [CORP_PUBLIC_ADDRESS as `0x${string}`],
-    threshold: 1,
-  } :{
-    owners: [owner as `0x${string}`, CORP_PUBLIC_ADDRESS as `0x${string}`],
-    threshold: 1,
-  };
-
-
-  const owners = singleOwner || owner === '' ? [CORP_ACCOUNT]:[{address: owner, type: 'local'}, CORP_ACCOUNT];
-  const client = publicClient(chainid ? chainid : 11155111);
-  const safeAccount = await toSafeSmartAccount({
-    client: client,
-    entryPoint: {
-      address: entryPoint07Address,
-      version: "0.7",
-    },
-    owners: [CORP_ACCOUNT],
-    version: "1.4.1"
-  })
-  
-  const _paymasterClient = paymasterClient(chainid || 11155111);
-  const smartAccountClient = createSmartAccountClient({
-    account: safeAccount,
-    chain: chainIdToChain[chainid ? chainid : 11155111],
-    paymaster: _paymasterClient,
-    bundlerTransport: transport(chainid),
-    userOperation: {
-      estimateFeesPerGas: async () => (await _paymasterClient.getUserOperationGasPrice()).fast,
-    },
-  })
-  
-  return safeAccount.address;
 }
 
 export async function createAccount(options: CreateAccountOptions): Promise<string> {
@@ -203,7 +170,7 @@ export async function createAccount(options: CreateAccountOptions): Promise<stri
   const secondTransactionData = {
     transactions: [
       {
-        to: getAddress(USDC_ADDRESS),
+        to: getAddress(USDT_ADDRESS),
         data: rawApprovalData,
         value: '0',
       }
@@ -292,6 +259,117 @@ export async function createAccountSelfSign(options: CreateAccountOptions): Prom
   return 'safeAddress';
 }
 
+export interface CreateInvoiceOptions {
+  //ownerPrivateKey: string;
+  rpcUrl: string;
+  owner: string;
+  chainid?: number;
+  id: string;
+  invoice: Invoice;
+  //signer: SafeSigner;
+}
+
+export async function createInvoiceTransaction(options: CreateInvoiceOptions): Promise<string> {
+  const { owner, rpcUrl, chainid, id } = options;
+  const safeAccountConfig = owner === '' ? {
+    owners: [CORP_PUBLIC_ADDRESS as `0x${string}`],
+    threshold: 1,
+    saltNonce: encodeStringToBigInt(id).toString()
+  } :{
+    owners: [owner, CORP_PUBLIC_ADDRESS as `0x${string}`],
+    threshold: 1,
+    saltNonce: encodeStringToBigInt(id).toString()
+  };
+
+  const packData = {
+      provider: rpcUrl,
+      signer : process.env.DEVACCOUNTKEY,
+      bundlerUrl: bundlerUrl(chainid || 11155111),
+      options: safeAccountConfig,
+      paymasterOptions: {
+          isSponsored: true,
+          paymasterUrl: paymasterUrl(chainid || 11155111),
+      }
+  } as Safe4337InitOptions;
+  const safe4337Pack = await Safe4337Pack.init(packData);
+  const safeAddress = await safe4337Pack.protocolKit.getAddress();
+  
+  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
+  const pubClient = publicClient(chainid || 11155111);
+  if (!client) return '';
+  
+  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
+  console.log('IsSafeDeployed', isSafeDeployed)
+  if (!isSafeDeployed) {
+    const deploymentTransaction = await safe4337Pack.protocolKit.createSafeDeploymentTransaction()
+    const transactionHash = await client.sendTransaction({
+      to: deploymentTransaction.to,
+      value: BigInt(deploymentTransaction.value),
+      data: deploymentTransaction.data as `0x${string}`,
+      account: CORP_ACCOUNT,
+      chain: chainIdToChain[chainid ? chainid : 11155111],
+      kzg: undefined
+    });
+    console.log('transactionHash', transactionHash);
+    const deploymentReceipt = await pubClient.waitForTransactionReceipt( 
+      { hash: transactionHash }
+    )
+    console.log('deploymentReceipt found');
+    const rawApprovalData = encodeFunctionData({
+      abi: ERC20_ABI,
+      functionName: 'approve',
+      args: [contractAddressMap[chainid || 137], MAX_UINT256],
+    });
+    const secondTransactionData = {
+      transactions: [
+        {
+          to: getAddress(USDT_ADDRESS),
+          data: rawApprovalData,
+          value: '0',
+        }
+      ]
+    } as CreateTransactionProps;
+    const secondTransaction = await safe4337Pack.createTransaction({
+      transactions: secondTransactionData.transactions,
+    });
+    const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
+      safeOperation: secondTransaction
+    })
+    const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
+    const userOperationHash = await safe4337Pack.executeTransaction({
+      executable: signedSafeOperation
+    })
+    console.log('userOperationHash', userOperationHash);
+  }
+
+  const invoiceTransactions = options.invoice.members.map((member) => {
+    return createUserSourceTransfer(member);
+  })
+  const secondTransactionData = {
+    transactions: [
+      ...invoiceTransactions
+    ]
+  } as CreateTransactionProps;
+  const secondTransaction = await safe4337Pack.createTransaction({
+    transactions: secondTransactionData.transactions,
+  });
+  const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
+    safeOperation: secondTransaction
+  })
+  const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
+  const userOperationHash = await safe4337Pack.executeTransaction({
+    executable: signedSafeOperation
+  })
+  console.log('userOperationHash', userOperationHash);
+  
+  
+  console.log('safeAddress', safeAddress);
+  const submittedTransactions = await options.invoice.members.map(async (member) => {
+    return await createUserSpotExecution(member, rpcUrl, chainid || 11155111);
+  })
+  return safeAddress;
+}
+
 export interface InvoiceTransactionOptions {
   safeAddress: string;
   tokenAddress: string;
@@ -300,6 +378,94 @@ export interface InvoiceTransactionOptions {
   rpcUrl: string;
   chainid: number;
   contractNetworks?: ContractNetworksConfig;
+}
+
+function createUserSourceTransfer(member: InvoiceMember) {
+  const recipientAddress = getAddress(member.safeWalletAddress);
+  const amount = parseUnits(member.salaryContribution.toString(), 6);
+
+  const rawTransferData = encodeFunctionData({
+    abi: ERC20_ABI,
+    functionName: 'transfer',
+    args: [recipientAddress, amount],
+  });
+  return {
+    to: getAddress(USDT_ADDRESS),
+    data: rawTransferData,
+    value: '0',
+  };
+}
+
+async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, chainid: number) {
+  const safeAccountConfig = {
+    safeAddress: member.safeWalletAddress,
+  };
+
+  const packData = {
+      provider: rpcUrl,
+      signer : process.env.DEVACCOUNTKEY,
+      bundlerUrl: bundlerUrl(chainid || 11155111),
+      options: safeAccountConfig,
+      paymasterOptions: {
+          isSponsored: true,
+          paymasterUrl: paymasterUrl(chainid || 11155111),
+      }
+  } as Safe4337InitOptions;
+  const safe4337Pack = await Safe4337Pack.init(packData);
+  const safeAddress = await safe4337Pack.protocolKit.getAddress();
+  
+  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
+  const pubClient = publicClient(chainid || 11155111);
+  if (!client) return '';
+  
+  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
+  console.log('IsUserSafeDeployed', isSafeDeployed);
+
+  const portfolio = DEMO_PORTFOLIO.portfolio;
+  const tokenAllocations = distributeWeights(portfolio);
+  const tokenAddresses = portfolio.map((item) => getAddress(item.address));
+  const tokenPoolFees = portfolio.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
+
+  const unencodedData = {
+    abi: XUCREINDEXFUNDS_ABI.abi,
+    functionName: 'spotExecution',
+    args: [
+      safeAddress,
+      tokenAddresses,
+      tokenAllocations,
+      tokenPoolFees,
+      getAddress(USDT_ADDRESS),
+      parseUnits(member.salaryContribution.toString(), 6)
+    ],
+  }
+  //console.log('unencodedData', unencodedData);
+  const rawDisbursmentData = encodeFunctionData(unencodedData);
+  //console.log('rawDisbursmentData', rawDisbursmentData);
+  const userDisbursementTransactions = {
+    to: getAddress(contractAddressMap[chainid || 137]),
+    data: rawDisbursmentData,
+    value: '0',
+  }
+
+  const userDisbursementTransactionData = {
+    transactions: [
+      userDisbursementTransactions
+    ]
+  } as CreateTransactionProps;
+  console.log('UserDisbursementTransactionData');
+  const userDisbursementTransaction = await safe4337Pack.protocolKit.createTransaction({
+    transactions: userDisbursementTransactionData.transactions,
+  });   
+  
+  console.log('UserDisbursementTransaction');
+  // const userDisbursementSafeOperation = await safe4337Pack.getEstimateFee({
+  //   safeOperation: userDisbursementTransaction
+  // })
+  console.log('UserDisbursementSafeOperation');
+  const signedUserDisbursementSafeOperation = await safe4337Pack.protocolKit.signTransaction(userDisbursementTransaction)
+  const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
+  console.log('UserDisbursementOperationHash', userDisbursementOperationHash);
+  return userDisbursementOperationHash;
 }
 
 // export async function createInvoiceTransaction(options: InvoiceTransactionOptions): Promise<string> {

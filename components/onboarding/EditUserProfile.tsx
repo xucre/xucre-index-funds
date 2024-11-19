@@ -17,6 +17,7 @@ import KYC from '@/components/onboarding/KYC';
 import NumberInput from '@/components/ui/NumberInput';
 import { getTextColor } from '@/service/helpers';
 import ReusableModal from '@/components/ui/ReusableModal';
+import { setSafeAddress } from '@/service/db';
 
 const riskOptions = [
   { label: 'risk_aggressive', value: 'Aggressive' },
@@ -80,7 +81,11 @@ const EditProfile = ({ }) => {
       status: '',
       wallets: [] as SFDCWallet[]
   });
-
+  const clearSafewallet = async () => {
+    if (!user) return;
+    setSafeAddress(user.id, '');
+    router.refresh()
+  }
   // useEffect(() => {
   //   if (!isConnected || !user) return;
   //   setMessage(`${address}:${user.id}`)
@@ -234,6 +239,7 @@ const EditProfile = ({ }) => {
           <Typography variant="h6" gutterBottom>
             {languageData[language].Edit.title}
           </Typography>
+          <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} />
         </Stack>
       
         <Stack direction={'column'} spacing={2} my={3} justifyContent={'space-between'} alignItems={'flex-start'} >

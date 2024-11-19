@@ -1,0 +1,111 @@
+{
+  "name": {
+    "0": "Classic Fund",
+    "1": "Fondo Clasico",
+    "2": "Fundo Clássico"
+  },
+  "cardSubtitle": {
+    "0": "A curated selection of foundational assets",
+    "1": "Una selección curada de activos fundamentales.",
+    "2": "Uma seleção com curadoria de ativos essenciais."
+  },
+  "description": {
+    "0": "Explore 'The Classics' index fund on Polygon, featuring a curated selection of foundational cryptocurrencies: Bitcoin (BTC), Ethereum (ETH), Solana (SOL). This fund offers a robust investment option, focusing on well-established digital assets with proven track records. Perfect for those seeking stability within the volatile crypto market.",
+    "1": "Explora el fondo indexado 'The Classics' en Polygon, que incluye una selección curada de criptomonedas fundamentales: Bitcoin (BTC), Ethereum (ETH), Solana (SOL). Este fondo ofrece una opción de inversión sólida, que se centra en activos digitales bien establecidos con antecedentes comprobados. Perfecto para quienes buscan estabilidad dentro del volátil mercado de criptomonedas.",
+    "2": "Explore o fundo de índice 'The Classics' no Polygon, apresentando uma seleção selecionada das principais criptomoedas: Bitcoin (BTC), Ethereum (ETH), Solana (SOL). Este fundo oferece uma opção de investimento sólida, com foco em ativos digitais bem estabelecidos e com histórico comprovado. Perfeito para quem procura estabilidade no volátil mercado de criptomoedas."
+  },
+  "image": "/classics.png",
+  "imageSmall": "/classics-low.png",
+  "chainId": 137,
+  "color": "#421155",
+  "portfolio": [
+    {
+      "name": "WBTC",
+      "address": "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6",
+      "chainId": 137,
+      "weight": 3400,
+      "poolFee": 3000,
+      "active": true,
+      "decimals": 18,
+      "sourceFees": {
+        "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+        "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+      },
+      "chartColor": "#FFD700",
+      "description": {
+        "0": "Wrapped Bitcoin (WBTC) is an ERC20 token pegged to the price of Bitcoin.",
+        "1": "Wrapped Bitcoin (WBTC) es un token ERC20 vinculado al precio de Bitcoin.",
+        "2": "Wrapped Bitcoin (WBTC) é um token ERC20 atrelado ao preço do Bitcoin."
+      },
+      "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/btc.png",
+      "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+      "links": ["https://www.centre.io/usdc"]
+    },
+    {
+      "name": "WETH",
+      "address": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+      "chainId": 137,
+      "weight": 3300,
+      "poolFee": 3000,
+      "active": true,
+      "decimals": 18,
+      "sourceFees": {
+        "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+        "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 500
+      },
+      "chartColor": "#627EEA",
+      "description": {
+        "0": "WETH is the native token for the Ethereum blockchain.",
+        "1": "WETH es el token nativo de la cadena de bloques Ethereum.",
+        "2": "WETH é o token nativo da blockchain Ethereum."
+      },
+      "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+      "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+      "links": ["https://weth.io/"]
+    },
+    {
+      "name": "SOL",
+      "address": "0xd93f7e271cb87c23aaa73edc008a79646d1f9912",
+      "chainId": 137,
+      "weight": 3300,
+      "poolFee": 3000,
+      "active": true,
+      "decimals": 18,
+      "sourceFees": {
+        "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 3000,
+        "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+      },
+      "chartColor": "#9945FF",
+      "description": {
+        "0": "SOL is the native token for the Solana blockchain.",
+        "1": "SOL es el token nativo de la cadena de bloques Solana.",
+        "2": "SOL é o token nativo do blockchain Solana."
+      },
+      "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/solana.png",
+      "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+      "links": ["https://portalbridge.com/"]
+    },
+    {
+      "name": "Matic Token",
+      "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      "chainId": 137,
+      "weight": 909,
+      "poolFee": 500,
+      "active": true,
+      "decimals": 18,
+      "sourceFees": {
+        "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": 500,
+        "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000
+      },
+      "chartColor": "#FFD700",
+      "description": {
+        "0": "Matic Token is a cryptocurrency token used on the Polygon network.",
+        "1": "Matic Token es un token de criptomoneda utilizado en la red Polygon.",
+        "2": "Matic Token é um token de criptomoeda utilizado na rede Polygon."
+      },
+      "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+      "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+      "links": ["https://polygon.technology/"]
+    }
+  ]
+}

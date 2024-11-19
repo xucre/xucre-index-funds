@@ -18,6 +18,7 @@ import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation, normalizeDevChains } from "@/service/helpers";
 import React from "react";
 import OpaqueCard from "@/components/ui/OpaqueCard";
+import demoPortfolio from "@/public/demoPortfolio.json";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 
@@ -38,6 +39,8 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
       return encodeURIComponent(fund.name[lang]) === slugString || normalizeDevChains(chainId || 137) === fund.chainId;
     }, false);
   });
+  //const _indexFund = demoPortfolio;
+  //const [_indexFund, setIndexFund] = useState(indexFundFound);
   const { balance, allowance, hash, error, loading, isNativeToken, confirmationHash, approveContract, initiateSpot, sourceToken, sourceTokens, setSourceToken, status } = useConnectedIndexFund({ fund: _indexFund });
   const [amount, setAmount] = useState<BigInt>(BigInt(0));
   const [rawAmount, setRawAmount] = useState<string>('');
@@ -81,6 +84,8 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
     console.log('Approving');
     approveContract(amount);
   }
+
+  
 
   const handleSpot = () => {
     initiateSpot(amount);

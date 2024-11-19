@@ -152,7 +152,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
       const tokenAddresses = portfolio.map((item) => getAddress(item.address));
       //const tokenAllocations = portfolio.map((item) => item.weight);
       const tokenPoolFees = portfolio.map((item) => item.sourceFees[sourceToken.address] ? item.sourceFees[sourceToken.address] : item.poolFee);
-      const result = await writeContractAsync({
+      const requestOptions = {
         abi: XucreETF.abi,
         address: getAddress(contractAddressMap[chainId || 137]),
         functionName: 'spotExecution',
@@ -166,7 +166,9 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
         ],
         chain: chain,
         account: address
-      })
+      };
+      console.log(requestOptions);
+      const result = await writeContractAsync(requestOptions);
       enqueueSnackbar(`${languageData[language].ui.transaction_successful}: ${result}`, { variant: 'success', autoHideDuration: 5000 });
       setConfirmationHash(result);
       setIsLoading(false);

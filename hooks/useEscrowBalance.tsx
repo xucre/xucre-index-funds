@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getUSDCBalance } from '@/service/alchemy';
+import { getUSDCBalance, getUSDTBalance } from '@/service/alchemy';
 import { getOrganizationSafeAddress } from '@/service/db';
 
 export function useEscrowBalance(organizationId: string) {
@@ -8,7 +8,9 @@ export function useEscrowBalance(organizationId: string) {
   const fetchBalance = async () => {
     const safeAddress = await getOrganizationSafeAddress(organizationId, 'escrow');
     if (safeAddress && safeAddress.length > 0) {
-      const usdcBalance = await getUSDCBalance(safeAddress);
+      console.log('safeAddress for balance', safeAddress);
+      const usdcBalance = await getUSDTBalance(safeAddress);
+      console.log('usdcBalance', usdcBalance);
       if (!usdcBalance) return;
       setBalance(usdcBalance);
     }

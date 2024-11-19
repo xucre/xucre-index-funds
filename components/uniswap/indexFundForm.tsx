@@ -303,7 +303,7 @@ const IndexFundForm = () => {
             variant="contained"
             color={theme.palette.mode === 'dark' ? 'primary' : 'secondary'}
             onClick={handleSubmit}
-            disabled={!isFormValid()}
+            //disabled={!isFormValid()}
           >
             Copy to Clipboard
           </Button>
