@@ -41,7 +41,8 @@ export async function getAccount(organizationId : string) {
       }
   } catch (err) {
     console.log('error :/');
-    throw new Error('Error creating connection');
+    return null;
+    //throw new Error('Error creating connection');
   }
 }
 
@@ -129,7 +130,7 @@ export async function upsertOrganization(organizationId : string, name : string,
       }
   } catch (err) {
     console.log('error :/');
-    throw new Error('Error creating connection');
+    //throw new Error('Error creating connection');
   }
 }
 
@@ -144,6 +145,6 @@ export async function createOrganization(organizationId : string, name : string)
       }
   } catch (err) {
     console.log('error :/');
-    throw new Error('Error creating connection');
+   // throw new Error('Error creating connection');
   }
 }

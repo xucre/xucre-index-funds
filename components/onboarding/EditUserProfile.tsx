@@ -239,7 +239,7 @@ const EditProfile = ({ }) => {
           <Typography variant="h6" gutterBottom>
             {languageData[language].Edit.title}
           </Typography>
-          <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} />
+          {/*<Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} />*/}
         </Stack>
       
         <Stack direction={'column'} spacing={2} my={3} justifyContent={'space-between'} alignItems={'flex-start'} >

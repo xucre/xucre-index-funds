@@ -47,27 +47,6 @@ export default function DashboardLayout({
   const { user } = useUser();
   const [safeWallet, setSafeWallet] = useState<string | null>(null);
 
-  const createSafeWallet = async () => {
-    if (!user) return;
-    const safePayload = isDev ? { 
-      rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
-      owner: address,
-      threshold: 1,
-      id: user.id,
-    } as CreateAccountOptions : {
-      rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
-      owner: address,
-      threshold: 1,
-      id: user.id,
-      chainid: 137
-    } as CreateAccountOptions;
-    console.log('createSafeWallet', isDev);
-    const safeAddress = await createAccount(safePayload);
-    setSafeAddress(user.id, safeAddress);
-    updateSafeWalletDetails(user.id, safeAddress);
-    setSafeWallet(safeAddress);
-  }
-
   const syncSafeWallet = async () => {
     if (!user) return;
     const walletAddress = await getSafeAddress(user.id);
@@ -98,7 +77,7 @@ export default function DashboardLayout({
           <>
             <DashboardHeader />
             {!safeWallet ?
-              <OpaqueCard><EmptySafeWallet onCreateSafe={createSafeWallet} /></OpaqueCard> :
+              <OpaqueCard><EmptySafeWallet id={user ? user.id : ''} /></OpaqueCard> :
               <>
                 <Stack direction={matches ? 'row' : 'column'} spacing={8} justifyContent={'space-between'} px={5}>
                   <Stack direction={'column'} spacing={2} flexGrow={2}>

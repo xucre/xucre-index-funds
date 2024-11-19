@@ -1,8 +1,5 @@
 'use client'
 import DashboardContainer from "@/components/dashboard/DashboardContainer";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import EmptyProfileState from "@/components/onboarding/EmptyProfile";
-import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
 import { useSFDC } from "@/hooks/useSFDC";
 import { getSafeAddress, setSafeAddress } from "@/service/db";
 import { updateSafeWalletDetails } from "@/service/sfdc";
