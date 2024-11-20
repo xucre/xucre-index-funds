@@ -22,7 +22,7 @@ const EmptySafeWallet = ({ id }) => {
     setLoading(true);
     const safePayload = {
       rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
-      owner: address,
+      owner: '',
       threshold: 1,
       id: id,
       chainid: 137

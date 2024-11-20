@@ -74,10 +74,14 @@ const CORP_ACCOUNT = privateKeyToAccount(process.env.DEVACCOUNTKEY as `0x${strin
 const transport = (chainid) => {
   return http(`https://api.pimlico.io/v2/${chainid ? chainid : '11155111'}/rpc?apikey=${process.env.PIMELCO_API_KEY}`)
 }
+
+const publicTransport = () => {
+  return http(process.env.NEXT_PUBLIC_SAFE_RPC_URL)
+}
 const publicClient = (chainid : number) => {
   return createPublicClient({
     chain: chainIdToChain[chainid ? chainid : 11155111],
-    transport: transport(chainid),
+    transport: publicTransport(),
   })
 }
 
@@ -154,11 +158,15 @@ export async function createAccount(options: CreateAccountOptions): Promise<stri
       kzg: undefined
     });
     console.log('transactionHash', transactionHash);
-    // const deploymentReceipt = await pubClient.waitForTransactionReceipt( 
-    //   { hash: transactionHash }
-    // )
-    // console.log('deploymentReceipt found');
+    const deploymentReceipt = await pubClient.waitForTransactionReceipt( 
+      { hash: transactionHash }
+    )
+    console.log('deploymentReceipt found');
   }
+  const allowance = await getCurrentERC20Allowance(chainid || 137, safeAddress);
+  if (allowance < BigInt(MAX_UINT256)) {
+    await createERC20Approval(chainid || 137, safe4337Pack);
+  } 
 
   
   console.log('safeAddress', safeAddress);
@@ -317,11 +325,19 @@ export async function createInvoiceTransaction(options: CreateInvoiceOptions): P
   })
   console.log('userOperationHash', userOperationHash);
   
-  
-  console.log('safeAddress', safeAddress);
+  let isOperationSuccess = false;
+  while (!isOperationSuccess) {
+    const userOperationResult = await safe4337Pack.getUserOperationReceipt(userOperationHash);
+    isOperationSuccess = userOperationResult !== null && userOperationResult.success;
+  }  
+  console.log('disbursement of source to users successful');
   const submittedTransactions = await options.invoice.members.map(async (member) => {
-    return await createUserSpotExecution(member, rpcUrl, chainid || 11155111);
+    try {
+      await createUserSpotExecution(member, rpcUrl, chainid || 11155111);
+    } catch (err) {console.log('error executing spot for memeber', member.safeWalletAddress)}
+    return;
   })
+  console.log('disbursement complete');
   return safeAddress;
 }
 
@@ -377,11 +393,9 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   console.log('IsUserSafeDeployed', isSafeDeployed);
   
   const memberContribution = parseUnits(member.salaryContribution.toString(), 6);
-  const allowance = await getCurrentERC20Allowance(chainid || 137, safeAddress);
-  if (allowance < memberContribution) {
-    await createERC20Approval(chainid || 137, safe4337Pack);
-  } 
+  
 
+  console.log('building portfolio for user', member.safeWalletAddress);
   const portfolio = DEMO_PORTFOLIO.portfolio;
   const tokenAllocations = distributeWeights(portfolio);
   const tokenAddresses = portfolio.map((item) => getAddress(item.address));
@@ -424,9 +438,20 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   // })
   console.log('UserDisbursementSafeOperation');
   const signedUserDisbursementSafeOperation = await safe4337Pack.protocolKit.signTransaction(userDisbursementTransaction)
-  const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
-  console.log('UserDisbursementOperationHash', userDisbursementOperationHash);
-  return userDisbursementOperationHash;
+  let finalHash = '';
+  try {
+    const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
+    console.log('UserDisbursementOperationHash', userDisbursementOperationHash);
+    finalHash = userDisbursementOperationHash.hash;
+  } catch (err) {
+    console.log('error executing spot for member', member.safeWalletAddress);
+    console.log('retrying disbursement');
+    const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
+    console.log('UserDisbursementOperationHash', userDisbursementOperationHash);
+    finalHash = userDisbursementOperationHash.hash;
+  }
+  
+  return finalHash;
 }
 
 async function getCurrentERC20Allowance (chainid: number, safeAddress: string) {
@@ -468,72 +493,3 @@ async function createERC20Approval (chainid: number, safe4337Pack: Safe4337Pack)
     executable: signedSafeOperation
   })
 }
-
-// export async function createInvoiceTransaction(options: InvoiceTransactionOptions): Promise<string> {
-//   const {
-//     safeAddress,
-//     tokenAddress,
-//     recipientAddress,
-//     amount,
-//     rpcUrl,
-//     chainid,
-//     contractNetworks,
-//   } = options;
-
-//   const safeAccountConfig: SafeAccountConfig = {
-//     owners: [CORP_PUBLIC_ADDRESS as `0x${string}`],
-//     threshold: 1,
-//   };
-
-//   const packData = {
-//       provider: rpcUrl,
-//       signer : process.env.DEVACCOUNTKEY,
-//       bundlerUrl: bundlerUrl(chainid || 11155111),
-//       options: {
-//         safeAddress
-//       },
-//       paymasterOptions: {
-//           isSponsored: true,
-//           paymasterUrl: paymasterUrl(chainid || 11155111),
-//       }
-//   } as Safe4337InitOptions;
-//   const safe4337Pack = await Safe4337Pack.init(packData);
-//   const smartAccountClient = createSmartAccountClient({
-//     account: safe4337Pack.protocolKit,
-//     chain: chainIdToChain[chainid || 11155111],
-//     paymaster: paymasterClient,
-//     bundlerTransport: http("https://api.pimlico.io/v2/sepolia/rpc?apikey=API_KEY"),
-//     userOperation: {
-//       estimateFeesPerGas: async () => (await paymasterClient.getUserOperationGasPrice()).fast,
-//     },
-//   })
-//   // Encode ERC20 transfer data
-//   const erc20Contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
-//   const txData = erc20Contract.interface.encodeFunctionData('transfer', [
-//     recipientAddress,
-//     amount,
-//   ]);
-
-//   const safeTransactionData: SafeTransactionDataPartial = {
-//     to: tokenAddress,
-//     data: txData,
-//     value: '0',
-//   };
-
-//   // Create the Safe transaction
-//   const safeTransaction = await safeSdk.createTransaction({ safeTransactionData });
-
-//   // Propose the transaction (optional, if you're using a transaction service)
-//   // await safeSdk.proposeTransaction({ safeTransaction });
-
-//   // Sign the transaction
-//   await safeSdk.signTransaction(safeTransaction);
-
-//   // Execute the transaction
-//   const executeTxResponse = await safeSdk.executeTransaction(safeTransaction);
-
-//   // Wait for the transaction to be mined
-//   const receipt = await executeTxResponse.transactionResponse.wait();
-
-//   return receipt.transactionHash;
-// }

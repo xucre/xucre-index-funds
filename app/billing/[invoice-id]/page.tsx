@@ -84,7 +84,7 @@ export default function InvoicePage() {
     <Suspense>
       {invoiceDetails && 
         <Stack direction={'column'} spacing={2} mx={2}>
-          <InvoiceDetail invoice={invoiceDetails} usdcBalance={usdcBalance}/>
+          <InvoiceDetail invoice={invoiceDetails} usdcBalance={usdcBalance} reload={fetchInvoiceDetails}/>
           <InvoiceDetailTable
             saveMembers={saveMembers}
             showButtons={showButtons}

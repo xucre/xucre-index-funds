@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Chip, Stack } from '@mui/material';
 import OpaqueCard from '../ui/OpaqueCard';
 import { Invoice, InvoiceStatuses } from '@/service/types';
@@ -13,16 +13,19 @@ import { setInvoiceDetails } from '@/service/db';
 interface InvoiceDetailProps {
   invoice: Invoice;
   usdcBalance: number | null;
+  reload: Function;
 }
 
-const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance }) => {
+const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, reload }) => {
     const router = useRouter();
     const {organization} = useOrganization();
+    const [loading, setLoading] = useState(false);
     const handleFundClick = () => {
        router.push(`/billing/${invoice.id}/pay`);
     };
     const handleDisburseClick = async () => {
         if (!organization) return;
+        setLoading(true);
         //createInvoiceTransaction
         try {
             const txDetails = {
@@ -42,12 +45,12 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance }) =
                     updatedAt: new Date().toISOString()
                 }
                 await setInvoiceDetails(organization.id, _invoice.id, _invoice);
-                router.refresh()
+                reload();
             }
         } catch (err) {
             console.log(err.reason);
-            return;
         }
+        setLoading(false);
         
     }
     const canDisburse = invoice.status === InvoiceStatuses.New && usdcBalance && usdcBalance >= invoice.totalDue;
@@ -62,7 +65,8 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance }) =
             <Typography>Escrow Amount Available: ${usdcBalance || 0}</Typography>
             </Stack>
             {!canDisburse && <Chip onClick={handleFundClick} color={'primary'} sx={{fontWeight: 'bold'}} label="Fund Disbursement" disabled={invoice.status != InvoiceStatuses.New} />}
-            {canDisburse && <Chip onClick={handleDisburseClick} color={'primary'} sx={{fontWeight: 'bold'}} label="Disburse" disabled={invoice.status != InvoiceStatuses.New} />}
+            {canDisburse && !loading && <Chip onClick={handleDisburseClick} color={'primary'} sx={{fontWeight: 'bold'}} label="Disburse" disabled={invoice.status != InvoiceStatuses.New}/>}
+            {canDisburse && loading && <Chip color={'primary'} sx={{fontWeight: 'bold'}} label="Executing..." />}
         </Box>
         </OpaqueCard>
     );

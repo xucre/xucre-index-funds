@@ -20,9 +20,9 @@ export default function DashboardContainer({ address }: { address: string }) {
   const { transactions, history, balance, change, loaded } = useWalletData({ address });
   return (
     <Stack direction={'column'} spacing={2}>
-      <BalanceBlock balance={balance} change={change} address={_address} loaded={loaded} />
+      <BalanceBlock balance={balance} change={change} address={address} loaded={loaded} />
 
-      <DashboardTransactionList address={_address} transactions={transactions} />
+      <DashboardTransactionList address={address} transactions={transactions} />
     </Stack>
   );
 };
