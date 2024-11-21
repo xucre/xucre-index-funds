@@ -32,7 +32,7 @@ const EmptySafeWallet = ({ id }) => {
     setSafeAddress(id, safeAddress);
     updateSafeWalletDetails(id, safeAddress);
     setLoading(false);
-    router.refresh();
+    window.location.reload();
   }
   return (
     <Box
