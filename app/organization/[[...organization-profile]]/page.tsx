@@ -5,7 +5,6 @@ import router from "next/router";
 import { dark } from "@clerk/themes";
 import React, { useEffect } from "react";
 import EmptyOrganization from "@/components/organization/EmptyOrganization";
-import { useOrganizationWallet } from "@/hooks/useOrganizationWallet";
 import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
 import OrganizationMembersTable from "@/components/organization/OrganizationMembersTable";
 import CreateUserModal from "@/components/organization/CreateUserModal";

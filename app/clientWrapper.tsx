@@ -9,7 +9,7 @@ import Header from './header';
 import { Box, CssBaseline, Stack } from '@mui/material';
 
 import CTA from '@/components/ui/cta';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { ThemeSwitcherProvider } from '@/hooks/useThemeSwitcher';
 import { LanguageContextProvider } from '@/hooks/useLanguage';
 import Footer from './footer';
@@ -25,7 +25,11 @@ export default function Wrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const hideLoginButton = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email'
+  const hideLoginButton = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || pathname.includes('/index-fund')
+  
+  useEffect(() => {
+    console.log('Wrapper-hideLoginButton');
+  }, [hideLoginButton]);
   return (
     <Box>
       <MixpanelProvider>

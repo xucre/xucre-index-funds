@@ -1,7 +1,7 @@
 'use server'
 import { kv } from '@vercel/kv'
 import { TransactionDetails } from './eip155';
-import { Invoice, SFDCUserData } from './types';
+import { Invoice, SFDCUserData, TokenDetails } from './types';
 import { isDev } from './constants';
 const tenant = isDev ? 'dev' : 'prod';
 
@@ -62,11 +62,19 @@ export const setInvoiceDetails = async (organizationId: string, invoiceId: strin
   return await kv.hmset(`${tenant}:invoice:${organizationId}:${invoiceId}`, invoice);
 }
 
-
 export const getStripePaymentId = async (organizationId: string, invoiceId: string) => {
   return await kv.hget(`${tenant}:invoice:payment:${organizationId}:${invoiceId}`, 'safeWalletAddress') as string;
 }
 
 export const setStripePaymentId = async (organizationId: string, invoiceId: string, paymentId: string) => {
   await kv.hmset(`${tenant}:invoice:payment:${organizationId}:${invoiceId}`, {invoiceId: paymentId});
+}
+
+
+export const getTokenMetadata = async (chainId: number, address: string) => {
+  return await kv.hgetall(`${tenant}:token_metadata:${chainId}:${address}`);
+}
+
+export const setTokenMetadata = async (chainId: number, address: string, tokenData: TokenDetails) => {
+  await kv.hmset(`${tenant}:token_metadata:${chainId}:${address}`, tokenData);
 }

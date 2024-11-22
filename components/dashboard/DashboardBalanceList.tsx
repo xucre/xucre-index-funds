@@ -17,6 +17,7 @@ import { TokenDetails } from "@/service/types";
 import DashboardBalanceItem from "./DashboardBalanceItem";
 import { isAddressEqual } from "viem";
 import Dashboard from '../../app/dashboard/page';
+import { getTokenMetadata, setTokenMetadata } from "@/service/db";
 
 const BASEURL = 'https://xucre-public.s3.sa-east-1.amazonaws.com/';// + coinIconNames[token.chainId as keyof typeof coinIconNames].toLowerCase() + '.png'
 
@@ -36,7 +37,14 @@ export default function DashboardBalanceList({ address }: { address: string }) {
   const syncTokenDetails = async () => {
     setLoaded(false);
     const tokenDetails = await Promise.all(balances.map(async (balance) => {
-      const token = await getTokenInfo(137, balance.contract_address);
+      let token: TokenDetails;
+      const token1 = await getTokenMetadata(137, balance.contract_address);
+      if (token1) {
+        token = token1 as TokenDetails;
+      } else {
+        token = await getTokenInfo(137, balance.contract_address);
+        await setTokenMetadata(137, balance.contract_address, token as TokenDetails);
+      }
       if (isAddressEqual(balance.contract_address, '0x924442A46EAC25646b520Da8D78218Ae8FF437C2')) {
         return { ...token, logo: BASEURL + 'xucre.png' };
       }

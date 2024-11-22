@@ -176,6 +176,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
     setChange(difference);
 
     setLoaded(true);
+    // console.log('useWalletData-computeTotals');
   }
 
   useEffect(() => {
@@ -189,6 +190,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
       //console.log(result2);
       if (result2) setHistory(result2 as WalletHistory);
       if (result2) computeTotals(result2);
+      // console.log('useWalletData-runAsync');
     }
     if (address) runAsync()
   }, [address])

@@ -139,3 +139,10 @@ html {
   min-width: min(450px, 60vw);
   margin-bottom: 24px;
 }
+
+.gutterless-accordion > .MuiAccordionSummary-content {
+  margin: 0 !important;
+  margin-top:0;
+  margin-bottom:0;
+}
+

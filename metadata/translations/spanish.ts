@@ -34,6 +34,7 @@ const values : TranslationType = {
     deposit: 'Depósito',
     withdrawal: 'Retiro',
     unknown: 'Desconocido',
+    investment: 'Inversión',
     total_balance: 'Saldo total',
   },
   Edit: {

@@ -19,7 +19,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 //import '@covalenthq/goldrush-kit/styles.css'
 
-const WalletBlock = () => {
+const NewsBlock = () => {
   const theme = useTheme();
   const borderColor = getDashboardBorderColor(theme);
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -84,7 +84,7 @@ export default function DashboardLayout({
                     <DashboardNavigation />
                     {children}
                   </Stack>
-                  <WalletBlock />
+                  <NewsBlock />
                 </Stack>
               </>
             }

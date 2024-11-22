@@ -16,16 +16,19 @@ export function useOrganizationWallet() {
             setLoading(true);
             const selfAddress2 = await getOrganizationSafeAddress(organization.id, 'self');
             const escrowAddress2 = await getOrganizationSafeAddress(organization.id, 'escrow');
-            console.log('useOrganizationWallet', selfAddress2, escrowAddress2);
+            console.log('useOrganizationWallet', escrowAddress2);
             setEscrowAddress(escrowAddress2);
             setSelfAddress(selfAddress2);
             setLoading(false);
+            console.log('useOrganizationWallet-runAsync');
         }
 
         if (organization) {
+
+            console.log('useOrganizationWallet-organizationChange');
             runAsync();
         }
-    }, [organization])
+    }, [])
 
     const hasEscrowAddress = !!escrowAddres;
     const hasSelfAddress = !!selfAddress;
@@ -46,7 +49,7 @@ export function useOrganizationWallet() {
             id: organization.id,
             chainid: 137
           } as CreateAccountOptions;
-        console.log('createEscrowAddress', isDev);
+        console.log('createEscrowAddress');
         //const safeAddress = isDev ? await createAccountSelfSign(safePayload) : await createAccount(safePayload);
         const safeAddress = await createAccount(safePayload);
         setOrganizationSafeAddress(organization.id, safeAddress, 'escrow');

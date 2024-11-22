@@ -49,9 +49,9 @@ export default function IndexFunds() {
     //return <Campfire setIsLocked={setIsLocked} />;
   }
 
-  if (!isConnected) return <WalletNotConnected />;
+  //if (!isConnected) return <WalletNotConnected />;
   //if (!isSubscribed) return <Campfire setIsLocked={() => { }} />;
-  if (!chainValidation(chainId || 137)) return <WalletNotConnected />;
+  //if (!chainValidation(chainId || 137)) return <WalletNotConnected />;
   return (
     <Box pb={4}>
       <Stack justifyContent={'center'} alignItems={'center'}>
