@@ -163,6 +163,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
   const [loaded, setLoaded] = useState(false);
 
   const computeTotals = async (_history: WalletHistory) => {
+    console.log(_history);
     const _balance = _history.data.items.reduce((acc, item) => {
       const latest = item.holdings[0];
       return acc + latest.close.quote;
@@ -172,7 +173,8 @@ export function useWalletData({ address }: { address?: string } = {}) {
       const previousDay = item.holdings[1];
       return acc + previousDay.close.quote;
     }, 0);
-    const difference = _balance - _previousDayBalance;
+
+    const difference = ((_balance - _previousDayBalance)/_previousDayBalance)*100;
     setChange(difference);
 
     setLoaded(true);

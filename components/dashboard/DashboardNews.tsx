@@ -34,7 +34,6 @@ export default function DashboardNews() {
       }
       return acc;
     }, []);
-    console.log(_feed);
     setNews(_feed);
   }
 
