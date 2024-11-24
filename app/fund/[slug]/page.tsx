@@ -19,6 +19,7 @@ import { chainValidation, normalizeDevChains } from "@/service/helpers";
 import React from "react";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import demoPortfolio from "@/public/demoPortfolio.json";
+import { useUser } from "@clerk/nextjs";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 
@@ -28,6 +29,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const theme = useTheme();
   const { language } = useLanguage();
   const mixpanel = useMixpanel();
+  const { isSignedIn } = useUser();
   const slugString = params.slug as string;
   //const _indexFund = JSON.parse(atob(decodeURIComponent(slugString))) as IndexFund;
   const textColor = getTextColor(theme);
@@ -52,6 +54,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
     const addresses = _indexFund.portfolio.map((item) => item.address).join(',');
     const _chainId = normalizeDevChains(chainId || 137);
     const prices = await getTokenPrices(`addresses=${addresses}&chainId=${_chainId}`);
+    //console.log('getPrices', prices);
     try {
       setPriceData(prices as PriceData[]);
       const _priceMap = prices.reduce((acc, price) => {
@@ -65,7 +68,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   }
 
   useEffect(() => {
-    if (chainId && _indexFund) getPrices();
+    if (_indexFund) getPrices();
   }, [chainId, _indexFund])
 
   useEffect(() => {
@@ -83,9 +86,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const handleApproval = () => {
     console.log('Approving');
     approveContract(amount);
-  }
-
-  
+  }  
 
   const handleSpot = () => {
     initiateSpot(amount);
@@ -110,11 +111,11 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   //return (<Campfire setIsLocked={() => { }} />)
 
   //if (!isSubscribed) return <Campfire setIsLocked={() => { }} />;
-  if (!isConnected && !isConnecting && !isReconnecting) {
-    return <WalletNotConnected />
-  }
+  // if (!isConnected && !isConnecting && !isReconnecting) {
+  //   return <WalletNotConnected />
+  // }
 
-  if (!chainValidation(chainId || 137)) return <Typography textAlign={'center'}>{languageData[language].ui.wrong_network}</Typography>;
+  // if (!chainValidation(chainId || 137)) return <Typography textAlign={'center'}>{languageData[language].ui.wrong_network}</Typography>;
   if (_indexFund === undefined) return <></>;
   return (
     <Box mt={{ xs: 0, sm: 4 }} pb={4}>
@@ -126,9 +127,11 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
             <PortfolioItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
           </Stack>
         </OpaqueCard>
-        <Box maxWidth={'50vw'}>
-          <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
-        </Box>
+        {!isSignedIn && 
+          <Box maxWidth={'50vw'}>
+            <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
+          </Box>
+        }
 
       </Stack>
 
@@ -140,7 +143,9 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
         <Divider sx={{ color: textColor, width: '80vw' }} />
 
         {/**BUY ITEM  */}
-        <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
+        {!isSignedIn && 
+          <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
+        }
       </Stack>
     </Box>
   );

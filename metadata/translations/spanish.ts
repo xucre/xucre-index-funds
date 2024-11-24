@@ -128,7 +128,7 @@ const values : TranslationType = {
     qr_scan_button: "Escaner QR",
     requests_button: 'Solicitudes',
     wallet_button: "Billetera",
-    faq: "FAQ",
+    faq: "Ayuda",
     settings: "Configurações",
     support: "Suporte",
     terms: "Termos e Condições",

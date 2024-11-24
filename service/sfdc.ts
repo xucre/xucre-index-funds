@@ -148,3 +148,19 @@ export async function createOrganization(organizationId : string, name : string)
    // throw new Error('Error creating connection');
   }
 }
+
+export async function createCase(subject: string, description: string, contactEmail: string) {
+  try {
+      const conn = await createConnection();
+      //const requestType = new URL(req.url).searchParams.get('type');
+      if (subject.length > 0) {
+        await conn.create('Case', { Subject: subject, Description: description, SuppliedEmail: contactEmail });
+      } else {
+        throw new Error('Subject is required');
+      }
+  } catch (err) {
+    console.log(err);
+    console.log('error :/');
+    //throw new Error('Error creating connection');
+  }
+}

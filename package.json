@@ -20,6 +20,8 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
     "@gatefi/js-sdk": "^0.20.0",
+    "@knocklabs/node": "^0.6.15",
+    "@knocklabs/react": "^0.2.31",
     "@mui/base": "^5.0.0-beta.61",
     "@mui/icons-material": "^6.0.2",
     "@mui/lab": "^6.0.0-beta.9",

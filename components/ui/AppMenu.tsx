@@ -15,6 +15,7 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
+import CasesOutlinedIcon from '@mui/icons-material/CasesOutlined';
 import anime from 'animejs';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -59,10 +60,21 @@ const AppMenu: React.FC = () => {
       {
         items: [
           {
+            icon: <CasesOutlinedIcon />,
+            name: 'Funds',
+            apiName: 'fund',
+            path: '/fund',
+            ref: React.createRef<HTMLButtonElement>(),
+          }
+        ],
+      },
+      {
+        items: [
+          {
             icon: <HelpOutlineOutlinedIcon />,
-            name: 'FAQ',
-            apiName: 'faq',
-            path: '/about-us',
+            name: 'Help',
+            apiName: 'help',
+            path: '/support',
             ref: React.createRef<HTMLButtonElement>(),
           },
           {
@@ -108,10 +120,21 @@ const AppMenu: React.FC = () => {
       {
         items: [
           {
+            icon: <CasesOutlinedIcon />,
+            name: 'Funds',
+            apiName: 'fund',
+            path: '/fund',
+            ref: React.createRef<HTMLButtonElement>(),
+          }
+        ],
+      },
+      {
+        items: [
+          {
             icon: <HelpOutlineOutlinedIcon />,
-            name: 'FAQ',
-            apiName: 'faq',
-            path: '/about-us',
+            name: 'Help',
+            apiName: 'help',
+            path: '/support',
             ref: React.createRef<HTMLButtonElement>(),
           },
           {
@@ -123,6 +146,23 @@ const AppMenu: React.FC = () => {
           },
         ],
       },
+    ],
+    []
+  );
+
+  const fundMenuGroups = React.useMemo(
+    () => [
+      {
+        items: [
+          {
+            icon: <CasesOutlinedIcon />,
+            name: 'Funds',
+            apiName: 'fund',
+            path: '/fund',
+            ref: React.createRef<HTMLButtonElement>(),
+          }
+        ],
+      }
     ],
     []
   );
@@ -179,7 +219,7 @@ const AppMenu: React.FC = () => {
         });
       });
     }
-    
+
     if (!currentItemRef) return;
 
     if (currentItemRef.current && backgroundRef.current) {

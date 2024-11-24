@@ -1,5 +1,5 @@
 'use client'
-import { use, useEffect, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, AppBar, Box, Button, Toolbar, Stack, Divider, Drawer, IconButton, Menu, MenuItem, ButtonGroup } from '@mui/material';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -18,9 +18,15 @@ import { dark } from "@clerk/themes";
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import AccountButton from '@/components/accountButton';
 import {useOrganizationWallet} from '@/hooks/useOrganizationWallet';
+import { KnockFeedProvider, KnockProvider, NotificationFeedPopover, NotificationIconButton } from '@knocklabs/react';
+import { syncKnock } from '@/service/knock';
 
 
 const drawerWidth = 240;
+
+const knockPublicKey = process.env.NEXT_PUBLIC_KNOCK_API_KEY as string;
+const knockInternalChannelId = process.env.NEXT_PUBLIC_KNOCK_IN_APP_MESSAGE_CHANNEL_ID as string;
+
 function Header() {
   const mixpanel = useMixpanel();
   const { user } = useUser();
@@ -56,11 +62,12 @@ function Header() {
   const { isConnected, address } = useAccount();
   const { hasEscrowAddress, loading : isOrganizationWalletLoading } = useOrganizationWallet();
   const { isAdmin } = useIsAdmin();
-
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const url = 'xucre.expo.client://ViewWallet';
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const notifButtonRef = useRef(null);
   const open = Boolean(anchorEl);
   const isDarkTheme = theme.palette.mode === 'dark';
   const hideLoginButton =  pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email'
@@ -90,9 +97,9 @@ function Header() {
 
   const navigateTo = (type) => {
     if (type === languageData[language].Menu.index_funds) {
-      router.replace('/index-fund')
+      router.replace('/fund')
     } else if (type === languageData[language].Menu.faq) {
-      router.replace('/about-us')
+      router.replace('/support')
     } else if (type === languageData[language].Menu.organization) {
       router.replace('/organization')
     } else if (type === languageData[language].Menu.billing) {
@@ -117,6 +124,12 @@ function Header() {
       //router.replace('/organization')
     }
   }, [isAdmin, hasEscrowAddress, isOrganizationWalletLoading])
+  
+  useEffect(() => {
+    if (user) {
+      syncKnock(user.id, user.fullName ? user.fullName : '', user.primaryEmailAddress ? user.primaryEmailAddress.emailAddress : '');
+    }
+  }, [user])
 
   const headerButton = (
     <Button variant="text" onClick={() => router.push('/')} >
@@ -178,92 +191,26 @@ function Header() {
     </Stack>
   );
 
+        
   return (
     <div>
       {user && 
-        <>
-          <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '0px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
-            <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-              <Box sx={{}}>
-                {!isHome && headerButton}
-              </Box>
-
-              {/* <SignedIn>
-                {isAdmin &&
-                  <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-                    {adminNavItems.map((item) => (
-                      <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
-                    ))}
-                  </ButtonGroup>
-                }
-                {!isAdmin &&
-                  <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-                    {navItems.map((item) => (
-                      <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
-                    ))}
-                  </ButtonGroup>
-                }
-              </SignedIn>
-              <SignedOut>
-                <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-                  {publicNavItems.map((item) => (
-                    <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
-                  ))}
-                </ButtonGroup>
-              </SignedOut> */}
-
-              <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
+        <KnockProvider
+          apiKey={knockPublicKey}
+          userId={user.id}
+        >
+          <KnockFeedProvider feedId={knockInternalChannelId} colorMode={theme.palette.mode}>
+            <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '0px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
+              <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box sx={{}}>
+                  {!isHome && headerButton}
                 </Box>
-                <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
-                  <SignedIn>
-                    {user && user.publicMetadata.superAdmin as boolean &&
-                      <OrganizationSwitcher
-                        appearance={{
-                          baseTheme: isDarkTheme ? dark : undefined,
-                        }}
-                        organizationProfileProps={{
-                          appearance: {
-                            baseTheme: isDarkTheme ? dark : undefined,
-                          }
-                        }}
-                        organizationProfileMode='navigation'
-                        organizationProfileUrl='/organization'
-                      />
-                    }
-                    {user && !user.publicMetadata.superAdmin &&
-                      <UserButton
-                        appearance={{
-                          baseTheme: isDarkTheme ? dark : undefined,
-                        }}
-                        userProfileProps={{
-                          appearance: {
-                            baseTheme: isDarkTheme ? dark : undefined,
-                          }
-                        }}
-                        userProfileUrl='/settings'
-                        userProfileMode='navigation'
-                      />
-                    }
-                  </SignedIn>
-                </Box>
-                <IconButton
-                  color={theme.palette.mode === 'dark' ? 'default' : 'default'}
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={handleDrawerToggle}
-                  sx={{ mr: 2, display: { md: 'none' }, }}
-                >
-                  <MenuIcon />
-                </IconButton>
 
-                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                  {
-                    /*<AccountButton />*/
-                  }
-
-                  <SignedIn>
-                    <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
+                  <Box sx={{}}>
+                  </Box>
+                  <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
+                    <SignedIn>
                       {user && user.publicMetadata.superAdmin as boolean &&
                         <OrganizationSwitcher
                           appearance={{
@@ -274,13 +221,11 @@ function Header() {
                               baseTheme: isDarkTheme ? dark : undefined,
                             }
                           }}
-                          hidePersonal={true}
                           organizationProfileMode='navigation'
                           organizationProfileUrl='/organization'
                         />
                       }
-                      <Box sx={{width: 20}}/>
-                      {user &&
+                      {user && !user.publicMetadata.superAdmin &&
                         <UserButton
                           appearance={{
                             baseTheme: isDarkTheme ? dark : undefined,
@@ -292,59 +237,117 @@ function Header() {
                           }}
                           userProfileUrl='/settings'
                           userProfileMode='navigation'
-                          
                         />
                       }
-                    </Stack>
-                  </SignedIn>
-                  {/* <AccountButton /> */}
+                    </SignedIn>
+                  </Box>
                   <IconButton
                     color={theme.palette.mode === 'dark' ? 'default' : 'default'}
                     aria-label="open drawer"
                     edge="start"
-                    onClick={handleMenuOpen}
-                    sx={{ ml: 2, display: { xs: 'block', sm: 'none' }, }}
+                    onClick={handleDrawerToggle}
+                    sx={{ mr: 2, display: { md: 'none' }, }}
                   >
                     <MenuIcon />
                   </IconButton>
 
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleMenuClose}
-                    MenuListProps={{
-                      'aria-labelledby': 'basic-button',
-                    }}
-                  >
-                    {navItems.map((item) => (
-                      <MenuItem onClick={() => navigateTo(item)} key={item}>{item}</MenuItem>
-                    ))}
-                  </Menu>
-                </Box>
+                  <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    {
+                      /*<AccountButton />*/
+                    }
 
-              </Stack>
+                    <SignedIn>
+                      <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                        {user && user.publicMetadata.superAdmin as boolean &&
+                          <OrganizationSwitcher
+                            appearance={{
+                              baseTheme: isDarkTheme ? dark : undefined,
+                            }}
+                            organizationProfileProps={{
+                              appearance: {
+                                baseTheme: isDarkTheme ? dark : undefined,
+                              }
+                            }}
+                            hidePersonal={true}
+                            organizationProfileMode='navigation'
+                            organizationProfileUrl='/organization'
+                          />
+                        }
+                        <NotificationIconButton
+                          ref={notifButtonRef}
+                          onClick={(e) => setIsNotificationOpen(!isNotificationOpen)}
+                        />
+                        <NotificationFeedPopover
+                          buttonRef={notifButtonRef}
+                          isVisible={isNotificationOpen}
+                          onClose={() => setIsNotificationOpen(false)}
+                        />
+                        {user &&
+                          <UserButton
+                            appearance={{
+                              baseTheme: isDarkTheme ? dark : undefined,
+                            }}
+                            userProfileProps={{
+                              appearance: {
+                                baseTheme: isDarkTheme ? dark : undefined,
+                              }
+                            }}
+                            userProfileUrl='/settings'
+                            userProfileMode='navigation'
+                            
+                          />
+                        }
+                      </Stack>
+                    </SignedIn>
+                    {/* <AccountButton /> */}
+                    <IconButton
+                      color={theme.palette.mode === 'dark' ? 'default' : 'default'}
+                      aria-label="open drawer"
+                      edge="start"
+                      onClick={handleMenuOpen}
+                      sx={{ ml: 2, display: { xs: 'block', sm: 'none' }, }}
+                    >
+                      <MenuIcon />
+                    </IconButton>
 
-            </Toolbar>
-            {/* {theme.palette.mode === 'light' && <Divider />} */}
-          </AppBar>    
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleMenuClose}
+                      MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                      }}
+                    >
+                      {navItems.map((item) => (
+                        <MenuItem onClick={() => navigateTo(item)} key={item}>{item}</MenuItem>
+                      ))}
+                    </Menu>
+                  </Box>
 
-          <Drawer
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-            sx={{
-              display: { xs: 'block', md: 'none' },
-              zIndex: 10000,
-              '& .MuiDrawer-paper': { width: drawerWidth },
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </>
+                </Stack>
+
+              </Toolbar>
+              {/* {theme.palette.mode === 'light' && <Divider />} */}
+            </AppBar>    
+
+            <Drawer
+              variant="temporary"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+                zIndex: 10000,
+                '& .MuiDrawer-paper': { width: drawerWidth },
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </KnockFeedProvider>
+        </KnockProvider>
       }
       
     </div>

@@ -176,7 +176,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
 
     const difference = ((_balance - _previousDayBalance)/_previousDayBalance)*100;
     setChange(difference);
-
+    console.log(`Balance: ${_balance}, Previous Balance: ${_previousDayBalance} Change: ${difference}`);
     setLoaded(true);
     // console.log('useWalletData-computeTotals');
   }

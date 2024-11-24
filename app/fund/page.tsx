@@ -34,7 +34,7 @@ export default function IndexFunds() {
       if (mixpanel) mixpanel.track('Index Fund Selected', { fund: selectedFund.name[language] });
       //const data = btoa(JSON.stringify(selectedFund));
       const data = selectedFund.name[language];
-      router.push(`/index-fund/${data}`);
+      router.push(`/fund/${data}`);
     }
     //console.log(indexFunds);
   }, [selectedFund])

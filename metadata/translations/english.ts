@@ -129,7 +129,7 @@ const values : TranslationType = {
     qr_scan_button: "QR Scan",
     requests_button: 'Requests',
     wallet_button: "Wallets",
-    faq: "FAQ",
+    faq: "Help",
     billing: "Billing",
     index_builder: "Index Builder",
     organization: "Organization",
