@@ -42,7 +42,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imageUpload, imageUrl }) => {
           <Avatar
             src={currentImageUrl}
             variant='square'
-            alt="Uploaded Image"
+            alt={languageData[language].Edit.image_upload}
             sx={{ width: 150, height: 150, cursor: 'pointer' }}
             onClick={handleClick}
           />

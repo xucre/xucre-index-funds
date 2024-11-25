@@ -14,12 +14,15 @@ import { Suspense, useEffect, useState } from "react";
 import { uid } from 'uid-promise'
 import InvoiceDetail from "@/components/billing/InvoiceDetail";
 import { useEscrowBalance } from "@/hooks/useEscrowBalance";
+import { useLanguage } from "@/hooks/useLanguage";
+import languageData, { Language } from '@/metadata/translations';
 
 // components/LoadingIndicator.tsx
 export default function InvoicePage() {
   const theme = useTheme();
   const router = useRouter();
   const params = useParams();
+  const { language } = useLanguage();
   const { organization } = useOrganization();
   const invoiceId = params['invoice-id'] as string;
   const [invoiceDetails, setInvoiceDetailsState] = useState(null as Invoice | null);

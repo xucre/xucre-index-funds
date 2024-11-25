@@ -97,7 +97,7 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
       {showButtons && 
         <>
           <Stack  direction="row" alignItems={'center'} justifyContent={'space-between'} spacing={1} sx={{mb:1}}>
-          <Chip color={'secondary'} sx={{fontWeight: 'bold', px: 3, py: 1}} label={'Refresh Members'} onClick={fetchMembers} />
+          <Chip color={'secondary'} sx={{fontWeight: 'bold', px: 3, py: 1}} label={languageData[language].Invoice.detail_table_refresh_members} onClick={fetchMembers} />
             <Fade in={hasChanges}>
               <Stack  direction="row" alignItems={'center'} justifyContent={'end'} spacing={1} >
                 <Chip color={'primary'}  sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={executeSave} label={languageData[language].ui.save} />
@@ -114,12 +114,12 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
         rowSelection={false}
         sx={{ width: '100%', mb: 10 }}
         columns={[
-          { field: 'id', headerName: 'Id', flex:2, headerClassName: 'primaryBackground--header' },
-          { field: 'email', headerName: 'Email', flex:1, headerClassName: 'primaryBackground--header' },
-          { field: 'firstName', headerName: 'First', flex:1, headerClassName: 'primaryBackground--header' },
-          { field: 'lastName', headerName: 'Last', flex:1, headerClassName: 'primaryBackground--header' },
-          { field: 'salaryContribution', headerName: 'Amount', flex:1, editable: true, headerClassName: 'primaryBackground--header' },
-          { field: 'safeWalletAddress', headerName: 'Safe Wallet Address', flex:2, headerClassName: 'primaryBackground--header' },
+          { field: 'id', headerName: languageData[language].Invoice.detail_table_column_id, flex:2, headerClassName: 'primaryBackground--header' },
+          { field: 'email', headerName: languageData[language].Invoice.detail_table_column_email, flex:1, headerClassName: 'primaryBackground--header' },
+          { field: 'firstName', headerName: languageData[language].Invoice.detail_table_column_first, flex:1, headerClassName: 'primaryBackground--header' },
+          { field: 'lastName', headerName: languageData[language].Invoice.detail_table_column_last, flex:1, headerClassName: 'primaryBackground--header' },
+          { field: 'salaryContribution', headerName: languageData[language].Invoice.detail_table_column_amount, flex:1, editable: true, headerClassName: 'primaryBackground--header' },
+          { field: 'safeWalletAddress', headerName: languageData[language].Invoice.detail_table_column_wallet, flex:2, headerClassName: 'primaryBackground--header' },
         ]}        
         processRowUpdate={(params) => {
           const { id } = params;

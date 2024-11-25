@@ -9,6 +9,8 @@ import { CreateInvoiceOptions, createInvoiceTransaction } from '@/service/safe';
 import { useOrganization } from '@clerk/nextjs';
 import { isDev } from '@/service/constants';
 import { setInvoiceDetails } from '@/service/db';
+import languageData, { Language } from '@/metadata/translations';
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface InvoiceDetailProps {
   invoice: Invoice;
@@ -19,6 +21,7 @@ interface InvoiceDetailProps {
 const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, reload }) => {
     const router = useRouter();
     const {organization} = useOrganization();
+    const {language} = useLanguage();
     const [loading, setLoading] = useState(false);
     const handleFundClick = () => {
        router.push(`/billing/${invoice.id}/pay`);
@@ -58,15 +61,15 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, rel
         <OpaqueCard>
         <Box display="flex" justifyContent="space-between" alignItems="flex-start">
             <Stack direction={'column'} spacing={1}>
-            <Typography variant="h6">Invoice Details</Typography>
+            <Typography variant="h6">{languageData[language].Invoice.detail_title}</Typography>
             <Box sx={{maxWidth: 100}}><InvoiceStatus status={invoice.status} /></Box>
-            <Typography>Escrow Wallet: {invoice.escrowWallet}</Typography>
-            <Typography>Total Due: ${invoice.totalDue}</Typography>
-            <Typography>Escrow Amount Available: ${usdcBalance || 0}</Typography>
+            <Typography>{languageData[language].Invoice.escrow_wallet}{invoice.escrowWallet}</Typography>
+            <Typography>{languageData[language].Invoice.total_due}{invoice.totalDue}</Typography>
+            <Typography>{languageData[language].Invoice.escrow_amount}{usdcBalance || 0}</Typography>
             </Stack>
-            {!canDisburse && <Chip onClick={handleFundClick} color={'primary'} sx={{fontWeight: 'bold'}} label="Fund Disbursement" disabled={invoice.status != InvoiceStatuses.New} />}
-            {canDisburse && !loading && <Chip onClick={handleDisburseClick} color={'primary'} sx={{fontWeight: 'bold'}} label="Disburse" disabled={invoice.status != InvoiceStatuses.New}/>}
-            {canDisburse && loading && <Chip color={'primary'} sx={{fontWeight: 'bold'}} label="Executing..." />}
+            {!canDisburse && <Chip onClick={handleFundClick} color={'primary'} sx={{fontWeight: 'bold'}} label={languageData[language].Invoice.fund_button} disabled={invoice.status != InvoiceStatuses.New} />}
+            {canDisburse && !loading && <Chip onClick={handleDisburseClick} color={'primary'} sx={{fontWeight: 'bold'}} label={languageData[language].Invoice.disburse_button} disabled={invoice.status != InvoiceStatuses.New}/>}
+            {canDisburse && loading && <Chip color={'primary'} sx={{fontWeight: 'bold'}} label={languageData[language].Invoice.executing_label} />}
         </Box>
         </OpaqueCard>
     );

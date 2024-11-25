@@ -150,23 +150,6 @@ const AppMenu: React.FC = () => {
     []
   );
 
-  const fundMenuGroups = React.useMemo(
-    () => [
-      {
-        items: [
-          {
-            icon: <CasesOutlinedIcon />,
-            name: 'Funds',
-            apiName: 'fund',
-            path: '/fund',
-            ref: React.createRef<HTMLButtonElement>(),
-          }
-        ],
-      }
-    ],
-    []
-  );
-
   const superAdminMenuGroups = React.useMemo(
     () => [
       {

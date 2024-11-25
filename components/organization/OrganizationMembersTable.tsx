@@ -7,8 +7,11 @@ import { useOrganization } from '@clerk/nextjs';
 import { OrganizationMembership } from '@clerk/backend';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateUserModal from './CreateUserModal';
+import { useLanguage } from '@/hooks/useLanguage';
+import languageData from '@/metadata/translations';
 
 const OrganizationMembersTable: React.FC = () => {
+  const {language} = useLanguage();
   const { organization } = useOrganization();
   const [members, setMembers] = useState([] as OrganizationMembership[]);
   const [selectedMember, setSelectedMember] = useState(null as OrganizationMembership | null);
@@ -49,11 +52,11 @@ const OrganizationMembersTable: React.FC = () => {
     };
   });
   const columns: GridColDef[] = [
-    { field: 'userId', headerName: 'User ID', flex:2, headerClassName: 'primaryBackground--header'},
-    { field: 'identifier', headerName: 'Email', flex: 2, headerClassName: 'primaryBackground--header'},
+    { field: 'userId', headerName: languageData[language].Organization.organization_member_table_user_id, flex:2, headerClassName: 'primaryBackground--header'},
+    { field: 'identifier', headerName: languageData[language].Organization.organization_member_table_email, flex: 2, headerClassName: 'primaryBackground--header'},
     {
       field: 'actions',
-      headerName: 'Actions',
+      headerName: languageData[language].Organization.organization_member_table_actions,
       flex: 1,
       headerClassName: 'primaryBackground--header',
       renderCell: (params: GridRenderCellParams) => (
@@ -81,12 +84,12 @@ const OrganizationMembersTable: React.FC = () => {
         {selectedMember && selectedMember.publicUserData &&
             <Box>
             <Typography variant="h5">{selectedMember.publicUserData.identifier}</Typography>
-            <Typography>Are you sure you want to remove this user?</Typography>
+            <Typography>{languageData[language].Organization.organization_member_table_remove_question}</Typography>
             <Button variant="contained" color="error" onClick={handleConfirmRemove}>
-            Yes
+            {languageData[language].ui.yes}
             </Button>
             <Button variant="contained" onClick={() => setModalOpen(false)}>
-            No
+            {languageData[language].ui.no}
             </Button>
             </Box>
         }

@@ -12,6 +12,8 @@ import InvoiceTable from "@/components/billing/InvoiceTable";
 import { setOrganizationSafeAddress } from "@/service/db";
 import { useOrganizationWallet } from "@/hooks/useOrganizationWallet";
 import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
+import languageData, { Language } from '@/metadata/translations';
+import { useLanguage } from "@/hooks/useLanguage";
 
 // components/LoadingIndicator.tsx
 export default function Billing() {
@@ -21,7 +23,7 @@ export default function Billing() {
   const session = params.get('session');
   const [trigger, setTrigger] = useState(false);
   const { escrowAddres, hasEscrowAddress, createEscrowAddress } = useOrganizationWallet();
-  
+  const { language } = useLanguage();
   //const billingOnboarded = false;
 
   const handleCheckoutComplete = async (sessionId) => {

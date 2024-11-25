@@ -11,10 +11,13 @@ import SocialIcons from "@/components/ui/socialIcons";
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 import WalletIcon from '@mui/icons-material/Wallet';
 import EditUserProfile from "@/components/onboarding/EditUserProfile";
+import { useLanguage } from '@/hooks/useLanguage';
+import languageData from '@/metadata/translations';
 
 // components/LoadingIndicator.tsx
 export default function Settings() {
   const theme = useTheme();
+  const {language} = useLanguage();
   const isDarkTheme = theme.palette.mode === 'dark';
   const Social = () => (
     <SocialIcons discordUrl={'https://discord.gg/F4gaehZ7'} emailUrl={'mailto:support@xucre.io'} twitterUrl={'https://x.com/WalletXucre'} githubUrl={null} instagramUrl={null} governanceUrl={null} websiteUrl={'https://linktr.ee/xucrewallet'} gitbookUrl={null} />
@@ -26,26 +29,26 @@ export default function Settings() {
           <UserProfile
             appearance={{ baseTheme: isDarkTheme ? dark : undefined, }}
           >
-            <UserProfile.Page label="Portfolio" labelIcon={<WalletIcon fontSize="small" />} url="portfolio">
+            <UserProfile.Page label={languageData[language].Settings.view_portfolio} labelIcon={<WalletIcon fontSize="small" />} url="portfolio">
               <EditUserProfile />
             </UserProfile.Page>
-            <UserProfile.Page label="Web3" labelIcon={<LinkIcon fontSize="small" />} url="web3">
+            <UserProfile.Page label={languageData[language].Settings.view_web3} labelIcon={<LinkIcon fontSize="small" />} url="web3">
               <WalletManagement />
             </UserProfile.Page>
-            <UserProfile.Page label="Display" labelIcon={<DisplaySettingsIcon fontSize="small" />} url="display">
+            <UserProfile.Page label={languageData[language].Settings.view_display} labelIcon={<DisplaySettingsIcon fontSize="small" />} url="display">
               <Stack direction="column" spacing={2}>
                 <Stack direction="row" spacing={2} width={'100%'} justifyContent={'space-between'} >
-                  <Typography variant={'h6'}>Theme</Typography>
+                  <Typography variant={'h6'}>{languageData[language].Settings.view_theme}</Typography>
                   <ThemeSwitcherElement />
                 </Stack>
                 <Divider />
                 <Stack direction="row" spacing={2} width={'100%'} justifyContent={'space-between'} >
-                  <Typography variant={'h6'}>Language</Typography>
+                  <Typography variant={'h6'}>{languageData[language].Settings.view_language}</Typography>
                   <LanguageSelect type={'menu'} />
                 </Stack>
                 <Divider />
                 <Stack direction="row" spacing={2} width={'100%'} justifyContent={'space-between'} >
-                  <Typography variant={'h6'}>Social</Typography>
+                  <Typography variant={'h6'}>{languageData[language].Settings.view_social}</Typography>
                   <Social />
                 </Stack>
               </Stack>

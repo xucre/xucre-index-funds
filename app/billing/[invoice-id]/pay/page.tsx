@@ -7,7 +7,6 @@ import { ReactElement, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import Campfire from "@/components/campfire";
 import WalletNotConnected from "@/components/walletNotConnected";
-import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation } from "@/service/helpers";
 import { useOrganization } from "@clerk/nextjs";
@@ -16,6 +15,8 @@ import { Invoice, InvoiceStatuses, PaymentOption } from "@/service/types";
 import Unlimit from "@/components/billing/integrations/Unlimit";
 import PaymentOptionCard from "@/components/billing/PaymentOptionCard";
 import Stripe from "@/components/billing/integrations/Stripe";
+import languageData, { Language } from '@/metadata/translations';
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function InvoicePaymentPage() {
   const mixpanel = useMixpanel();
@@ -78,14 +79,14 @@ export default function InvoicePaymentPage() {
     <Box p={4}>
       {invoiceDetails && invoiceDetails.status !== InvoiceStatuses.New && 
         <Stack justifyContent={'center'} alignItems={'center'}>
-          <Typography variant={'h6'} color={textColor}>{'Invoice is not ready for payment'}</Typography>
+          <Typography variant={'h6'} color={textColor}>{languageData[language].Invoice.invoice_not_ready}</Typography>
         </Stack>
       }
 
       {invoiceDetails && invoiceDetails.status === InvoiceStatuses.New && !openProvider && 
         <Grid container spacing={2}>
           <Grid size={12}>
-            <Typography variant={'h6'} color={textColor}>{'Select a payment option'}</Typography>
+            <Typography variant={'h6'} color={textColor}>{languageData[language].Invoice.select_payment_option}</Typography>
           </Grid>
           {paymentOptions().map(option => {
             return (
@@ -101,7 +102,7 @@ export default function InvoicePaymentPage() {
       {openProvider && selectedProvider && 
         <Box>
           <Stack direction={'row'} justifyContent={'flex-start'}>
-            <Button variant={'text'} color={theme.palette.mode === 'dark' ? 'primary' : 'secondary'} onClick={handleCloseProvider}>{'Back to Providers'}</Button>
+            <Button variant={'text'} color={theme.palette.mode === 'dark' ? 'primary' : 'secondary'} onClick={handleCloseProvider}>{languageData[language].Invoice.back_button}</Button>
           </Stack>
           {selectedProvider}
         </Box>      

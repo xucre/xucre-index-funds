@@ -47,11 +47,11 @@ const InvoiceTable = () => {
         sx={{ width: '100%', mb: 10 }}
         columns={[
           // ...existing code...
-          { field: 'id', headerName: 'Invoice ID', flex: 2, headerClassName: 'primaryBackground--header' },
-          { field: 'status', headerName: 'Status', flex: 1, headerClassName: 'primaryBackground--header' },
-          { field: 'dueDate', headerName: 'Due Date', flex: 1, headerClassName: 'primaryBackground--header' },
-          { field: 'totalDue', headerName: 'Total Due', flex: 1, headerClassName: 'primaryBackground--header' },
-          { field: 'createdAt', headerName: 'Created At', flex: 1, headerClassName: 'primaryBackground--header',
+          { field: 'id', headerName: languageData[language].Invoice.table_header_id, flex: 2, headerClassName: 'primaryBackground--header' },
+          { field: 'status', headerName: languageData[language].Invoice.table_header_status, flex: 1, headerClassName: 'primaryBackground--header' },
+          { field: 'dueDate', headerName: languageData[language].Invoice.table_header_due_date, flex: 1, headerClassName: 'primaryBackground--header' },
+          { field: 'totalDue', headerName: languageData[language].Invoice.table_header_total_due, flex: 1, headerClassName: 'primaryBackground--header' },
+          { field: 'createdAt', headerName: languageData[language].Invoice.table_header_created_at, flex: 1, headerClassName: 'primaryBackground--header',
 
             renderCell: (params) => (
               <span>{dayjs(params.row.createdAt).format('L')}</span>

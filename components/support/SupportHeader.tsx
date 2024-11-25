@@ -31,7 +31,7 @@ const SupportHeader = ({ }) => {
                 <Box ref={elementRef}>
                     <Typography variant={'h5'} sx={{fontWeight: 'bold'}} color={textColor}>{languageData[language].FAQPage.title}</Typography>
                     <Typography variant={'body1'} color={textColor}>{languageData[language].FAQPage.header1}</Typography>
-                    {!checked && <Stack onClick={() => setChecked(!checked)} sx={{}} direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'}><Typography color={'textDisabled'}>Learn More</Typography><ArrowForwardIosIcon color={'disabled'} /></Stack>}
+                    {!checked && <Stack onClick={() => setChecked(!checked)} sx={{}} direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'}><Typography color={'textDisabled'}>{languageData[language].SupportPage.header_button}</Typography><ArrowForwardIosIcon color={'disabled'} /></Stack>}
                 </Box>
                 <List>
                     {languageData[language].FAQPage.headerList1.map((item, index) => {

@@ -97,6 +97,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
   }
 
   const InvestmentEntry = () => {
+    const {language} = useLanguage();
     const [expanded, setExpanded] = React.useState(false);
     const handleChange = () => (event: React.SyntheticEvent, isExpanded) => {
       console.log('expand');
@@ -129,7 +130,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
                     <Grid container size={12} key={index}>
                       {/* Left Grid item */}
                       <Grid size={2}>
-                        <Typography>{isInbound ? 'In' : 'Out'}</Typography>
+                        <Typography>{isInbound ? languageData[language].Dashboard.transaction_in : languageData[language].Dashboard.transaction_out}</Typography>
                       </Grid>
                       <Grid size={1}>
                         {transfer.tokenMetadata.logo && (
