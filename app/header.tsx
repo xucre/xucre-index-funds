@@ -10,7 +10,7 @@ import { getTextColor } from '@/service/theme';
 import SocialIcons from '@/components/ui/socialIcons';
 import LanguageSelect from '@/components/ui/languageSelect';
 import { useLanguage } from '@/hooks/useLanguage';
-import languageData from '@/metadata/translations';
+import languageData, { Language } from '@/metadata/translations';
 import { useMixpanel } from '@/hooks/useMixpanel';
 import { SignedIn, SignedOut, useOrganization, UserButton, useUser, OrganizationSwitcher } from '@clerk/nextjs';
 //import HeaderSwitch from './ThemeMode';
@@ -18,7 +18,7 @@ import { dark } from "@clerk/themes";
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import AccountButton from '@/components/accountButton';
 import {useOrganizationWallet} from '@/hooks/useOrganizationWallet';
-import { KnockFeedProvider, KnockProvider, NotificationFeedPopover, NotificationIconButton } from '@knocklabs/react';
+import { KnockFeedProvider, KnockI18nProvider, KnockProvider, NotificationFeedPopover, NotificationIconButton, I18nContent, Translations } from '@knocklabs/react';
 import { syncKnock } from '@/service/knock';
 
 
@@ -191,6 +191,7 @@ function Header() {
     </Stack>
   );
 
+  const languageCode = language === Language.EN ? 'en' : language === Language.ES ? 'es' : 'pt';
         
   return (
     <div>
@@ -199,65 +200,34 @@ function Header() {
           apiKey={knockPublicKey}
           userId={user.id}
         >
-          <KnockFeedProvider feedId={knockInternalChannelId} colorMode={theme.palette.mode}>
-            <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '0px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
-              <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box sx={{}}>
-                  {!isHome && headerButton}
-                </Box>
-
-                <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
+          <KnockI18nProvider i18n={{
+            translations: {
+              notifications: languageData[language].Notifications.notifications,
+              markAllAsRead: languageData[language].Notifications.markAllAsRead,
+              archiveRead: languageData[language].Notifications.archiveRead,
+              emptyFeedTitle: languageData[language].Notifications.emptyFeedTitle,
+              emptyFeedBody: languageData[language].Notifications.emptyFeedBody,
+              poweredBy: languageData[language].Notifications.poweredBy,
+              archiveNotification: languageData[language].Notifications.archiveNotification,
+              all: languageData[language].Notifications.all,
+              unread: languageData[language].Notifications.unread,
+              read: languageData[language].Notifications.read,
+              unseen: languageData[language].Notifications.unseen,
+            },
+            locale: languageCode,
+          } as I18nContent}>
+            <KnockFeedProvider feedId={knockInternalChannelId} colorMode={theme.palette.mode}>
+              <AppBar component="nav" position="relative" color={'transparent'} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: 'none', borderBottom: '0px solid', borderBottomColor: 'GrayText', mb: { xs: 0, sm: 0 } }}>
+                <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
                   <Box sx={{}}>
+                    {!isHome && headerButton}
                   </Box>
-                  <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
-                    <SignedIn>
-                      {user && user.publicMetadata.superAdmin as boolean &&
-                        <OrganizationSwitcher
-                          appearance={{
-                            baseTheme: isDarkTheme ? dark : undefined,
-                          }}
-                          organizationProfileProps={{
-                            appearance: {
-                              baseTheme: isDarkTheme ? dark : undefined,
-                            }
-                          }}
-                          organizationProfileMode='navigation'
-                          organizationProfileUrl='/organization'
-                        />
-                      }
-                      {user && !user.publicMetadata.superAdmin &&
-                        <UserButton
-                          appearance={{
-                            baseTheme: isDarkTheme ? dark : undefined,
-                          }}
-                          userProfileProps={{
-                            appearance: {
-                              baseTheme: isDarkTheme ? dark : undefined,
-                            }
-                          }}
-                          userProfileUrl='/settings'
-                          userProfileMode='navigation'
-                        />
-                      }
-                    </SignedIn>
-                  </Box>
-                  <IconButton
-                    color={theme.palette.mode === 'dark' ? 'default' : 'default'}
-                    aria-label="open drawer"
-                    edge="start"
-                    onClick={handleDrawerToggle}
-                    sx={{ mr: 2, display: { md: 'none' }, }}
-                  >
-                    <MenuIcon />
-                  </IconButton>
 
-                  <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                    {
-                      /*<AccountButton />*/
-                    }
-
-                    <SignedIn>
-                      <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                  <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
+                    <Box sx={{}}>
+                    </Box>
+                    <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
+                      <SignedIn>
                         {user && user.publicMetadata.superAdmin as boolean &&
                           <OrganizationSwitcher
                             appearance={{
@@ -268,21 +238,11 @@ function Header() {
                                 baseTheme: isDarkTheme ? dark : undefined,
                               }
                             }}
-                            hidePersonal={true}
                             organizationProfileMode='navigation'
                             organizationProfileUrl='/organization'
                           />
                         }
-                        <NotificationIconButton
-                          ref={notifButtonRef}
-                          onClick={(e) => setIsNotificationOpen(!isNotificationOpen)}
-                        />
-                        <NotificationFeedPopover
-                          buttonRef={notifButtonRef}
-                          isVisible={isNotificationOpen}
-                          onClose={() => setIsNotificationOpen(false)}
-                        />
-                        {user &&
+                        {user && !user.publicMetadata.superAdmin &&
                           <UserButton
                             appearance={{
                               baseTheme: isDarkTheme ? dark : undefined,
@@ -294,59 +254,117 @@ function Header() {
                             }}
                             userProfileUrl='/settings'
                             userProfileMode='navigation'
-                            
                           />
                         }
-                      </Stack>
-                    </SignedIn>
-                    {/* <AccountButton /> */}
+                      </SignedIn>
+                    </Box>
                     <IconButton
                       color={theme.palette.mode === 'dark' ? 'default' : 'default'}
                       aria-label="open drawer"
                       edge="start"
-                      onClick={handleMenuOpen}
-                      sx={{ ml: 2, display: { xs: 'block', sm: 'none' }, }}
+                      onClick={handleDrawerToggle}
+                      sx={{ mr: 2, display: { md: 'none' }, }}
                     >
                       <MenuIcon />
                     </IconButton>
 
-                    <Menu
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleMenuClose}
-                      MenuListProps={{
-                        'aria-labelledby': 'basic-button',
-                      }}
-                    >
-                      {navItems.map((item) => (
-                        <MenuItem onClick={() => navigateTo(item)} key={item}>{item}</MenuItem>
-                      ))}
-                    </Menu>
-                  </Box>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                      {
+                        /*<AccountButton />*/
+                      }
 
-                </Stack>
+                      <SignedIn>
+                        <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                          {user && user.publicMetadata.superAdmin as boolean &&
+                            <OrganizationSwitcher
+                              appearance={{
+                                baseTheme: isDarkTheme ? dark : undefined,
+                              }}
+                              organizationProfileProps={{
+                                appearance: {
+                                  baseTheme: isDarkTheme ? dark : undefined,
+                                }
+                              }}
+                              hidePersonal={true}
+                              organizationProfileMode='navigation'
+                              organizationProfileUrl='/organization'
+                            />
+                          }
+                          <NotificationIconButton
+                            ref={notifButtonRef}
+                            onClick={(e) => setIsNotificationOpen(!isNotificationOpen)}
+                          />
+                          <NotificationFeedPopover
+                            buttonRef={notifButtonRef}
+                            isVisible={isNotificationOpen}
+                            onClose={() => setIsNotificationOpen(false)}
+                          />
+                          {user &&
+                            <UserButton
+                              appearance={{
+                                baseTheme: isDarkTheme ? dark : undefined,
+                              }}
+                              userProfileProps={{
+                                appearance: {
+                                  baseTheme: isDarkTheme ? dark : undefined,
+                                }
+                              }}
+                              userProfileUrl='/settings'
+                              userProfileMode='navigation'
+                              
+                            />
+                          }
+                        </Stack>
+                      </SignedIn>
+                      {/* <AccountButton /> */}
+                      <IconButton
+                        color={theme.palette.mode === 'dark' ? 'default' : 'default'}
+                        aria-label="open drawer"
+                        edge="start"
+                        onClick={handleMenuOpen}
+                        sx={{ ml: 2, display: { xs: 'block', sm: 'none' }, }}
+                      >
+                        <MenuIcon />
+                      </IconButton>
 
-              </Toolbar>
-              {/* {theme.palette.mode === 'light' && <Divider />} */}
-            </AppBar>    
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleMenuClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}
+                      >
+                        {navItems.map((item) => (
+                          <MenuItem onClick={() => navigateTo(item)} key={item}>{item}</MenuItem>
+                        ))}
+                      </Menu>
+                    </Box>
 
-            <Drawer
-              variant="temporary"
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-              ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-                zIndex: 10000,
-                '& .MuiDrawer-paper': { width: drawerWidth },
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </KnockFeedProvider>
+                  </Stack>
+
+                </Toolbar>
+                {/* {theme.palette.mode === 'light' && <Divider />} */}
+              </AppBar>    
+
+              <Drawer
+                variant="temporary"
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                ModalProps={{
+                  keepMounted: true, // Better open performance on mobile.
+                }}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                  zIndex: 10000,
+                  '& .MuiDrawer-paper': { width: drawerWidth },
+                }}
+              >
+                {drawer}
+              </Drawer>
+            </KnockFeedProvider>
+          </KnockI18nProvider>
         </KnockProvider>
       }
       

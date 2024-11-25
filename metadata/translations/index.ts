@@ -20,6 +20,7 @@ export interface TranslationType {
   Menu: any,
   Onboarding: any,
   Organization: any,
+  Notifications: any,
   Profile: any,
   SelectLanguage: any,
   SupportPage: any,

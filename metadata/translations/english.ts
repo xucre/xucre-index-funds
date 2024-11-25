@@ -175,6 +175,19 @@ const values : TranslationType = {
     help: 'Help',
 
   },
+  Notifications: {
+    notifications: "Notifications",
+    markAllAsRead: "Mark all as read!",
+    archiveRead: 'Archive',
+    emptyFeedTitle: 'No notifications found',
+    emptyFeedBody: 'Notifications will appear here when you have new messages or updates. Stay tuned!',
+    poweredBy: 'Powered by Knock',
+    archiveNotification: 'Archive Notification',
+    all: 'All',
+    unread: 'Unread',
+    read: 'Read',
+    unseen: 'Unseen',
+  },
   Onboarding: {
     empty_profile: 'No profile found',
     empty_profile_description: 'It looks like you haven\'t created your profile yet. Let\'s get set up and get started!',
