@@ -16,6 +16,7 @@ import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import CasesOutlinedIcon from '@mui/icons-material/CasesOutlined';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import anime from 'animejs';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -159,6 +160,13 @@ const AppMenu: React.FC = () => {
             name: 'Organizations',
             apiName: 'organizations',
             path: '/organizations',
+            ref: React.createRef<HTMLButtonElement>(),
+          },
+          {
+            icon: <ManageAccountsOutlinedIcon />,
+            name: 'Index Manager',
+            apiName: 'index-manager',
+            path: '/index-manager',
             ref: React.createRef<HTMLButtonElement>(),
           }
         ],

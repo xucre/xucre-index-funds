@@ -17,12 +17,15 @@ export function useIsAdmin() {
         } else {
           setIsAdmin(false);
         }
-      }
 
-      if (user.publicMetadata.superAdmin) {
-        setIsSuperAdmin(true);
-      } else {
-        setIsSuperAdmin(false);
+        const hasSuperAdmin = user.organizationMemberships.reduce((_hasSuperAdmin, membership) => {
+          return _hasSuperAdmin || membership.permissions.find((permission) => permission === 'org:superadmin:true');
+        });
+        if (hasSuperAdmin) {
+          setIsSuperAdmin(true);
+        } else {
+          setIsSuperAdmin(false);
+        }
       }
     }
 

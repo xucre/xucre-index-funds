@@ -1,9 +1,8 @@
 'use client'
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { PriceData } from '@/service/types';
+import { PortfolioItem, PriceData } from '@/service/types';
 import { useEffect, useState } from 'react';
-import { PortfolioItem } from '@/hooks/useIndexFunds';
 
 const colorSet = ['#182158', '#103D50', '#2D1657', '#D4E815', '#FFA000'];
 

@@ -1,7 +1,7 @@
 'use server'
 import { kv } from '@vercel/kv'
 import { TransactionDetails } from './eip155';
-import { Invoice, SFDCUserData, TokenDetails } from './types';
+import { IndexFund, Invoice, SFDCUserData, TokenDetails } from './types';
 import { isDev } from './constants';
 const tenant = isDev ? 'dev' : 'prod';
 
@@ -70,11 +70,28 @@ export const setStripePaymentId = async (organizationId: string, invoiceId: stri
   await kv.hmset(`${tenant}:invoice:payment:${organizationId}:${invoiceId}`, {invoiceId: paymentId});
 }
 
-
 export const getTokenMetadata = async (chainId: number, address: string) => {
   return await kv.hgetall(`${tenant}:token_metadata:${chainId}:${address}`);
 }
 
 export const setTokenMetadata = async (chainId: number, address: string, tokenData: TokenDetails) => {
   await kv.hmset(`${tenant}:token_metadata:${chainId}:${address}`, tokenData);
+}
+
+export const getAllFunds = async (chainId: number) => {
+  return await kv.smembers(`${tenant}:funds:${chainId}`);
+}
+
+export const getFundDetails = async (chainId: number, fundId: string) => {
+  return await kv.hgetall(`${tenant}:fund:${chainId}:${fundId}`) as IndexFund;
+}
+
+export const setFundDetails = async (chainId: number, fundId: string, fundDetails: IndexFund) => {
+  await kv.sadd(`${tenant}:funds:${chainId}`, fundId);
+  return await kv.hmset(`${tenant}:fund:${chainId}:${fundId}`, fundDetails);
+}
+
+export const delFundDetails = async (chainId: number, fundId: string) => {
+  await kv.srem(`${tenant}:funds:${chainId}`, fundId);
+  return await kv.del(`${tenant}:fund:${chainId}:${fundId}`);
 }

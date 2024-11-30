@@ -5,7 +5,7 @@ import { useTheme } from "@mui/material";
 import { Box, Grid2 as Grid, Stack } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { IndexFund, useIndexFunds } from "@/hooks/useIndexFunds";
+import { useIndexFunds } from "@/hooks/useIndexFunds";
 import CustomCard from "@/components/portfolio/customCard";
 import WalletNotConnected from "@/components/walletNotConnected";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -13,6 +13,8 @@ import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation } from "@/service/helpers";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 import { normalizeDevChains } from '../../service/helpers';
+import { IndexFund } from "@/service/types";
+import { setFundDetails } from "@/service/db";
 
 // components/LoadingIndicator.tsx
 export default function IndexFunds() {
@@ -26,6 +28,13 @@ export default function IndexFunds() {
   const [selectedFund, setSelectedFund] = useState(null as IndexFund | null);
   const { isConnected, address, chainId } = useAccount();
   const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || 137) });
+  // useEffect(() => {
+  //   if (indexFunds.length > 0) {
+  //     indexFunds.forEach((fund) => {
+  //       setFundDetails(137, fund.name[0], fund);
+  //     })
+  //   }
+  // }, [indexFunds])
   //const { isSubscribed } = usePaidPlanCheck();
 
 

@@ -1,3 +1,4 @@
+import { Language } from "@/metadata/translations";
 import { OrganizationMembership } from "@clerk/backend";
 import { ReactElement } from "react";
 
@@ -114,4 +115,51 @@ export type PaymentOption = {
   component: ReactElement; //React.FC<PaymentOptionProps>;
   countries: string[];
   limit: number;
+};
+
+export type PortfolioItem = {
+  name: string;
+  chainId: number;
+  address: string;
+  weight: number;
+  description: {
+    [key in Language]: string;
+  };
+  logo: string;
+  active: boolean;
+  poolFee: number;
+  decimals: number;
+  chain_logo: string;
+  chartColor: string;
+  links: string[];
+  sourceFees: {
+    [key: string]: number;
+  };
+}
+
+export enum ToleranceLevels {
+  Aggressive = 'Aggressive',
+  Moderate = 'Moderate',
+  Conservative = 'Conservative',
+}
+
+export type IndexFund = {
+  id?: string;
+  toleranceLevels?: ToleranceLevels[];
+  name: {
+    [key in Language]: string;
+  };
+  cardSubtitle: {
+    [key in Language]: string;
+  };
+  description: {
+    [key in Language]: string;
+  };
+  image: string;
+  imageSmall: string;
+  color: string;
+  chainId: number;
+  custom: boolean | undefined;
+  sourceToken: PortfolioItem | undefined;
+  portfolio: PortfolioItem[]
 };

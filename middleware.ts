@@ -1,11 +1,11 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/about-us(.*)', '/fund(.*)', '/index-builder(.*)'])
+const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/about-us(.*)', '/fund(.*)'])
 const isAdminRoute = createRouteMatcher(['/organization(.*)', '/billing(.*)', '/api/billing(.*)', '/api/invoice(.*)'])
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/edit(.*)', '/settings(.*)', '/wallets(.*)', '/transactions(.*)', '/api(.*)'])
-const isInternalRoute = createRouteMatcher(['/organizations(.*)'])
+const isInternalRoute = createRouteMatcher(['/organizations(.*)', '/index-manager(.*)', '/index-builder(.*)'])
 
-const adminUserList = (process.env.ADMIN_USER_LIST as string).split(',');
+export const adminUserList = (process.env.ADMIN_USER_LIST as string).split(',');
 
 export default clerkMiddleware((_auth, req) => {
   const auth = _auth();
@@ -26,10 +26,13 @@ export default clerkMiddleware((_auth, req) => {
       )
     })
   } else if (isInternalRoute(req)) {
-    auth.protect(() => {
+    auth.protect((has) => {
       return (
-        auth.userId !== undefined && auth.userId !== null && adminUserList.includes(auth.userId)
+        has({role: 'org:superadmin:true'}) || adminUserList.includes(auth.userId)
       )
+      // return (
+      //   auth.userId !== undefined && auth.userId !== null && auth.user?.publicMetadata?.superAdmin === true
+      // )
     })
   }
 })

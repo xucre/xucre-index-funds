@@ -86,10 +86,10 @@ const OrganizationMembersTable: React.FC = () => {
             <Typography variant="h5">{selectedMember.publicUserData.identifier}</Typography>
             <Typography>{languageData[language].Organization.organization_member_table_remove_question}</Typography>
             <Button variant="contained" color="error" onClick={handleConfirmRemove}>
-            {languageData[language].ui.yes}
+              {languageData[language].ui.yes}
             </Button>
             <Button variant="contained" onClick={() => setModalOpen(false)}>
-            {languageData[language].ui.no}
+              {languageData[language].ui.no}
             </Button>
             </Box>
         }

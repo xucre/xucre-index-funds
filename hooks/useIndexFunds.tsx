@@ -11,45 +11,7 @@ import { config } from "@/config";
 import { distributeWeights, normalizeDevChains } from "@/service/helpers";
 import { useLanguage } from "./useLanguage";
 import languageData, { Language } from '@/metadata/translations'
-
-export type PortfolioItem = {
-  name: string;
-  chainId: number;
-  address: string;
-  weight: number;
-  description: {
-    [key in Language]: string;
-  };
-  logo: string;
-  active: boolean;
-  poolFee: number;
-  decimals: number;
-  chain_logo: string;
-  chartColor: string;
-  links: string[];
-  sourceFees: {
-    [key: string]: number;
-  };
-}
-
-export type IndexFund = {
-  name: {
-    [key in Language]: string;
-  };
-  cardSubtitle: {
-    [key in Language]: string;
-  };
-  description: {
-    [key in Language]: string;
-  };
-  image: string;
-  imageSmall: string;
-  color: string;
-  chainId: number;
-  custom: boolean | undefined;
-  sourceToken: PortfolioItem | undefined;
-  portfolio: PortfolioItem[]
-};
+import { PortfolioItem, IndexFund } from "@/service/types";
 
 const initialSourceTokens = sourceTokensJson as unknown as PortfolioItem[];
 const initialFunds = indexFundJson as IndexFund[];

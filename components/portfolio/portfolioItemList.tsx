@@ -7,8 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import { PortfolioItem } from '@/hooks/useIndexFunds';
-import { PriceData } from '@/service/types';
+import { PortfolioItem, PriceData } from '@/service/types';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const DEFAULT_LOGO = "/icon-green.png"

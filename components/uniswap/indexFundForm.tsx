@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Stack,
   TextField,
@@ -11,18 +11,26 @@ import {
   Chip,
   Avatar,
   useTheme,
+  Checkbox,
+  ListItemText,
+  OutlinedInput,
+  Grid2 as Grid
 } from '@mui/material';
-import { IndexFund } from '@/hooks/useIndexFunds';
 import UniswapPoolChecker, { PoolData } from '@/components/uniswap/poolChecker';
 import { Language } from '@/metadata/translations';
 import { useSnackbar } from 'notistack';
 import { useAccount } from 'wagmi';
 import OpaqueCard from '../ui/OpaqueCard';
+import { IndexFund, PortfolioItem, ToleranceLevels } from '@/service/types';
+import { delFundDetails, getFundDetails, setFundDetails } from '@/service/db';
+import { useRouter } from 'next/navigation';
+import EditPortfolioItem from './editPortfolioItem';
 
-const IndexFundForm = () => {
+const IndexFundForm = ({id = null} : {id: string|null}) => {
   const { enqueueSnackbar } = useSnackbar();
   const { chainId } = useAccount();
   const theme = useTheme();
+  const router = useRouter();
   const [fund, setFund] = useState<IndexFund>({
     name: {
       [Language.EN]: '',
@@ -44,11 +52,14 @@ const IndexFundForm = () => {
     color: '',
     chainId: chainId || 137,
     portfolio: [],
+    toleranceLevels: [],
     custom: true,
     sourceToken: undefined,
   });
-
   const [currentLanguage, setCurrentLanguage] = useState<Language>(Language.EN);
+  const [toleranceLevels, setToleranceLevels] = useState<string[]>([]);
+  const [editItemIndex, setEditItemIndex] = useState<number | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
   // Validation state
   const [imageUrlError, setImageUrlError] = useState<string>('');
@@ -118,6 +129,26 @@ const IndexFundForm = () => {
       }
     };
 
+  const availableRiskTolerances = Object.keys(ToleranceLevels);
+  const handleChangeRiskTolerance = (event: SelectChangeEvent<string>) => {
+    if (typeof event.target.value !== 'string') {
+      const values = (event.target.value as string).split(',') as ToleranceLevels[];
+      // setFund({
+      //   ...fund,
+      //   toleranceLevels: values,
+      // });
+      setToleranceLevels(values);
+      return;
+    }
+    
+    const value = event.target.value as ToleranceLevels;
+    setToleranceLevels([value]);
+    // setFund({
+    //   ...fund,
+    //   toleranceLevels: [value],
+    // });
+  }
+
   const handlePortfolioItemRegister = (pool: PoolData) => {
     setFund({
       ...fund,
@@ -173,19 +204,27 @@ const IndexFundForm = () => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleCopyToClipboard = () => {
+    handleSubmit(false);
+  }
+
+  const handleSave = () => {
+    handleSubmit(true);
+  }
+
+  const handleSubmit = async (save: boolean) => {
     // Validate before submit
     let valid = true;
 
-    if (fund.image && !validateUrl(fund.image)) {
-      setImageUrlError('Please enter a valid URL.');
-      valid = false;
-    }
+    // if (fund.image && !validateUrl(fund.image)) {
+    //   setImageUrlError('Please enter a valid URL.');
+    //   valid = false;
+    // }
 
-    if (fund.imageSmall && !validateUrl(fund.imageSmall)) {
-      setImageSmallUrlError('Please enter a valid URL.');
-      valid = false;
-    }
+    // if (fund.imageSmall && !validateUrl(fund.imageSmall)) {
+    //   setImageSmallUrlError('Please enter a valid URL.');
+    //   valid = false;
+    // }
 
     if (fund.color && !validateHexColor(fund.color)) {
       setColorError('Please enter a valid hex color (e.g., #FFFFFF).');
@@ -198,13 +237,22 @@ const IndexFundForm = () => {
       });
       return;
     }
-
-    navigator.clipboard.writeText(JSON.stringify(fund, null, 2));
-    // Handle form submission logic
-    console.log('IndexFund:', fund);
-    enqueueSnackbar('Copied to clipboard.', {
-      variant: 'success',
-    })
+    if (!save) {
+      navigator.clipboard.writeText(JSON.stringify({...fund, toleranceLevels}, null, 2));
+      // Handle form submission logic
+      enqueueSnackbar('Copied to clipboard.', {
+        variant: 'success',
+      })
+    } else if (id) {
+      // Handle form submission logic
+      const convertedToleranceLevels = toleranceLevels as ToleranceLevels[];
+      await setFundDetails(137, id, {...fund, toleranceLevels : convertedToleranceLevels});
+      
+      enqueueSnackbar('Saved.', {
+        variant: 'success',
+      })
+    }
+    
   };
 
   // Fix: Ensure `requiredLanguages` contains only string values
@@ -226,8 +274,8 @@ const IndexFundForm = () => {
       fund.image.trim() !== '' &&
       fund.imageSmall.trim() !== '' &&
       fund.color.trim() !== '' &&
-      !imageUrlError &&
-      !imageSmallUrlError &&
+      //!imageUrlError &&
+      //!imageSmallUrlError &&
       !colorError;
 
     const hasEnoughPortfolioItems = fund.portfolio.length >= 2;
@@ -235,8 +283,51 @@ const IndexFundForm = () => {
     return allFieldsFilled && hasEnoughPortfolioItems;
   };
 
+  const fetchFund = async () => {
+    if (!id) return;
+    // Fetch fund details
+    console.log(id, id.toString(), decodeURI(id));
+    const fundDetails = await getFundDetails(137, decodeURI(id));
+    console.log('fetched fund details', fundDetails);
+    setFund({...fund, ...fundDetails});
+    setToleranceLevels(fundDetails.toleranceLevels ? fundDetails.toleranceLevels.map((val) => val.toString()) : []);
+  }
+
+  const deleteFund = async () => {
+    if (id) {
+      await delFundDetails(137, id);
+      router.push('/index-manager');
+    }
+  }
+
+  const handleEditItem = (index: number) => {
+    setEditItemIndex(index);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditItemClose = () => {
+    setIsEditModalOpen(false);
+    setEditItemIndex(null);
+  };
+
+  const handleEditItemSubmit = (updatedItem: PortfolioItem) => {
+    if (editItemIndex !== null) {
+      const updatedPortfolio = [...fund.portfolio];
+      updatedPortfolio[editItemIndex] = updatedItem;
+      setFund({ ...fund, portfolio: updatedPortfolio });
+    }
+    handleEditItemClose();
+  };
+
+  useEffect(() => {
+    if (id) {
+      // Fetch fund details
+      fetchFund();
+    }
+  }, [id])
+
   return (
-    <Stack direction="row" spacing={4} p={4} pb={10}>
+    <Stack direction="row" spacing={4} p={4}>
       <OpaqueCard sx={{ flex: 1 }}>
         <Stack spacing={2}>
           {/* Left side: Form fields */}
@@ -259,6 +350,25 @@ const IndexFundForm = () => {
             value={fund.name[currentLanguage]}
             onChange={handleInputChange('name')}
           />
+          {
+            //@ts-ignore
+            <Select
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
+              value={toleranceLevels.join(',')}
+              onChange={handleChangeRiskTolerance}
+              input={<OutlinedInput label="Tag" />}
+              //renderValue={(selected) => selected.join(', ')}
+            >
+              {availableRiskTolerances.map((name) => (
+                <MenuItem key={name} value={name}>
+                  {/* <Checkbox checked={fund.toleranceLevels?.includes(name as ToleranceLevels)} /> */}
+                  <ListItemText primary={name} />
+                </MenuItem>
+              ))}
+            </Select>
+          }
+          
           <TextField
             label="Fund Subtitle"
             fullWidth
@@ -280,7 +390,7 @@ const IndexFundForm = () => {
             fullWidth
             value={fund.image}
             onChange={handleChange('image')}
-            error={Boolean(imageUrlError)}
+            //error={Boolean(imageUrlError)}
             helperText={imageUrlError}
           />
           <TextField
@@ -288,7 +398,7 @@ const IndexFundForm = () => {
             fullWidth
             value={fund.imageSmall}
             onChange={handleChange('imageSmall')}
-            error={Boolean(imageSmallUrlError)}
+            //error={Boolean(imageSmallUrlError)}
             helperText={imageSmallUrlError}
           />
           <TextField
@@ -299,14 +409,34 @@ const IndexFundForm = () => {
             error={Boolean(colorError)}
             helperText={colorError}
           />
-          <Button
-            variant="contained"
-            color={theme.palette.mode === 'dark' ? 'primary' : 'secondary'}
-            onClick={handleSubmit}
-            //disabled={!isFormValid()}
-          >
-            Copy to Clipboard
-          </Button>
+          {!id && 
+            <Button
+              variant="contained"
+              color={theme.palette.mode === 'dark' ? 'primary' : 'secondary'}
+              onClick={handleCopyToClipboard}
+              disabled={!isFormValid()}
+            >
+              Copy to Clipboard
+            </Button>
+          }
+          {id && 
+            <Button
+              variant="contained"
+              color={theme.palette.mode === 'dark' ? 'primary' : 'secondary'}
+              onClick={handleSave}
+              disabled={!isFormValid()}
+            >
+              Save
+            </Button>
+          }
+            <Button
+              variant="contained"
+              color={'error'}
+              onClick={deleteFund}
+            >
+              Delete
+            </Button>
+          
         </Stack>
       </OpaqueCard>
 
@@ -316,22 +446,35 @@ const IndexFundForm = () => {
           registerPortfolioItem={handlePortfolioItemRegister}
         />
         {fund.portfolio.length > 0 &&
-          <Stack direction={'column'} spacing={2}>
+          <Grid container >
             {fund.portfolio.map((item, index) => {
-              console.log(fund);
-              return (<OpaqueCard key={index}>
-                <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
-                  {/* <Avatar src={fund.sourceToken.logo} sx={{ width: 24, height: 24 }}/> */}
-                  <strong> {fund.sourceToken ? fund.sourceToken.name : ''} / {item.name}</strong>
-                  {/* <Avatar src={item.logo} sx={{ width: 24, height: 24 }}/>  */}
-                  <Chip label={`${item.poolFee / 10000}%`} color={'default'} />
-                </Stack>
-              </OpaqueCard>
+              return (<Grid size={12} my={1}><OpaqueCard key={index} sx={{cursor: 'pointer'}} onClick={() => handleEditItem(index)}>
+                <Grid container alignItems={'center'} justifyContent={'center'}>
+                  <Grid size={4} textAlign={'center'}>
+                    {/* <Avatar src={fund.sourceToken.logo} sx={{ width: 24, height: 24 }}/> */}
+                    {<Checkbox disabled checked={item.active} />}
+                  </Grid>
+                  <Grid size={4} textAlign={'center'}>
+                    <strong> {fund.sourceToken ? `${fund.sourceToken.name}/${item.name}` : `${item.name}`} </strong>
+                    {/* <Avatar src={item.logo} sx={{ width: 24, height: 24 }}/>  */}
+                  </Grid>
+                  <Grid size={4} textAlign={'center'}>
+                    <Chip label={`${item.poolFee / 10000}%`} color={'default'} />
+                  </Grid>
+                </Grid>
+              </OpaqueCard></Grid>
               )
             })}
-          </Stack>
+          </Grid>
         }
-        
+        {editItemIndex !== null && (
+          <EditPortfolioItem
+            open={isEditModalOpen}
+            onClose={handleEditItemClose}
+            portfolioItem={fund.portfolio[editItemIndex]}
+            onSubmit={handleEditItemSubmit}
+          />
+        )}
       </Stack>
     </Stack>
   );
