@@ -246,11 +246,14 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
     } else if (id) {
       // Handle form submission logic
       const convertedToleranceLevels = toleranceLevels as ToleranceLevels[];
-      await setFundDetails(137, id, {...fund, toleranceLevels : convertedToleranceLevels});
+      const _fund = {...fund, toleranceLevels : convertedToleranceLevels};
+      console.log('_fund', _fund, convertedToleranceLevels);
+      await setFundDetails(137, decodeURI(id), _fund);
       
       enqueueSnackbar('Saved.', {
         variant: 'success',
       })
+      fetchFund();
     }
     
   };
@@ -286,7 +289,6 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
   const fetchFund = async () => {
     if (!id) return;
     // Fetch fund details
-    console.log(id, id.toString(), decodeURI(id));
     const fundDetails = await getFundDetails(137, decodeURI(id));
     console.log('fetched fund details', fundDetails);
     setFund({...fund, ...fundDetails});
@@ -350,15 +352,15 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
             value={fund.name[currentLanguage]}
             onChange={handleInputChange('name')}
           />
-          {
-            //@ts-ignore
+          
+          <FormControl>
+            <InputLabel id="riskTolerance-select-label">Risk Tolerance</InputLabel>
             <Select
-              labelId="demo-multiple-checkbox-label"
+              labelId={'riskTolerance-select-label'}
               id="demo-multiple-checkbox"
               value={toleranceLevels.join(',')}
               onChange={handleChangeRiskTolerance}
-              input={<OutlinedInput label="Tag" />}
-              //renderValue={(selected) => selected.join(', ')}
+              label={'Risk Tolerance'}
             >
               {availableRiskTolerances.map((name) => (
                 <MenuItem key={name} value={name}>
@@ -367,7 +369,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
                 </MenuItem>
               ))}
             </Select>
-          }
+          </FormControl>
           
           <TextField
             label="Fund Subtitle"
@@ -448,7 +450,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
         {fund.portfolio.length > 0 &&
           <Grid container >
             {fund.portfolio.map((item, index) => {
-              return (<Grid size={12} my={1}><OpaqueCard key={index} sx={{cursor: 'pointer'}} onClick={() => handleEditItem(index)}>
+              return (<Grid key={index} size={12} my={1}><OpaqueCard sx={{cursor: 'pointer'}} onClick={() => handleEditItem(index)}>
                 <Grid container alignItems={'center'} justifyContent={'center'}>
                   <Grid size={4} textAlign={'center'}>
                     {/* <Avatar src={fund.sourceToken.logo} sx={{ width: 24, height: 24 }}/> */}
