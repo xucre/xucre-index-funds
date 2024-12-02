@@ -95,3 +95,27 @@ export const delFundDetails = async (chainId: number, fundId: string) => {
   await kv.srem(`${tenant}:funds:${chainId}`, fundId);
   return await kv.del(`${tenant}:fund:${chainId}:${fundId}`);
 }
+
+export const createFailureLog = async (organizationId: string, invoiceId: string, memberId: string, error: string) => {
+  await kv.sadd(`${tenant}:errors`, `${organizationId}:${invoiceId}:${memberId}`);
+  return await kv.hmset(`${tenant}:errors:${organizationId}:${invoiceId}:${memberId}`, {
+    error,
+    createdAt: new Date().toISOString(),
+    organizationId,
+    invoiceId,
+    memberId
+  });
+}
+
+export const getAllFailureLogs = async () => {
+  return await kv.smembers(`${tenant}:errors`);
+}
+
+export const getFailureLog = async (key: string) => {
+  return await kv.hgetall(`${tenant}:errors:${key}`);
+}
+
+export const delFailureLog = async (key: string) => {
+  await kv.srem(`${tenant}:errors`, key);
+  return await kv.del(`${tenant}:errors:${key}`);
+}

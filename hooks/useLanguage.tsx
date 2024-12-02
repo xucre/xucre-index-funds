@@ -1,10 +1,11 @@
 'use client'
 import React, { useEffect, useMemo } from 'react';
-import { Language } from '@/metadata/translations/index';
+import languageData, { Language } from '@/metadata/translations';
 
 export type LanguageResponse = {
   language: Language;
   setLanguage: (language: Language) => void;
+  languageData: any;
 }
 
 const LanguageContext = React.createContext({ language: Language.EN } as LanguageResponse);
@@ -25,7 +26,7 @@ export const LanguageContextProvider = ({ children }: { children: any }) => {
     localStorage.setItem('language', Language[language]);
   }, [language])
 
-  const value = useMemo(() => ({ language, setLanguage }), [language]);
+  const value = useMemo(() => ({ language, setLanguage, languageData }), [language]);
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
 };

@@ -26,7 +26,8 @@ import XUCREINDEXFUNDS_ABI from '../public/XucreETF.json'; // Ensure you have th
 import DEMO_PORTFOLIO from '../public/demoPortfolio.json'; // Ensure you have the ERC20 ABI JSON file
 import { writeContract } from 'viem/actions';
 import { distributeWeights, encodeStringToBigInt } from './helpers';
-import { Invoice, InvoiceMember } from './types';
+import { IndexFund, Invoice, InvoiceMember } from './types';
+import { createFailureLog, getUserDetails } from './db';
 
 const buildbear = defineChain({
   id: 19819,
@@ -331,13 +332,13 @@ export async function createInvoiceTransaction(options: CreateInvoiceOptions): P
     isOperationSuccess = userOperationResult !== null && userOperationResult.success;
   }  
   console.log('disbursement of source to users successful');
-  const submittedTransactions = await options.invoice.members.map(async (member) => {
-    try {
-      await createUserSpotExecution(member, rpcUrl, chainid || 11155111);
-    } catch (err) {console.log('error executing spot for memeber', member.safeWalletAddress)}
-    return;
-  })
-  console.log('disbursement complete');
+  // const submittedTransactions = await options.invoice.members.map(async (member) => {
+  //   try {
+  //     await createUserSpotExecution(member, rpcUrl, chainid || 11155111);
+  //   } catch (err) {console.log('error executing spot for memeber', member.safeWalletAddress)}
+  //   return;
+  // })
+  // console.log('disbursement complete');
   return safeAddress;
 }
 
@@ -367,7 +368,18 @@ function createUserSourceTransfer(member: InvoiceMember) {
   };
 }
 
-async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, chainid: number) {
+export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: string, chainid: number, invoiceId: string, fundMap: {[key: string]: IndexFund}) {
+  try {
+    await createUserSpotExecution(member, rpcUrl, chainid, fundMap);
+  } catch (err2) {
+    console.log('error executing retry spot for member', member.safeWalletAddress);
+    await createFailureLog(member.organization.id, invoiceId, member.id, 'error executing spot for member');
+  }
+}
+
+async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
+  const memberDetails = await getUserDetails(member.id);
+  const selectedFund = fundMap[memberDetails.riskTolerance] || DEMO_PORTFOLIO;
   const safeAccountConfig = {
     safeAddress: member.safeWalletAddress,
   };
@@ -387,7 +399,10 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   
   const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
   const pubClient = publicClient(chainid || 11155111);
-  if (!client) return '';
+  if (!client) {
+    console.log('client not found');
+    return;
+  }
   
   const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
   console.log('IsUserSafeDeployed', isSafeDeployed);
@@ -396,7 +411,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   
 
   console.log('building portfolio for user', member.safeWalletAddress);
-  const portfolio = DEMO_PORTFOLIO.portfolio;
+  const portfolio = selectedFund.portfolio;
   const tokenAllocations = distributeWeights(portfolio);
   const tokenAddresses = portfolio.map((item) => getAddress(item.address));
   const tokenPoolFees = portfolio.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
@@ -432,7 +447,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
     transactions: userDisbursementTransactionData.transactions,
   });   
   
-  console.log('UserDisbursementTransaction');
+  //console.log('UserDisbursementTransaction');
   // const userDisbursementSafeOperation = await safe4337Pack.getEstimateFee({
   //   safeOperation: userDisbursementTransaction
   // })
@@ -441,14 +456,14 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   let finalHash = '';
   try {
     const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
-    console.log('UserDisbursementOperationHash', userDisbursementOperationHash);
+    console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
     finalHash = userDisbursementOperationHash.hash;
   } catch (err) {
     console.log('error executing spot for member', member.safeWalletAddress);
     console.log('retrying disbursement');
     const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
-    console.log('UserDisbursementOperationHash', userDisbursementOperationHash);
-    finalHash = userDisbursementOperationHash.hash;
+    console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
+    finalHash = userDisbursementOperationHash.hash;    
   }
   
   return finalHash;

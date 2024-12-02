@@ -69,6 +69,11 @@ const InvoiceTable = () => {
             ),
           },
         ]}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'createdAt', sort: 'desc' }],
+          },
+        }}
       />
     </Box>
   );

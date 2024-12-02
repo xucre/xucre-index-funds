@@ -247,7 +247,6 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
       // Handle form submission logic
       const convertedToleranceLevels = toleranceLevels as ToleranceLevels[];
       const _fund = {...fund, toleranceLevels : convertedToleranceLevels};
-      console.log('_fund', _fund, convertedToleranceLevels);
       await setFundDetails(137, decodeURI(id), _fund);
       
       enqueueSnackbar('Saved.', {
