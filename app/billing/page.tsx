@@ -5,7 +5,7 @@ import { useStripeBilling } from "@/hooks/useStripeBilling";
 import { updateOrganizationLicenses } from "@/service/clerk";
 import { upsertOrganization } from "@/service/sfdc";
 import { checkoutSuccess } from "@/service/billing/stripe";
-import { Box, useTheme } from "@mui/material"
+import { Box, Skeleton, useTheme } from "@mui/material"
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import InvoiceTable from "@/components/billing/InvoiceTable";
@@ -22,7 +22,7 @@ export default function Billing() {
   const { hasSignedUp, seatCount, organization, portalSession, reset } = useStripeBilling();
   const session = params.get('session');
   const [trigger, setTrigger] = useState(false);
-  const { escrowAddres, hasEscrowAddress, createEscrowAddress } = useOrganizationWallet();
+  const { escrowAddres, hasEscrowAddress, createEscrowAddress, loading: walletLoading } = useOrganizationWallet();
   const { language } = useLanguage();
   //const billingOnboarded = false;
 
@@ -46,11 +46,11 @@ export default function Billing() {
     }
   }, [hasSignedUp, organization])
 
-  const hasLoaded = organization !== null;
+  const hasLoaded = organization !== null && !walletLoading;
 
   return (
     <Suspense>
-      {hasLoaded &&
+      {hasLoaded && 
         <Box m={5} pb={10}>
           {!hasSignedUp && false && 
             <StripePricingTable />
@@ -67,6 +67,9 @@ export default function Billing() {
             </>
           }
         </Box>
+      }
+      {!hasLoaded &&
+        <Skeleton variant={'rounded'} width={"80vw"} height={150} sx={{m: 4, mx: 'auto'}} />
       }
     </Suspense>
   );

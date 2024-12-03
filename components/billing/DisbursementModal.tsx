@@ -91,7 +91,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
                 return await getFundDetails(isDev ? 1155111: 137, fund);
             }));
             const fundMap = fundDetailList.reduce((acc, fund) => {
-                if (!fund.toleranceLevels || fund.toleranceLevels.length > 0) return acc;
+                if (!fund.toleranceLevels || fund.toleranceLevels.length === 0) return acc;
                 acc[fund.toleranceLevels[0]] = fund;
                 return acc;
             }, {} as {[key: string]: IndexFund});

@@ -10,7 +10,7 @@ import { useConnectedIndexFund, useIndexFunds } from "@/hooks/useIndexFunds";
 import WalletNotConnected from "@/components/walletNotConnected";
 import PortfolioItemList from "@/components/portfolio/portfolioItemList";
 import { getTokenPrices } from "@/service/lambda";
-import { PriceData } from "@/service/types";
+import { IndexFund, PriceData } from "@/service/types";
 import { BuyItem } from "@/components/portfolio/buyItem";
 import { useLanguage } from "@/hooks/useLanguage";
 import languageData, { languages } from '@/metadata/translations';
@@ -20,6 +20,8 @@ import React from "react";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import demoPortfolio from "@/public/demoPortfolio.json";
 import { useUser } from "@clerk/nextjs";
+import { getAllFunds, getFundDetails } from "@/service/db";
+import { isDev } from "@/service/constants";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 
@@ -33,14 +35,16 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const slugString = params.slug as string;
   //const _indexFund = JSON.parse(atob(decodeURIComponent(slugString))) as IndexFund;
   const textColor = getTextColor(theme);
-  const { isConnected, chainId, isConnecting, isReconnecting } = useAccount();
-  const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || 137) });
-  const _indexFund = indexFunds.find((fund) => {
-    return languages.reduce((returnVal, lang) => {
-      if (returnVal) return returnVal;
-      return encodeURIComponent(fund.name[lang]) === slugString || normalizeDevChains(chainId || 137) === fund.chainId;
-    }, false);
-  });
+  // const { isConnected, chainId, isConnecting, isReconnecting } = useAccount();
+  // const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || 137) });
+  // const _indexFund = indexFunds.find((fund) => {
+  //   return languages.reduce((returnVal, lang) => {
+  //     if (returnVal) return returnVal;
+  //     return encodeURIComponent(fund.name[lang]) === slugString || normalizeDevChains(chainId || 137) === fund.chainId;
+  //   }, false);
+  // });
+
+  const [_indexFund, setIndexFund] = useState<IndexFund | undefined>(undefined);
   //const _indexFund = demoPortfolio;
   //const [_indexFund, setIndexFund] = useState(indexFundFound);
   const { balance, allowance, hash, error, loading, isNativeToken, confirmationHash, approveContract, initiateSpot, sourceToken, sourceTokens, setSourceToken, status } = useConnectedIndexFund({ fund: _indexFund });
@@ -52,7 +56,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const getPrices = async () => {
     if (!_indexFund) return;
     const addresses = _indexFund.portfolio.map((item) => item.address).join(',');
-    const _chainId = normalizeDevChains(chainId || 137);
+    const _chainId = normalizeDevChains(137);
     const prices = await getTokenPrices(`addresses=${addresses}&chainId=${_chainId}`);
     //console.log('getPrices', prices);
     try {
@@ -69,7 +73,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
 
   useEffect(() => {
     if (_indexFund) getPrices();
-  }, [chainId, _indexFund])
+  }, [_indexFund])
 
   useEffect(() => {
     if (mixpanel) {
@@ -94,34 +98,41 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const allowanceString = allowance && sourceToken ? formatUnits(allowance as bigint, sourceToken.decimals) : 0;
   const allowanceAmount = allowance ? (allowance as BigInt) <= amount : true;
   //console.log(allowanceAmount, allowanceString)
-
-  //useEffect(() => { console.log(allowanceAmount, allowanceString) }, [allowanceAmount, allowanceString])
-
-  const SelectSource = () => {
-
+  const retrieveFunds = async () => {
+    const funds = await getAllFunds(isDev ? 1155111: 137);
+    const fundDetailList = await Promise.all( funds.map(async (fund) => {
+        return await getFundDetails(isDev ? 1155111: 137, fund);
+    }));
+    //console.log(fundDetailList);
+    const fund = fundDetailList.reduce((acc, fund) => {
+        if (!fund.toleranceLevels || fund.toleranceLevels.length === 0) {
+          return acc;
+        }
+        if (fund.toleranceLevels[0] === slugString) return fund;
+        return acc;
+    }, fundDetailList[0] as IndexFund);
+    setIndexFund(fund);
   }
+
+  useEffect(() => {
+    if (slugString) {
+      retrieveFunds();
+    }
+  }, [slugString]);
 
   const PortfolioDescription = () => (
     <Stack direction={'column'} spacing={2}>
       <Typography variant={'h5'} color={textColor} textAlign={'center'}>{_indexFund ? _indexFund.name[language] : ''}</Typography>
-      <Typography variant={'body1'} color={textColor}>{_indexFund ? _indexFund.description[language] : ''}</Typography>
+      <Typography variant={'body1'} color={textColor} textAlign={'justify'}>{_indexFund ? _indexFund.description[language] : ''}</Typography>
     </Stack>
   )
 
-  //return (<Campfire setIsLocked={() => { }} />)
-
-  //if (!isSubscribed) return <Campfire setIsLocked={() => { }} />;
-  // if (!isConnected && !isConnecting && !isReconnecting) {
-  //   return <WalletNotConnected />
-  // }
-
-  // if (!chainValidation(chainId || 137)) return <Typography textAlign={'center'}>{languageData[language].ui.wrong_network}</Typography>;
   if (_indexFund === undefined) return <></>;
   return (
     <Box mt={{ xs: 0, sm: 4 }} pb={4}>
 
       <Stack direction={'row'} mt={2} mx={2} spacing={2} justifyContent={'space-evenly'} alignItems={'start'} sx={{ display: { md: 'flex', xs: 'none' } }}>
-        <OpaqueCard>
+        <OpaqueCard sx={{p: 4}}>
           <Stack maxWidth={'50vw'} direction={'column'} justifyContent={'center'} alignItems={'center'}>
             <PortfolioDescription />
             <PortfolioItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
