@@ -173,7 +173,8 @@ const values : TranslationType = {
     settings : 'Settings',
     fund: 'Fund',
     help: 'Help',
-
+    organizations: 'Organizations',
+    index_manager: 'Fund Manager'
   },
   Notifications: {
     notifications: "Notifications",

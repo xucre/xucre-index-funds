@@ -11,7 +11,7 @@ import { updateSafeWalletDetails } from '@/service/sfdc';
 import { setSafeAddress } from '@/service/db';
 import { useRouter } from 'next/navigation';
 
-const EmptySafeWallet = ({ id }) => {
+const EmptySafeWallet = ({ id, refresh }: {id: string, refresh: Function}) => {
   const {language} = useLanguage();
   const [loading, setLoading] = useState(false);
   const { address, isConnected } = useAccount();
@@ -32,7 +32,7 @@ const EmptySafeWallet = ({ id }) => {
     setSafeAddress(id, safeAddress);
     updateSafeWalletDetails(id, safeAddress);
     setLoading(false);
-    window.location.reload();
+    refresh();
   }
   return (
     <Box

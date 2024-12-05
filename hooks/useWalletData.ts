@@ -160,6 +160,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
   const [history, setHistory] = useState({} as WalletHistory);
   const [balance, setBalance] = useState(0);
   const [change, setChange] = useState(0);
+  const [hasHistory, setHasHistory] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   const computeTotals = async (_history: WalletHistory) => {
@@ -190,7 +191,12 @@ export function useWalletData({ address }: { address?: string } = {}) {
       if (result && result.covalent) setTransactions(result.covalent.items as CovalentTransactionV3[]);
       const result2 = await getWalletHistory(address, 'matic-mainnet');
       //console.log(result2);
-      if (result2) setHistory(result2 as WalletHistory);
+      if (result2) {
+        setHasHistory(true);
+        setHistory(result2 as WalletHistory);
+      } else {
+        setHasHistory(false);
+      }
       if (result2) computeTotals(result2);
       // console.log('useWalletData-runAsync');
     }
@@ -198,7 +204,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
   }, [address])
 
   return useMemo(
-    () => ({ transactions, history, balance, change, loaded }),
+    () => ({ transactions, history, balance, change, loaded, hasHistory }),
     [transactions, history, balance, change, loaded],
   );
 }

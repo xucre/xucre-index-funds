@@ -14,12 +14,14 @@ import { useOrganizationWallet } from "@/hooks/useOrganizationWallet";
 import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
+import { useOrganization } from "@clerk/nextjs";
 
 // components/LoadingIndicator.tsx
 export default function Billing() {
   const theme = useTheme();
   const params = useSearchParams();
-  const { hasSignedUp, seatCount, organization, portalSession, reset } = useStripeBilling();
+  const { organization } = useOrganization();
+  const { hasSignedUp, seatCount, portalSession, reset } = useStripeBilling();
   const session = params.get('session');
   const [trigger, setTrigger] = useState(false);
   const { escrowAddres, hasEscrowAddress, createEscrowAddress, loading: walletLoading } = useOrganizationWallet();

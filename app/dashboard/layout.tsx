@@ -13,7 +13,7 @@ import { getDashboardBorderColor } from "@/service/helpers";
 import { createAccount, CreateAccountOptions, createAccountSelfSign } from "@/service/safe";
 import { updateSafeWalletDetails } from "@/service/sfdc";
 import { useUser } from "@clerk/nextjs";
-import { Box, Stack, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material"
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
@@ -49,7 +49,7 @@ export default function DashboardLayout({
 
   const syncSafeWallet = async () => {
     if (!user) return;
-    const walletAddress = await getSafeAddress(user.id);
+      const walletAddress = await getSafeAddress(user.id);
     if (walletAddress) {
       setSafeWallet(walletAddress);
     } else {
@@ -60,7 +60,6 @@ export default function DashboardLayout({
   useEffect(() => {
     if (user && user.id) {
       syncSafeWallet();
-
       //setSafeAddress(user.id, '');
     }
   }, [user])
@@ -77,7 +76,7 @@ export default function DashboardLayout({
           <>
             <DashboardHeader />
             {!safeWallet ?
-              <OpaqueCard><EmptySafeWallet id={user ? user.id : ''} /></OpaqueCard> :
+              <OpaqueCard><EmptySafeWallet id={user ? user.id : ''} refresh={syncSafeWallet} /></OpaqueCard> :
               <>
                 <Stack direction={matches ? 'row' : 'column'} spacing={8} justifyContent={'space-between'} px={5}>
                   <Stack direction={'column'} spacing={2} flexGrow={2}>

@@ -295,7 +295,7 @@ const EditProfile = ({ }) => {
                 />     */}
                 {<Slider
                   aria-label={languageData[language].Edit.salary_label}
-                  value={modifiedUser.salaryContribution}
+                  value={modifiedUser.salaryContribution || 0}
                   getAriaValueText={(value) => `$${value}`}
                   step={10}
                   marks={[100,200,300,400,500].map((value) => ({value, label: `$${value}`}))}

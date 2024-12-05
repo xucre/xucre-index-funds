@@ -80,9 +80,10 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
               value={user ? { description: user.address, place_id: user.placeId, components: {}, structured_formatting: { main_text: user.address, secondary_text: "", main_text_matched_substrings: []} }: { description: '', place_id: '', components: {}, structured_formatting: { main_text: '', secondary_text: "", main_text_matched_substrings: []} }} 
               //value={null}
               fields={[]} // fields will always contain address_components and formatted_address, no need to repeat them
-              onChange={(_, value) => {
+              onChange={(_, value, reason) => {
+                if (!value) return;
+                if (reason === 'clear' || reason === 'blur') return;
                 updateUser((prevData) => {
-                  if (!value) return prevData;
                   return {
                   ...prevData,
                   address: value['formatted_address'],

@@ -165,7 +165,7 @@ const AppMenu: React.FC = () => {
           {
             icon: <ManageAccountsOutlinedIcon />,
             name: 'Index Manager',
-            apiName: 'index-manager',
+            apiName: 'index_manager',
             path: '/index-manager',
             ref: React.createRef<HTMLButtonElement>(),
           }

@@ -174,6 +174,8 @@ const values : TranslationType  = {
     home: "Página inicial",
     fund: 'Fundos',
     help: 'Ajuda',
+    organizations: 'Organizações',
+    index_manager: 'Gerente de Índice',
   },
   Notifications: {
     notifications: "Notificações",

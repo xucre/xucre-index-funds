@@ -75,6 +75,6 @@ export function useOrganizationWallet() {
     }
     return useMemo(
         () => ({ escrowAddres, selfAddress, hasEscrowAddress, hasSelfAddress, createEscrowAddress, createSelfAddress, loading }),
-        [escrowAddres, selfAddress],
+        [escrowAddres, selfAddress, loading],
     );
 }
