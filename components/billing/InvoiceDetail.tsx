@@ -62,6 +62,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, rel
     const handleDisburseClose = () => {setOpenDisbursement(false); reload();};
 
     const canDisburse = invoice.status === InvoiceStatuses.New && usdcBalance && usdcBalance >= invoice.totalDue;
+    console.log(usdcBalance, invoice.totalDue, canDisburse);
     return (
         <>
             <OpaqueCard>

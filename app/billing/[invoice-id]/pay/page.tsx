@@ -30,7 +30,7 @@ export default function InvoicePaymentPage() {
   const { organization } = useOrganization();
   const [invoiceDetails, setInvoiceDetailsState] = useState({} as Invoice);
   const invoiceId = params['invoice-id'] as string;
-  const [selectedProvider, setSelectedProvider] = useState({} as ReactElement);
+  const [selectedProvider, setSelectedProvider] = useState(null as ReactElement | null);
   const openProvider = selectedProvider !== null;
   const paymentOptions = () => {
     return [

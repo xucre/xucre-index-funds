@@ -54,7 +54,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
       console.log('updateUser', user2);
       await upsertUserDetails(user2);
       await setUserDetails(user2.userId, user2);
-      enqueueSnackbar(`${languageData[language].ui.transaction_successful}:`, { variant: 'success', autoHideDuration: 5000 });
+      enqueueSnackbar(`${languageData[language].ui.profile_saved}:`, { variant: 'success', autoHideDuration: 5000 });
       await refresh();
     } catch (err) {
       enqueueSnackbar(`${languageData[language].ui.error}:`, { variant: 'error', autoHideDuration: 5000 });
