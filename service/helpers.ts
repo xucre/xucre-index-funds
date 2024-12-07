@@ -95,3 +95,7 @@ export function encodeStringToBigInt(str: string): bigint {
   }
   return sum;
 }
+
+export const isNull = (value: any) => {
+  return value === null || value === undefined || value === '';
+}

@@ -51,8 +51,8 @@ export default function FundHeader() {
     }, [pathname]);
     return (
         <Stack direction={'row'} justifyContent={'center'} alignItems={'center'} my={4} px={0} mb={2} spacing={2}>
-            <Chip label={languageData[language].Edit.risk_moderate} onClick={() => {selectComponent(ToleranceLevels.Moderate)}} sx={{ bgcolor: isModerate ? '#00872a' : '', fontSize: isModerate ? 18 : 14, fontWeight: isModerate ? 'bold' : '', py: 2, px: 1 }} />
             <Chip label={languageData[language].Edit.risk_conservative} onClick={() => {selectComponent(ToleranceLevels.Conservative)}} sx={{ bgcolor: isConservative ? '#00872a' : '', fontSize: isConservative ? 18 : 16, fontWeight: isConservative ? 'bold' : '', py: 2, px: 1 }} />
+            <Chip label={languageData[language].Edit.risk_moderate} onClick={() => {selectComponent(ToleranceLevels.Moderate)}} sx={{ bgcolor: isModerate ? '#00872a' : '', fontSize: isModerate ? 18 : 14, fontWeight: isModerate ? 'bold' : '', py: 2, px: 1 }} />
             <Chip label={languageData[language].Edit.risk_aggressive} onClick={() => {selectComponent(ToleranceLevels.Aggressive)}} sx={{ bgcolor: isAggressive ? '#00872a' : '', fontSize: isAggressive ? 18 : 16, fontWeight: isAggressive ? 'bold' : '', py: 2, px: 1 }} />
             {!toleranceMatch && tolerance && <IconButton onClick={() => updateUser({ ...sfdcUser, riskTolerance: tolerance.toString() })} sx={{ bgcolor: '#00872a', color: 'white' }}><SaveIcon /></IconButton>}
         </Stack>

@@ -219,6 +219,7 @@ const values : TranslationType  = {
     view_language: 'Idioma',
     view_theme: 'Tema',
     view_social: 'Social',
+    view_indentification: 'Identificação',
   },
   SelectLanguage : {
     en: 'InglÃªs',

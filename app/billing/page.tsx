@@ -58,11 +58,11 @@ export default function Billing() {
             <StripePricingTable />
           }
 
-          {hasLoaded && true && !hasEscrowAddress && 
+          {hasLoaded && true && true && !hasEscrowAddress && 
             <EmptyEscrowWallet onCreateSafe={createEscrowAddress} />
           }
 
-          {hasLoaded && true && hasEscrowAddress &&
+          {hasLoaded && true && true && hasEscrowAddress &&
             <>
               <BillingHeader portalSession={portalSession} />
               <InvoiceTable />

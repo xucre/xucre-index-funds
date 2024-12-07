@@ -15,7 +15,7 @@ import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
 import KYC from '@/components/onboarding/KYC';
 import NumberInput from '@/components/ui/NumberInput';
-import { getTextColor } from '@/service/helpers';
+import { getTextColor, isNull } from '@/service/helpers';
 import ReusableModal from '@/components/ui/ReusableModal';
 import { setSafeAddress } from '@/service/db';
 
@@ -43,7 +43,7 @@ const EditProfile = ({ }) => {
   const theme = useTheme();
   const textColor = getTextColor(theme);
   
-  const { sfdcUser, updateUser } = useSFDC();
+  const { sfdcUser, updateUser, refresh } = useSFDC();
   const [modifiedUser, setModifiedUser] = useState<SFDCUserData>(sfdcUser ? {
     firstName: sfdcUser.firstName,
     middleName: sfdcUser.middleName,
@@ -95,7 +95,7 @@ const EditProfile = ({ }) => {
     if (!sfdcUser) return;
     setModifiedUser(sfdcUser);
     //setRiskTolerance(sfdcUser.riskTolerance);
-    setSalaryContribution(String(sfdcUser.salaryContribution));
+    //setSalaryContribution(String(sfdcUser.salaryContribution));
   }, [sfdcUser])
 
   const handleSaveProfile = async () => {
@@ -132,194 +132,28 @@ const EditProfile = ({ }) => {
 
     // Call saveProfile with the collected data
     await updateUser(profileData);
-    router.push('/dashboard')
+    refresh();
+    //router.push('/dashboard')
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    if (name === 'salaryContribution') {
-      if (isNaN(Number(value))) return;
-      setModifiedUser((prevData) => ({
-        ...prevData,
-        salaryContribution: Number(value),
-      }));
-    } else {
-      setModifiedUser((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-  };
-
-  const RiskToleranceHelpText = () => {
-    return (
-      <Box p={5}>
-        <Typography variant="h6" sx={{pb:2}}>
-          {languageData[language].Edit.risk_help_text_title}
-        </Typography>
-        <Typography variant="body1">
-          {languageData[language].Edit.risk_help_text_body1}
-        </Typography>
-        <List>
-          <ListItem>
-            {/* <ListItemIcon>
-              <CircleIcon fontSize="small" />
-            </ListItemIcon> */}
-            <ListItemText primary={languageData[language].Edit.risk_help_text_bullet1} />
-          </ListItem>
-          <ListItem>
-            {/* <ListItemIcon>
-              <CircleIcon fontSize="small"  sx={{fontSize: 10}}/>
-            </ListItemIcon> */}
-            <ListItemText primary={languageData[language].Edit.risk_help_text_bullet2} />
-          </ListItem>
-          <ListItem>
-            {/* <ListItemIcon>
-              <CircleIcon fontSize="small" />
-            </ListItemIcon> */}
-            <ListItemText primary={languageData[language].Edit.risk_help_text_bullet3} />
-          </ListItem>
-        </List>
-        <Typography variant="body1">
-          {languageData[language].Edit.risk_help_text_body2}
-        </Typography>
-      </Box>
-      
-    )
-  }
-
-  const SalaryContributionHelpText = () => {
-    return (
-      <Box p={5}>
-        <Typography variant="h6" sx={{pb:2}}>
-          {languageData[language].Edit.salary_help_text_title}
-        </Typography>
-        <Typography variant="body1">
-          {languageData[language].Edit.salary_help_text_body1}
-        </Typography>
-        <List>
-          <ListItem>
-            {/* <ListItemIcon>
-              <CircleIcon fontSize="small" />
-            </ListItemIcon> */}
-            <ListItemText primary={languageData[language].Edit.salary_help_text_bullet1} />
-          </ListItem>
-          <ListItem>
-            {/* <ListItemIcon>
-              <CircleIcon fontSize="small"  sx={{fontSize: 10}}/>
-            </ListItemIcon> */}
-            <ListItemText primary={languageData[language].Edit.salary_help_text_bullet2} />
-          </ListItem>
-          <ListItem>
-            {/* <ListItemIcon>
-              <CircleIcon fontSize="small" />
-            </ListItemIcon> */}
-            <ListItemText primary={languageData[language].Edit.salary_help_text_bullet3} />
-          </ListItem>
-        </List>
-        <Typography variant="body1">
-          {languageData[language].Edit.salary_help_text_body2}
-        </Typography>
-      </Box>
-      
-    )
-  }
-
-  const isNull = (value: any) => {
-    return value === null || value === undefined || value === '';
-  }
-  const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.address) && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
-
+  const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.address);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
 
   return (
       <OpaqueCard sx={{
-        p: 4
+        px: 4,
+        py: 2
       }}>
-        <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
+        {/* <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
           <Typography variant="h6" gutterBottom>
             {languageData[language].Edit.title}
           </Typography>
-          {/*<Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} />*/}
-        </Stack>
+          <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} />
+        </Stack> */}
       
         <Stack direction={'column'} spacing={2} my={3} justifyContent={'space-between'} alignItems={'flex-start'} >
           
           <Stack direction={'column'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
             <KYC user={modifiedUser} updateUser={setModifiedUser}/>
-          </Stack>
-          <Stack direction={'column'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
-            <Grid container spacing={2}>
-              <Grid size={12}><Typography fontWeight={'bold'}>{languageData[language].Edit.porfolio_section}</Typography></Grid>
-              <Grid size={12}>
-                <TextField
-                  select
-                  label={<>
-                    <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
-                      <Typography color={'text.secondary'} variant={'body1'}>{languageData[language].Edit.tolerance_label}</Typography>
-                      <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
-                        <RiskToleranceHelpText />
-                      </ReusableModal>
-                    </Stack>
-                  </>}
-                  defaultValue={''}
-                  value={modifiedUser.riskTolerance || ''}
-                  name={'riskTolerance'}
-                  onChange={handleChange}
-                  fullWidth
-                >
-                  {riskOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {languageData[language].Edit[option.label]}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid size={12}>
-                <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
-                  <Typography color={'text.secondary'} variant={'caption'}>{languageData[language].Edit.salary_label}</Typography>
-                  <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
-                    <SalaryContributionHelpText />
-                  </ReusableModal>
-                </Stack>
-                {/* <NumberInput onChange={(_, value) => {
-                    setModifiedUser((prevData) => ({
-                      ...prevData,
-                      salaryContribution: Math.round(value as number * 10) / 10,
-                    }));
-                  }} 
-                  aria-label={languageData[language].Edit.salary_label} 
-                  min={0} 
-                  max={50} 
-                  step={1}
-                  value={modifiedUser.salaryContribution} 
-                />     */}
-                {<Slider
-                  aria-label={languageData[language].Edit.salary_label}
-                  value={modifiedUser.salaryContribution || 0}
-                  getAriaValueText={(value) => `$${value}`}
-                  step={10}
-                  marks={[100,200,300,400,500].map((value) => ({value, label: `$${value}`}))}
-                  min={0}
-                  max={500}
-                  valueLabelDisplay="auto"
-                  onChange={(e, value) => {
-                    setModifiedUser((prevData) => ({
-                      ...prevData,
-                      salaryContribution: value as number,
-                    }));
-                  }}
-                />}
-                {/* <TextField
-                  label={languageData[language].Edit.salary_label}
-                  type="number"
-                  name={'salaryContribution'}
-                  value={modifiedUser.salaryContribution}
-                  onChange={handleChange}
-                  fullWidth
-                /> */}
-                
-              </Grid>
-            </Grid>
           </Stack>
         </Stack>
         <Stack direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'} >

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import {
+  Badge,
   Box,
   SpeedDial,
   SpeedDialAction,
@@ -21,6 +22,8 @@ import anime from 'animejs';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
+import { useSFDC } from '@/hooks/useSFDC';
+import { isNull } from '@/service/helpers';
 
 const AppMenu: React.FC = () => {
   const {language} = useLanguage();
@@ -30,6 +33,9 @@ const AppMenu: React.FC = () => {
   const router = useRouter();
   const theme = useTheme();
   const pathname = usePathname();
+  const {sfdcUser} = useSFDC();
+
+  const isOnboardingComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.address) && !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution);
 
   const menuGroups = React.useMemo(
     () => [
@@ -79,7 +85,7 @@ const AppMenu: React.FC = () => {
             ref: React.createRef<HTMLButtonElement>(),
           },
           {
-            icon: <SettingsOutlinedIcon />,
+            icon: isOnboardingComplete ? <SettingsOutlinedIcon /> : <Badge badgeContent={"!"} color="warning" overlap="circular" variant="dot"><SettingsOutlinedIcon /></Badge>,
             name: 'Settings',
             apiName: 'settings',
             path: '/settings',
@@ -139,7 +145,7 @@ const AppMenu: React.FC = () => {
             ref: React.createRef<HTMLButtonElement>(),
           },
           {
-            icon: <SettingsOutlinedIcon />,
+            icon: isOnboardingComplete ? <SettingsOutlinedIcon /> : <Badge badgeContent={"!"} color="warning" overlap="circular" variant="dot"><SettingsOutlinedIcon /></Badge>,
             name: 'Settings',
             apiName: 'settings',
             path: '/settings',
