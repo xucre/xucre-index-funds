@@ -33,10 +33,15 @@ const AppMenu: React.FC = () => {
   const router = useRouter();
   const theme = useTheme();
   const pathname = usePathname();
-  const {sfdcUser} = useSFDC();
-
-  const isOnboardingComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.address) && !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution);
-
+  const {sfdcUser, isLoaded} = useSFDC();
+  const [isOnboardingComplete, setIsOnboardingComplete] = React.useState(false);
+  useEffect(() => {
+    if (isLoaded) {
+      const _isOnboardingComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.address) && !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution)
+      console.log('isOnboardingComplete', sfdcUser, _isOnboardingComplete);
+      setIsOnboardingComplete(_isOnboardingComplete);
+    }    
+  }, [sfdcUser, isLoaded]);
   const menuGroups = React.useMemo(
     () => [
       {
@@ -94,7 +99,7 @@ const AppMenu: React.FC = () => {
         ],
       },
     ],
-    []
+    [isOnboardingComplete]
   );
 
   const adminMenuGroups = React.useMemo(
@@ -154,7 +159,7 @@ const AppMenu: React.FC = () => {
         ],
       },
     ],
-    []
+    [isOnboardingComplete]
   );
 
   const superAdminMenuGroups = React.useMemo(
@@ -252,127 +257,132 @@ const AppMenu: React.FC = () => {
   }, []);
 
   return (
-    <Stack
-      direction="column"
-      py={2}
-      spacing={2}
-      alignItems="flex-end"
-      justifyContent="center"
-      sx={{ position: 'relative' }}
-    >
-      <Box
-        ref={backgroundRef}
-        sx={{
-          position: 'absolute',
-          right: 0,
-          top: -8,
-          width: 56,
-          height: 56,
-          borderRadius: '50%',
-          backgroundColor: 'white',
-          boxShadow: theme.shadows[3],
-          zIndex: -1,
-        }}
-      />
-      {!isAdmin && menuGroups.map((group, groupIndex) => (
-        <SpeedDial
-          key={groupIndex}
-          ariaLabel={`SpeedDial navigation menu group ${groupIndex}`}
-          direction="down"
-          sx={{ borderRadius: 25 }}
-          className={'opaqueMenu'}
-          icon={null}
-          FabProps={{ sx: { display: 'none' } }}
-          open={isOpen}
+    <>
+      {true && 
+        <Stack
+          direction="column"
+          py={2}
+          spacing={2}
+          alignItems="flex-end"
+          justifyContent="center"
+          sx={{ position: 'relative' }}
         >
-          {group.items.map((item, itemIndex) => (
-            <SpeedDialAction
-              key={`${groupIndex}-${itemIndex}`}
-              icon={item.icon}
-              tooltipTitle={languageData[language].Menu[item.apiName]}
-              onClick={() => handleNavigation(item.path)}
-              ref={item.ref} // Move ref here
-              FabProps={{
-                sx: {
-                  padding: theme.spacing(1),
-                  color: !pathname.startsWith('/organizations') && pathname === item.path || (item.path === '/settings' && pathname.includes(item.path)) 
-                    ? theme.palette.success.main
-                    : 'default',
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                },
-              }}
-            />
+          <Box
+            ref={backgroundRef}
+            sx={{
+              position: 'absolute',
+              right: 0,
+              top: -8,
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              backgroundColor: 'white',
+              boxShadow: theme.shadows[3],
+              zIndex: -1,
+            }}
+          />
+          {!isAdmin && menuGroups.map((group, groupIndex) => (
+            <SpeedDial
+              key={groupIndex}
+              ariaLabel={`SpeedDial navigation menu group ${groupIndex}`}
+              direction="down"
+              sx={{ borderRadius: 25 }}
+              className={'opaqueMenu'}
+              icon={null}
+              FabProps={{ sx: { display: 'none' } }}
+              open={isOpen}
+            >
+              {group.items.map((item, itemIndex) => (
+                <SpeedDialAction
+                  key={`${groupIndex}-${itemIndex}`}
+                  icon={item.icon}
+                  tooltipTitle={languageData[language].Menu[item.apiName]}
+                  onClick={() => handleNavigation(item.path)}
+                  ref={item.ref} // Move ref here
+                  FabProps={{
+                    sx: {
+                      padding: theme.spacing(1),
+                      color: !pathname.startsWith('/organizations') && pathname === item.path || (item.path === '/settings' && pathname.includes(item.path)) 
+                        ? theme.palette.success.main
+                        : 'default',
+                      backgroundColor: 'transparent',
+                      boxShadow: 'none',
+                    },
+                  }}
+                />
+              ))}
+            </SpeedDial>
           ))}
-        </SpeedDial>
-      ))}
 
-      {isAdmin && adminMenuGroups.map((group, groupIndex) => (
-        <SpeedDial
-          key={groupIndex}
-          ariaLabel={`SpeedDial navigation menu group ${groupIndex}`}
-          direction="down"
-          sx={{ borderRadius: 25 }}
-          className={'opaqueMenu'}
-          icon={null}
-          FabProps={{ sx: { display: 'none' } }}
-          open={isOpen}
-        >
-          {group.items.map((item, itemIndex) => (
-            <SpeedDialAction
-              key={`${groupIndex}-${itemIndex}`}
-              icon={item.icon}
-              tooltipTitle={languageData[language].Menu[item.apiName]}
-              onClick={() => handleNavigation(item.path)}
-              ref={item.ref} // Move ref here
-              FabProps={{
-                sx: {
-                  padding: theme.spacing(1),
-                  color: !pathname.startsWith('/organizations') && pathname.includes(item.path)
-                    ? theme.palette.success.main
-                    : 'default',
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                },
-              }}
-            />
+          {isAdmin && adminMenuGroups.map((group, groupIndex) => (
+            <SpeedDial
+              key={groupIndex}
+              ariaLabel={`SpeedDial navigation menu group ${groupIndex}`}
+              direction="down"
+              sx={{ borderRadius: 25 }}
+              className={'opaqueMenu'}
+              icon={null}
+              FabProps={{ sx: { display: 'none' } }}
+              open={isOpen}
+            >
+              {group.items.map((item, itemIndex) => (
+                <SpeedDialAction
+                  key={`${groupIndex}-${itemIndex}`}
+                  icon={item.icon}
+                  tooltipTitle={languageData[language].Menu[item.apiName]}
+                  onClick={() => handleNavigation(item.path)}
+                  ref={item.ref} // Move ref here
+                  FabProps={{
+                    sx: {
+                      padding: theme.spacing(1),
+                      color: !pathname.startsWith('/organizations') && pathname.includes(item.path)
+                        ? theme.palette.success.main
+                        : 'default',
+                      backgroundColor: 'transparent',
+                      boxShadow: 'none',
+                    },
+                  }}
+                />
+              ))}
+            </SpeedDial>
           ))}
-        </SpeedDial>
-      ))}
 
-      {isSuperAdmin && superAdminMenuGroups.map((group, groupIndex) => (
-        <SpeedDial
-          key={groupIndex}
-          ariaLabel={`SpeedDial navigation menu group ${groupIndex}`}
-          direction="down"
-          sx={{ borderRadius: 25 }}
-          className={'opaqueMenu'}
-          icon={null}
-          FabProps={{ sx: { display: 'none' } }}
-          open={isOpen}
-        >
-          {group.items.map((item, itemIndex) => (
-            <SpeedDialAction
-              key={`superAdmin-${groupIndex}-${itemIndex}`}
-              icon={item.icon}
-              tooltipTitle={languageData[language].Menu[item.apiName]}
-              onClick={() => handleNavigation(item.path)}
-              ref={item.ref} // Move ref here
-              FabProps={{
-                sx: {
-                  padding: theme.spacing(1),
-                  color: pathname.includes(item.path)
-                    ? theme.palette.success.main
-                    : 'default',
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                },
-              }}
-            />
+          {isSuperAdmin && superAdminMenuGroups.map((group, groupIndex) => (
+            <SpeedDial
+              key={groupIndex}
+              ariaLabel={`SpeedDial navigation menu group ${groupIndex}`}
+              direction="down"
+              sx={{ borderRadius: 25 }}
+              className={'opaqueMenu'}
+              icon={null}
+              FabProps={{ sx: { display: 'none' } }}
+              open={isOpen}
+            >
+              {group.items.map((item, itemIndex) => (
+                <SpeedDialAction
+                  key={`superAdmin-${groupIndex}-${itemIndex}`}
+                  icon={item.icon}
+                  tooltipTitle={languageData[language].Menu[item.apiName]}
+                  onClick={() => handleNavigation(item.path)}
+                  ref={item.ref} // Move ref here
+                  FabProps={{
+                    sx: {
+                      padding: theme.spacing(1),
+                      color: pathname.includes(item.path)
+                        ? theme.palette.success.main
+                        : 'default',
+                      backgroundColor: 'transparent',
+                      boxShadow: 'none',
+                    },
+                  }}
+                />
+              ))}
+            </SpeedDial>
           ))}
-        </SpeedDial>
-      ))}
-    </Stack>
+        </Stack>
+      }
+    </>
+    
   );
 };
 

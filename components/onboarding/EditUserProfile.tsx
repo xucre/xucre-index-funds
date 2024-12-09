@@ -49,6 +49,12 @@ const EditProfile = ({ }) => {
     middleName: sfdcUser.middleName,
     lastName: sfdcUser.lastName,
     address: sfdcUser.address,
+    street: sfdcUser.street,
+    street2: sfdcUser.street2,
+    city: sfdcUser.city,
+    province: sfdcUser.province,
+    postalCode: sfdcUser.postalCode,
+    country: sfdcUser.country,
     placeId: sfdcUser.placeId,
     idCardNumber: sfdcUser.idCardNumber,
     idExpirationDate: sfdcUser.idExpirationDate || '',
@@ -67,6 +73,12 @@ const EditProfile = ({ }) => {
       middleName: '',
       lastName: '',
       address: '',
+      street: '',
+      street2: '',
+      city: '',
+      province: '',
+      postalCode: '',
+      country: '',
       placeId: '',
       idCardNumber: '',
       idExpirationDate: '',
@@ -111,13 +123,19 @@ const EditProfile = ({ }) => {
       middleName: modifiedUser.middleName,
       lastName: modifiedUser.lastName,
       address: modifiedUser.address,
+      street: modifiedUser.street,
+      street2: modifiedUser.street2,
+      city: modifiedUser.city,
+      province: modifiedUser.province,
+      postalCode: modifiedUser.postalCode,
+      country: modifiedUser.country,
       placeId: modifiedUser.placeId,
       idCardNumber: modifiedUser.idCardNumber,
       idExpirationDate: modifiedUser.idExpirationDate,
       frontImage: modifiedUser.frontImage,
       backImage: modifiedUser.backImage,
-      riskTolerance: modifiedUser.riskTolerance,
-      salaryContribution: modifiedUser.salaryContribution,
+      riskTolerance: sfdcUser.riskTolerance,
+      salaryContribution: sfdcUser.salaryContribution,
     } as SFDCUserData;
 
     if (signedMessage) {
@@ -151,7 +169,6 @@ const EditProfile = ({ }) => {
         </Stack> */}
       
         <Stack direction={'column'} spacing={2} my={3} justifyContent={'space-between'} alignItems={'flex-start'} >
-          
           <Stack direction={'column'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
             <KYC user={modifiedUser} updateUser={setModifiedUser}/>
           </Stack>
