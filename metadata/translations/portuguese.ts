@@ -67,6 +67,7 @@ const values : TranslationType  = {
     front_label: 'Imagem da frente',
     back_label: 'Imagem de trás',
     idExpiration_label: 'Data de validade',
+    idIssueDate_label: 'Data de emissão',
     title: 'Configure seu perfil de investimento',
     tolerance_label: 'Tolerância ao risco',
     salary_label: 'Contribuição salarial',

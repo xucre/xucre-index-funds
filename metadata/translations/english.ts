@@ -55,6 +55,7 @@ const values : TranslationType = {
     id_section: 'Identification',
     idNumber_label: 'Identification Card Number',
     idExpiration_label: 'ID Card Expiration Date',
+    idIssueDate_label: 'ID Card Issue Date',
     front_label: 'Front Image',
     back_label: 'Back Image',
     personal_information: 'Personal Information',

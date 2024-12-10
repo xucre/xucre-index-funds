@@ -8,6 +8,8 @@ import { useLanguage } from "@/hooks/useLanguage";
 import languageData from '@/metadata/translations';
 import { useMixpanel } from "@/hooks/useMixpanel";
 import OpaqueCard from "../ui/OpaqueCard";
+import { useAccount } from "wagmi";
+import AccountButton from "../accountButton";
 
 export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, sourceToken, sourceTokens, setSourceToken, balance, rawAmount, handleAmountUpdate, amount, handleApproval, loading, allowance, allowanceAmount, handleSpot }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -20,6 +22,7 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
   };
   const mixpanel = useMixpanel();
   const { language } = useLanguage();
+  const { isConnected, address, chainId, chain } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const [currentAction, setCurrentAction] = useState('');
   const isReadyToApprove = amount > BigInt(0);
@@ -156,10 +159,15 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
           {/*<LoadingButton variant="contained" fullWidth disabled={amount === BigInt(0)} onClick={handleApproval} loading={loading} loadingIndicator="Approve">
             Approve
           </LoadingButton>*/}
-
-          <LoadingButton variant="contained" fullWidth disabled={!isReadyToApprove} onClick={executeCombinedFlow} loading={isLoading} loadingIndicator={languageData[language].ui.executing}>
-            {isReadyToBuy ? languageData[language].Buttons_Header.buy : languageData[language].ui.approve_and_buy}
-          </LoadingButton>
+          {!isConnected &&
+            <AccountButton />
+          }
+          {isConnected && 
+            <LoadingButton variant="contained" fullWidth disabled={!isReadyToApprove} onClick={executeCombinedFlow} loading={isLoading} loadingIndicator={languageData[language].ui.executing}>
+              {isReadyToBuy ? languageData[language].Buttons_Header.buy : languageData[language].ui.approve_and_buy}
+            </LoadingButton>
+          }
+          
         </CardActions>
       </OpaqueCard>
     </Stack>

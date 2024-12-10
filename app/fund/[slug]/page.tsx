@@ -138,7 +138,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
             <PortfolioItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
           </Stack>
         </OpaqueCard>
-        {!isSignedIn && 
+        {!isSignedIn && false &&
           <Box maxWidth={'50vw'}>
             <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
           </Box>
@@ -154,7 +154,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
         <Divider sx={{ color: textColor, width: '80vw' }} />
 
         {/**BUY ITEM  */}
-        {!isSignedIn && 
+        {!isSignedIn && false &&
           <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
         }
       </Stack>

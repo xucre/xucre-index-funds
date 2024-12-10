@@ -204,6 +204,18 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
               onChange={handleChange}
             />
           </Grid>
+          <Grid size={6}></Grid>
+          <Grid size={6}>
+            <TextField
+              label={languageData[language].Edit.idIssueDate_label}
+              name="idIssueDate"
+              type="date"
+              fullWidth
+              slotProps={{ inputLabel: { shrink: true } }}
+              value={user.idIssueDate || ''}
+              onChange={handleChange}
+            />
+          </Grid>
           <Grid size={12}>
             <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
               <Stack direction={'column'} spacing={1}>

@@ -14,7 +14,9 @@ import {
   Checkbox,
   ListItemText,
   OutlinedInput,
-  Grid2 as Grid
+  Grid2 as Grid,
+  Modal,
+  Dialog
 } from '@mui/material';
 import UniswapPoolChecker, { PoolData } from '@/components/uniswap/poolChecker';
 import { Language } from '@/metadata/translations';
@@ -25,6 +27,9 @@ import { IndexFund, PortfolioItem, ToleranceLevels } from '@/service/types';
 import { delFundDetails, getFundDetails, setFundDetails } from '@/service/db';
 import { useRouter } from 'next/navigation';
 import EditPortfolioItem from './editPortfolioItem';
+import { useConnectedIndexFund } from '@/hooks/useIndexFunds';
+import { BuyItem } from '../portfolio/buyItem';
+import { formatUnits, parseUnits } from 'viem';
 
 const IndexFundForm = ({id = null} : {id: string|null}) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -60,11 +65,14 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
   const [toleranceLevels, setToleranceLevels] = useState<string[]>([]);
   const [editItemIndex, setEditItemIndex] = useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-
+  const [isTestModalOpen, setIsTestModalOpen] = useState<boolean>(false);
   // Validation state
   const [imageUrlError, setImageUrlError] = useState<string>('');
   const [imageSmallUrlError, setImageSmallUrlError] = useState<string>('');
   const [colorError, setColorError] = useState<string>('');
+  const { balance, allowance, hash, error, loading, isNativeToken, confirmationHash, approveContract, initiateSpot, sourceToken, sourceTokens, setSourceToken, status } = useConnectedIndexFund({ fund });
+  const [amount, setAmount] = useState<BigInt>(BigInt(0));
+  const [rawAmount, setRawAmount] = useState<string>('');
 
   const validateUrl = (url: string): boolean => {
     try {
@@ -211,6 +219,23 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
   const handleSave = () => {
     handleSubmit(true);
   }
+
+  const handleAmountUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!sourceToken) return;
+    setRawAmount(event.target.value);
+    setAmount(parseUnits(event.target.value, sourceToken.decimals));
+  }
+
+  const handleApproval = () => {
+    console.log('Approving');
+    approveContract(amount);
+  }  
+
+  const handleSpot = () => {
+    initiateSpot(amount);
+  }
+  const allowanceString = allowance && sourceToken ? formatUnits(allowance as bigint, sourceToken.decimals) : 0;
+  const allowanceAmount = allowance ? (allowance as BigInt) <= amount : true;
 
   const handleSubmit = async (save: boolean) => {
     // Validate before submit
@@ -437,6 +462,14 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
             >
               Delete
             </Button>
+            <Button
+              variant="contained"
+              color={'info'}
+              onClick={() => {setIsTestModalOpen(true)}}
+            >
+              Test
+            </Button>
+            
           
         </Stack>
       </OpaqueCard>
@@ -477,6 +510,15 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
           />
         )}
       </Stack>
+
+      <Dialog
+        open={isTestModalOpen}
+        onClose={() => {setIsTestModalOpen(false)}}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={fund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
+      </Dialog>
     </Stack>
   );
 };

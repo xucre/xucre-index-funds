@@ -57,6 +57,7 @@ const values : TranslationType = {
     id_section: 'Identificación',
     idNumber_label: 'Número de identificación',
     idExpiration_label: 'Fecha de expiración',
+    idIssueDate_label: 'Fecha de emisión',
     personal_information: 'Información personal',
     front_label: 'Imagen Frontal',
     back_label: 'Imagen Trasera',
