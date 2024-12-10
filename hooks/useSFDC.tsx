@@ -47,6 +47,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
       country: '',
       idCardNumber: '',
       idExpirationDate: '',
+      idIssueDate: '',
       frontImage: '',
       backImage: '',
       placeId: ''
