@@ -1,22 +1,24 @@
 'use client'
 import { useParams, useRouter } from "next/navigation";
 import { getTextColor } from "@/service/theme";
-import { Button, Modal, Typography, useTheme } from "@mui/material";
+import { Button, IconButton, Modal, Typography, useTheme } from "@mui/material";
 import { Box, Stack } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import Campfire from "@/components/campfire";
 import WalletNotConnected from "@/components/walletNotConnected";
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation } from "@/service/helpers";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import { getOrganization, getOrganizationMembers, updateOrganizationMetadata } from "@/service/clerk";
-import { OrganizationUserData } from "@/service/types";
+import { OrganizationUserData, SFDCUserData } from "@/service/types";
 import UserDetails from "@/components/admin/UserDetails";
 import EditOrganization from "@/components/admin/EditOrganization";
 import { Organization } from "@clerk/backend";
+import { getUserDetails } from "@/service/db";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 const OrganizationDetails: React.FC = () => {
@@ -30,9 +32,19 @@ const OrganizationDetails: React.FC = () => {
   const params = useParams();
   const organizationId = params['organization-id'] as string;
   const [organization, setOrganization] = useState(null as Organization | null);
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState([] as OrganizationUserData[]);
   const [selectedMember, setSelectedMember] = useState(null as OrganizationUserData | null);
+  const [databaseUserData, setDatabaseUserData] = useState([] as SFDCUserData[]);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const fetchDatabaseData = async (_members: OrganizationUserData[]) => {
+    const data = await Promise.all(_members.map(async (member: OrganizationUserData) => {
+      const userData = await getUserDetails(member.id);
+      return userData;
+    }));
+    console.log('Database user data:', data);
+    setDatabaseUserData(data);
+  };
 
   const fetchData = async () => {
     try {
@@ -40,12 +52,14 @@ const OrganizationDetails: React.FC = () => {
       setOrganization(org);
 
       const orgMembers = await getOrganizationMembers(organizationId);
-      setMembers(orgMembers.data.map((member: any) => ({
-          id: member.publicUserData.userId,
-          firstName: member.publicUserData.firstName,
-          lastName: member.publicUserData.lastName,
-          emailAddress: member.publicUserData.identifier,
-      } as OrganizationUserData)));
+      const _members = orgMembers.data.map((member: any) => ({
+        id: member.publicUserData.userId,
+        firstName: member.publicUserData.firstName,
+        lastName: member.publicUserData.lastName,
+        emailAddress: member.publicUserData.identifier,
+    } as OrganizationUserData));
+      setMembers(_members);
+      fetchDatabaseData(_members);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -57,7 +71,9 @@ const OrganizationDetails: React.FC = () => {
     fetchData();
   }, [organizationId]);
 
-  const handleViewMember = (member: any) => {
+  const handleViewMember = (userId: string) => {
+    const member = members.find((m) => m.id === userId);
+    if (!member) return;
     setSelectedMember(member);
     setModalOpen(true);
   };
@@ -70,13 +86,13 @@ const OrganizationDetails: React.FC = () => {
   const memberColumns: GridColDef[] = [
     { field: 'firstName', headerName: 'First Name', flex: 1 },
     { field: 'lastName', headerName: 'Last Name', flex: 1 },
-    { field: 'emailAddress', headerName: 'Email', flex: 1 },
+    { field: 'userEmail', headerName: 'Email', flex: 1 },
     {
       field: 'view',
       headerName: 'View',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
-        <Button variant="contained" onClick={() => handleViewMember(params.row)}>
+        <Button variant="contained" onClick={() => handleViewMember(params.row.userId)}>
           View
         </Button>
       ),
@@ -88,13 +104,14 @@ const OrganizationDetails: React.FC = () => {
       {organization && (
         <OpaqueCard>
           <Stack direction="row" spacing={2} alignItems="center" justifyContent={'space-between'}>
-            <>
+            <IconButton onClick={() => router.push('/organizations')} ><ArrowBackIcon /></IconButton>
+            <Stack direction="row" spacing={2} alignItems="center" justifyContent={'space-between'}>
               <Typography variant="h5">{organization.name}</Typography>
               <Typography variant="body1">ID: {organization.id}</Typography>
               <Typography variant="body1">
                 Max Members: {organization.maxAllowedMemberships}
               </Typography>
-            </>
+            </Stack>
             <EditOrganization
               publicMetadata={JSON.stringify(organization.publicMetadata)}
               save={async (updatedMetadata: string) => {
@@ -113,7 +130,7 @@ const OrganizationDetails: React.FC = () => {
           </Typography>
           <Box sx={{ height: 600, width: '100%' }}>
             <DataGrid
-              rows={members}
+              rows={databaseUserData}
               columns={memberColumns}
               initialState={{
                 pagination: {
@@ -123,7 +140,7 @@ const OrganizationDetails: React.FC = () => {
                 },
               }}
               pageSizeOptions={[10, 25]}
-              getRowId={(row) => row.id}
+              getRowId={(row) => row.userId}
             />
           </Box>
         </OpaqueCard>

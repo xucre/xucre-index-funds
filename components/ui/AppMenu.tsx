@@ -38,7 +38,6 @@ const AppMenu: React.FC = () => {
   useEffect(() => {
     if (isLoaded) {
       const _isOnboardingComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.address) && !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution)
-      console.log('isOnboardingComplete', sfdcUser, _isOnboardingComplete);
       setIsOnboardingComplete(_isOnboardingComplete);
     }    
   }, [sfdcUser, isLoaded]);
