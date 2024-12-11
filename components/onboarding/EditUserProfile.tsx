@@ -157,7 +157,7 @@ const EditProfile = ({ }) => {
     //router.push('/dashboard')
   };
 
-  const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.address);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
+  const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
 
   return (
       <OpaqueCard sx={{

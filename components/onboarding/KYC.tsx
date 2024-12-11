@@ -84,7 +84,7 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
             />
           </Grid>
           <Grid size={12}><Typography fontWeight={'bold'}>{languageData[language].Edit.address_section}</Typography></Grid>
-          <Grid size={12}>
+          {/* <Grid size={12}>
             <AddressAutocomplete
               apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY}
               label={languageData[language].Edit.address_label}
@@ -115,7 +115,7 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
                 }});
               }}
             />
-          </Grid>
+          </Grid> */}
           <Grid size={6}>
             <TextField
               label={languageData[language].Edit.street_label}

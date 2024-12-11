@@ -44,7 +44,7 @@ export default function Settings() {
     </Stack>
   )
   
-  const isProfileComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.address);
+  const isProfileComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country);
   const isPortfolioComplete = !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution);
   
   return (
