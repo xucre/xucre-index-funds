@@ -12,12 +12,15 @@ import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation } from "@/service/helpers";
 import { useUser } from "@clerk/nextjs";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { v4 as uuidv4 } from 'uuid';
 
 
 // OrganizationsTable.tsx
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import OpaqueCard from '@/components/ui/OpaqueCard';
 import { getAllOrganizations } from "@/service/clerk";
+//import { createAccount, CreateAccountOptions } from "@/service/safe";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 interface Organization {
   id: string;
@@ -36,13 +39,13 @@ const OrganizationsTable: React.FC = () => {
   const {user} = useUser();
   const { language } = useLanguage();
   const { isConnected, address, chainId } = useAccount();
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
         const response = await getAllOrganizations();
         setOrganizations(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching organizations:', error);
       }
@@ -50,6 +53,23 @@ const OrganizationsTable: React.FC = () => {
 
     fetchOrganizations();
   }, []);
+  
+  // const handleCreateManualSafe = async () => {
+  //   setProcessing(true);
+  //   const id = uuidv4();
+  //   const callParams = {
+  //     rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
+  //     owner: '',
+  //     threshold: 1,
+  //     singleOwner: true,
+  //     chainid: 137,
+  //     id,
+  //   } as CreateAccountOptions;
+  //   const safeAddress = await createAccount(callParams);
+  //   console.log('safeAddress', safeAddress, id);
+
+  //   setProcessing(false);
+  // }
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Organization Name', flex: 1, headerClassName: 'primaryBackground--header', },
@@ -73,6 +93,9 @@ const OrganizationsTable: React.FC = () => {
 
   return (
     <OpaqueCard>
+      {/* <LoadingButton variant="contained" fullWidth onClick={handleCreateManualSafe} loading={processing} loadingIndicator={'Executing'} sx={{display: 'flex',my: 2}}>
+      Create Manual Safe
+      </LoadingButton> */}
       <Box sx={{ height: 600, width: '100%' }}>
         <DataGrid
           rows={organizations}

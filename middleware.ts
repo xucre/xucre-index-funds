@@ -1,8 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/about-us(.*)', '/fund(.*)'])
+const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/about-us(.*)'])
 const isAdminRoute = createRouteMatcher(['/organization(.*)', '/billing(.*)', '/api/billing(.*)', '/api/invoice(.*)'])
-const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/edit(.*)', '/settings(.*)', '/wallets(.*)', '/transactions(.*)', '/api(.*)'])
+const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/edit(.*)', '/settings(.*)', '/wallets(.*)', '/transactions(.*)', '/api(.*)', '/fund(.*)'])
 const isInternalRoute = createRouteMatcher(['/organizations(.*)', '/index-manager(.*)', '/index-builder(.*)'])
 
 export const adminUserList = (process.env.ADMIN_USER_LIST as string).split(',');

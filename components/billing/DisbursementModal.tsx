@@ -6,7 +6,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { useOrganization } from '@clerk/nextjs';
 import { IndexFund, Invoice, InvoiceStatuses } from '@/service/types';
 import { isDev } from '@/service/constants';
-import { CreateInvoiceOptions, createInvoiceTransaction, executeUserSpotExecution } from '@/service/safe';
+import { CreateInvoiceOptions, createInvoiceTransaction, createInvoiceTransactionV2, executeUserSpotExecution } from '@/service/safe';
 import { getAllFunds, getFundDetails, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -56,7 +56,8 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
                 owner: '',
                 chainid: isDev ? 1155111: 137,
                 id: organization.id,
-                invoice
+                invoice,
+                safeAddress: invoice.escrowWallet
             } as CreateInvoiceOptions;
             const transactionHash = await createInvoiceTransaction(txDetails);
             if (transactionHash !== '') {
@@ -95,6 +96,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
                 acc[fund.toleranceLevels[0]] = fund;
                 return acc;
             }, {} as {[key: string]: IndexFund});
+            
             // Execute user transactions and update currentCount
             await Promise.all(invoice.members.map(async (member) => {
                 try {

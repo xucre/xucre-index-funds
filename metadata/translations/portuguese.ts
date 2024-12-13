@@ -210,6 +210,12 @@ const values : TranslationType  = {
     empty_escrow: 'Escrow não encontrado',
     empty_escrow_description: 'Parece que você ainda não criou sua carteira de garantia. Vamos configurá-la para começar!',
     create_escrow: 'Criar escrow seguro',
+    transfer_escrow: 'Transferir Escrow',
+    transfer_escrow_description: 'Parece que você ainda não transferiu a propriedade do Escrow. Vamos configurá-lo para começar!',
+    transfer_escrow_button: 'Transferir Escrow',
+    transfer_safe: 'Transferir seguro',
+    transfer_safe_description: 'Parece que você ainda não transferiu a propriedade do seguro. Vamos configurá-lo para começar!',
+    transfer_safe_button: 'Transferir',
   },
   Organization: {
     organization_member_table_user_id: 'ID do usuário',

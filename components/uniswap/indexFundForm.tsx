@@ -314,7 +314,6 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
     if (!id) return;
     // Fetch fund details
     const fundDetails = await getFundDetails(137, decodeURI(id));
-    console.log('fetched fund details', fundDetails);
     setFund({...fund, ...fundDetails});
     setToleranceLevels(fundDetails.toleranceLevels ? fundDetails.toleranceLevels.map((val) => val.toString()) : []);
   }
