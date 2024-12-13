@@ -1,7 +1,8 @@
 'use server';
-import Safe, { ContractNetworksConfig, CreateTransactionProps, ExternalSigner, PredictedSafeProps, SafeAccountConfig, SafeDeploymentConfig, SigningMethod } from '@safe-global/protocol-kit';
+import Safe, { buildContractSignature, buildSignatureBytes, ContractNetworksConfig, CreateTransactionProps, ExternalSigner, PredictedSafeProps, SafeAccountConfig, SafeDeploymentConfig, SigningMethod } from '@safe-global/protocol-kit';
 import {
   EthSafeOperation,
+  Safe4337CreateTransactionProps,
   Safe4337InitOptions,
   Safe4337Pack
 } from '@safe-global/relay-kit'
@@ -10,6 +11,7 @@ import {
   safeOperations,
   BundlerOptions
 } from '@safe-global/sdk-starter-kit'
+import { SafeSignature } from '@safe-global/types-kit'
 
 import { isDev } from './constants';
 import { polygon, sepolia } from 'viem/chains'
@@ -35,6 +37,7 @@ import { writeContract } from 'viem/actions';
 import { distributeWeights, encodeStringToBigInt } from './helpers';
 import { IndexFund, Invoice, InvoiceMember } from './types';
 import { createFailureLog, getUserDetails } from './db';
+import SafeApiKit from '@safe-global/api-kit';
 
 const buildbear = defineChain({
   id: 19819,
@@ -125,10 +128,8 @@ export interface CreateAccountOptions {
 }
 
 export interface TransferSignerOwnershipOptions {
-  rpcUrl: string;
   chainid: number;
   safeWallet: string;
-  newOwner: string;
 }
 
 export async function createAccount(options: CreateAccountOptions): Promise<string> {
@@ -215,13 +216,12 @@ export async function createAccountV2(options: CreateAccountOptions): Promise<st
   const safe4337Pack = await Safe4337Pack.init(packData);
   const safeAddress = await safe4337Pack.protocolKit.getAddress();
   
-  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-  const pubClient = publicClient(chainid || 11155111);
-  if (!client) return '';
-  
   const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
   console.log('IsSafeDeployed', isSafeDeployed)
   if (!isSafeDeployed) {
+    const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
+    const pubClient = publicClient(chainid || 11155111);
+    if (!client) return '';
     const deploymentTransaction = await safe4337Pack.protocolKit.createSafeDeploymentTransaction()
     const transactionHash = await client.sendTransaction({
       to: deploymentTransaction.to,
@@ -240,7 +240,7 @@ export async function createAccountV2(options: CreateAccountOptions): Promise<st
 
   const allowance = await getCurrentERC20Allowance(chainid || 137, safeAddress);
   if (allowance < BigInt(MAX_UINT256)) {
-    await createERC20ApprovalV2(chainid || 137, rpcUrl, safe4337Pack);
+    await createERC20ApprovalV2(chainid || 137, rpcUrl, safeAddress);
   } 
   
   console.log('safeAddress', safeAddress);
@@ -249,7 +249,7 @@ export async function createAccountV2(options: CreateAccountOptions): Promise<st
 }
 
 export async function transferSignerOwnership(options: TransferSignerOwnershipOptions): Promise<void> {
-  const { rpcUrl, chainid, safeWallet } = options;
+  const { chainid, safeWallet } = options;
   const packData = {
     provider: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
     signer : process.env.DEVACCOUNTKEY,
@@ -267,7 +267,7 @@ export async function transferSignerOwnership(options: TransferSignerOwnershipOp
 
   const transaction = await safe4337Pack.protocolKit.createSwapOwnerTx({
     oldOwnerAddress: CORP_PUBLIC_ADDRESS as `0x${string}`,
-    newOwnerAddress: CORP_SIGNER_SAFE as `0x${string}`,
+    newOwnerAddress: '' as `0x${string}`,
   })
   
   const _transaction ={
@@ -283,56 +283,8 @@ export async function transferSignerOwnership(options: TransferSignerOwnershipOp
   const userOperationHash = await safe4337Pack.executeTransaction({
     executable: signedSafeOperation
   })
-  console.log('transfer successful');
+  console.log('transfer successful', userOperationHash);
   return;
-}
-
-export async function createAccountSelfSign(options: CreateAccountOptions): Promise<string> {
-  const { owner, threshold, rpcUrl } = options;
-  console.log('createAccountSelfSign',owner, threshold, rpcUrl);
-  const safeAccountConfig: SafeAccountConfig = options.singleOwner ? {
-    owners: [CORP_PUBLIC_ADDRESS as `0x${string}`],
-    threshold: 1,
-  } :{
-    owners: [owner, CORP_PUBLIC_ADDRESS as `0x${string}`],
-    threshold: 1,
-  };
-
-  const predictedSafe: PredictedSafeProps = {
-    safeAccountConfig
-    // More optional properties
-  }
-
-  console.log('do it again');
-  // const protocolKit = await Safe.init({
-  //   provider: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
-  //   signer: process.env.DEVACCOUNTKEY,
-  //   predictedSafe,
-  //   contractNetworks: {
-  //     [buildbear.id]: {
-  //       multiSendAddress: '0xca11bde05977b3631167028862be2a173976ca11',
-  //       multiSendCallOnlyAddress: '0xca11bde05977b3631167028862be2a173976ca11',
-  //       safeSingletonAddress, safeProxyFactoryAddress, fallbackHandlerAddress, signMessageLibAddress,
-  //     }
-  //   } as ContractNetworksConfig
-  // })
- 
-  //const safeAddress = await protocolKit.getAddress()
-  // const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-
-  // const client = await protocolKit.getSafeProvider().getExternalSigner()
-
-  // const transactionHash = await client.sendTransaction({
-  //   to: deploymentTransaction.to,
-  //   value: BigInt(deploymentTransaction.value),
-  //   data: deploymentTransaction.data as `0x${string}`,
-  //   account: CORP_ACCOUNT,
-  //   chain: buildbear,
-  //   kzg: undefined
-  // });
-  
-
-  return 'safeAddress';
 }
 
 export interface CreateInvoiceOptions {
@@ -342,12 +294,13 @@ export interface CreateInvoiceOptions {
   chainid?: number;
   id: string;
   invoice: Invoice;
+  safeAddress?: string;
   //signer: SafeSigner;
 }
 
 export async function createInvoiceTransaction(options: CreateInvoiceOptions): Promise<string> {
-  const { owner, rpcUrl, chainid, id } = options;
-  const safeAccountConfig = owner === '' ? {
+  const { owner, rpcUrl, chainid, id, safeAddress: _safeAddress } = options;
+  const safeAccountConfig = _safeAddress ? { safeAddress: _safeAddress}: owner === '' ? {
     owners: [CORP_PUBLIC_ADDRESS as `0x${string}`],
     threshold: 1,
     saltNonce: encodeStringToBigInt(id).toString()
@@ -418,9 +371,11 @@ export async function createInvoiceTransaction(options: CreateInvoiceOptions): P
     console.log('userOperationHash', userOperationHash);
   }
 
-  const invoiceTransactions = options.invoice.members.map((member) => {
-    return createUserSourceTransfer(member);
-  })
+  const invoiceTransactions = options.invoice.members.reduce((acc, member) => {
+    const result = createUserSourceTransfer(member);
+    if (result === null) return acc;
+    return [...acc, result];
+  }, [] as Safe4337CreateTransactionProps['transactions']);
   const secondTransactionData = {
     transactions: [
       ...invoiceTransactions
@@ -455,8 +410,10 @@ export async function createInvoiceTransaction(options: CreateInvoiceOptions): P
 }
 
 export async function createInvoiceTransactionV2(options: CreateInvoiceOptions): Promise<string> {
-  const { owner, rpcUrl, chainid, id } = options;
-  const safeAccountConfig = owner === '' ? {
+  const { owner, rpcUrl, chainid, id, safeAddress } = options;
+  const safeAccountConfig = safeAddress ? {
+    safeAddress: safeAddress,
+  } : owner === '' ? {
     owners: [CORP_SIGNER_SAFE as `0x${string}`],
     threshold: 1,
     saltNonce: encodeStringToBigInt(id).toString()
@@ -470,7 +427,7 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
   const packData = {
       provider: rpcUrl,
       signer : process.env.DEVACCOUNTKEY,
-      safeAddress: CORP_SIGNER_SAFE,
+      //safeAddress: CORP_SIGNER_SAFE,
       bundlerUrl: bundlerUrl(chainid || 11155111),
       options: safeAccountConfig,
       paymasterOptions: {
@@ -479,7 +436,8 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
       }
   } as Safe4337InitOptions;
   const safe4337Pack = await Safe4337Pack.init(packData);
-  const safeAddress = await safe4337Pack.protocolKit.getAddress();
+  const PARENT_SAFE = await safe4337Pack.protocolKit.getAddress();
+  const nonce = await safe4337Pack.protocolKit.getNonce();
   
   const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
   const pubClient = publicClient(chainid || 11155111);
@@ -529,39 +487,101 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
     console.log('userOperationHash', userOperationHash);
   }
 
-  const invoiceTransactions = options.invoice.members.map((member) => {
-    return createUserSourceTransfer(member);
-  })
-  const secondTransactionData = {
-    transactions: [
-      ...invoiceTransactions
-    ]
-  } as CreateTransactionProps;
+  const invoiceTransactions = options.invoice.members.reduce((acc, member) => {
+    const result = createUserSourceTransfer(member);
+    if (result === null) return acc;
+    return [...acc, result];
+  }, [] as Safe4337CreateTransactionProps['transactions']);
 
-  const newConnect = await safe4337Pack.protocolKit.connect({
+  
+  console.log('controlling safe transaction signed');
+  const secondTransactionData = {
+    transactions: [...invoiceTransactions]
+  } as Safe4337CreateTransactionProps;
+
+  // const secondTransaction = await safe4337Pack.createTransaction(secondTransactionData);
+  // console.log('sending safe transaction created');
+  // const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
+  //   safeOperation: secondTransaction
+  // })
+
+  const controllingSafe = await safe4337Pack.protocolKit.connect({
     provider: rpcUrl,
     signer: process.env.DEVACCOUNTKEY,
     safeAddress: CORP_SIGNER_SAFE
   });
+  // console.log('controlling safe initialized');
+  const trans = await controllingSafe.createTransaction({transactions: [...invoiceTransactions], options: {nonce}});
 
-  const secondTransaction = await safe4337Pack.createTransaction({
-    transactions: secondTransactionData.transactions,
-  });
-  const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
-    safeOperation: secondTransaction
-  })
-  const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
-  const userOperationHash = await safe4337Pack.executeTransaction({
-    executable: signedSafeOperation
-  })
-  console.log('userOperationHash', userOperationHash);
+  // console.log('controlling safe transaction created');
+  const signedTransaction =  await controllingSafe.signTransaction(
+    trans,
+    SigningMethod.SAFE_SIGNATURE,
+    PARENT_SAFE // Parent Safe address
+  )
+  const signatureSafe = await buildContractSignature(
+    Array.from(signedTransaction.signatures.values()),
+    CORP_SIGNER_SAFE as `0x${string}`,
+  )
+  //console.log('sending safe transaction gas estimated');
+  // const signature = signedTransaction.getSignature(CORP_PUBLIC_ADDRESS as `0x${string}`);
+  // if (!signature) {
+  //   console.log(signedTransaction.signatures);
+  //   console.log('signature not found');
+  //   return '';
+  // }
+  //await identifiedSafeOperation.addSignature(signatureSafe);
+  console.log('getting transaction hash');
+  //console.log('signing safe transaction');
+  //const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
+  // Deterministic hash based on transaction parameters
+  const safeTxHash = await controllingSafe.getTransactionHash(trans)
+
+  // Sign transaction to verify that the transaction is coming from owner 1
+  const senderSignature = await controllingSafe.signHash(safeTxHash)
+
+  const safeTransactionHash = await safe4337Pack.protocolKit.getTransactionHash(signedTransaction)
+
+  // Instantiate the API Kit
+  // Use the chainId where you have the Safe account deployed
+  const apiKit = new SafeApiKit({ chainId: BigInt(chainid || 137)})
   
-  let isOperationSuccess = false;
-  while (!isOperationSuccess) {
-    const userOperationResult = await safe4337Pack.getUserOperationReceipt(userOperationHash);
-    isOperationSuccess = userOperationResult !== null && userOperationResult.success;
-  }  
-  console.log('disbursement of source to users successful');
+  console.log('proposing transaction w/ apikit');
+  // Propose the transaction
+  await apiKit.proposeTransaction({
+    safeAddress: PARENT_SAFE,
+    safeTransactionData: signedTransaction.data,
+    safeTxHash: safeTransactionHash,
+    //safeTxHash,
+    senderAddress: CORP_SIGNER_SAFE as `0x${string}`,
+    senderSignature: buildSignatureBytes([signatureSafe]),
+    //safeTransactionData: trans.data,
+    //senderSignature: senderSignature.data
+  })
+
+  const pendingTransactions = (await apiKit.getPendingTransactions(PARENT_SAFE)).results
+  console.log('pendingTransactions');
+  const proposedTransaction = pendingTransactions.find((tx) => tx.safeTxHash === safeTransactionHash);
+  if (!proposedTransaction) throw new Error('Transaction not found');
+  console.log('confirming transaction w/ apikit');
+  // const signatureConfirmation = await apiKit.confirmTransaction(
+  //   safeTransactionHash,
+  //   buildSignatureBytes([signatureSafe])
+  // )
+
+  //const userOperation = await apiKit.getTransaction(safeTxHash)
+  
+  console.log('sending safe transaction signed');
+  
+  const userOperation = await safe4337Pack.protocolKit.executeTransaction(proposedTransaction)
+  console.log('userOperationHash', userOperation.hash);
+  
+  //let isOperationComplete = false;
+  if (!userOperation.transactionResponse) throw new Error('Transaction not found');
+  // @ts-ignore
+  const receipt = await userOperation.transactionResponse?.wait();
+  console.log('receipt', receipt);
+  // console.log('disbursement of source to users successful');
   // const submittedTransactions = await options.invoice.members.map(async (member) => {
   //   try {
   //     await createUserSpotExecution(member, rpcUrl, chainid || 11155111);
@@ -569,7 +589,7 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
   //   return;
   // })
   // console.log('disbursement complete');
-  return safeAddress;
+  return safeAddress || '';
 }
 
 export interface InvoiceTransactionOptions {
@@ -586,6 +606,8 @@ function createUserSourceTransfer(member: InvoiceMember) {
   const recipientAddress = getAddress(member.safeWalletAddress);
   const amount = parseUnits(member.salaryContribution.toString(), 6);
 
+  if (member.salaryContribution < .01) return null;
+
   const rawTransferData = encodeFunctionData({
     abi: ERC20_ABI,
     functionName: 'transfer',
@@ -594,7 +616,7 @@ function createUserSourceTransfer(member: InvoiceMember) {
   return {
     to: getAddress(USDT_ADDRESS),
     data: rawTransferData,
-    value: '0',
+    value: '0'
   };
 }
 
@@ -610,6 +632,7 @@ export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: s
 async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
   const memberDetails = await getUserDetails(member.id);
   const selectedFund = fundMap[memberDetails.riskTolerance] || DEMO_PORTFOLIO;
+  //console.log(fundMap,memberDetails.riskTolerance, selectedFund);
   const safeAccountConfig = {
     safeAddress: member.safeWalletAddress,
   };
@@ -624,6 +647,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
           paymasterUrl: paymasterUrl(chainid || 11155111),
       }
   } as Safe4337InitOptions;
+  
   const safe4337Pack = await Safe4337Pack.init(packData);
   const safeAddress = await safe4337Pack.protocolKit.getAddress();
   
@@ -633,13 +657,15 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
     console.log('client not found');
     return;
   }
-  
   const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
   console.log('IsUserSafeDeployed', isSafeDeployed);
   
   const memberContribution = parseUnits(member.salaryContribution.toString(), 6);
-  
-
+  await validateCurrentERC20Allowance(chainid || 137, safeAddress, memberContribution, safe4337Pack);
+  if (member.salaryContribution < .01) {
+    console.log('member salary contribution too low', member.safeWalletAddress);
+    return;
+  }
   console.log('building portfolio for user', member.safeWalletAddress);
   const portfolio = selectedFund.portfolio;
   const tokenAllocations = distributeWeights(portfolio);
@@ -658,6 +684,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
       memberContribution
     ],
   }
+  
   //console.log('unencodedData', unencodedData);
   const rawDisbursmentData = encodeFunctionData(unencodedData);
   //console.log('rawDisbursmentData', rawDisbursmentData);
@@ -667,36 +694,58 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
     value: '0',
   }
 
+  console.log('userDisbursementTransactions', userDisbursementTransactions.to);
+
   const userDisbursementTransactionData = {
     transactions: [
       userDisbursementTransactions
     ]
   } as CreateTransactionProps;
   console.log('UserDisbursementTransactionData');
-  const userDisbursementTransaction = await safe4337Pack.protocolKit.createTransaction({
-    transactions: userDisbursementTransactionData.transactions,
-  });   
   
-  //console.log('UserDisbursementTransaction');
-  // const userDisbursementSafeOperation = await safe4337Pack.getEstimateFee({
-  //   safeOperation: userDisbursementTransaction
-  // })
-  console.log('UserDisbursementSafeOperation');
-  const signedUserDisbursementSafeOperation = await safe4337Pack.protocolKit.signTransaction(userDisbursementTransaction)
-  let finalHash = '';
-  try {
-    const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
-    console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
-    finalHash = userDisbursementOperationHash.hash;
-  } catch (err) {
-    console.log('error executing spot for member', member.safeWalletAddress);
-    console.log('retrying disbursement');
-    const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
-    console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
-    finalHash = userDisbursementOperationHash.hash;    
-  }
+  const secondTransaction = await safe4337Pack.createTransaction({
+    transactions: userDisbursementTransactionData.transactions
+  });
+
+  console.log('secondTransaction complete');
+  const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
+    safeOperation: secondTransaction
+  })
+  console.log('identifiedSafeOperation complete');
+  const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
+  console.log('signedSafeOperation complete');
+  const userOperationHash = await safe4337Pack.executeTransaction({
+    executable: signedSafeOperation
+  })
+  console.log('userOperationHash', userOperationHash);
   
-  return finalHash;
+  let isOperationSuccess = false;
+  while (!isOperationSuccess) {
+    const userOperationResult = await safe4337Pack.getUserOperationReceipt(userOperationHash);
+    isOperationSuccess = userOperationResult !== null && userOperationResult.success;
+  } 
+
+  // const userDisbursementTransaction = await safe4337Pack.protocolKit.createTransaction({
+  //   transactions: userDisbursementTransactionData.transactions,
+  // });  
+  //
+  // console.log('UserDisbursementSafeOperation');
+  // const signedUserDisbursementSafeOperation = await safe4337Pack.protocolKit.signTransaction(userDisbursementTransaction)
+  // let finalHash = '';
+  // try {
+  //   const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
+  //   console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
+  //   finalHash = userDisbursementOperationHash.hash;
+  // } catch (err) {
+  //   //console.log(err);
+  //   console.log('error executing spot for member', member.safeWalletAddress);
+  //   console.log('retrying disbursement');
+  //   const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
+  //   console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
+  //   finalHash = userDisbursementOperationHash.hash;    
+  // }
+  
+  return ''//finalHash;
 }
 
 async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
@@ -731,7 +780,6 @@ async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, 
   
   const memberContribution = parseUnits(member.salaryContribution.toString(), 6);
   
-
   console.log('building portfolio for user', member.safeWalletAddress);
   const portfolio = selectedFund.portfolio;
   const tokenAllocations = distributeWeights(portfolio);
@@ -789,6 +837,13 @@ async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, 
   }
   
   return finalHash;
+}
+
+async function validateCurrentERC20Allowance (chainid: number, safeAddress: string, memberContribution: bigint, safe4337Pack: Safe4337Pack) {
+  const _allowance = await getCurrentERC20Allowance(chainid, safeAddress);
+  if (_allowance < memberContribution) {
+    await createERC20Approval(chainid, process.env.NEXT_PUBLIC_SAFE_RPC_URL as string, safe4337Pack);
+  }
 }
 
 async function getCurrentERC20Allowance (chainid: number, safeAddress: string) {
@@ -830,9 +885,31 @@ async function createERC20Approval (chainid: number, rpcUrl: string, safe4337Pac
   const userOperationHash = await safe4337Pack.executeTransaction({
     executable: signedSafeOperation
   })
+
+  let isOperationSuccess = false;
+  while (!isOperationSuccess) {
+    const userOperationResult = await safe4337Pack.getUserOperationReceipt(userOperationHash);
+    isOperationSuccess = userOperationResult !== null;
+  } 
+
 }
 
-async function createERC20ApprovalV2 (chainid: number, rpcUrl: string, safe4337Pack: Safe4337Pack) {
+async function createERC20ApprovalV2 (chainid: number, rpcUrl: string, safeAddress: string) {
+  const safeAccountConfig = {
+    safeAddress: CORP_SIGNER_SAFE as `0x${string}`,
+  };
+  const packData = {
+      provider: rpcUrl,
+      signer : process.env.DEVACCOUNTKEY,
+      bundlerUrl: bundlerUrl(chainid || 11155111),
+      options: safeAccountConfig,
+      paymasterOptions: {
+          isSponsored: true,
+          paymasterUrl: paymasterUrl(chainid || 11155111),
+      }
+  } as Safe4337InitOptions;
+  const safe4337Pack = await Safe4337Pack.init(packData);
+
   const rawApprovalData = encodeFunctionData({
     abi: ERC20_ABI,
     functionName: 'approve',
@@ -879,4 +956,16 @@ async function createERC20ApprovalV2 (chainid: number, rpcUrl: string, safe4337P
   const userOperationHash = await safe4337Pack.executeTransaction({
     executable: signedSafeOperation
   })
+}
+
+export async function getSafeOwner (chainid: number, safeAddress: string) {
+  const pubCli = publicClient(chainid);
+  const safeClient = await createSafeClient({
+    provider: pubCli,
+    signer: process.env.DEVACCOUNTKEY,
+    safeAddress: safeAddress
+  })
+  
+  const owners = await safeClient.getOwners();
+  return owners;
 }

@@ -209,6 +209,12 @@ const values : TranslationType = {
     empty_escrow: 'No Escrow Safe found',
     empty_escrow_description: 'It looks like you haven\'t created your Escrow Safe smart wallet yet. Let\'s set it up to finish onboarding!',
     create_escrow: 'Create Safe',
+    transfer_escrow: 'Transfer Safe',
+    transfer_escrow_description: 'It looks like you need to transfer ownership of your Escrow Safe to complete onboarding. Let\'s get started!',
+    transfer_escrow_button: 'Transfer',
+    transfer_safe: 'Transfer Safe',
+    transfer_safe_description: 'It looks like you need to transfer ownership of your Safe to complete onboarding. Let\'s get started!',
+    transfer_safe_button: 'Transfer',
   },
   Organization: {
     organization_member_table_user_id: 'User ID',

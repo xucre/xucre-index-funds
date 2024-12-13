@@ -2,35 +2,35 @@ export const maxDuration = 60; // Applies to the action
 import { useEffect, useMemo, useState } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import { getOrganizationSafeAddress, setOrganizationSafeAddress } from '@/service/db';
-import { createAccount, CreateAccountOptions } from '@/service/safe';
+import { createAccount, CreateAccountOptions, createAccountV2 } from '@/service/safe';
 import { isDev } from '@/service/constants';
 
 export function useOrganizationWallet() {
     const {organization} = useOrganization();
     const [loading, setLoading] = useState(true);
-    const [escrowAddres, setEscrowAddress] = useState(null as string | null);
+    const [escrowAddress, setEscrowAddress] = useState(null as string | null);
     const [selfAddress, setSelfAddress] = useState(null as string | null);
-    useEffect(() => {
-        const runAsync = async () => {
-            if (!organization) return;
-            setLoading(true);
-            const selfAddress2 = await getOrganizationSafeAddress(organization.id, 'self');
-            const escrowAddress2 = await getOrganizationSafeAddress(organization.id, 'escrow');
-            console.log('useOrganizationWallet', escrowAddress2);
-            setEscrowAddress(escrowAddress2);
-            setSelfAddress(selfAddress2);
-            setLoading(false);
-            console.log('useOrganizationWallet-runAsync');
-        }
 
+    const refresh = async () => {
+      if (!organization) return;
+      setLoading(true);
+      const selfAddress2 = await getOrganizationSafeAddress(organization.id, 'self');
+      const escrowAddress2 = await getOrganizationSafeAddress(organization.id, 'escrow');
+      console.log('useOrganizationWallet', escrowAddress2);
+      setEscrowAddress(escrowAddress2);
+      setSelfAddress(selfAddress2);
+      setLoading(false);
+      console.log('useOrganizationWallet-runAsync');
+    }
+    
+    useEffect(() => {        
         if (organization) {
-
             console.log('useOrganizationWallet-organizationChange');
-            runAsync();
+            refresh();
         }
     }, [])
 
-    const hasEscrowAddress = !!escrowAddres;
+    const hasEscrowAddress = !!escrowAddress;
     const hasSelfAddress = !!selfAddress;
 
     const createEscrowAddress = async () => {
@@ -50,7 +50,6 @@ export function useOrganizationWallet() {
             chainid: 137
           } as CreateAccountOptions;
         console.log('createEscrowAddress');
-        //const safeAddress = isDev ? await createAccountSelfSign(safePayload) : await createAccount(safePayload);
         const safeAddress = await createAccount(safePayload);
         setOrganizationSafeAddress(organization.id, safeAddress, 'escrow');
         setEscrowAddress(safeAddress);
@@ -74,7 +73,7 @@ export function useOrganizationWallet() {
         setLoading(false);
     }
     return useMemo(
-        () => ({ escrowAddres, selfAddress, hasEscrowAddress, hasSelfAddress, createEscrowAddress, createSelfAddress, loading }),
-        [escrowAddres, selfAddress, loading],
+        () => ({ escrowAddress, selfAddress, hasEscrowAddress, hasSelfAddress, createEscrowAddress, createSelfAddress, loading, refresh }),
+        [escrowAddress, selfAddress, loading],
     );
 }
