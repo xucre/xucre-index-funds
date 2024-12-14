@@ -129,7 +129,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
         chain: chain,
         account: address
       };
-      console.log(requestOptions);
+      
       const result = await writeContractAsync(requestOptions);
       enqueueSnackbar(`${languageData[language].ui.transaction_successful}: ${result}`, { variant: 'success', autoHideDuration: 5000 });
       setConfirmationHash(result);

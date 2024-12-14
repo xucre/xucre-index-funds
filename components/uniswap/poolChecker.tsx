@@ -14,19 +14,13 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PercentIcon from '@mui/icons-material/Percent';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import TokenAutocomplete from './autocomplete';
-import { Token } from '@/hooks/useTokenList';
 import { useAccount } from 'wagmi';
 import { config } from '@/config';
 import { getAddress, zeroAddress } from 'viem';
 import { normalizeDevChains } from '@/service/helpers';
+import { PoolData, Token } from '@/service/types';
 
-export interface PoolData {
-  id: string;
-  sourceToken: Token;
-  targetToken: Token;
-  feeTier: number;
-  liquidity: string;
-}
+
 
 const poolContractMap = {
   1: '0x1F98431c8aD98523631AE4a59f267346ea31F984',

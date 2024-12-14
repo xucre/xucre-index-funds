@@ -3,19 +3,9 @@ import React from 'react';
 import { normalizeDevChains } from '@/service/helpers';
 import { getTokenList } from '@/service/lambda';
 import { useEffect, useMemo, useState } from 'react';
+import { Token, TokenListResponse } from '@/service/types';
 
-export interface Token {
-  address: string;
-  chainId: number;
-  decimals: number;
-  name: string;
-  symbol: string;
-  logo?: string;
-}
 
-export type TokenListResponse = {
-  tokens: Token[];
-}
 
 const TokenListContext = React.createContext({ tokens: [] } as TokenListResponse);
 

@@ -170,3 +170,24 @@ export type IndexFund = {
   sourceToken: PortfolioItem | undefined;
   portfolio: PortfolioItem[]
 };
+
+export interface PoolData {
+  id: string;
+  sourceToken: Token;
+  targetToken: Token;
+  feeTier: number;
+  liquidity: string;
+}
+
+export interface Token {
+  address: string;
+  chainId: number;
+  decimals: number;
+  name: string;
+  symbol: string;
+  logo?: string;
+}
+
+export type TokenListResponse = {
+  tokens: Token[];
+}

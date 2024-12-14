@@ -30,6 +30,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
     useEffect(() => {
         if (open) {
             handleDisburseFunds();
+            //handleExecuteTransactions();
         }
     }, [open]);
 
@@ -100,6 +101,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
             // Execute user transactions and update currentCount
             await Promise.all(invoice.members.map(async (member) => {
                 try {
+                  console.log(member)
                     if (member.salaryContribution < .1) {
                         setCurrentCount(prev => prev + 1);
                         return;

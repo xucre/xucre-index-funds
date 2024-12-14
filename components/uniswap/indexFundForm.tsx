@@ -18,12 +18,12 @@ import {
   Modal,
   Dialog
 } from '@mui/material';
-import UniswapPoolChecker, { PoolData } from '@/components/uniswap/poolChecker';
+import UniswapPoolChecker from '@/components/uniswap/poolChecker';
 import { Language } from '@/metadata/translations';
 import { useSnackbar } from 'notistack';
 import { useAccount } from 'wagmi';
 import OpaqueCard from '../ui/OpaqueCard';
-import { IndexFund, PortfolioItem, ToleranceLevels } from '@/service/types';
+import { IndexFund, PoolData, PortfolioItem, ToleranceLevels } from '@/service/types';
 import { delFundDetails, getFundDetails, setFundDetails } from '@/service/db';
 import { useRouter } from 'next/navigation';
 import EditPortfolioItem from './editPortfolioItem';

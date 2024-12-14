@@ -631,8 +631,10 @@ export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: s
 
 async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
   const memberDetails = await getUserDetails(member.id);
+  //console.log(memberDetails);
   const selectedFund = fundMap[memberDetails.riskTolerance] || DEMO_PORTFOLIO;
-  //console.log(fundMap,memberDetails.riskTolerance, selectedFund);
+  //console.log('building portfolio for user', member.safeWalletAddress);
+  //console.log(memberDetails.riskTolerance, selectedFund);
   const safeAccountConfig = {
     safeAddress: member.safeWalletAddress,
   };
@@ -668,9 +670,10 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   }
   console.log('building portfolio for user', member.safeWalletAddress);
   const portfolio = selectedFund.portfolio;
-  const tokenAllocations = distributeWeights(portfolio);
-  const tokenAddresses = portfolio.map((item) => getAddress(item.address));
-  const tokenPoolFees = portfolio.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
+  const activeItems = portfolio.filter((item) => item.active);
+  const tokenAllocations = distributeWeights(activeItems);
+  const tokenAddresses = activeItems.map((item) => getAddress(item.address));
+  const tokenPoolFees = activeItems.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
 
   const unencodedData = {
     abi: XUCREINDEXFUNDS_ABI.abi,
@@ -702,10 +705,15 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
     ]
   } as CreateTransactionProps;
   console.log('UserDisbursementTransactionData');
-  
-  const secondTransaction = await safe4337Pack.createTransaction({
-    transactions: userDisbursementTransactionData.transactions
-  });
+  let secondTransaction;
+  //try { 
+    secondTransaction = await safe4337Pack.createTransaction({
+      transactions: userDisbursementTransactionData.transactions
+    });
+  // } catch (err) {
+  //   console.log(err);
+  //   throw err;
+  // }
 
   console.log('secondTransaction complete');
   const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
@@ -841,6 +849,7 @@ async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, 
 
 async function validateCurrentERC20Allowance (chainid: number, safeAddress: string, memberContribution: bigint, safe4337Pack: Safe4337Pack) {
   const _allowance = await getCurrentERC20Allowance(chainid, safeAddress);
+  //console.log(_allowance, memberContribution, _allowance < memberContribution);
   if (_allowance < memberContribution) {
     await createERC20Approval(chainid, process.env.NEXT_PUBLIC_SAFE_RPC_URL as string, safe4337Pack);
   }

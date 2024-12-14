@@ -5,12 +5,13 @@ import { useEffect, useMemo, useState } from 'react';
 // Removed fetchInfo import
 // import { fetchInfo } from '@/service/lambda';
 import truncateEthAddress from 'truncate-eth-address';
-import { Token, useTokenListRaw } from '@/hooks/useTokenList';
+import { useTokenListRaw } from '@/hooks/useTokenList';
 import { useAccount } from 'wagmi';
 import { getAddress, isAddress, zeroAddress } from 'viem';
 
 // Import Alchemy SDK
 import { getTokenMetadata } from '@/service/alchemy';
+import { Token } from '@/service/types';
 
 interface AutocompleteProps {
   onSelect: (token: Token | null) => void;
