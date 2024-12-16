@@ -108,7 +108,7 @@ export default function DashboardLayout({
             <DashboardHeader />
             {!safeWallet ?
               <OpaqueCard><EmptySafeWallet id={user ? user.id : ''} refresh={syncSafeWallet} /></OpaqueCard> : 
-              needsToTransfer ?
+              needsToTransfer && false ?
                 <OpaqueCard><TransferSafeWallet onTransferSafe={handeTransferOwnership} /></OpaqueCard> :
                 <>
                   <Stack direction={matches ? 'row' : 'column'} spacing={8} justifyContent={'space-between'} px={5}>
