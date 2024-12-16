@@ -1,9 +1,9 @@
 'use server';
-import { Token } from '@/hooks/useTokenList';
 import { Alchemy, Network } from 'alchemy-sdk';
 import { getAddress, isAddress, createPublicClient, http, Address } from 'viem';
 import abi from '@openzeppelin/contracts/build/contracts/ERC20.json';
 import { isDev } from './constants';
+import { Token } from './types';
 
 // Map chainId to Alchemy Network
 const getAlchemyNetwork = (chainId: number): Network => {

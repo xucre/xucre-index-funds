@@ -11,7 +11,7 @@ import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation, normalizeDevChains } from "@/service/helpers";
-import UniswapPoolChecker, { PoolData } from "@/components/uniswap/poolChecker";
+import UniswapPoolChecker from "@/components/uniswap/poolChecker";
 import { useSnackbar } from "notistack";
 import IndexFundForm from "@/components/uniswap/indexFundForm";
 import { IndexFund } from "@/service/types";

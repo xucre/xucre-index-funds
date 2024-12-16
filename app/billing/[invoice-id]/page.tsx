@@ -16,6 +16,7 @@ import InvoiceDetail from "@/components/billing/InvoiceDetail";
 import { useEscrowBalance } from "@/hooks/useEscrowBalance";
 import { useLanguage } from "@/hooks/useLanguage";
 import languageData, { Language } from '@/metadata/translations';
+import { useStripeBilling } from "@/hooks/useStripeBilling";
 
 // components/LoadingIndicator.tsx
 export default function InvoicePage() {
@@ -29,6 +30,7 @@ export default function InvoicePage() {
   const [escrowWallet, setEscrowWallet] = useState('');
   const [trigger, setTrigger] = useState(false);
   const {balance: usdcBalance, refresh} = useEscrowBalance(organization ? organization.id : '');
+  const { subscription } = useStripeBilling();
   //const billingOnboarded = false;
 
   const saveMembers = async (members) => {
@@ -48,15 +50,25 @@ export default function InvoicePage() {
 
   const fetchInvoiceDetails = async () => {
     if (!organization) return;
-    const details = (await getInvoiceDetails(organization.id, invoiceId)) as Invoice;
-    setInvoiceDetailsState(details);
+    try {
+      const details = (await getInvoiceDetails(organization.id, invoiceId)) as Invoice;
+      if (!details) {
+        createInvoice();
+      } else {
+        setInvoiceDetailsState(details);
+      }
+    } catch (err) { 
+      console.log(err);
+      createInvoice();
+    }
+    
   }
 
   const createInvoice = async () => {
     if (!organization) return;
     const escrowWallet = await getOrganizationSafeAddress(organization.id, 'escrow');
     const newInvoice: Invoice = {
-      id: await uid(16),
+      id: invoiceId,
       organizationId: organization.id,
       escrowWallet: escrowWallet,
       status: InvoiceStatuses.Draft,
@@ -70,14 +82,13 @@ export default function InvoicePage() {
     };
     await setInvoiceDetails(organization.id, newInvoice.id, newInvoice);
     setInvoiceDetailsState(newInvoice);
-    router.push(`/billing/${newInvoice.id}`);
   }
 
   useEffect(() => {
     if (invoiceId !== 'new') {
       fetchInvoiceDetails();
     } else {
-      createInvoice();
+      //createInvoice();
     }
   }, [invoiceId])
 

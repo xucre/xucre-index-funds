@@ -85,19 +85,19 @@ export default function Billing() {
       {hasLoaded && 
         <Box m={5} pb={10}>
           {/* <Button onClick={handeTransferOwnership} variant="contained" color="primary">Manual Ownership Transfer</Button> */}
-          {!hasSignedUp && false && 
+          {!hasSignedUp && true && 
             <StripePricingTable />
           }
 
-          {hasLoaded && true && true && !hasEscrowAddress && !needsToTransfer &&
+          {hasLoaded && hasSignedUp && true && !hasEscrowAddress && !needsToTransfer &&
             <EmptyEscrowWallet onCreateSafe={createEscrowAddress} />
           }
           
-          {hasLoaded && true && true && hasEscrowAddress && needsToTransfer &&
+          {hasLoaded && hasSignedUp && true && hasEscrowAddress && needsToTransfer &&
             <TransferEscrowWallet onTransferSafe={handeTransferOwnership} />
           }
 
-          {hasLoaded && true && true && hasEscrowAddress && !needsToTransfer &&
+          {hasLoaded && hasSignedUp && true && hasEscrowAddress && !needsToTransfer &&
             <>
               <BillingHeader portalSession={portalSession} />
               <InvoiceTable />

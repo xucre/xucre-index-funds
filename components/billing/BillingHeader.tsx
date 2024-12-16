@@ -9,6 +9,7 @@ import Stripe from "stripe";
 import { useOrganization } from "@clerk/nextjs";
 import { setOrganizationSafeAddress } from "@/service/db";
 import { isDev } from "@/service/constants";
+import { uid } from "uid-promise";
 // components/LoadingIndicator.tsx
 export default function BillingHeader({ portalSession }: { portalSession: Stripe.BillingPortal.Session | null }) {
   const theme = useTheme();
@@ -17,8 +18,9 @@ export default function BillingHeader({ portalSession }: { portalSession: Stripe
   const { organization } = useOrganization();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
-  const createNewDisbursement = () => {
-    router.push('/billing/new');
+  const createNewDisbursement = async () => {
+    const id = await uid(16);
+    router.push(`/billing/${id}`);
   };
 
   const openStripePortal = () => {

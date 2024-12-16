@@ -15,7 +15,7 @@ const OnrampSessionResource = Stripe.StripeResource.extend({
       path: 'crypto/onramp_sessions',
     }),
   });
-const priceId = process.env.STRIPE_PRICE_ID;
+const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID;
 
 export async function getCustomerSubscription (organization) {
     try {
@@ -73,6 +73,35 @@ export async function createCheckout (organzationId: string) {
       return null;
   }
 };
+
+export async function createInvoice (customer: string, amount: number) {
+    try {
+        const invoice = await stripe.invoices.create({
+            customer,
+            collection_method: 'send_invoice',
+            days_until_due: 30
+        });
+
+        const item = await stripe.invoices.addLines(invoice.id, {
+            lines: [
+              {
+                description: 'Disbursement For Users',
+                amount: amount * 100,
+                quantity: 1
+              },
+              {
+                description: 'Transaction Fees',
+                amount: (amount*100)*0.05,
+                quantity: 1
+              }
+            ]
+        }) ;
+        return invoice;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
 
 export async function checkoutSuccess (sessionId) {
   try {
