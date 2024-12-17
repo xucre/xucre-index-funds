@@ -11,7 +11,7 @@ import { setOrganizationSafeAddress } from "@/service/db";
 import { isDev } from "@/service/constants";
 import { uid } from "uid-promise";
 // components/LoadingIndicator.tsx
-export default function BillingHeader({ portalSession }: { portalSession: Stripe.BillingPortal.Session | null }) {
+export default function BillingHeader({ portalSession, openPortal }: { portalSession: Stripe.BillingPortal.Session | null, openPortal: Function }) {
   const theme = useTheme();
   const router = useRouter();
   const { language } = useLanguage();
@@ -24,8 +24,9 @@ export default function BillingHeader({ portalSession }: { portalSession: Stripe
   };
 
   const openStripePortal = () => {
-    if (!portalSession) return;
-    router.push(portalSession.url)
+    // if (!portalSession) return;
+    // router.push(portalSession.url)
+    openPortal();
   }
 
   const clearSafewallet = async () => {

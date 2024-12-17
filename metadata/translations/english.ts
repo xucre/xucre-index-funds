@@ -119,10 +119,10 @@ const values : TranslationType = {
     closing: "By providing a secure, regulatory-compliant way to invest in diversified crypto assets, Xucre index funds offer an innovative solution for modern investors looking to capitalize on the benefits of decentralized finance without compromising on security or control."
   },
   Invoice: {
-    invoice_not_ready: 'Invoice is not ready for payment',
+    invoice_not_ready: 'Disbursement is not ready for payment',
     select_payment_option: 'Select a payment option',
     back_button: 'Back to Providers',
-    detail_title: 'Invoice Details',
+    detail_title: 'Disbursement Details',
     escrow_wallet: 'Escrow Wallet: ',
     total_due: 'Total Due: $',
     escrow_amount: 'Escrow Amount Available: $',
@@ -142,7 +142,7 @@ const values : TranslationType = {
     status_pending: 'Pending',
     status_cancelled: 'Cancelled',
     status_draft: 'Draft',
-    table_header_id: 'Invoice ID',
+    table_header_id: 'Disbursement ID',
     table_header_status: 'Status',
     table_header_due_date: 'Due Date',
     table_header_total_due: 'Total Due',

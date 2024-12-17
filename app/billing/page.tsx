@@ -23,7 +23,7 @@ export default function Billing() {
   const theme = useTheme();
   const params = useSearchParams();
   const { organization } = useOrganization();
-  const { hasSignedUp, seatCount, portalSession, reset } = useStripeBilling();
+  const { hasSignedUp, seatCount, portalSession, reset, openPortal } = useStripeBilling();
   const session = params.get('session');
   const [trigger, setTrigger] = useState(false);
   const { escrowAddress, hasEscrowAddress, createEscrowAddress, loading: walletLoading, refresh } = useOrganizationWallet();
@@ -85,21 +85,21 @@ export default function Billing() {
       {hasLoaded && 
         <Box m={5} pb={10}>
           {/* <Button onClick={handeTransferOwnership} variant="contained" color="primary">Manual Ownership Transfer</Button> */}
-          {!hasSignedUp && true && 
+          {!hasSignedUp && false && 
             <StripePricingTable />
           }
 
-          {hasLoaded && hasSignedUp && true && !hasEscrowAddress && !needsToTransfer &&
+          {hasLoaded && true && true && !hasEscrowAddress && !needsToTransfer &&
             <EmptyEscrowWallet onCreateSafe={createEscrowAddress} />
           }
           
-          {hasLoaded && hasSignedUp && true && hasEscrowAddress && needsToTransfer &&
+          {hasLoaded && true && true && hasEscrowAddress && needsToTransfer &&
             <TransferEscrowWallet onTransferSafe={handeTransferOwnership} />
           }
 
-          {hasLoaded && hasSignedUp && true && hasEscrowAddress && !needsToTransfer &&
+          {hasLoaded && true && true && hasEscrowAddress && !needsToTransfer &&
             <>
-              <BillingHeader portalSession={portalSession} />
+              <BillingHeader portalSession={portalSession} openPortal={openPortal} />
               <InvoiceTable />
             </>
           }

@@ -46,6 +46,49 @@ export async function getCustomerSubscription (organization) {
     }
 };
 
+export async function createCustomer(organizationName: string, userEmail: string, organizationId: string) {
+    try {
+        const customer = await stripe.customers.create({
+            name: organizationName,
+            email: userEmail,
+            metadata: {
+                organization: organizationId
+            }
+        });
+        return customer.id;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
+
+export async function getCustomer (organizationId: string) {
+    try {
+        const customer = await stripe.customers.search({
+          query: "metadata['organization']:'" + organizationId + "'"
+        });
+        if (customer.data.length > 0) {
+          return customer.data[0];
+        }
+        return null;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
+
+export async function createPortalLink (customerId: string) {
+    try {
+        const session = await stripe.billingPortal.sessions.create({
+            customer: customerId,
+            return_url: `http://${DOMAIN}/billing`
+        });
+        return session.url;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
 
 export async function createCheckout (organzationId: string) {
   try {

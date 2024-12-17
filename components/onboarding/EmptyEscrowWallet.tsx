@@ -27,7 +27,7 @@ const EmptyEscrowWallet = ({ onCreateSafe }) => {
       <Typography variant="body1" color="textSecondary">
         {languageData[language].Onboarding.empty_escrow_description}
       </Typography>
-      {isConnected && 
+      {true && 
         <Button
           variant="contained"
           color="primary"
@@ -38,7 +38,7 @@ const EmptyEscrowWallet = ({ onCreateSafe }) => {
         </Button>  
       } 
       {
-        !isConnected &&
+        !isConnected && false && 
         <AccountButton />
       }
       
