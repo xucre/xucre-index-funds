@@ -46,6 +46,7 @@ export function getChainNameRainbowKit(_chainId: number) : string {
 export function convertHexToNumber(hex: string) {
   try {
     //return encoding.hexToNumber(hex);
+    return hex;
   } catch (e) {
     return hex;
   }
@@ -54,6 +55,7 @@ export function convertHexToNumber(hex: string) {
 export function convertHexToUtf8(hex: string) {
   try {
     //return encoding.hexToUtf8(hex);
+    return hex;
   } catch (e) {
     return hex;
   }

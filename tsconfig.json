@@ -13,6 +13,7 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
     "module": "esnext",
+    "baseUrl": "./",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -26,7 +27,13 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "@/components/*": ["components/*"],
+      "@/service/*": ["service/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/config/*": ["config/*"],
+      "@/context/*": ["context/*"],
+      "@/metadata/*": ["metadata/*"],
     }
   },
   "include": [

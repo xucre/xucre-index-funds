@@ -6,7 +6,7 @@ import { isDev } from './constants';
 import { Token } from './types';
 
 // Map chainId to Alchemy Network
-const getAlchemyNetwork = (chainId: number): Network => {
+export const getAlchemyNetwork = (chainId: number): Network => {
   switch (chainId) {
     case 1:
       return Network.ETH_MAINNET;
@@ -34,7 +34,7 @@ export const getTokenMetadata = async (address: string, chainId: number) => {
   const alchemyApiKey = process.env.ALCHEMY_API_KEY;
 
   if (!alchemyApiKey) {
-    console.error('Alchemy API key not set');
+    console.log('Alchemy API key not set', alchemyApiKey);
     return;
   }
 
@@ -47,7 +47,7 @@ export const getTokenMetadata = async (address: string, chainId: number) => {
   };
 
   const alchemy = new Alchemy(alchemySettings);
-  console.log(alchemy.config.network, tokenAddress);
+  //console.log(alchemy.config.network, tokenAddress);
   const tokenMetadata = await alchemy.core.getTokenMetadata(tokenAddress);
 
   if (tokenMetadata) {
