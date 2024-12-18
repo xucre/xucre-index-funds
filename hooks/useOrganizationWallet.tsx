@@ -54,7 +54,7 @@ export function useOrganizationWallet() {
         setOrganizationSafeAddress(organization.id, safeAddress, 'escrow');
         setEscrowAddress(safeAddress);
 
-        setLoading(true);
+        setLoading(false);
     }
     const createSelfAddress = async () => {
         if (!organization) return;

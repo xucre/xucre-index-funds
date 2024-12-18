@@ -93,9 +93,9 @@ export default function Billing() {
             <EmptyEscrowWallet onCreateSafe={createEscrowAddress} />
           }
           
-          {hasLoaded && true && true && hasEscrowAddress && needsToTransfer &&
+          {/* {hasLoaded && true && true && hasEscrowAddress && needsToTransfer &&
             <TransferEscrowWallet onTransferSafe={handeTransferOwnership} />
-          }
+          } */}
 
           {hasLoaded && true && true && hasEscrowAddress && !needsToTransfer &&
             <>
