@@ -62,7 +62,7 @@ const OrganizationsTable: React.FC = () => {
   //     owner: '',
   //     threshold: 1,
   //     singleOwner: true,
-  //     chainid: 137,
+  //     chainid: globalChainId,
   //     id,
   //   } as CreateAccountOptions;
   //   const safeAddress = await createAccount(callParams);

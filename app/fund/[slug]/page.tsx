@@ -21,7 +21,7 @@ import OpaqueCard from "@/components/ui/OpaqueCard";
 import demoPortfolio from "@/public/demoPortfolio.json";
 import { useUser } from "@clerk/nextjs";
 import { getAllFunds, getFundDetails } from "@/service/db";
-import { isDev } from "@/service/constants";
+import { globalChainId, isDev } from "@/service/constants";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 
@@ -36,11 +36,11 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   //const _indexFund = JSON.parse(atob(decodeURIComponent(slugString))) as IndexFund;
   const textColor = getTextColor(theme);
   // const { isConnected, chainId, isConnecting, isReconnecting } = useAccount();
-  // const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || 137) });
+  // const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || globalChainId) });
   // const _indexFund = indexFunds.find((fund) => {
   //   return languages.reduce((returnVal, lang) => {
   //     if (returnVal) return returnVal;
-  //     return encodeURIComponent(fund.name[lang]) === slugString || normalizeDevChains(chainId || 137) === fund.chainId;
+  //     return encodeURIComponent(fund.name[lang]) === slugString || normalizeDevChains(chainId || globalChainId) === fund.chainId;
   //   }, false);
   // });
 
@@ -56,7 +56,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const getPrices = async () => {
     if (!_indexFund) return;
     const addresses = _indexFund.portfolio.map((item) => item.address).join(',');
-    const _chainId = normalizeDevChains(137);
+    const _chainId = normalizeDevChains(globalChainId);
     const prices = await getTokenPrices(`addresses=${addresses}&chainId=${_chainId}`);
     //console.log('getPrices', prices);
     try {
@@ -99,9 +99,9 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const allowanceAmount = allowance ? (allowance as BigInt) <= amount : true;
   //console.log(allowanceAmount, allowanceString)
   const retrieveFunds = async () => {
-    const funds = await getAllFunds(isDev ? 1155111: 137);
+    const funds = await getAllFunds(isDev ? 1155111: globalChainId);
     const fundDetailList = await Promise.all( funds.map(async (fund) => {
-        return await getFundDetails(isDev ? 1155111: 137, fund);
+        return await getFundDetails(isDev ? 1155111: globalChainId, fund);
     }));
     //console.log(fundDetailList);
     const fund = fundDetailList.reduce((acc, fund) => {

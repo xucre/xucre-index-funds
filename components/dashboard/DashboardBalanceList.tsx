@@ -12,12 +12,12 @@ import DashboardTransaction from "./DashboardTransaction";
 import OpaqueCard from "../ui/OpaqueCard";
 import { getTextColor } from "@/service/theme";
 import { fetchInfo, getTokenInfo } from "@/service/lambda";
-import { getChainNameRainbowKit } from '../../service/helpers';
 import { TokenDetails } from "@/service/types";
 import DashboardBalanceItem from "./DashboardBalanceItem";
 import { isAddressEqual } from "viem";
 import Dashboard from '../../app/dashboard/page';
 import { getTokenMetadata, setTokenMetadata } from "@/service/db";
+import { globalChainId } from "@/service/constants";
 
 const BASEURL = 'https://xucre-public.s3.sa-east-1.amazonaws.com/';// + coinIconNames[token.chainId as keyof typeof coinIconNames].toLowerCase() + '.png'
 
@@ -38,21 +38,21 @@ export default function DashboardBalanceList({ address }: { address: string }) {
     setLoaded(false);
     const tokenDetails = await Promise.all(balances.map(async (balance) => {
       let token: TokenDetails;
-      const token1 = await getTokenMetadata(137, balance.contract_address);
+      const token1 = await getTokenMetadata(globalChainId, balance.contract_address);
       if (token1) {
         token = token1 as TokenDetails;
       } else {
-        token = await getTokenInfo(137, balance.contract_address);
-        await setTokenMetadata(137, balance.contract_address, token as TokenDetails);
+        token = await getTokenInfo(globalChainId, balance.contract_address);
+        await setTokenMetadata(globalChainId, balance.contract_address, token as TokenDetails);
       }
       if (isAddressEqual(balance.contract_address, '0x924442A46EAC25646b520Da8D78218Ae8FF437C2')) {
         return { ...token, logo: BASEURL + 'xucre.png' };
       }
       if (!token.logo && isAddressEqual(balance.contract_address, "0x0000000000000000000000000000000000001010")) {
-        return { ...token, logo: BASEURL + coinIconNames[137] + '.png', defaultLogo: false };
+        return { ...token, logo: BASEURL + coinIconNames[globalChainId] + '.png', defaultLogo: false };
       }
       if (!token.logo) {
-        return { ...token, logo: BASEURL + coinIconNames[137] + '.png', defaultLogo: true };
+        return { ...token, logo: BASEURL + coinIconNames[globalChainId] + '.png', defaultLogo: true };
       }
       return token;
     }));

@@ -1,11 +1,12 @@
 import { transferSignerOwnership } from "@/service/safe";
 import { getOrganizationMembers, getAllOrganizations } from "@/service/clerk";
 import { getSafeAddress, getOrganizationSafeAddress } from "@/service/db";
+import { globalChainId } from "@/service/constants";
 
 const main = async () => {
   try {
     // Replace with your actual chain ID
-    const CHAIN_ID = 137; // Example: 137 for Polygon Mainnet
+    const CHAIN_ID = globalChainId; // Example: globalChainId for Polygon Mainnet
 
 
     // Retrieve all organization IDs

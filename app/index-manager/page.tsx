@@ -16,6 +16,7 @@ import { setFundDetails } from "@/service/db";
 import { v4 as uuidv4 } from 'uuid';
 import { IndexFund } from "@/service/types";
 import EmptyFundDetailState from "@/components/admin/EmptyFundDetailState";
+import { globalChainId } from "@/service/constants";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 export default function IndexFundBase() {
@@ -42,7 +43,7 @@ export default function IndexFundBase() {
         sourceToken: undefined,
         portfolio: []
     };
-    await setFundDetails(137, newFundId, placeholderFund);
+    await setFundDetails(globalChainId, newFundId, placeholderFund);
   };
 
   return (

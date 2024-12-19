@@ -36,7 +36,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, rel
         //     const txDetails = {
         //         rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
         //         owner: '',
-        //         chainid: isDev ? 1155111: 137,
+        //         chainid: isDev ? 1155111: globalChainId,
         //         id: organization.id,
         //         invoice
         //     } as CreateInvoiceOptions;

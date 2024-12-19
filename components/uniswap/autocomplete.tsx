@@ -12,6 +12,7 @@ import { getAddress, isAddress, zeroAddress } from 'viem';
 // Import Alchemy SDK
 import { getTokenMetadata } from '@/service/alchemy';
 import { Token } from '@/service/types';
+import { globalChainId } from '@/service/constants';
 
 interface AutocompleteProps {
   onSelect: (token: Token | null) => void;
@@ -80,7 +81,7 @@ const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
       console.log('Fetching token metadata for', query);
       if (query && isAddress(query)) {
         try {
-          const additionalToken = await getTokenMetadata(query, chainId || 137);
+          const additionalToken = await getTokenMetadata(query, chainId || globalChainId);
           console.log(additionalToken);
           if (additionalToken) {
             setAdditionalToken(additionalToken);

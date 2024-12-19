@@ -13,6 +13,7 @@ import { TokenDetails } from '@/service/types';
 import { getTokenMetadata, setTokenMetadata } from '@/service/db';
 import { getTokenInfo } from '@/service/lambda';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { globalChainId } from '@/service/constants';
 
 dayjs.extend(relativeTime)
 
@@ -45,14 +46,14 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
     if (transactionDetails === null) return;
     const transferList = await Promise.all(transactionDetails.erc20Transfers.map(async (transfer) => {
       let token: TokenDetails;
-      const token1 = await getTokenMetadata(137,  transfer.token);
+      const token1 = await getTokenMetadata(globalChainId,  transfer.token);
       if (token1) {
         token = token1 as TokenDetails;
       } else {
-        token = await getTokenInfo(137,  transfer.token);
-        await setTokenMetadata(137,  transfer.token, token as TokenDetails);
+        token = await getTokenInfo(globalChainId,  transfer.token);
+        await setTokenMetadata(globalChainId,  transfer.token, token as TokenDetails);
       }
-      //const token = await getTokenMetadata(137, transfer.token);
+      //const token = await getTokenMetadata(globalChainId, transfer.token);
       return { ...transfer, tokenMetadata: token as TokenDetails };
     }));
     // console.log('dashboardTransaction-enrichTransfers');

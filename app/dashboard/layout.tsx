@@ -3,16 +3,17 @@ import DashboardContainer from "@/components/dashboard/DashboardContainer";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardNavigation from "@/components/dashboard/DashboardNavigation";
 import DashboardNews from "@/components/dashboard/DashboardNews";
+import EmptyDelegateOnSafe from "@/components/onboarding/EmptyDelegateOnSafe";
 import EmptyProfileState from "@/components/onboarding/EmptyProfile";
 import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import TransferSafeWallet from "@/components/onboarding/TransferSafeWallet";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import { useSFDC } from "@/hooks/useSFDC";
-import { isDev } from "@/service/constants";
+import { globalChainId, isDev } from "@/service/constants";
 import { getSafeAddress, setSafeAddress } from "@/service/db";
 import { getDashboardBorderColor } from "@/service/helpers";
-import { getSafeOwner, transferSignerOwnership } from "@/service/safe";
+import { getSafeOwner, transferSignerOwnership, getSafeProposer } from "@/service/safe";
 import { updateSafeWalletDetails } from "@/service/sfdc";
 import { useUser } from "@clerk/nextjs";
 import { Box, Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material"
@@ -20,17 +21,6 @@ import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 //import '@covalenthq/goldrush-kit/styles.css'
-
-const NewsBlock = () => {
-  const theme = useTheme();
-  const borderColor = getDashboardBorderColor(theme);
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
-  return (
-    <Stack direction={'column'} spacing={2} px={2} maxWidth={!matches ? '100%' : '35%'}>
-      <DashboardNews />
-    </Stack>
-  )
-}
 
 // components/LoadingIndicator.tsx
 export default function DashboardLayout({
@@ -41,7 +31,7 @@ export default function DashboardLayout({
   const theme = useTheme();
   const isSignedUp = false;
   const { sfdcUser, isLoaded } = useSFDC();
-  const { address, chainId } = useAccount();
+  const { address, chainId, isConnected } = useAccount();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   //const signer = useWalletClient({ chainId })
   const router = useRouter();
@@ -49,10 +39,12 @@ export default function DashboardLayout({
   const { user } = useUser();
   const [safeWallet, setSafeWallet] = useState<string | null>(null);
   const [needsToTransfer, setNeedsToTransfer] = useState(false);
+  const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
 
   const syncSafeWallet = async () => {
     if (!user) return;
-      const walletAddress = await getSafeAddress(user.id);
+    setSafeWallet(null);
+    const walletAddress = await getSafeAddress(user.id);
     if (walletAddress) {
       setSafeWallet(walletAddress);
     } else {
@@ -62,7 +54,7 @@ export default function DashboardLayout({
 
   const handleCheckSafeOwnership = async () => {
     if (!safeWallet) return;
-    const owners = await getSafeOwner(137, safeWallet);
+    const owners = await getSafeOwner(globalChainId, safeWallet);
     console.log('safe owners', owners);
     const hasCorrectOwner = owners.includes(process.env.NEXT_PUBLIC_SIGNER_SAFE_ADDRESS_POLYGON as string);
     if (!hasCorrectOwner) {
@@ -71,15 +63,33 @@ export default function DashboardLayout({
     }
   }
 
+  const handleCheckSafeProposer = async () => {
+    if (!safeWallet) return;
+    const params = {
+      chainid: globalChainId,
+      safeWallet: safeWallet
+    }
+    const delegates = await getSafeProposer(params);
+    console.log('safe delegates', delegates);
+    if (delegates.count === 0) {
+      setNeedsToSetProposer(true);
+    } else {
+      setNeedsToSetProposer(false);
+    }
+    // const hasCorrectProposer = proposer === address;
+    // if (!hasCorrectProposer) {
+    //   setNeedsToSetProposer(true);
+    // }
+  }
+
   const handeTransferOwnership = async () => {
     if (!safeWallet) return;
     await transferSignerOwnership({
-      chainid: 137,
+      chainid: globalChainId,
       safeWallet: safeWallet
     });
     setNeedsToTransfer(false);
   }
-
 
   useEffect(() => {
     if (user && user.id) {
@@ -91,7 +101,7 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (safeWallet && user) {
-      handleCheckSafeOwnership();
+      handleCheckSafeProposer();
     }
   }, [safeWallet])
 
@@ -103,20 +113,20 @@ export default function DashboardLayout({
           <OpaqueCard><EmptyProfileState onCreateProfile={(() => { router.push('/settings/portfolio') })} /></OpaqueCard>
         }
 
-        {profileFilled &&
+        {profileFilled && 
           <>
             <DashboardHeader />
             {!safeWallet ?
-              <OpaqueCard><EmptySafeWallet id={user ? user.id : ''} refresh={syncSafeWallet} /></OpaqueCard> : 
-              needsToTransfer && false ?
-                <OpaqueCard><TransferSafeWallet onTransferSafe={handeTransferOwnership} /></OpaqueCard> :
+                <OpaqueCard><EmptySafeWallet id={user ? user.id : ''} refresh={syncSafeWallet} /></OpaqueCard> : 
+              needsToSetProposer ?
+                <OpaqueCard><EmptyDelegateOnSafe id={safeWallet ? safeWallet : ''} refresh={syncSafeWallet} /></OpaqueCard> :
                 <>
                   <Stack direction={matches ? 'row' : 'column'} spacing={8} justifyContent={'space-between'} px={5}>
                     <Stack direction={'column'} spacing={2} flexGrow={2}>
                       <DashboardNavigation />
                       {children}
                     </Stack>
-                    <NewsBlock />
+                    <DashboardNews />
                   </Stack>
                 </>
             }

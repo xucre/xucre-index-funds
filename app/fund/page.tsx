@@ -29,11 +29,11 @@ export default function IndexFunds() {
   const { sfdcUser, isLoaded } = useSFDC();
   // const [selectedFund, setSelectedFund] = useState(null as IndexFund | null);
   // const { isConnected, address, chainId } = useAccount();
-  // const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || 137) });
+  // const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || globalChainId) });
   // useEffect(() => {
   //   if (indexFunds.length > 0) {
   //     indexFunds.forEach((fund) => {
-  //       setFundDetails(137, fund.name[0], fund);
+  //       setFundDetails(globalChainId, fund.name[0], fund);
   //     })
   //   }
   // }, [indexFunds])
@@ -64,7 +64,7 @@ export default function IndexFunds() {
 
   //if (!isConnected) return <WalletNotConnected />;
   //if (!isSubscribed) return <Campfire setIsLocked={() => { }} />;
-  //if (!chainValidation(chainId || 137)) return <WalletNotConnected />;
+  //if (!chainValidation(chainId || globalChainId)) return <WalletNotConnected />;
   // return (
   //   <Box pb={4}>
   //     <Stack justifyContent={'center'} alignItems={'center'}>

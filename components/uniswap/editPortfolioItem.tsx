@@ -45,6 +45,7 @@ const poolContractMap = {
 }
 
 const USDT = process.env.NEXT_PUBLIC_USDT_ADDRESS as string;
+const USDC = process.env.NEXT_PUBLIC_USDC_ADDRESS as string;
 const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, portfolioItem, onSubmit }) => {
   const [item, setItem] = useState<PortfolioItem>(portfolioItem);
   const [currentLanguage, setCurrentLanguage] = useState<Language>(Language.EN);

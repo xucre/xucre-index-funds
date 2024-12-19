@@ -6,6 +6,7 @@ import { IndexFund } from '@/service/types';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useParams, useRouter } from 'next/navigation';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { globalChainId } from '@/service/constants';
 
 const IndexManagerList = () => {
     const router = useRouter();
@@ -16,10 +17,10 @@ const IndexManagerList = () => {
 
     useEffect(() => {
         const fetchFunds = async () => {
-        const fundIds = await getAllFunds(137);
+        const fundIds = await getAllFunds(globalChainId);
         const fundDetails = await Promise.all(
             fundIds.map(async (id) => {
-                const details = await getFundDetails(137, id);
+                const details = await getFundDetails(globalChainId, id);
                 return { id, ...details };
             })
         );
@@ -43,7 +44,7 @@ const IndexManagerList = () => {
             sourceToken: undefined,
             portfolio: []
         };
-        await setFundDetails(137, newFundId, placeholderFund);
+        await setFundDetails(globalChainId, newFundId, placeholderFund);
         setFunds([...funds, placeholderFund]);
     };
 

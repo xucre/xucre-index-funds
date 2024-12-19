@@ -5,7 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useOrganization } from '@clerk/nextjs';
 import { IndexFund, Invoice, InvoiceStatuses } from '@/service/types';
-import { isDev } from '@/service/constants';
+import { globalChainId, isDev } from '@/service/constants';
 import { CreateInvoiceOptions, createInvoiceTransaction, createInvoiceTransactionV2, executeUserSpotExecution } from '@/service/safe';
 import { getAllFunds, getFundDetails, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -55,7 +55,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
             const txDetails = {
                 rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
                 owner: '',
-                chainid: isDev ? 1155111: 137,
+                chainid: isDev ? 1155111: globalChainId,
                 id: organization.id,
                 invoice,
                 safeAddress: invoice.escrowWallet
@@ -88,9 +88,9 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
         setSteps(prev => ({ ...prev, executing: 'loading' }));
         
             // Get funds per risk tolerance
-            const funds = await getAllFunds(isDev ? 1155111: 137);
+            const funds = await getAllFunds(isDev ? 1155111: globalChainId);
             const fundDetailList = await Promise.all( funds.map(async (fund) => {
-                return await getFundDetails(isDev ? 1155111: 137, fund);
+                return await getFundDetails(isDev ? 1155111: globalChainId, fund);
             }));
             const fundMap = fundDetailList.reduce((acc, fund) => {
                 if (!fund.toleranceLevels || fund.toleranceLevels.length === 0) return acc;
@@ -106,7 +106,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
                         setCurrentCount(prev => prev + 1);
                         return;
                     }
-                    await executeUserSpotExecution(member, process.env.NEXT_PUBLIC_SAFE_RPC_URL as string, isDev ? 1155111: 137, invoice.id, fundMap);
+                    await executeUserSpotExecution(member, process.env.NEXT_PUBLIC_SAFE_RPC_URL as string, isDev ? 1155111: globalChainId, invoice.id, fundMap);
                     setCurrentCount(prev => prev + 1);
                     return;
                 } catch (err) {

@@ -215,6 +215,9 @@ const values : TranslationType = {
     transfer_safe: 'Transfer Safe',
     transfer_safe_description: 'It looks like you need to transfer ownership of your Safe to complete onboarding. Let\'s get started!',
     transfer_safe_button: 'Transfer',
+    empty_delegate: 'No Delegate found',
+    empty_delegate_description: 'It looks like you haven\'t linked your wallet with your Safe. Let\'s get started!',
+    empty_delegate_button: 'Link Wallet',
   },
   Organization: {
     organization_member_table_user_id: 'User ID',

@@ -42,18 +42,21 @@ export default function DashboardNews() {
   }, [])
   const newsList = news.length < 4 ? news : news.slice(0, 3);
   return (
-    <Stack direction={'column'} spacing={2} pt={0}>
-      {/*<Typography variant={'h6'} color={textColor}>News</Typography>*/}
-      {news.length > 0 ?
-        newsList.map((item, index) => (
-          <DashboardNewsCard key={index} publishDate={dayjs(item.isoDate).format('DD/MM/YYYY')} title={item.title} text={item.content} url={item.link} />
-        )) :
-        <>
-          <Skeleton variant="rounded" width={210} height={100} />
-          <Skeleton variant="rounded" width={210} height={100} />
-          <Skeleton variant="rounded" width={210} height={100} />
-        </>
-      }
+
+    <Stack direction={'column'} spacing={2} px={2} maxWidth={!matches ? '100%' : '35%'}>
+      <Stack direction={'column'} spacing={2} pt={0}>
+        {/*<Typography variant={'h6'} color={textColor}>News</Typography>*/}
+        {news.length > 0 ?
+          newsList.map((item, index) => (
+            <DashboardNewsCard key={index} publishDate={dayjs(item.isoDate).format('DD/MM/YYYY')} title={item.title} text={item.content} url={item.link} />
+          )) :
+          <>
+            <Skeleton variant="rounded" width={210} height={100} />
+            <Skeleton variant="rounded" width={210} height={100} />
+            <Skeleton variant="rounded" width={210} height={100} />
+          </>
+        }
+      </Stack>
     </Stack>
   );
 };

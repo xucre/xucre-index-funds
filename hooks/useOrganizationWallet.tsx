@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import { getOrganizationSafeAddress, setOrganizationSafeAddress } from '@/service/db';
 import { createAccount, CreateAccountOptions, createAccountV2 } from '@/service/safe';
-import { isDev } from '@/service/constants';
+import { globalChainId, isDev } from '@/service/constants';
 
 export function useOrganizationWallet() {
     const {organization} = useOrganization();
@@ -47,7 +47,7 @@ export function useOrganizationWallet() {
             owner: '',
             threshold: 1,
             id: organization.id,
-            chainid: 137
+            chainid: globalChainId
           } as CreateAccountOptions;
         console.log('createEscrowAddress');
         const safeAddress = await createAccount(safePayload);

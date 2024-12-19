@@ -13,13 +13,13 @@ import {
 } from '@safe-global/sdk-starter-kit'
 import { SafeSignature } from '@safe-global/types-kit'
 
-import { isDev } from './constants';
+import { globalChainId, isDev } from './constants';
 import { polygon, sepolia } from 'viem/chains'
-import { ByteArray, Client, defineChain, encodeFunctionData, getAddress, parseUnits } from 'viem';
+import { ByteArray, Chain, Client, ClientConfig, defineChain, EIP1193RequestFn, encodeFunctionData, getAddress, parseUnits, TransportConfig } from 'viem';
 import { mainnetTrustedSetupPath } from 'viem/node'
 import { privateKeyToAccount } from 'viem/accounts';
 import { createSmartAccountClient,  } from "permissionless"
-import { createPublicClient, getContract, http, parseEther } from "viem"
+import { createPublicClient, createWalletClient, getContract, http, parseEther } from "viem"
 import { createPimlicoClient } from 'permissionless/clients/pimlico'
 import type { ToSafeSmartAccountParameters } from 'permissionless/accounts'
 import {
@@ -37,7 +37,7 @@ import { writeContract } from 'viem/actions';
 import { distributeWeights, encodeStringToBigInt } from './helpers';
 import { IndexFund, Invoice, InvoiceMember } from './types';
 import { createFailureLog, getUserDetails } from './db';
-import SafeApiKit from '@safe-global/api-kit';
+import SafeApiKit, { AddSafeDelegateProps } from '@safe-global/api-kit';
 
 const buildbear = defineChain({
   id: 19819,
@@ -180,9 +180,9 @@ export async function createAccount(options: CreateAccountOptions): Promise<stri
     )
     console.log('deploymentReceipt found');
   }
-  const allowance = await getCurrentERC20Allowance(chainid || 137, safeAddress);
+  const allowance = await getCurrentERC20Allowance(chainid || globalChainId, safeAddress);
   if (allowance < BigInt(MAX_UINT256)) {
-    await createERC20Approval(chainid || 137, rpcUrl, safe4337Pack);
+    await createERC20Approval(chainid || globalChainId, rpcUrl, safe4337Pack);
   } 
 
   
@@ -238,9 +238,9 @@ export async function createAccountV2(options: CreateAccountOptions): Promise<st
     console.log('deploymentReceipt found');
   }
 
-  const allowance = await getCurrentERC20Allowance(chainid || 137, safeAddress);
+  const allowance = await getCurrentERC20Allowance(chainid || globalChainId, safeAddress);
   if (allowance < BigInt(MAX_UINT256)) {
-    await createERC20ApprovalV2(chainid || 137, rpcUrl, safeAddress);
+    await createERC20ApprovalV2(chainid || globalChainId, rpcUrl, safeAddress);
   } 
   
   console.log('safeAddress', safeAddress);
@@ -347,7 +347,7 @@ export async function createInvoiceTransaction(options: CreateInvoiceOptions): P
     const rawApprovalData = encodeFunctionData({
       abi: ERC20_ABI,
       functionName: 'approve',
-      args: [contractAddressMap[chainid || 137], MAX_UINT256],
+      args: [contractAddressMap[chainid || globalChainId], MAX_UINT256],
     });
     const secondTransactionData = {
       transactions: [
@@ -463,7 +463,7 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
     const rawApprovalData = encodeFunctionData({
       abi: ERC20_ABI,
       functionName: 'approve',
-      args: [contractAddressMap[chainid || 137], MAX_UINT256],
+      args: [contractAddressMap[chainid || globalChainId], MAX_UINT256],
     });
     const secondTransactionData = {
       transactions: [
@@ -544,7 +544,7 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
 
   // Instantiate the API Kit
   // Use the chainId where you have the Safe account deployed
-  const apiKit = new SafeApiKit({ chainId: BigInt(chainid || 137)})
+  const apiKit = new SafeApiKit({ chainId: BigInt(chainid || globalChainId)})
   
   console.log('proposing transaction w/ apikit');
   // Propose the transaction
@@ -663,7 +663,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   console.log('IsUserSafeDeployed', isSafeDeployed);
   
   const memberContribution = parseUnits(member.salaryContribution.toString(), 6);
-  await validateCurrentERC20Allowance(chainid || 137, safeAddress, memberContribution, safe4337Pack);
+  await validateCurrentERC20Allowance(chainid || globalChainId, safeAddress, memberContribution, safe4337Pack);
   if (member.salaryContribution < .01) {
     console.log('member salary contribution too low', member.safeWalletAddress);
     return;
@@ -692,7 +692,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   const rawDisbursmentData = encodeFunctionData(unencodedData);
   //console.log('rawDisbursmentData', rawDisbursmentData);
   const userDisbursementTransactions = {
-    to: getAddress(contractAddressMap[chainid || 137]),
+    to: getAddress(contractAddressMap[chainid || globalChainId]),
     data: rawDisbursmentData,
     value: '0',
   }
@@ -810,7 +810,7 @@ async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, 
   const rawDisbursmentData = encodeFunctionData(unencodedData);
   //console.log('rawDisbursmentData', rawDisbursmentData);
   const userDisbursementTransactions = {
-    to: getAddress(contractAddressMap[chainid || 137]),
+    to: getAddress(contractAddressMap[chainid || globalChainId]),
     data: rawDisbursmentData,
     value: '0',
   }
@@ -862,7 +862,7 @@ async function getCurrentERC20Allowance (chainid: number, safeAddress: string) {
     address: getAddress(USDT_ADDRESS),
     abi: ERC20_ABI,
     functionName: 'allowance',
-    args: [safeAddress, contractAddressMap[chainid || 137]]
+    args: [safeAddress, contractAddressMap[chainid || globalChainId]]
   })
   return _allowance as bigint;
 
@@ -872,7 +872,7 @@ async function createERC20Approval (chainid: number, rpcUrl: string, safe4337Pac
   const rawApprovalData = encodeFunctionData({
     abi: ERC20_ABI,
     functionName: 'approve',
-    args: [contractAddressMap[chainid || 137], MAX_UINT256],
+    args: [contractAddressMap[chainid || globalChainId], MAX_UINT256],
   });
   const secondTransactionData = {
     transactions: [
@@ -922,7 +922,7 @@ async function createERC20ApprovalV2 (chainid: number, rpcUrl: string, safeAddre
   const rawApprovalData = encodeFunctionData({
     abi: ERC20_ABI,
     functionName: 'approve',
-    args: [contractAddressMap[chainid || 137], MAX_UINT256],
+    args: [contractAddressMap[chainid || globalChainId], MAX_UINT256],
   });
   const transaction = {
     to: getAddress(USDT_ADDRESS),
@@ -977,4 +977,52 @@ export async function getSafeOwner (chainid: number, safeAddress: string) {
   
   const owners = await safeClient.getOwners();
   return owners;
+}
+
+export interface GetProposerOptions {
+  chainid: number;
+  safeWallet: string;
+}
+
+export async function getSafeProposer (options: GetProposerOptions) {
+  const { chainid, safeWallet } = options;
+  const signer = createWalletClient({
+    account: CORP_ACCOUNT,
+    chain: chainIdToChain[chainid],
+    transport: http(),
+  });
+  const apiKit = new SafeApiKit({ chainId: BigInt(chainid || globalChainId)})
+  const conf = {
+    safeAddress: safeWallet
+  }
+  
+  const delegates = await apiKit.getSafeDelegates(conf);
+  return delegates;
+}
+
+export interface AddProposerOptions {
+  chainid: number;
+  safeWallet: string;
+  proposer: string;
+  name: string;
+}
+
+export async function addProposer(options: AddProposerOptions): Promise<void> {
+  const { chainid, safeWallet, proposer, name } = options;
+  const signer = createWalletClient({
+    account: CORP_ACCOUNT,
+    chain: chainIdToChain[chainid],
+    transport: http(),
+  });
+  const apiKit = new SafeApiKit({ chainId: BigInt(chainid || globalChainId)})
+  const conf: AddSafeDelegateProps = {
+    safeAddress: safeWallet, // Optional
+    delegateAddress: proposer,
+    delegatorAddress: CORP_PUBLIC_ADDRESS as `0x${string}`,
+    label: name,
+    signer,
+  }
+  
+  await apiKit.addSafeDelegate(conf);
+  return;
 }

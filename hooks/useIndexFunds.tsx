@@ -12,6 +12,7 @@ import { distributeWeights, normalizeDevChains } from "@/service/helpers";
 import { useLanguage } from "./useLanguage";
 import languageData, { Language } from '@/metadata/translations'
 import { PortfolioItem, IndexFund } from "@/service/types";
+import { globalChainId } from "@/service/constants";
 
 const initialSourceTokens = sourceTokensJson as unknown as PortfolioItem[];
 const initialFunds = indexFundJson as IndexFund[];
@@ -44,7 +45,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
   const { enqueueSnackbar } = useSnackbar();
   const { language } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
-  const [sourceToken, setSourceToken] = useState(initialSourceTokens.find((item) => item.chainId === normalizeDevChains(chainId || 137) && item.active));
+  const [sourceToken, setSourceToken] = useState(initialSourceTokens.find((item) => item.chainId === normalizeDevChains(chainId || globalChainId) && item.active));
   const [confirmationHash, setConfirmationHash] = useState('');
   const { data: hash, error, writeContractAsync, isPending, status, } = useWriteContract()
   const { data: sourceBalance, refetch: balanceRefetch } = useReadContract({
@@ -59,7 +60,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
     address: sourceToken ? getAddress(sourceToken.address) : zeroAddress,
     abi: erc20,
     functionName: 'allowance',
-    args: [address, contractAddressMap[chainId || 137]],
+    args: [address, contractAddressMap[chainId || globalChainId]],
     query: { enabled: false }
   })
 
@@ -78,7 +79,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
         functionName: 'approve',
         chainId,
         args: [
-          contractAddressMap[chainId || 137],
+          contractAddressMap[chainId || globalChainId],
           amount.toString(),
         ],
         chain,
@@ -116,7 +117,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
       const tokenPoolFees = portfolio.map((item) => item.sourceFees[sourceToken.address] ? item.sourceFees[sourceToken.address] : item.poolFee);
       const requestOptions = {
         abi: XucreETF.abi,
-        address: getAddress(contractAddressMap[chainId || 137]),
+        address: getAddress(contractAddressMap[chainId || globalChainId]),
         functionName: 'spotExecution',
         args: [
           address,
@@ -188,5 +189,5 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
   const balance = nativeBalance && getAddress(!sourceToken ? '' : sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006') ? nativeBalance.value : sourceBalance;
   const isNativeToken = getAddress(!sourceToken ? '' : sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006');
 
-  return { balance: balance, isNativeToken, allowance: sourceAllowance, sourceToken, sourceTokens: initialSourceTokens.filter((token) => token.chainId === normalizeDevChains(chainId || 137)), setSourceToken, approveContract, initiateSpot, hash, error, loading, status, confirmationHash }
+  return { balance: balance, isNativeToken, allowance: sourceAllowance, sourceToken, sourceTokens: initialSourceTokens.filter((token) => token.chainId === normalizeDevChains(chainId || globalChainId)), setSourceToken, approveContract, initiateSpot, hash, error, loading, status, confirmationHash }
 }

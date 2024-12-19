@@ -30,6 +30,7 @@ import EditPortfolioItem from './editPortfolioItem';
 import { useConnectedIndexFund } from '@/hooks/useIndexFunds';
 import { BuyItem } from '../portfolio/buyItem';
 import { formatUnits, parseUnits } from 'viem';
+import { globalChainId } from '@/service/constants';
 
 const IndexFundForm = ({id = null} : {id: string|null}) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -55,7 +56,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
     image: '',
     imageSmall: '',
     color: '',
-    chainId: chainId || 137,
+    chainId: chainId || globalChainId,
     portfolio: [],
     toleranceLevels: [],
     custom: true,
@@ -164,7 +165,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
         ...fund.portfolio,
         {
           name: pool.targetToken.name,
-          chainId: chainId || 137,
+          chainId: chainId || globalChainId,
           address: pool.targetToken.address,
           weight: 0,
           description: {
@@ -189,7 +190,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
         address: pool.sourceToken.address,
         decimals: pool.sourceToken.decimals,
         logo: pool.sourceToken.logo as string,
-        chainId: chainId || 137,
+        chainId: chainId || globalChainId,
         weight: 0,
         description: {
           [Language.EN]: 'Pool Description',
@@ -272,7 +273,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
       // Handle form submission logic
       const convertedToleranceLevels = toleranceLevels as ToleranceLevels[];
       const _fund = {...fund, toleranceLevels : convertedToleranceLevels};
-      await setFundDetails(137, decodeURI(id), _fund);
+      await setFundDetails(globalChainId, decodeURI(id), _fund);
       
       enqueueSnackbar('Saved.', {
         variant: 'success',
@@ -313,14 +314,14 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
   const fetchFund = async () => {
     if (!id) return;
     // Fetch fund details
-    const fundDetails = await getFundDetails(137, decodeURI(id));
+    const fundDetails = await getFundDetails(globalChainId, decodeURI(id));
     setFund({...fund, ...fundDetails});
     setToleranceLevels(fundDetails.toleranceLevels ? fundDetails.toleranceLevels.map((val) => val.toString()) : []);
   }
 
   const deleteFund = async () => {
     if (id) {
-      await delFundDetails(137, id);
+      await delFundDetails(globalChainId, id);
       router.push('/index-manager');
     }
   }
