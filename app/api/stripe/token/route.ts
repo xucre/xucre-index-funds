@@ -1,5 +1,3 @@
-import { getOrganization, updateOrganizationLicenses } from "@/service/clerk";
-import { getCustomerSubscription } from "@/service/billing/stripe";
 import { NextRequest } from "next/server"
 import Stripe from "stripe";
 

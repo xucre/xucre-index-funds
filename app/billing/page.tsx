@@ -68,7 +68,7 @@ export default function Billing() {
   useEffect(() => {
     if (trigger && hasSignedUp && organization) {
       upsertOrganization(organization.id, organization.name, seatCount);
-      updateOrganizationLicenses(organization.id, seatCount);
+      //updateOrganizationLicenses(organization.id, seatCount);
       setTrigger(false);
     }
   }, [hasSignedUp, organization])

@@ -1,6 +1,7 @@
 'use server'
 import { createClerkClient } from '@clerk/backend'
 import { Roles } from './types'
+import superagent from 'superagent';
 
 const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY })
 
@@ -55,3 +56,21 @@ export async function removeUserFromOrganization(userId: string, organizationId:
   });
 }
 
+export const bulkInviteUsers = async (organizationId: string, emailAddresses:string[], role: string) => {
+  try {
+    const payload = emailAddresses.map(email => {
+      return {
+        "email_address": email,
+        "role": role,
+        "public_metadata": { },
+        "private_metadata": { }
+      }
+    })
+    const response = await superagent.post(`https://api.clerk.com/v1/organizations/${organizationId}/invitations/bulk`).send(payload).set('Authorization', `Bearer ${process.env.CLERK_SECRET_KEY}`).withCredentials();
+    //console.log(response.body);
+    return response.body;
+  } catch (error) {
+    //console.error('Error inviting users:', error);
+    return null;
+  }
+}

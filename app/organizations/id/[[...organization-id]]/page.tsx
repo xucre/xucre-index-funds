@@ -19,6 +19,7 @@ import UserDetails from "@/components/admin/UserDetails";
 import EditOrganization from "@/components/admin/EditOrganization";
 import { Organization } from "@clerk/backend";
 import { getUserDetails } from "@/service/db";
+import BulkAddUsers from "@/components/admin/BulkAddUsers";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 const OrganizationDetails: React.FC = () => {
@@ -125,9 +126,12 @@ const OrganizationDetails: React.FC = () => {
 
       <Box mt={4}>
         <OpaqueCard>
-          <Typography variant="h6" gutterBottom>
-            Organization Members
-          </Typography>
+          <Stack direction={'row'} spacing={2} sx={{py:1}} alignItems="center" justifyContent={'space-between'}>
+            <Typography variant="h6" gutterBottom>
+              Organization Members
+            </Typography>
+            <BulkAddUsers organizationId={organizationId} />
+          </Stack>
           <Box sx={{ height: 600, width: '100%' }}>
             <DataGrid
               rows={databaseUserData}

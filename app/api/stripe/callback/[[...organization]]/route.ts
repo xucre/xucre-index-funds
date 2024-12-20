@@ -17,10 +17,10 @@ export async function GET(request: NextRequest) {
     if (_subscription && (_subscription.status === 'active' || _subscription.status === 'trialing')) {
       const seatCount = _subscription.items.data[0].quantity;
       await upsertOrganization(organizationId, organizationData.name, seatCount || 1);
-      await updateOrganizationLicenses(organizationId, seatCount || 1);
+      //await updateOrganizationLicenses(organizationId, seatCount || 1);
     } else {
       await upsertOrganization(organizationId, organizationData.name, 1);
-      await updateOrganizationLicenses(organizationId, 1);
+      //await updateOrganizationLicenses(organizationId, 1);
     }
     return Response.redirect(`${origin}/billing`);
   } catch (err) {
