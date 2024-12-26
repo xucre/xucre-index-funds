@@ -218,6 +218,11 @@ const values : TranslationType = {
     empty_delegate: 'No Delegate found',
     empty_delegate_description: 'It looks like you haven\'t linked your wallet with your Safe. Let\'s get started!',
     empty_delegate_button: 'Link Wallet',
+    empty_disclosure: 'No Disclosure found',
+    empty_disclosure_description: 'It looks like you haven\'t signed the risk disclosure yet. Let\'s get started!',
+    empty_disclosure_button: 'Sign Disclosure',
+    empty_disclosure_submit_button: 'Sign',
+    empty_disclosure_title: 'Sign Risk Disclosure',
   },
   Organization: {
     organization_member_table_user_id: 'User ID',

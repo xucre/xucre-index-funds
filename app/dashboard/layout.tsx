@@ -6,6 +6,7 @@ import DashboardNews from "@/components/dashboard/DashboardNews";
 import EmptyDelegateOnSafe from "@/components/onboarding/EmptyDelegateOnSafe";
 import EmptyProfileState from "@/components/onboarding/EmptyProfile";
 import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
+import SignRiskDisclosure from "@/components/onboarding/SignRiskDisclosure";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import TransferSafeWallet from "@/components/onboarding/TransferSafeWallet";
 import OpaqueCard from "@/components/ui/OpaqueCard";
@@ -30,7 +31,7 @@ export default function DashboardLayout({
 }) {
   const theme = useTheme();
   const isSignedUp = false;
-  const { sfdcUser, isLoaded } = useSFDC();
+  const { sfdcUser, isLoaded, refresh } = useSFDC();
   const { address, chainId, isConnected } = useAccount();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   //const signer = useWalletClient({ chainId })
@@ -105,7 +106,9 @@ export default function DashboardLayout({
     }
   }, [safeWallet])
 
+  const disclosureSigned = sfdcUser && sfdcUser.riskDisclosureSigned;
   const profileFilled = isLoaded && sfdcUser && sfdcUser.status === 'Active';
+  
   return (
     <Suspense>
       <Box width={'full'} px={5} py={4}>
@@ -113,7 +116,11 @@ export default function DashboardLayout({
           <OpaqueCard><EmptyProfileState onCreateProfile={(() => { router.push('/settings/portfolio') })} /></OpaqueCard>
         }
 
-        {profileFilled && 
+        {!disclosureSigned && profileFilled &&
+          <OpaqueCard><SignRiskDisclosure refresh={refresh}/></OpaqueCard>
+        }
+
+        {profileFilled && disclosureSigned && 
           <>
             <DashboardHeader />
             {!safeWallet ?

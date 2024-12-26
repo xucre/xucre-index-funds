@@ -1,7 +1,7 @@
 import { cookieStorage, createStorage } from '@wagmi/core'
 import { ChainMetadata } from '@/context/types';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { mainnet, celo, base, type AppKitNetwork } from '@reown/appkit/networks'
+import { mainnet, celo, base,bsc, type AppKitNetwork } from '@reown/appkit/networks'
 import { defineChain, http } from 'viem';
 
 // Get projectId at https://cloud.walletconnect.com
@@ -94,7 +94,7 @@ export function getChainMetadata(chainId: string): ChainMetadata {
   return metadata;
 }
 
-export const networks = [mainnet, ethereumDev, polygon2, celo, base,hardhat, customChain] as [AppKitNetwork, ...AppKitNetwork[]]
+export const networks = [mainnet, ethereumDev, polygon2, celo, base,bsc,hardhat, customChain] as [AppKitNetwork, ...AppKitNetwork[]]
 
 // Set up the Wagmi Adapter (Config)
 export const wagmiAdapter = new WagmiAdapter({

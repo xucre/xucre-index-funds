@@ -16,7 +16,7 @@ import {
   Checkbox,
   Typography
 } from '@mui/material';
-import { PoolData, PortfolioItem } from '@/service/types';
+import { IndexFund, PoolData, PortfolioItem } from '@/service/types';
 import { Token as UniswapToken } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
 
@@ -31,6 +31,7 @@ interface EditPortfolioItemProps {
   open: boolean;
   onClose: () => void;
   portfolioItem: PortfolioItem;
+  indexFund: IndexFund;
   onSubmit: (item: PortfolioItem) => void;
 }
 
@@ -46,7 +47,7 @@ const poolContractMap = {
 
 const USDT = process.env.NEXT_PUBLIC_USDT_ADDRESS as string;
 const USDC = process.env.NEXT_PUBLIC_USDC_ADDRESS as string;
-const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, portfolioItem, onSubmit }) => {
+const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, portfolioItem, onSubmit, indexFund }) => {
   const [item, setItem] = useState<PortfolioItem>(portfolioItem);
   const [currentLanguage, setCurrentLanguage] = useState<Language>(Language.EN);
   const [poolData, setPoolData] = useState<PoolData | null>(null);
@@ -91,12 +92,12 @@ const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, po
   const queryPools = async () => {
     setPoolData(null);
     try {
-      const souceAddress = USDT;
+      const souceAddress = indexFund.sourceToken?.address || USDT;
       const targetAddress = item.address;
 
       const poolAddress = computePoolAddress({
         factoryAddress: poolContractMap[normalizeDevChains(item.chainId)],
-        tokenA: new UniswapToken(item.chainId, souceAddress, 6, 'USDT'),
+        tokenA: new UniswapToken(item.chainId, souceAddress, indexFund.sourceToken?.decimals || 0, indexFund.sourceToken?.name || 'USDT'),
         tokenB: new UniswapToken(item.chainId, targetAddress, item.decimals, item.name),
         fee: item.poolFee,
       })

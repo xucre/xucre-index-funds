@@ -506,6 +506,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
             open={isEditModalOpen}
             onClose={handleEditItemClose}
             portfolioItem={fund.portfolio[editItemIndex]}
+            indexFund={fund}
             onSubmit={handleEditItemSubmit}
           />
         )}

@@ -45,6 +45,8 @@ export type SFDCUserData = {
   idIssueDate: string,
   frontImage: string,
   backImage: string,
+  riskDisclosureSigned?: boolean,
+  riskDisclosureSignedDate?: string,
   wallets : SFDCWallet[]
 }
 

@@ -3,7 +3,7 @@ import { defaultWagmiConfig } from "@web3modal/wagmi/react";
 import { defineChain } from 'viem';
 
 import { cookieStorage, createStorage } from 'wagmi'
-import { mainnet, polygonMumbai, base, celo } from 'wagmi/chains'
+import { mainnet, polygonMumbai, base, celo, bsc } from 'wagmi/chains'
 // Get projectId at https://cloud.walletconnect.com
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string;
 
@@ -35,7 +35,7 @@ const polygon2 = defineChain({
 
 export function getConfig() {
   return defaultWagmiConfig({
-    chains: [mainnet, polygonMumbai, celo, base, polygon2], // required
+    chains: [mainnet, polygonMumbai, celo, base, polygon2, bsc], // required
     projectId, // required
     metadata, // required
     ssr: true,

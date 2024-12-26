@@ -186,8 +186,8 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
   }, [chainId]);
 
   const loading = isLoading || isPending;
-  const balance = nativeBalance && getAddress(!sourceToken ? '' : sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006') ? nativeBalance.value : sourceBalance;
-  const isNativeToken = getAddress(!sourceToken ? '' : sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006');
+  const balance = sourceToken && nativeBalance && getAddress(sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006') ? nativeBalance.value : sourceBalance;
+  const isNativeToken = sourceToken ? getAddress(sourceToken.address) === getAddress('0x4200000000000000000000000000000000000006') : false;
 
   return { balance: balance, isNativeToken, allowance: sourceAllowance, sourceToken, sourceTokens: initialSourceTokens.filter((token) => token.chainId === normalizeDevChains(chainId || globalChainId)), setSourceToken, approveContract, initiateSpot, hash, error, loading, status, confirmationHash }
 }
