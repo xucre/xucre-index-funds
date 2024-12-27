@@ -186,6 +186,8 @@ const values : TranslationType  = {
     help: 'Ajuda',
     organizations: 'Organizações',
     index_manager: 'Gerente de Índice',
+    transactions: 'Transações',
+    balance: 'Saldos de Tokens',
   },
   Notifications: {
     notifications: "Notificações",

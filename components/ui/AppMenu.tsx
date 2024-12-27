@@ -182,7 +182,7 @@ const AppMenu: React.FC = () => {
         ],
       }
     ],
-    []
+    [isSuperAdmin]
   );
 
   const handleNavigation = (path: string) => {

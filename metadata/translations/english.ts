@@ -184,7 +184,9 @@ const values : TranslationType = {
     fund: 'Fund',
     help: 'Help',
     organizations: 'Organizations',
-    index_manager: 'Fund Manager'
+    index_manager: 'Fund Manager',
+    transactions: 'Transactions',
+    balance: 'Token Balances',
   },
   Notifications: {
     notifications: "Notifications",

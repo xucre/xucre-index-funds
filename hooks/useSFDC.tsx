@@ -65,10 +65,10 @@ export const SFDCProvider = ({ children }: { children: any }) => {
       setIsLoaded(false);
       await upsertUserDetails(user2);
       await setUserDetails(user2.userId, user2);
-      enqueueSnackbar(`${languageData[language].ui.profile_saved}:`, { variant: 'success', autoHideDuration: 5000 });
+      enqueueSnackbar(`${languageData[language].ui.profile_saved}`, { variant: 'success', autoHideDuration: 5000 });
       await refresh();
     } catch (err) {
-      enqueueSnackbar(`${languageData[language].ui.error}:`, { variant: 'error', autoHideDuration: 5000 });
+      enqueueSnackbar(`${languageData[language].ui.error}`, { variant: 'error', autoHideDuration: 5000 });
       setIsLoaded(true);
     }
 
