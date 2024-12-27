@@ -34,7 +34,6 @@ export default function InvoicePage() {
   //const billingOnboarded = false;
 
   const saveMembers = async (members) => {
-    console.log('saveMembers');
     if (!invoiceDetails || !organization) return;
     const total = members.reduce((acc, member) => acc + Number(member.salaryContribution), 0);
     const _invoice = {
@@ -58,7 +57,6 @@ export default function InvoicePage() {
         setInvoiceDetailsState(details);
       }
     } catch (err) { 
-      console.log(err);
       createInvoice();
     }
     

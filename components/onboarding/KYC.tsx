@@ -43,14 +43,14 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
 
   const handleFrontImageChange = (url) => updateUser((prevData) => ({ ...prevData, frontImage: url }))
   const handleBackImageChange = (url) => updateUser((prevData) => ({ ...prevData, backImage: url }))
-
+  //console.log('kyc rendered');
   return (
     <>
       <Tabs value={selectedTab} onChange={handleTabChange} aria-label="basic tabs example" sx={{alignItems: 'center',justifyContent: 'space-between', display: 'flex'}} component={Stack} direction={'row'} width={'100%'}>
           <Tab label={languageData[language].Edit.personal_information}  />
           <Tab label={languageData[language].Edit.id_section} />
       </Tabs>
-      {user && selectedTab === 0 && 
+      {selectedTab === 0 && 
         <Grid container spacing={2}>
           <Grid size={12}><Typography fontWeight={'bold'}>{languageData[language].Edit.personal_section}</Typography></Grid>
           <Grid size={4}>
@@ -84,38 +84,7 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
             />
           </Grid>
           <Grid size={12}><Typography fontWeight={'bold'}>{languageData[language].Edit.address_section}</Typography></Grid>
-          {/* <Grid size={12}>
-            <AddressAutocomplete
-              apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY}
-              label={languageData[language].Edit.address_label}
-              autoComplete={false}
-              value={user ? { description: user.address, place_id: user.placeId, components: {}, structured_formatting: { main_text: user.address, secondary_text: "", main_text_matched_substrings: []} }: { description: '', place_id: '', components: {}, structured_formatting: { main_text: '', secondary_text: "", main_text_matched_substrings: []} }} 
-              //value={null}
-              fields={[]} // fields will always contain address_components and formatted_address, no need to repeat them
-              onChange={(_, value, reason) => {
-                if (!value) return;
-                if (reason === 'clear' || reason === 'blur') return;
-                if (!value['address_components'].find((c) => c.types.includes('route'))) return;
-                console.log(value);
-                const street = value['address_components'].find((c) => c.types.includes('street_number'))?.long_name + ' ' + value['address_components'].find((c) => c.types.includes('route'))?.long_name;
-                const city = value['address_components'].find((c) => c.types.includes('locality'))?.long_name || '';
-                const province = value['address_components'].find((c) => c.types.includes('administrative_area_level_1'))?.long_name || '';
-                const postalCode = value['address_components'].find((c) => c.types.includes('postal_code'))?.long_name || '';
-                const country = value['address_components'].find((c) => c.types.includes('country'))?.long_name || '';
-                updateUser((prevData) => {
-                  return {
-                  ...prevData,
-                  address: value['formatted_address'],
-                  placeId: value['place_id'],
-                  street: street,
-                  city: city,
-                  province: province,
-                  postalCode: postalCode,
-                  country: country
-                }});
-              }}
-            />
-          </Grid> */}
+          
           <Grid size={6}>
             <TextField
               label={languageData[language].Edit.street_label}
@@ -179,7 +148,7 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
         </Grid>
       }
 
-      {user && selectedTab === 1 &&
+      {selectedTab === 1 &&
         <Grid container spacing={2}>
           <Grid size={12}><Typography fontWeight={'bold'}>{languageData[language].Edit.id_section}</Typography></Grid>
           <Grid size={6}>

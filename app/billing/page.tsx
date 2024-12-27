@@ -41,7 +41,6 @@ export default function Billing() {
   const handleCheckSafeOwnership = async () => {
     if (!escrowAddress) return;
     const owners = await getSafeOwner(globalChainId, escrowAddress);
-    console.log('safe owners', owners);
     const hasCorrectOwner = owners.includes(process.env.NEXT_PUBLIC_SIGNER_SAFE_ADDRESS_POLYGON as string);
     if (!hasCorrectOwner) {
       setNeedsToTransfer(true);

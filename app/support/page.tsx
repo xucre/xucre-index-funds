@@ -9,7 +9,6 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import SupportHeader from "@/components/support/SupportHeader";
-import { useUser } from "@clerk/nextjs";
 import { useSFDC } from "@/hooks/useSFDC";
 import CreateCase from "@/components/support/CreateCase";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";

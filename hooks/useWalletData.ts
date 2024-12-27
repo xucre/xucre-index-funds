@@ -164,7 +164,6 @@ export function useWalletData({ address }: { address?: string } = {}) {
   const [loaded, setLoaded] = useState(false);
 
   const computeTotals = async (_history: WalletHistory) => {
-    console.log(_history);
     const _balance = _history.data.items.reduce((acc, item) => {
       const latest = item.holdings[0];
       return acc + latest.close.quote;
@@ -177,9 +176,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
 
     const difference = ((_balance - _previousDayBalance)/_previousDayBalance)*100;
     setChange(difference);
-    console.log(`Balance: ${_balance}, Previous Balance: ${_previousDayBalance} Change: ${difference}`);
     setLoaded(true);
-    // console.log('useWalletData-computeTotals');
   }
 
   useEffect(() => {
@@ -190,7 +187,7 @@ export function useWalletData({ address }: { address?: string } = {}) {
       
       if (result && result.covalent) setTransactions(result.covalent.items as CovalentTransactionV3[]);
       const result2 = await getWalletHistory(address, 'matic-mainnet');
-      //console.log(result2);
+      
       if (result2) {
         setHasHistory(true);
         setHistory(result2 as WalletHistory);
@@ -198,7 +195,6 @@ export function useWalletData({ address }: { address?: string } = {}) {
         setHasHistory(false);
       }
       if (result2) computeTotals(result2);
-      // console.log('useWalletData-runAsync');
     }
     if (address) runAsync()
   }, [address])

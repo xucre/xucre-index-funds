@@ -1,5 +1,5 @@
 'use client'
-import React, { use, useEffect, useState } from 'react';
+import React, { use, useEffect, useMemo, useState } from 'react';
 import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid, Slider, useTheme, Tooltip, List, ListItem, ListItemText, ListItemIcon, IconButton } from '@mui/material';
 import { useAccount, useSignMessage } from 'wagmi';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -18,6 +18,7 @@ import NumberInput from '@/components/ui/NumberInput';
 import { getTextColor, isNull } from '@/service/helpers';
 import ReusableModal from '@/components/ui/ReusableModal';
 import { setSafeAddress } from '@/service/db';
+import { useClerkUser } from '@/hooks/useClerkUser';
 
 const riskOptions = [
   { label: 'risk_aggressive', value: 'Aggressive' },
@@ -31,89 +32,32 @@ interface ProfileData {
   signedMessage?: string;
 }
 
-const EditProfile = ({ }) => {
+const EditUserProfile = () => {
   const {language} = useLanguage();
-  const [riskTolerance, setRiskTolerance] = useState('');
-  const [salaryContribution, setSalaryContribution] = useState('');
-  const [signedMessage, setSignedMessage] = useState('');
-  // const [message, setMessage] = useState('');
-  const { address, isConnected } = useAccount();
   const router = useRouter();
-  const { user, isAdmin } = useIsAdmin();
-  const theme = useTheme();
-  const textColor = getTextColor(theme);
+  const { user } = useClerkUser();
+  const { isAdmin } = useIsAdmin();
   
-  const { sfdcUser, updateUser, refresh } = useSFDC();
-  const [modifiedUser, setModifiedUser] = useState<SFDCUserData>(sfdcUser ? {
-    firstName: sfdcUser.firstName,
-    middleName: sfdcUser.middleName,
-    lastName: sfdcUser.lastName,
-    address: sfdcUser.address,
-    street: sfdcUser.street,
-    street2: sfdcUser.street2,
-    city: sfdcUser.city,
-    province: sfdcUser.province,
-    postalCode: sfdcUser.postalCode,
-    country: sfdcUser.country,
-    placeId: sfdcUser.placeId,
-    idCardNumber: sfdcUser.idCardNumber,
-    idExpirationDate: sfdcUser.idExpirationDate || '',
-    idIssueDate: sfdcUser.idIssueDate || '',
-    frontImage: sfdcUser.frontImage,
-    backImage: sfdcUser.backImage,
-    riskTolerance: sfdcUser.riskTolerance === '' ? 'Moderate' : sfdcUser.riskTolerance,
-    salaryContribution: sfdcUser.salaryContribution,
-    role: sfdcUser.role,
-    userId: sfdcUser.userId,
-    organizationId: sfdcUser.organizationId,
-    userEmail: sfdcUser.userEmail,
-    status: sfdcUser.status,
-    wallets: sfdcUser.wallets
-  } : {
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      address: '',
-      street: '',
-      street2: '',
-      city: '',
-      province: '',
-      postalCode: '',
-      country: '',
-      placeId: '',
-      idCardNumber: '',
-      idExpirationDate: '',
-      idIssueDate: '',
-      frontImage: '',
-      backImage: '',
-      riskTolerance: 'Moderate',
-      salaryContribution: 0,
-      role: '',
-      userId: user ? user.id : '',
-      organizationId: user ? user.organizationMemberships[0].organization.id : '',
-      userEmail: '',
-      status: '',
-      wallets: [] as SFDCWallet[]
-  });
+  const { sfdcUser: sfdcUserRaw, updateUser, refresh } = useSFDC();
+  const sfdcUser = useMemo(() => (sfdcUserRaw), [sfdcUserRaw]);
+  const [modifiedUser, setModifiedUser] = useState<SFDCUserData | null>(null);
   const clearSafewallet = async () => {
     if (!user) return;
     setSafeAddress(user.id, '');
     router.refresh()
   }
-  // useEffect(() => {
-  //   if (!isConnected || !user) return;
-  //   setMessage(`${address}:${user.id}`)
-  // }, [isConnected, address, user])
-
+  
   useEffect(() => {
     if (!sfdcUser) return;
-    setModifiedUser(sfdcUser);
-    //setRiskTolerance(sfdcUser.riskTolerance);
-    //setSalaryContribution(String(sfdcUser.salaryContribution));
+    console.log('sfdcUser changed');
+    if (modifiedUser === null) {
+      setModifiedUser(sfdcUser);
+    }
   }, [sfdcUser])
 
   const handleSaveProfile = async () => {
-    if (!user) return;
+    if (!user || !modifiedUser) return;
+    console.log('handle save profile');
     const profileData = {
       userEmail: user.emailAddresses[0].emailAddress,
       userId: user.id,
@@ -141,15 +85,15 @@ const EditProfile = ({ }) => {
       salaryContribution: sfdcUser.salaryContribution,
     } as SFDCUserData;
 
-    if (signedMessage) {
-      profileData.wallets = [{
-        walletAddress: address,
-        primary: true,
-        chainId: 'EVM',
-        //signedMessage: signedMessage
-      } as SFDCWallet];
-      //profileData.signedMessage = signedMessage;
-    }
+    // if (signedMessage) {
+    //   profileData.wallets = [{
+    //     walletAddress: address,
+    //     primary: true,
+    //     chainId: 'EVM',
+    //     //signedMessage: signedMessage
+    //   } as SFDCWallet];
+    //   //profileData.signedMessage = signedMessage;
+    // }
 
     // Call saveProfile with the collected data
     await updateUser(profileData);
@@ -157,8 +101,43 @@ const EditProfile = ({ }) => {
     //router.push('/dashboard')
   };
 
-  const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.street) && !isNull(modifiedUser.city) && !isNull(modifiedUser.province) && !isNull(modifiedUser.postalCode) && !isNull(modifiedUser.country);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
+  // useEffect(() => {
+  //   // setModifiedUser(
+  //   //   {
+  //   //     firstName: '',
+  //   //     middleName: '',
+  //   //     lastName: '',
+  //   //     address: '',
+  //   //     street: '',
+  //   //     street2: '',
+  //   //     city: '',
+  //   //     province: '',
+  //   //     postalCode: '',
+  //   //     country: '',
+  //   //     placeId: '',
+  //   //     idCardNumber: '',
+  //   //     idExpirationDate: '',
+  //   //     idIssueDate: '',
+  //   //     frontImage: '',
+  //   //     backImage: '',
+  //   //     riskTolerance: 'Moderate',
+  //   //     salaryContribution: 0,
+  //   //     role: '',
+  //   //     userId: user ? user.id : '',
+  //   //     organizationId: user ? user.organizationMemberships[0].organization.id : '',
+  //   //     userEmail: '',
+  //   //     status: '',
+  //   //     wallets: [] as SFDCWallet[]
+  //   // } as SFDCUserData
+  //   // );
+  // }, [])
+  //console.log('edit profile rendered');
+  if (modifiedUser === null) return null;
 
+
+  const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.street) && !isNull(modifiedUser.city) && !isNull(modifiedUser.province) && !isNull(modifiedUser.postalCode) && !isNull(modifiedUser.country);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
+  //const KYCMemo = React.memo(KYC);
+  console.log('edit profile rendered');
   return (
       <OpaqueCard sx={{
         px: 4,
@@ -190,4 +169,4 @@ const EditProfile = ({ }) => {
   );
 };
 
-export default EditProfile;
+export default React.memo(EditUserProfile);

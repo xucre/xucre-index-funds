@@ -114,7 +114,6 @@ const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, po
       } as PoolData;
       setPoolData(data);
     } catch (err) {
-      console.log(err);
       setPoolData(null);
     }
 

@@ -23,7 +23,6 @@ const contractAddressMap = {
   31337 : '0xCBBe2A5c3A22BE749D5DDF24e9534f98951983e2'
 };
 
-//console.log(initialFunds[0].portfolio.reduce((acc, item) => acc + item.weight, 0))
 export function useIndexFunds({ chainId }: { chainId: number }) {
   const [indexFunds, setIndexFunds] = useState(initialFunds.filter((item) => item.chainId === chainId));
   const [sourceTokens, setSourceTokens] = useState(initialSourceTokens.find((item) => item.chainId === chainId && item.active));
@@ -72,7 +71,6 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
     setIsLoading(true);
     try {
       if (!sourceToken) return;
-      //console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS, amount)
       const result = await writeContract(config, {
         abi: erc20,
         address: getAddress(sourceToken.address),
@@ -99,7 +97,6 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
       setIsLoading(false);
     }
 
-    //console.log(result);
     //setIsLoading(false);
 
     //return 'success';
@@ -164,19 +161,13 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
       //setIsLoading(false);
     }
     if (isConnected && address && sourceToken) {
-      //console.log('reloading balances');
       runAsync()
     }
   }, [isConnected, address, sourceToken])
 
   useEffect(() => {
-    console.log(nativeBalance);
-  }, [nativeBalance])
-
-  useEffect(() => {
     if (error && error as BaseError) {
       const err = error as BaseError;
-      console.log(err.details);
     }
   }, [error])
 

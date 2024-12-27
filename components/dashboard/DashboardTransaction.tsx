@@ -56,7 +56,6 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
       //const token = await getTokenMetadata(globalChainId, transfer.token);
       return { ...transfer, tokenMetadata: token as TokenDetails };
     }));
-    // console.log('dashboardTransaction-enrichTransfers');
     setTransfers(transferList);
   }
 
@@ -69,10 +68,8 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
   useEffect(() => {
     const fetchTransactionDetails = async () => {
       const details = await retrieveTransactionDetails(address, transaction.tx_hash);
-      //console.log(details);
       setTransactionDetails(details);
       setTransactionType(computeTransactionType(details));
-      // console.log('dashboardTransaction-fetchTransactionDetails');
     };
 
     if (transaction && address) fetchTransactionDetails();
@@ -101,8 +98,6 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
     const {language} = useLanguage();
     const [expanded, setExpanded] = React.useState(false);
     const handleChange = () => (event: React.SyntheticEvent, isExpanded) => {
-      console.log('expand');
-
       setExpanded(isExpanded);
     };
     return (

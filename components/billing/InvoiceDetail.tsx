@@ -41,7 +41,6 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, rel
         //         invoice
         //     } as CreateInvoiceOptions;
         //     const transactionHash = await createInvoiceTransaction(txDetails);
-        //     console.log('Transaction Hash:', transactionHash);
         //     if (transactionHash !== '') {
         //         const _invoice = {
         //             ...invoice,
@@ -53,7 +52,6 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, rel
         //         reload();
         //     }
         // } catch (err) {
-        //     console.log(err.reason);
         // }
         // setLoading(false);
         
@@ -62,7 +60,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, rel
     const handleDisburseClose = () => {setOpenDisbursement(false); reload();};
 
     const canDisburse = invoice.status === InvoiceStatuses.New && usdcBalance && usdcBalance >= invoice.totalDue;
-    //console.log(usdcBalance, invoice.totalDue, canDisburse);
+    
     return (
         <>
             <OpaqueCard>

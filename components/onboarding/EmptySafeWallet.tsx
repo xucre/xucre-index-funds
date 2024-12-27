@@ -28,7 +28,6 @@ const EmptySafeWallet = ({ id, refresh }: {id: string, refresh: Function}) => {
       id: id,
       chainid: globalChainId
     } as CreateAccountOptions;
-    console.log('createSafeWallet');
     const safeAddress = await createAccount(safePayload);
     setSafeAddress(id, safeAddress);
     updateSafeWalletDetails(id, safeAddress);

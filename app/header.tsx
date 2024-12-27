@@ -12,7 +12,7 @@ import LanguageSelect from '@/components/ui/languageSelect';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
 import { useMixpanel } from '@/hooks/useMixpanel';
-import { SignedIn, SignedOut, useOrganization, UserButton, useUser, OrganizationSwitcher } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton, OrganizationSwitcher } from '@clerk/nextjs';
 //import HeaderSwitch from './ThemeMode';
 import { dark } from "@clerk/themes";
 import { useIsAdmin } from '../hooks/useIsAdmin';
@@ -20,6 +20,7 @@ import AccountButton from '@/components/accountButton';
 import {useOrganizationWallet} from '@/hooks/useOrganizationWallet';
 import { KnockFeedProvider, KnockI18nProvider, KnockProvider, NotificationFeedPopover, NotificationIconButton, I18nContent, Translations } from '@knocklabs/react';
 import { syncKnock } from '@/service/knock';
+import { useClerkUser } from '@/hooks/useClerkUser';
 
 
 const drawerWidth = 240;
@@ -29,8 +30,7 @@ const knockInternalChannelId = process.env.NEXT_PUBLIC_KNOCK_IN_APP_MESSAGE_CHAN
 
 function Header() {
   const mixpanel = useMixpanel();
-  const { user } = useUser();
-  const { organization } = useOrganization();
+  const { user } = useClerkUser();
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { language } = useLanguage();
@@ -118,12 +118,6 @@ function Header() {
       mixpanel.identify(address);
     }
   }, [mixpanel, address])
-
-  useEffect(() => {
-    if (isAdmin && !hasEscrowAddress && !isOrganizationWalletLoading) {
-      //router.replace('/organization')
-    }
-  }, [isAdmin, hasEscrowAddress, isOrganizationWalletLoading])
   
   useEffect(() => {
     if (user) {

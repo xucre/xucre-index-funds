@@ -13,16 +13,16 @@ import { useRouter } from 'next/navigation';
 import { globalChainId } from '@/service/constants';
 import { Roles } from '@/service/types';
 import { DocusealForm } from '@docuseal/react'
-import { useUser } from '@clerk/nextjs';
 import { getTextColor } from '@/service/helpers';
 import { useSFDC } from '@/hooks/useSFDC';
 import dayjs from 'dayjs';
+import { useClerkUser } from '@/hooks/useClerkUser';
 
 const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
   const {language} = useLanguage();
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
-  const {user} = useUser();
+  const {user} = useClerkUser();
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
@@ -32,7 +32,6 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
   const handleClose = () => setOpen(false);
 
   const handleComplete = async (data) => {  
-    console.log('handleComplete', data);
 
     await updateUser({
       ...sfdcUser,
@@ -52,7 +51,6 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
     //   id: id,
     //   chainid: globalChainId
     // } as CreateAccountOptions;
-    // console.log('createSafeWallet');
     // const safeAddress = await createAccount(safePayload);
     // setSafeAddress(id, safeAddress);
     // updateSafeWalletDetails(id, safeAddress);

@@ -40,7 +40,6 @@ export async function getAccount(organizationId : string) {
         throw new Error('Organization Id is required');
       }
   } catch (err) {
-    console.log('error :/');
     return null;
     //throw new Error('Error creating connection');
   }

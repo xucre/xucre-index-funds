@@ -11,11 +11,11 @@ import { updateSafeWalletDetails } from '@/service/sfdc';
 import { setSafeAddress } from '@/service/db';
 import { useRouter } from 'next/navigation';
 import { globalChainId } from '@/service/constants';
-import { useUser } from '@clerk/nextjs';
+import { useClerkUser } from '@/hooks/useClerkUser';
 
 const EmptyDelegateOnSafe = ({ id, refresh }: {id: string, refresh: Function}) => {
   const {language} = useLanguage();
-  const {user} = useUser();
+  const {user} = useClerkUser();
   const [loading, setLoading] = useState(false);
   const { address, isConnected } = useAccount();
   const router = useRouter();

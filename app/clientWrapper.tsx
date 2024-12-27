@@ -10,13 +10,12 @@ import Header from './header';
 import { Box, CssBaseline, Stack } from '@mui/material';
 
 import CTA from '@/components/ui/cta';
-import { Suspense, useEffect } from 'react';
 import { ThemeSwitcherProvider } from '@/hooks/useThemeSwitcher';
 import { LanguageContextProvider } from '@/hooks/useLanguage';
 import Footer from './footer';
 import { MixpanelProvider } from '@/hooks/useMixpanel';
 import AppMenu from '@/components/ui/AppMenu';
-import { SignedIn, useUser } from '@clerk/nextjs';
+import { SignedIn } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
 import {
   KnockProvider,
@@ -24,6 +23,7 @@ import {
   NotificationIconButton,
   NotificationFeedPopover,
 } from "@knocklabs/react";
+import { useClerkUser } from '@/hooks/useClerkUser';
 
 //import { TokenListProvider } from '@/hooks/useTokenList';
 export default function Wrapper({
@@ -31,20 +31,16 @@ export default function Wrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const {user} = useUser();
+  const {user} = useClerkUser();
   const pathname = usePathname();
   const hasUser = user !== null;
   const hideLoginButton = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || ( !hasUser && pathname.includes('/fund'))
   
-  useEffect(() => {
-    console.log('Wrapper-hideLoginButton');
-  }, [hideLoginButton]);
   return (
     <Box>
       
           <MixpanelProvider>
             <ThemeSwitcherProvider>
-                <Suspense >
                   <CssBaseline enableColorScheme />
                   
                     <Header />
@@ -66,7 +62,6 @@ export default function Wrapper({
                     </Stack>
 
                     {/* <Footer /> */}
-                </Suspense>
             </ThemeSwitcherProvider>
           </MixpanelProvider>
     </Box>

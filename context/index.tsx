@@ -54,7 +54,6 @@ export function ContextProvider({
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
   //const [modalState, setModalState] = React.useState(null as any);
   useEffect(() => {
-    console.log('theme', theme.palette.mode)
     setIsLoaded(true)
   }, [])
   const customTheme = experimental_createTheme({})
@@ -78,6 +77,7 @@ export function ContextProvider({
           }}
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
           localization={activeLanguage}
+          touchSession={false}
         >
           <SnackbarProvider maxSnack={3} >
           <ClerkLoaded>

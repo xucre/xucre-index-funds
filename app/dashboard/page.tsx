@@ -1,9 +1,9 @@
 'use client'
 import DashboardContainer from "@/components/dashboard/DashboardContainer";
+import { useClerkUser } from "@/hooks/useClerkUser";
 import { useSFDC } from "@/hooks/useSFDC";
 import { getSafeAddress, setSafeAddress } from "@/service/db";
 import { updateSafeWalletDetails } from "@/service/sfdc";
-import { useUser } from "@clerk/nextjs";
 import { Box, useTheme } from "@mui/material"
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export default function Dashboard() {
   //const signer = useWalletClient({ chainId })
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { user } = useUser();
+  const { user } = useClerkUser();
   const [safeWallet, setSafeWallet] = useState<string>('');
   const syncSafeWallet = async () => {
     if (!user) return;

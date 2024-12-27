@@ -33,13 +33,11 @@ export async function updateOrganizationMetadata(organizationId: string, metadat
 }
 
 export async function createUserWithRole(email: string, role: Roles, organizationId: string) {
-  console.log('create user', email);
   const user = await clerkClient.users.createUser({
     firstName: '',
     lastName: '',
     emailAddress: [email],
   });
-  console.log(user);
   // await clerkClient.organizations.createOrganizationMembership({
   //   userId: user.id,
   //   organizationId,
@@ -67,7 +65,6 @@ export const bulkInviteUsers = async (organizationId: string, emailAddresses:str
       }
     })
     const response = await superagent.post(`https://api.clerk.com/v1/organizations/${organizationId}/invitations/bulk`).send(payload).set('Authorization', `Bearer ${process.env.CLERK_SECRET_KEY}`).withCredentials();
-    //console.log(response.body);
     return response.body;
   } catch (error) {
     //console.error('Error inviting users:', error);

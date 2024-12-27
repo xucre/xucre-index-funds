@@ -85,7 +85,6 @@ const UniswapPoolChecker = ({ registerPortfolioItem }: { registerPortfolioItem: 
       setError(null);
       setLoading(false);
     } catch (err) {
-      console.log(err);
       setError('No liquidity found for this token pair.');
       setPoolData(null);
       setLoading(false);
@@ -95,7 +94,6 @@ const UniswapPoolChecker = ({ registerPortfolioItem }: { registerPortfolioItem: 
 
   /*const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('submit', sourceToken, targetToken, fee);
     if (sourceToken && targetToken && fee !== 0) {
       queryPools();
     }

@@ -24,7 +24,6 @@ const CreateCase = ({userName, userEmail} : {userName: string, userEmail: string
 
   const handleSubmit = async () => {
     // Handle submit logic here
-    console.log('Submitted data:', formData);
     await createCase(formData.name, formData.details, formData.email);
   };
 

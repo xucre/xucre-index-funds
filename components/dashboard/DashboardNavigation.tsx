@@ -9,14 +9,12 @@ import { useRouter, usePathname } from "next/navigation";
 import React, { } from "react";
 import { getTextColor } from "@/service/helpers";
 import { toTitleCase } from '../../service/helpers';
-import { useUser } from "@clerk/nextjs";
 // components/LoadingIndicator.tsx
 export default function DashboardNavigation() {
   const theme = useTheme();
   const router = useRouter();
   const textColor = getTextColor(theme);
   const { language } = useLanguage();
-  const { user } = useUser();
   const pathname = usePathname();
   const isHome = pathname === '/dashboard';
   const isBalance = pathname === '/dashboard/balances';

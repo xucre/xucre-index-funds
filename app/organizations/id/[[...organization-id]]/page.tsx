@@ -43,7 +43,6 @@ const OrganizationDetails: React.FC = () => {
       const userData = await getUserDetails(member.id);
       return userData;
     }));
-    console.log('Database user data:', data);
     setDatabaseUserData(data);
   };
 

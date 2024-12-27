@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import mixpanelFull, { Mixpanel } from 'mixpanel-browser';
-import { useOrganization, useUser } from '@clerk/nextjs';
+import { useOrganization } from '@clerk/nextjs';
 import { createCustomer, createPortalLink, getCustomer, getCustomerSubscription } from '@/service/billing/stripe';
 import Stripe from 'stripe';
+import { useClerkUser } from './useClerkUser';
 
 export function useStripeBilling() {
   const { organization } = useOrganization();
-  const { user } = useUser();
+  const { user } = useClerkUser();
   const [hasSignedUp, setHasSignedUp] = useState(false);
   const [customerId, setCustomerId] = useState('');
   const [seatCount, setSeatCount] = useState(0);

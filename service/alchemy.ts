@@ -30,12 +30,10 @@ export const getAlchemyNetwork = (chainId: number): Network => {
 
 export const getTokenMetadata = async (address: string, chainId: number) => {
   const tokenAddress = getAddress(address);
-  console.log('tokenAddress', tokenAddress, chainId);
   const alchemyNetwork = await getAlchemyNetwork(chainId);
   const alchemyApiKey = process.env.ALCHEMY_API_KEY;
 
   if (!alchemyApiKey) {
-    console.log('Alchemy API key not set', alchemyApiKey);
     return;
   }
 
@@ -46,9 +44,7 @@ export const getTokenMetadata = async (address: string, chainId: number) => {
       skipFetchSetup: true,
     },
   };
-  console.log(alchemyNetwork)
   const alchemy = new Alchemy(alchemySettings);
-  console.log('alchemy.config.network', tokenAddress);
   const tokenMetadata = await alchemy.core.getTokenMetadata(tokenAddress);
 
   if (tokenMetadata) {

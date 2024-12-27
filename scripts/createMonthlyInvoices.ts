@@ -27,7 +27,7 @@ for (const organization of organizations) {
   };
 
   await setInvoiceDetails(organization.id, newInvoice.id, newInvoice);
-  console.log(`Created invoice ${newInvoice.id} for organization ${organization.id}`);
+  
 }
 };
 

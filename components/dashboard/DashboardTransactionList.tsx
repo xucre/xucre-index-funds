@@ -32,7 +32,6 @@ const groupTransactionsByWeek = (transactions: CovalentTransactionV3[]): Transac
     }
     groupedTransactions[weekStart].push(transaction);
   });
-  console.log('dashboardTransactionList-groupTransactionsByWeek-groupedTransactions');
   return Object.keys(groupedTransactions).map((weekStart) => ({
     weekStart,
     transactions: groupedTransactions[weekStart],

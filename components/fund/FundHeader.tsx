@@ -9,7 +9,6 @@ import { useRouter, usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { getTextColor } from "@/service/helpers";
 import { toTitleCase } from '../../service/helpers';
-import { useUser } from "@clerk/nextjs";
 import { useSFDC } from "@/hooks/useSFDC";
 import { ToleranceLevels } from "@/service/types";
 // components/LoadingIndicator.tsx
@@ -20,7 +19,6 @@ export default function FundHeader() {
     const textColor = getTextColor(theme);
     const { language, languageData } = useLanguage();
     const {sfdcUser, updateUser, isLoaded, refresh} = useSFDC();
-    const { user } = useUser();
     const pathname = usePathname();
     const [tolerance, setTolerance] = useState(ToleranceLevels.Moderate);
     const isConservative = tolerance === 'Conservative';

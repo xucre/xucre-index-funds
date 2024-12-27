@@ -22,13 +22,11 @@ const main = async () => {
     for (const userId of userIds) {
       const safeWalletAddress = await getSafeAddress(userId);
       if (safeWalletAddress) {
-        console.log(`Transferring ownership for user ${userId} safe wallet ${safeWalletAddress}`);
         await transferSignerOwnership({
           safeWallet: safeWalletAddress,
           chainid: CHAIN_ID,
         });
       } else {
-        console.log(`No safe wallet found for user ${userId}`);
       }
     }
 
@@ -37,27 +35,25 @@ const main = async () => {
       const safeWalletAddress = await getOrganizationSafeAddress(organizationId, 'escrow');
       const selfSafeWalletAddress = await getOrganizationSafeAddress(organizationId, 'self');
       if (safeWalletAddress) {
-        console.log(`Transferring ownership for organization ${organizationId} escrow safe wallet ${safeWalletAddress}`);
-        await transferSignerOwnership({
+       await transferSignerOwnership({
           safeWallet: safeWalletAddress,
           chainid: CHAIN_ID,
         });
       } else {
-        console.log(`No escrow safe wallet found for organization ${organizationId}`);
+        
       }
 
       if (selfSafeWalletAddress) {
-        console.log(`Transferring ownership for organization ${organizationId} self safe wallet ${selfSafeWalletAddress}`);
+        
         await transferSignerOwnership({
           safeWallet: selfSafeWalletAddress,
           chainid: CHAIN_ID,
         });
       } else {
-        console.log(`No self safe wallet found for organization ${organizationId}`);
+        
       }
     }
 
-    console.log('Ownership transfer completed.');
   } catch (error) {
     console.error('Error transferring ownership:', error);
   }

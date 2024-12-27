@@ -1,6 +1,6 @@
 export const maxDuration = 60; // Applies to the action
 import { useEffect, useMemo, useState } from 'react';
-import { useUser, useOrganization } from '@clerk/nextjs';
+import { useOrganization } from '@clerk/nextjs';
 import { getOrganizationSafeAddress, setOrganizationSafeAddress } from '@/service/db';
 import { createAccount, CreateAccountOptions, createAccountV2 } from '@/service/safe';
 import { globalChainId, isDev } from '@/service/constants';
@@ -16,16 +16,14 @@ export function useOrganizationWallet() {
       setLoading(true);
       const selfAddress2 = await getOrganizationSafeAddress(organization.id, 'self');
       const escrowAddress2 = await getOrganizationSafeAddress(organization.id, 'escrow');
-      console.log('useOrganizationWallet', escrowAddress2);
+      
       setEscrowAddress(escrowAddress2);
       setSelfAddress(selfAddress2);
       setLoading(false);
-      console.log('useOrganizationWallet-runAsync');
     }
     
     useEffect(() => {        
         if (organization) {
-            console.log('useOrganizationWallet-organizationChange');
             refresh();
         }
     }, [])
@@ -49,7 +47,6 @@ export function useOrganizationWallet() {
             id: organization.id,
             chainid: globalChainId
           } as CreateAccountOptions;
-        console.log('createEscrowAddress');
         const safeAddress = await createAccount(safePayload);
         setOrganizationSafeAddress(organization.id, safeAddress, 'escrow');
         setEscrowAddress(safeAddress);

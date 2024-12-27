@@ -46,7 +46,6 @@ export default function IndexFunds() {
     } else {
       router.push(`/fund/Moderate`);
     }
-    //console.log(indexFunds);
   }, [sfdcUser])
 
 

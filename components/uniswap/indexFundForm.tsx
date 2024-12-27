@@ -228,7 +228,6 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
   }
 
   const handleApproval = () => {
-    console.log('Approving');
     approveContract(amount);
   }  
 

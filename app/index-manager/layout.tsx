@@ -1,8 +1,8 @@
 'use client'
 import IndexManagerList from "@/components/admin/IndexManagerList";
 import DashboardNews from "@/components/dashboard/DashboardNews";
+import { useClerkUser } from "@/hooks/useClerkUser";
 import { getDashboardBorderColor } from "@/service/helpers";
-import { useUser } from "@clerk/nextjs";
 import { Box, Divider, Stack, useMediaQuery, useTheme } from "@mui/material"
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -34,7 +34,7 @@ export default function IndexManagerLayout({
   const params = useParams();
   const invoiceId = params['id'] as string;
   const [mounted, setMounted] = useState(false);
-  const { user } = useUser();
+  const { user } = useClerkUser();
   return (
     <Suspense>
         <Stack direction={'column'} spacing={2} justifyContent={'space-between'} px={5} py={4} >

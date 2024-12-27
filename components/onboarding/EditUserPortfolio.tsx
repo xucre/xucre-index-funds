@@ -13,8 +13,6 @@ import { useRouter } from 'next/navigation';
 import OpaqueCard from '@/components/ui/OpaqueCard';
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
-import KYC from '@/components/onboarding/KYC';
-import NumberInput from '@/components/ui/NumberInput';
 import { getTextColor, isNull } from '@/service/helpers';
 import ReusableModal from '@/components/ui/ReusableModal';
 import { setSafeAddress } from '@/service/db';

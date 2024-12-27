@@ -19,9 +19,9 @@ import { chainValidation, normalizeDevChains } from "@/service/helpers";
 import React from "react";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import demoPortfolio from "@/public/demoPortfolio.json";
-import { useUser } from "@clerk/nextjs";
 import { getAllFunds, getFundDetails } from "@/service/db";
 import { globalChainId, isDev } from "@/service/constants";
+import { useClerkUser } from "@/hooks/useClerkUser";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 
@@ -31,7 +31,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const theme = useTheme();
   const { language } = useLanguage();
   const mixpanel = useMixpanel();
-  const { isSignedIn } = useUser();
+  const { isSignedIn } = useClerkUser();
   const slugString = params.slug as string;
   //const _indexFund = JSON.parse(atob(decodeURIComponent(slugString))) as IndexFund;
   const textColor = getTextColor(theme);
@@ -58,7 +58,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
     const addresses = _indexFund.portfolio.map((item) => item.address).join(',');
     const _chainId = normalizeDevChains(globalChainId);
     const prices = await getTokenPrices(`addresses=${addresses}&chainId=${_chainId}`);
-    //console.log('getPrices', prices);
+    
     try {
       setPriceData(prices as PriceData[]);
       const _priceMap = prices.reduce((acc, price) => {
@@ -88,7 +88,6 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   }
 
   const handleApproval = () => {
-    console.log('Approving');
     approveContract(amount);
   }  
 
@@ -97,13 +96,12 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   }
   const allowanceString = allowance && sourceToken ? formatUnits(allowance as bigint, sourceToken.decimals) : 0;
   const allowanceAmount = allowance ? (allowance as BigInt) <= amount : true;
-  //console.log(allowanceAmount, allowanceString)
+  
   const retrieveFunds = async () => {
     const funds = await getAllFunds(isDev ? 1155111: globalChainId);
     const fundDetailList = await Promise.all( funds.map(async (fund) => {
         return await getFundDetails(isDev ? 1155111: globalChainId, fund);
     }));
-    //console.log(fundDetailList);
     const fund = fundDetailList.reduce((acc, fund) => {
         if (!fund.toleranceLevels || fund.toleranceLevels.length === 0) {
           return acc;

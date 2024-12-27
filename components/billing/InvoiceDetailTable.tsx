@@ -53,7 +53,6 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
         safeWalletAddress,
       } as InvoiceMember]
     }, []);
-    console.log(membersData);
     return membersData;
   };
 
@@ -68,13 +67,11 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(existingMembers);
       if (existingMembers) {
         setMembers(existingMembers);
         setInitialMembers(existingMembers);
         return;
       }
-      console.log('fetchingMembers')
       const data = await fetchMembers();
       setMembers(data);
     };

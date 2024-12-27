@@ -8,9 +8,7 @@ export function useEscrowBalance(organizationId: string) {
   const fetchBalance = async () => {
     const safeAddress = await getOrganizationSafeAddress(organizationId, 'escrow');
     if (safeAddress && safeAddress.length > 0) {
-      console.log('safeAddress for balance', safeAddress);
       const usdcBalance = await getUSDTBalance(safeAddress);
-      console.log('usdcBalance', usdcBalance);
       if (!usdcBalance) return;
       setBalance(usdcBalance);
     }

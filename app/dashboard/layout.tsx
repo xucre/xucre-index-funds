@@ -10,13 +10,13 @@ import SignRiskDisclosure from "@/components/onboarding/SignRiskDisclosure";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import TransferSafeWallet from "@/components/onboarding/TransferSafeWallet";
 import OpaqueCard from "@/components/ui/OpaqueCard";
+import { useClerkUser } from "@/hooks/useClerkUser";
 import { useSFDC } from "@/hooks/useSFDC";
 import { globalChainId, isDev } from "@/service/constants";
 import { getSafeAddress, setSafeAddress } from "@/service/db";
 import { getDashboardBorderColor } from "@/service/helpers";
 import { getSafeOwner, transferSignerOwnership, getSafeProposer } from "@/service/safe";
 import { updateSafeWalletDetails } from "@/service/sfdc";
-import { useUser } from "@clerk/nextjs";
 import { Box, Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material"
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -36,8 +36,7 @@ export default function DashboardLayout({
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   //const signer = useWalletClient({ chainId })
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-  const { user } = useUser();
+  const { user } = useClerkUser();
   const [safeWallet, setSafeWallet] = useState<string | null>(null);
   const [needsToTransfer, setNeedsToTransfer] = useState(false);
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
@@ -56,7 +55,6 @@ export default function DashboardLayout({
   const handleCheckSafeOwnership = async () => {
     if (!safeWallet) return;
     const owners = await getSafeOwner(globalChainId, safeWallet);
-    console.log('safe owners', owners);
     const hasCorrectOwner = owners.includes(process.env.NEXT_PUBLIC_SIGNER_SAFE_ADDRESS_POLYGON as string);
     if (!hasCorrectOwner) {
       setNeedsToTransfer(true);
@@ -71,7 +69,6 @@ export default function DashboardLayout({
       safeWallet: safeWallet
     }
     const delegates = await getSafeProposer(params);
-    console.log('safe delegates', delegates);
     if (delegates.count === 0) {
       setNeedsToSetProposer(true);
     } else {
@@ -93,6 +90,7 @@ export default function DashboardLayout({
   }
 
   useEffect(() => {
+    console.log('user has reloaded');
     if (user && user.id) {
       syncSafeWallet();
       //setSafeAddress(user.id, '');

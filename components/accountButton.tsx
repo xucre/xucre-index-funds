@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import { useAppKit } from '@reown/appkit/react'
 import { Button } from '@mui/material';
@@ -12,13 +12,14 @@ const AccountButton = ({ showBalance = true }) => {
   const [showButton, setShowButton] = useState(false);
   const { isConnected } = useAccount();
   const { open, close } = useAppKit();
-  useEffect(() => {
+
+  useMemo(() => {
     if (showButton) {
       open();
     } else {
       close();
     }
-  }, [showButton]);
+  }, [showButton, open, close]);
   return (
     <Box>
       {/* <w3m-button balance={showBalance ? 'show' : 'hide'} /> */}

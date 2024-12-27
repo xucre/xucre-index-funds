@@ -1,13 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import AccountButton from '../accountButton';
-import { Box, Chip, Divider, Link, Stack, Typography, useTheme } from '@mui/material';
-import { useLanguage } from '@/hooks/useLanguage';
-import languageData, { Language } from '@/metadata/translations';
-import { useSFDC } from '@/hooks/useSFDC';
-import { useUser } from '@clerk/nextjs';
-import { getSafeAddress } from '@/service/db';
-import truncateEthAddress from 'truncate-eth-address';
 import QRCode from 'qrcode'
 const WalletQRCode = ({safeAddress}: {safeAddress: string}) => {
   

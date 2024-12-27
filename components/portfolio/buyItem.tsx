@@ -76,11 +76,6 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
     }
   }, [confirmationHash]);
 
-  useEffect(() => {
-    //console.log(sourceToken);
-  }, [sourceToken])
-  //useEffect(() => { console.log('buyItemBalance', balance) }, [balance])
-
   if (!sourceToken) return null;
   return (
     <Stack justifyContent={'center'} alignItems={'center'} spacing={2} >

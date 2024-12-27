@@ -8,10 +8,8 @@ export const ASSETURL = (chainName: string, address: string) => `https://raw.git
 export const getTokenPrices = async (data: string) => {
   try {
     const response = await superagent.get(`${BASEURL}prices?${data}`).withCredentials();
-    //console.log(response.body);
     return response.body;
   } catch (error) {
-    console.log(data, error);
     //return null;
   }
 }
@@ -47,7 +45,6 @@ export const fetchLogo = async (chainName: string, address: string) => {
     if (response.status === 200) return logoUrl;
     return '/icon-green.png';
   } catch (error) {
-    //console.log('Error fetching logo:', error);
     return null;
   }
 };
@@ -55,11 +52,9 @@ export const fetchLogo = async (chainName: string, address: string) => {
 export const fetchInfo = async (chainName: string, address: string) => {
   try {
     const infoUrl = (await ASSETURL(chainName, address)) + '/info.json';
-    console.log(infoUrl);
     const response = await fetch(infoUrl);
     return await response.json();
   } catch (error) {
-    console.log('Error fetching info:', error);
     return null;
   }
 };

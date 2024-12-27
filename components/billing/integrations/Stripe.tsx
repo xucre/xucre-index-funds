@@ -44,12 +44,10 @@ export default function Stripe({ invoiceId, destination, amount }: { invoiceId: 
     }   
 
     const onChange = useCallback(({ session }) => {
-        console.log(session);
         //setMessage(`OnrampSession is now in ${session.status} state.`);
       }, []);
 
     const onReady = useCallback(({ session }) => {
-        console.log(session);
         //setMessage(`OnrampSession is now in ${session.status} state.`);
     }, []);
 

@@ -1,5 +1,5 @@
 'use client'
-import { OrganizationProfile, OrganizationSwitcher, Protect, useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
+import { OrganizationProfile, OrganizationSwitcher, Protect, useOrganization, useOrganizationList } from "@clerk/nextjs";
 import { Box, Chip, Stack, Typography, useTheme } from "@mui/material"
 import router from "next/router";
 import { dark } from "@clerk/themes";
@@ -11,11 +11,12 @@ import CreateUserModal from "@/components/organization/CreateUserModal";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import { setOrganizationSafeAddress } from "@/service/db";
 import { isDev } from "@/service/constants";
+import { useClerkUser } from "@/hooks/useClerkUser";
 
 // components/LoadingIndicator.tsx
 export default function Organization() {
   const theme = useTheme();
-  const { user } = useUser();
+  const { user } = useClerkUser();
   const {userMemberships, setActive} = useOrganizationList();
   const { organization, isLoaded } = useOrganization();
   const isDarkTheme = theme.palette.mode === 'dark';

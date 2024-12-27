@@ -78,11 +78,10 @@ const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
 
   useEffect(() => {
     const debouncedFetch = debounce(async (query: string) => {
-      console.log('Fetching token metadata for', query);
       if (query && isAddress(query)) {
         try {
           const additionalToken = await getTokenMetadata(query, chainId || globalChainId);
-          console.log(additionalToken);
+          
           if (additionalToken) {
             setAdditionalToken(additionalToken);
           }

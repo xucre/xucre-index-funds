@@ -10,7 +10,6 @@ import WalletNotConnected from "@/components/walletNotConnected";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation } from "@/service/helpers";
-import { useUser } from "@clerk/nextjs";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -21,6 +20,7 @@ import OpaqueCard from '@/components/ui/OpaqueCard';
 import { getAllOrganizations } from "@/service/clerk";
 //import { createAccount, CreateAccountOptions } from "@/service/safe";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useClerkUser } from "@/hooks/useClerkUser";
 
 interface Organization {
   id: string;
@@ -36,7 +36,7 @@ const OrganizationsTable: React.FC = () => {
   const theme = useTheme();
   const textColor = getTextColor(theme);
   const router = useRouter();
-  const {user} = useUser();
+  const {user} = useClerkUser();
   const { language } = useLanguage();
   const { isConnected, address, chainId } = useAccount();
   const [processing, setProcessing] = useState(false);
@@ -66,7 +66,6 @@ const OrganizationsTable: React.FC = () => {
   //     id,
   //   } as CreateAccountOptions;
   //   const safeAddress = await createAccount(callParams);
-  //   console.log('safeAddress', safeAddress, id);
 
   //   setProcessing(false);
   // }

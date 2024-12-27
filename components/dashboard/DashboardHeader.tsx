@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import React, { } from "react";
 import { getTextColor } from "@/service/helpers";
 import { toTitleCase } from '../../service/helpers';
-import { useUser } from "@clerk/nextjs";
 import { useSFDC } from "@/hooks/useSFDC";
 // components/LoadingIndicator.tsx
 
@@ -19,7 +18,6 @@ export default function DashboardHeader() {
   const router = useRouter();
   const textColor = getTextColor(theme);
   const { language } = useLanguage();
-  const { user } = useUser();
   const {sfdcUser} = useSFDC();
   const isNewUser = !sfdcUser || !sfdcUser.firstName || sfdcUser.firstName === '' || !sfdcUser.riskTolerance || sfdcUser.riskTolerance === '';
 

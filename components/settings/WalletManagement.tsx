@@ -5,14 +5,14 @@ import { Box, Chip, Divider, Link, Stack, Typography, useTheme } from '@mui/mate
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
 import { useSFDC } from '@/hooks/useSFDC';
-import { useUser } from '@clerk/nextjs';
 import { getSafeAddress } from '@/service/db';
 import truncateEthAddress from 'truncate-eth-address';
 import WalletQRCode from './WalletQRCode';
+import { useClerkUser } from '@/hooks/useClerkUser';
 
 const WalletManagement: React.FC = () => {
   const {language} = useLanguage();
-  const {user} = useUser();
+  const {user} = useClerkUser();
   const [safe, setSafe] = useState('');
   const syncSafe = async () => {
     if (!user) return;

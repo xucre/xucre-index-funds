@@ -1,7 +1,4 @@
 'use client';
-import { useEffect } from 'react';
-import { useAccount } from 'wagmi';
-import WalletNotConnected from '@/components/walletNotConnected';
 import { useRouter } from 'next/navigation';
 import { Avatar, Box, Button, Chip, Stack, Typography } from '@mui/material';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
@@ -11,12 +8,6 @@ import languageData from '@/metadata/translations'
 export default function Home() {
   const {language} = useLanguage();
   const router = useRouter();
-  const { isConnected } = useAccount();
-  useEffect(() => {
-    if (isConnected) {
-      //router.replace('/index-fund')
-    }
-  }, [isConnected]);
 
   return (
     <main>

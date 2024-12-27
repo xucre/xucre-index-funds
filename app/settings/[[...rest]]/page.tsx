@@ -14,15 +14,15 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import EditUserProfile from "@/components/onboarding/EditUserProfile";
 import { useLanguage } from '@/hooks/useLanguage';
-import languageData from '@/metadata/translations';
 import EditUserPortfolio from "@/components/onboarding/EditUserPortfolio";
 import { useSFDC } from "@/hooks/useSFDC";
 import { isNull } from "@/service/helpers";
+import React from "react";
 
 // components/LoadingIndicator.tsx
 export default function Settings() {
   const theme = useTheme();
-  const {language} = useLanguage();
+  const {language, languageData} = useLanguage();
   const isDarkTheme = theme.palette.mode === 'dark';
   const {sfdcUser, refresh} = useSFDC();
   const Display = () => (
@@ -46,11 +46,10 @@ export default function Settings() {
   
   const isProfileComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country);
   const isPortfolioComplete = !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution);
-  
+  const UserProfileMemoized = React.memo(UserProfile);
   return (
-    <Suspense>
       <Box alignItems={'center'} display={'flex'} justifyContent={'center'} width={'full'} mx={5} my={1} pb={10}>
-        {
+
           <UserProfile
             appearance={{ baseTheme: isDarkTheme ? dark : undefined, }}
           >
@@ -71,8 +70,7 @@ export default function Settings() {
             </UserProfile.Page> */}
 
           </UserProfile>
-        }
+        
       </Box>
-    </Suspense>
   );
 };
