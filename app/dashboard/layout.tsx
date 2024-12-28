@@ -43,7 +43,7 @@ export default function DashboardLayout({
 
   const syncSafeWallet = async () => {
     if (!user) return;
-    setSafeWallet(null);
+    //setSafeWallet(null);
     const walletAddress = await getSafeAddress(user.id);
     if (walletAddress) {
       setSafeWallet(walletAddress);
