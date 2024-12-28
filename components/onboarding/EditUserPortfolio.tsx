@@ -31,8 +31,6 @@ interface ProfileData {
 
 const EditProfile = ({ }) => {
   const {language} = useLanguage();
-  const [riskTolerance, setRiskTolerance] = useState('');
-  const [salaryContribution, setSalaryContribution] = useState('');
   const [signedMessage, setSignedMessage] = useState('');
   // const [message, setMessage] = useState('');
   const { address, isConnected } = useAccount();
@@ -42,57 +40,7 @@ const EditProfile = ({ }) => {
   const textColor = getTextColor(theme);
   
   const { sfdcUser, updateUser, refresh } = useSFDC();
-  const [modifiedUser, setModifiedUser] = useState<SFDCUserData>(sfdcUser ? {
-    firstName: sfdcUser.firstName,
-    middleName: sfdcUser.middleName,
-    lastName: sfdcUser.lastName,
-    address: sfdcUser.address,
-    street: sfdcUser.street,
-    street2: sfdcUser.street2,
-    city: sfdcUser.city,
-    province: sfdcUser.province,
-    postalCode: sfdcUser.postalCode,
-    country: sfdcUser.country,
-    placeId: sfdcUser.placeId,
-    idCardNumber: sfdcUser.idCardNumber,
-    idExpirationDate: sfdcUser.idExpirationDate || '',
-    idIssueDate: sfdcUser.idIssueDate || '',
-    frontImage: sfdcUser.frontImage,
-    backImage: sfdcUser.backImage,
-    riskTolerance: sfdcUser.riskTolerance === '' ? 'Moderate' : sfdcUser.riskTolerance,
-    salaryContribution: sfdcUser.salaryContribution,
-    role: sfdcUser.role,
-    userId: sfdcUser.userId,
-    organizationId: sfdcUser.organizationId,
-    userEmail: sfdcUser.userEmail,
-    status: sfdcUser.status,
-    wallets: sfdcUser.wallets
-  } : {
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      address: '',
-      street: '',
-      street2: '',
-      city: '',
-      province: '',
-      postalCode: '',
-      country: '',
-      placeId: '',
-      idCardNumber: '',
-      idExpirationDate: '',
-      idIssueDate: '',
-      frontImage: '',
-      backImage: '',
-      riskTolerance: 'Moderate',
-      salaryContribution: 0,
-      role: '',
-      userId: user ? user.id : '',
-      organizationId: user ? user.organizationMemberships[0].organization.id : '',
-      userEmail: '',
-      status: '',
-      wallets: [] as SFDCWallet[]
-  });
+  const [modifiedUser, setModifiedUser] = useState<SFDCUserData | null>(null);
   const clearSafewallet = async () => {
     if (!user) return;
     setSafeAddress(user.id, '');
@@ -104,14 +52,14 @@ const EditProfile = ({ }) => {
   // }, [isConnected, address, user])
 
   useEffect(() => {
-    if (!sfdcUser) return;
-    setModifiedUser(sfdcUser);
-    //setRiskTolerance(sfdcUser.riskTolerance);
-    setSalaryContribution(String(sfdcUser.salaryContribution));
-  }, [sfdcUser])
+      if (!sfdcUser) return;
+      if (modifiedUser === null) {
+        setModifiedUser({...sfdcUser, riskTolerance: sfdcUser.riskTolerance || 'Moderate', salaryContribution: sfdcUser.salaryContribution || 0});
+      }
+    }, [sfdcUser])
 
   const handleSaveProfile = async () => {
-    if (!user) return;
+    if (!user || !modifiedUser) return;
     const profileData = {
       userEmail: user.emailAddresses[0].emailAddress,
       userId: user.id,
@@ -156,18 +104,19 @@ const EditProfile = ({ }) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!modifiedUser) return;
     const { name, value } = e.target;
     if (name === 'salaryContribution') {
       if (isNaN(Number(value))) return;
-      setModifiedUser((prevData) => ({
-        ...prevData,
+      setModifiedUser({
+        ...modifiedUser,
         salaryContribution: Number(value),
-      }));
+      });
     } else {
-      setModifiedUser((prevData) => ({
-        ...prevData,
+      setModifiedUser({
+        ...modifiedUser,
         [name]: value,
-      }));
+      });
     }
   };
 
@@ -245,7 +194,7 @@ const EditProfile = ({ }) => {
     )
   }
   
-  const isProfileComplete = !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
+  const isProfileComplete = modifiedUser && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
   return (
       <OpaqueCard sx={{
         px: 4,
@@ -274,7 +223,7 @@ const EditProfile = ({ }) => {
                     </Stack>
                   </>}
                   defaultValue={''}
-                  value={modifiedUser.riskTolerance || 'Moderate'}
+                  value={modifiedUser ? modifiedUser.riskTolerance || 'Moderate' : 'Moderate'}
                   name={'riskTolerance'}
                   onChange={handleChange}
                   fullWidth
@@ -307,7 +256,7 @@ const EditProfile = ({ }) => {
                 />     */}
                 {<Slider
                   aria-label={languageData[language].Edit.salary_label}
-                  value={modifiedUser.salaryContribution || 0}
+                  value={modifiedUser ? modifiedUser.salaryContribution || 0 : 0}
                   getAriaValueText={(value) => `$${value}`}
                   step={10}
                   marks={[100,200,300,400,500].map((value) => ({value, label: `$${value}`}))}
@@ -315,10 +264,11 @@ const EditProfile = ({ }) => {
                   max={500}
                   valueLabelDisplay="auto"
                   onChange={(e, value) => {
-                    setModifiedUser((prevData) => ({
-                      ...prevData,
+                    if (!modifiedUser) return;
+                    setModifiedUser({
+                      ...modifiedUser,
                       salaryContribution: value as number,
-                    }));
+                    });
                   }}
                 />}
                 {/* <TextField
