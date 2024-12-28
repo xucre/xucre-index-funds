@@ -49,7 +49,6 @@ const EditUserProfile = () => {
   
   useEffect(() => {
     if (!sfdcUser) return;
-    console.log('sfdcUser changed');
     if (modifiedUser === null) {
       setModifiedUser(sfdcUser);
     }
@@ -78,6 +77,7 @@ const EditUserProfile = () => {
       placeId: modifiedUser.placeId,
       idCardNumber: modifiedUser.idCardNumber,
       idExpirationDate: modifiedUser.idExpirationDate,
+      idType: modifiedUser.idType,
       idIssueDate: modifiedUser.idIssueDate,
       frontImage: modifiedUser.frontImage,
       backImage: modifiedUser.backImage,
@@ -137,7 +137,6 @@ const EditUserProfile = () => {
 
   const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.street) && !isNull(modifiedUser.city) && !isNull(modifiedUser.province) && !isNull(modifiedUser.postalCode) && !isNull(modifiedUser.country);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
   //const KYCMemo = React.memo(KYC);
-  console.log('edit profile rendered');
   return (
       <OpaqueCard sx={{
         px: 4,

@@ -1,10 +1,14 @@
 import React, { use, useEffect, useState } from 'react';
-import { TextField, Button, Stack, Grid2 as Grid, Typography, debounce, Tabs, Tab } from '@mui/material';
+import { TextField, Button, Stack, Grid2 as Grid, Typography, debounce, Tabs, Tab, FormControl, InputLabel, MenuItem, Select, IconButton, Box, List, ListItem, ListItemText, Badge, styled } from '@mui/material';
 import ImageUpload from './ImageUpload';
 import { SFDCUserData } from '@/service/types';
 import AddressAutocomplete from 'mui-address-autocomplete';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
+import CloseIcon from '@mui/icons-material/Close';
+import ReusableModal from '../ui/ReusableModal';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { isNull } from '@/service/helpers';
 
 // Import additional necessary components and libraries
 interface KYCFormData {
@@ -18,13 +22,27 @@ interface KYCFormData {
   backImage: string;
 }
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    top:'10px',
+  },
+}));
+
 const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) => {
   const {language} = useLanguage();
   const [selectedTab, setSelectedTab] = React.useState(0);
 
+  const handleIdTypeSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    updateUser((prevData) => ({
+      ...prevData,
+      ['idType']: value,
+    }));
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (false && name === 'idExpirationDate') {
+    if (false && name === 'idType') {
       return updateUser((prevData) => ({
         ...prevData,
         idExpirationDate: new Date(value).getTime(),
@@ -42,8 +60,45 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
   };
 
   const handleFrontImageChange = (url) => updateUser((prevData) => ({ ...prevData, frontImage: url }))
+  const handleFrontImageClear = () => updateUser((prevData) => ({ ...prevData, frontImage: '' }))
   const handleBackImageChange = (url) => updateUser((prevData) => ({ ...prevData, backImage: url }))
-  //console.log('kyc rendered');
+  const handleBackImageClear = () => updateUser((prevData) => ({ ...prevData, frontImage: '' }))
+  
+  const IdentificationHelpText = () => {
+    return (
+      <Box p={5}>
+        <Typography variant="h6" sx={{pb:2}}>
+          {languageData[language].Edit.identification_help_text_title}
+        </Typography>
+        <Typography variant="body1">
+          {languageData[language].Edit.identification_help_text_body1}
+        </Typography>
+        <List>
+          <ListItem>
+            {/* <ListItemIcon>
+              <CircleIcon fontSize="small" />
+            </ListItemIcon> */}
+            <ListItemText primary={languageData[language].Edit.identification_help_text_bullet1} />
+          </ListItem>
+          <ListItem>
+            {/* <ListItemIcon>
+              <CircleIcon fontSize="small"  sx={{fontSize: 10}}/>
+            </ListItemIcon> */}
+            <ListItemText primary={languageData[language].Edit.identification_help_text_bullet2} />
+          </ListItem>
+          <ListItem>
+            {/* <ListItemIcon>
+              <CircleIcon fontSize="small" />
+            </ListItemIcon> */}
+            <ListItemText primary={languageData[language].Edit.identification_help_text_bullet3} />
+          </ListItem>
+        </List>
+      </Box>
+      
+    )
+  }
+
+  const isProfileComplete =  !isNull(user.idCardNumber) && !isNull(user.idExpirationDate) && !isNull(user.idIssueDate) && !isNull(user.backImage) && !isNull(user.frontImage);
   return (
     <>
       <Tabs value={selectedTab} onChange={handleTabChange} aria-label="basic tabs example" sx={{alignItems: 'center',justifyContent: 'space-between', display: 'flex'}} component={Stack} direction={'row'} width={'100%'}>
@@ -150,7 +205,14 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
 
       {selectedTab === 1 &&
         <Grid container spacing={2}>
-          <Grid size={12}><Typography fontWeight={'bold'}>{languageData[language].Edit.id_section}</Typography></Grid>
+          <Grid size={12}>
+            <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >  
+              <Typography fontWeight={'bold'}>{languageData[language].Edit.id_section}</Typography>
+              <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
+                <IdentificationHelpText />
+              </ReusableModal>
+            </Stack>
+          </Grid>
           <Grid size={6}>
             <TextField
               label={languageData[language].Edit.idNumber_label}
@@ -161,19 +223,6 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
               onChange={handleChange}
             />
           </Grid>
-
-          <Grid size={6}>
-            <TextField
-              label={languageData[language].Edit.idExpiration_label}
-              name="idExpirationDate"
-              type="date"
-              fullWidth
-              slotProps={{ inputLabel: { shrink: true } }}
-              value={user.idExpirationDate || ''}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid size={6}></Grid>
           <Grid size={6}>
             <TextField
               label={languageData[language].Edit.idIssueDate_label}
@@ -185,14 +234,48 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
               onChange={handleChange}
             />
           </Grid>
+          <Grid size={6}>
+            <FormControl fullWidth >
+              <InputLabel shrink={true} id="idType">{languageData[language].Edit.idType_label}</InputLabel>
+              <Select
+                labelId="idType"
+                value={user.idType || ''}
+                label={languageData[language].Edit.idType_label}
+                onChange={handleIdTypeSelectChange}
+                native={false}
+              >
+                <MenuItem value={'id'}>{languageData[language].Edit.idType_id}</MenuItem>
+                <MenuItem value={'dl'}>{languageData[language].Edit.idType_driverLicense}</MenuItem>
+                <MenuItem value={'passport'}>{languageData[language].Edit.idType_passport}</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid size={6}>
+            <TextField
+              error={user.idExpirationDate !== null && new Date(user.idExpirationDate).getTime() <= new Date().getTime()}
+              label={languageData[language].Edit.idExpiration_label}
+              name="idExpirationDate"
+              type="date"
+              fullWidth
+              slotProps={{ inputLabel: { shrink: true } }}
+              value={user.idExpirationDate || ''}
+              onChange={handleChange}
+            />
+          </Grid>
           <Grid size={12}>
             <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
               <Stack direction={'column'} spacing={1}>
-                <Typography fontWeight={'bold'}>{languageData[language].Edit.front_label}</Typography>
+                <Stack direction={'row'} spacing={1} justifyContent={'space-between'} alignItems={'center'}>
+                  <Typography fontWeight={'bold'}>{languageData[language].Edit.front_label}</Typography>
+                  {user.frontImage && user.frontImage.length > 0 && <IconButton onClick={handleFrontImageClear}><CloseIcon /></IconButton>}
+                </Stack>
                 <ImageUpload imageUrl={user.frontImage} imageUpload={handleFrontImageChange} />
               </Stack>
               <Stack direction={'column'} spacing={1}>
-                <Typography fontWeight={'bold'}>{languageData[language].Edit.back_label}</Typography>
+                <Stack direction={'row'} spacing={1} justifyContent={'space-between'} alignItems={'center'}>
+                  <Typography fontWeight={'bold'}>{languageData[language].Edit.back_label}</Typography>
+                  {user.backImage && user.backImage.length > 0 && <IconButton onClick={handleBackImageClear}><CloseIcon /></IconButton>}
+                </Stack>
                 <ImageUpload imageUrl={user.backImage} imageUpload={handleBackImageChange} />
               </Stack>
             </Stack>

@@ -40,6 +40,7 @@ export type SFDCUserData = {
   postalCode: string,
   country: string,
   placeId: string,
+  idType?: 'id' | 'passport' | 'driverLicense',
   idCardNumber: string,
   idExpirationDate: string,
   idIssueDate: string,

@@ -44,7 +44,7 @@ export default function Settings() {
     </Stack>
   )
   
-  const isProfileComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country);
+  const isProfileComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country) && !isNull(sfdcUser.idCardNumber) && !isNull(sfdcUser.idExpirationDate) && !isNull(sfdcUser.idIssueDate) && !isNull(sfdcUser.backImage) && !isNull(sfdcUser.frontImage);
   const isPortfolioComplete = !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution);
   const UserProfileMemoized = React.memo(UserProfile);
   return (
