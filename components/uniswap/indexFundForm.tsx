@@ -217,6 +217,13 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
     handleSubmit(false);
   }
 
+  const handleDelete = (address: string) => {
+    setFund({
+      ...fund,
+      portfolio: fund.portfolio.filter((item) => item.address !== address),
+    });
+  }
+
   const handleSave = () => {
     handleSubmit(true);
   }
@@ -481,6 +488,8 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
         {fund.portfolio.length > 0 &&
           <Grid container >
             {fund.portfolio.map((item, index) => {
+
+
               return (<Grid key={index} size={12} my={1}><OpaqueCard sx={{cursor: 'pointer'}} onClick={() => handleEditItem(index)}>
                 <Grid container alignItems={'center'} justifyContent={'center'}>
                   <Grid size={4} textAlign={'center'}>
@@ -507,6 +516,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
             portfolioItem={fund.portfolio[editItemIndex]}
             indexFund={fund}
             onSubmit={handleEditItemSubmit}
+            onDelete={handleDelete}
           />
         )}
       </Stack>

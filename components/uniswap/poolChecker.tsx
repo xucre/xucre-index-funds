@@ -160,14 +160,14 @@ const UniswapPoolChecker = ({ registerPortfolioItem }: { registerPortfolioItem: 
         {poolData && <IconButton onClick={addToPortfolio} disabled={invalidPortfolioItem}> <AddCircleIcon /> </IconButton>}
       </Stack>        
 
-      {/* {poolData && (
+      {poolData && (
         <Box sx={{ marginTop: 2 }}>
           <Button fullWidth variant='outlined' onClick={addToPortfolio}>Add to Portfolio</Button>
           <Typography align="center">
             <strong>Pool found!</strong>
           </Typography>
           <Typography align="center">
-            Pool Pair: {`${sourceToken.symbol || sourceToken.name} / ${targetToken.symbol || targetToken.name}`}
+            Pool Pair: {`${sourceToken?.symbol || sourceToken?.name} / ${targetToken?.symbol || targetToken?.name}`}
           </Typography>
           <Typography align="center">
             Pool ID: {truncateEthAddress(poolData.id)}
@@ -185,7 +185,7 @@ const UniswapPoolChecker = ({ registerPortfolioItem }: { registerPortfolioItem: 
         <Typography align="center" sx={{ marginTop: 2 }}>
           No pool found for this token pair.
         </Typography>
-      )} */}
+      )} 
     </Box>
   );
 };

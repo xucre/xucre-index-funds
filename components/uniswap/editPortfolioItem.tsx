@@ -14,15 +14,18 @@ import {
   SelectChangeEvent,
   FormControlLabel,
   Checkbox,
-  Typography
+  Typography,
+  Menu,
+  Fab
 } from '@mui/material';
+import PercentIcon from '@mui/icons-material/Percent';
 import { IndexFund, PoolData, PortfolioItem } from '@/service/types';
 import { Token as UniswapToken } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
 
 import { config } from '@/config';
 import { Language } from '@/metadata/translations';
-import { computePoolAddress } from '@uniswap/v3-sdk';
+import { computePoolAddress, FeeAmount } from '@uniswap/v3-sdk';
 import { getAddress, zeroAddress } from 'viem';
 import { normalizeDevChains } from '@/service/helpers';
 import { readContract } from 'wagmi/actions';
@@ -33,6 +36,7 @@ interface EditPortfolioItemProps {
   portfolioItem: PortfolioItem;
   indexFund: IndexFund;
   onSubmit: (item: PortfolioItem) => void;
+  onDelete: (address: string) => void;
 }
 
 const poolContractMap = {
@@ -47,10 +51,17 @@ const poolContractMap = {
 
 const USDT = process.env.NEXT_PUBLIC_USDT_ADDRESS as string;
 const USDC = process.env.NEXT_PUBLIC_USDC_ADDRESS as string;
-const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, portfolioItem, onSubmit, indexFund }) => {
+const feeTiers = [FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH];
+const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, portfolioItem, onSubmit, indexFund, onDelete }) => {
   const [item, setItem] = useState<PortfolioItem>(portfolioItem);
   const [currentLanguage, setCurrentLanguage] = useState<Language>(Language.EN);
   const [poolData, setPoolData] = useState<PoolData | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const deleteItem = () => {
+    onDelete(item.address);
+    onClose();
+  };    
 
   const handleLanguageChange = (event: SelectChangeEvent<Language>) => {
     setCurrentLanguage(event.target.value as Language);
@@ -84,9 +95,25 @@ const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, po
     });
   };
 
+  const handleFabClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   const handleSave = () => {
     onSubmit(item);
     onClose();
+  };
+
+  const handleMenuItemClick = (feeAmount: number) => {
+    setItem((prev) => (
+      {...prev, poolFee: feeAmount}
+    ));
+    setAnchorEl(null);
+    queryPools();
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const queryPools = async () => {
@@ -107,6 +134,7 @@ const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, po
         address: getAddress(poolAddress),
         functionName: 'liquidity',
       });
+      console.log('liquidity', liquidity);
       const data = {
         id: poolAddress,
         feeTier: item.poolFee,
@@ -173,6 +201,27 @@ const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, po
               onChange={handleInputChange('weight')}
               fullWidth
             />
+            <>
+              <Fab color={'default'} size="small" onClick={handleFabClick}>
+                {item.poolFee ? `${item.poolFee / 10000}%` : <PercentIcon />}
+              </Fab>
+              <Menu
+                id="fee-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                {feeTiers.map((feeAmount) => (
+                  <MenuItem
+                    key={feeAmount}
+                    selected={feeAmount === item.poolFee}
+                    onClick={() => handleMenuItemClick(feeAmount)}
+                  >
+                    {feeAmount / 10000}%
+                  </MenuItem>
+                ))}
+              </Menu>
+            </>
             <FormControlLabel
               control={
                 <Checkbox
@@ -189,6 +238,7 @@ const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, po
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={deleteItem}>Delete</Button>
         <Button onClick={handleSave} variant="contained">Save</Button>
       </DialogActions>
     </Dialog>
