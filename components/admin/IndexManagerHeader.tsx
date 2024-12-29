@@ -6,9 +6,10 @@ import { IndexFund } from '@/service/types';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useParams, useRouter } from 'next/navigation';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { globalChainId } from '@/service/constants';
 
-const IndexManagerList = () => {
+const IndexManagerHeader = () => {
     const router = useRouter();
     const {language} = useLanguage();
     const [funds, setFunds] = useState([] as IndexFund[]);
@@ -50,27 +51,13 @@ const IndexManagerList = () => {
 
     return (
 
-        <Stack direction={'row'} spacing={2}>
-            {funds.map((fund) => (
-                <ListItemButton component={ListItem} key={fund.id} onClick={() => router.push(`/index-manager/${fund.id}`)} selected={fundId === fund.id} sx={{px:3, py:1}}>
-                    <ListItemText primary={fund.name[language]} />
-                </ListItemButton>
-            ))}
-            <ListItem>
-                <Button onClick={createNewFund}>Create New Fund</Button>
-            </ListItem>
+        <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'}>
+            {fundId && fundId.length > 0 &&
+              <IconButton onClick={() => router.push('/index-manager')}><ArrowBackIcon /></IconButton>
+            }
+            <Button onClick={createNewFund}>Create New Fund</Button>
         </Stack>
-        // <List sx={{width: 150}}>
-        //     {funds.map((fund) => (
-        //         <ListItemButton component={ListItem} key={fund.id} onClick={() => router.push(`/index-manager/${fund.id}`)} selected={fundId === fund.id} sx={{px:3, py:2}}>
-        //             <ListItemText primary={fund.name[language]} />
-        //         </ListItemButton>
-        //     ))}
-        //     <ListItem>
-        //         <Button onClick={createNewFund}>Create New Fund</Button>
-        //     </ListItem>
-        // </List>
     );
 };
 
-export default IndexManagerList;
+export default IndexManagerHeader;

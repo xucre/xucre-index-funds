@@ -1,5 +1,5 @@
 'use client'
-import IndexManagerList from "@/components/admin/IndexManagerList";
+import IndexManagerHeader from "@/components/admin/IndexManagerHeader";
 import DashboardNews from "@/components/dashboard/DashboardNews";
 import { useClerkUser } from "@/hooks/useClerkUser";
 import { getDashboardBorderColor } from "@/service/helpers";
@@ -38,7 +38,7 @@ export default function IndexManagerLayout({
   return (
     <Suspense>
         <Stack direction={'column'} spacing={2} justifyContent={'space-between'} px={5} py={4} >
-            <IndexManagerList />
+            <IndexManagerHeader />
             <Divider orientation={'horizontal'} flexItem />
             <Stack direction={'column'} spacing={2} flexGrow={2}>
               {/* <DashboardNavigation /> */}

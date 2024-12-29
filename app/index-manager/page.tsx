@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { IndexFund } from "@/service/types";
 import EmptyFundDetailState from "@/components/admin/EmptyFundDetailState";
 import { globalChainId } from "@/service/constants";
+import FundList from "@/components/admin/FundList";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 export default function IndexFundBase() {
@@ -49,7 +50,7 @@ export default function IndexFundBase() {
   return (
     <Box pb={4}>
       <Stack justifyContent={'center'} alignItems={'center'}>
-        <EmptyFundDetailState onCreateData={createNewFund} />
+        <FundList />
       </Stack>
 
     </Box>
