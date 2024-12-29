@@ -134,7 +134,6 @@ const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, po
         address: getAddress(poolAddress),
         functionName: 'liquidity',
       });
-      console.log('liquidity', liquidity);
       const data = {
         id: poolAddress,
         feeTier: item.poolFee,

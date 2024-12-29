@@ -108,7 +108,8 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
       if (!sourceToken || !fund) return;
       setIsLoading(true);
       const portfolio = fund.portfolio.filter((item) => item.active);
-      const tokenAllocations = distributeWeights(portfolio);
+      const tokenAllocations = portfolio.map((item) => item.weight); //distributeWeights(portfolio);
+      //console.log(tokenAllocations);
       const tokenAddresses = portfolio.map((item) => getAddress(item.address));
       //const tokenAllocations = portfolio.map((item) => item.weight);
       const tokenPoolFees = portfolio.map((item) => item.sourceFees[sourceToken.address] ? item.sourceFees[sourceToken.address] : item.poolFee);
@@ -134,7 +135,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      enqueueSnackbar(err.message, { variant: 'error', autoHideDuration: 5000 });
+      enqueueSnackbar(err.message, { variant: 'error', autoHideDuration: 2000 });
     }
   }
 

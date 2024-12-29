@@ -239,6 +239,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
   }  
 
   const handleSpot = () => {
+    console.log('spotting');
     initiateSpot(amount);
   }
   const allowanceString = allowance && sourceToken ? formatUnits(allowance as bigint, sourceToken.decimals) : 0;

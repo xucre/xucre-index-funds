@@ -671,7 +671,8 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   console.log('building portfolio for user', member.safeWalletAddress);
   const portfolio = selectedFund.portfolio;
   const activeItems = portfolio.filter((item) => item.active);
-  const tokenAllocations = distributeWeights(activeItems);
+  const tokenAllocations = portfolio.map((item) => item.weight);
+  //const tokenAllocations = distributeWeights(activeItems);
   const tokenAddresses = activeItems.map((item) => getAddress(item.address));
   const tokenPoolFees = activeItems.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
 
