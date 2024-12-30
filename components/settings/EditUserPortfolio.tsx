@@ -85,6 +85,7 @@ const EditProfile = ({ }) => {
       backImage: sfdcUser.backImage,
       riskTolerance: modifiedUser.riskTolerance,
       salaryContribution: modifiedUser.salaryContribution,
+      beneficiaries: sfdcUser.beneficiaries || [],
     } as SFDCUserData;
 
     if (signedMessage) {

@@ -72,7 +72,7 @@ const values : TranslationType = {
     risk_conservative: 'Conservative',
     risk_aggressive: 'Aggressive',
     risk_moderate: 'Moderate',
-
+    beneficiary_section: 'Beneficiaries',
     identification_help_text_title: 'Photo IDs',
     identification_help_text_body1: 'The photo ID must: Be non-expired. Have the machine-readable zone visible (if available). Be a physical photo ID document, not a digital one.',
     identification_help_text_bullet1: 'Passport: Must be the data page (picture, MRZ, and details)',

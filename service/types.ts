@@ -48,7 +48,23 @@ export type SFDCUserData = {
   backImage: string,
   riskDisclosureSigned?: boolean,
   riskDisclosureSignedDate?: string,
+  beneficiaries: Beneficiary[],
   wallets : SFDCWallet[]
+}
+
+export type Beneficiary = {
+  id: string,
+  firstName: string,
+  middleName: string,
+  lastName: string,
+  email: string,
+  phone: string,
+  street: string,
+  street2: string,
+  city: string,
+  province: string,
+  postalCode: string,
+  country: string,
 }
 
 export type SFDCWallet = {

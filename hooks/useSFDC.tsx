@@ -27,7 +27,10 @@ export const SFDCProvider = ({ children }: { children: any }) => {
     const org = user?.organizationMemberships?.length > 0 ? user?.organizationMemberships[0].id : '';
     const response = await getUserDetails(user.id);
     if (response && response.firstName) {
-      setSfdcUser(response);
+      setSfdcUser({
+        ...response, 
+        beneficiaries: response.beneficiaries || [],
+      });
     } else {
       setSfdcUser({
         riskTolerance: '',
@@ -53,7 +56,8 @@ export const SFDCProvider = ({ children }: { children: any }) => {
         idIssueDate: '',
         frontImage: '',
         backImage: '',
-        placeId: ''
+        placeId: '',
+        beneficiaries: [],
       } as SFDCUserData);
     }
     setIsLoaded(true);

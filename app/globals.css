@@ -146,3 +146,6 @@ html {
   margin-bottom:0;
 }
 
+.group-space-between [role="tablist"] {
+  /*justify-content: space-between;*/
+}

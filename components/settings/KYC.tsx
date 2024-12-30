@@ -1,14 +1,20 @@
 import React, { use, useEffect, useState } from 'react';
 import { TextField, Button, Stack, Grid2 as Grid, Typography, debounce, Tabs, Tab, FormControl, InputLabel, MenuItem, Select, IconButton, Box, List, ListItem, ListItemText, Badge, styled } from '@mui/material';
 import ImageUpload from './ImageUpload';
-import { SFDCUserData } from '@/service/types';
+import { Beneficiary, SFDCUserData } from '@/service/types';
 import AddressAutocomplete from 'mui-address-autocomplete';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
 import CloseIcon from '@mui/icons-material/Close';
 import ReusableModal from '../ui/ReusableModal';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import AddIcon from '@mui/icons-material/Add';
 import { isNull } from '@/service/helpers';
+import { v4 as uuidv4 } from 'uuid';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import router from 'next/router';
+import BeneficiaryModal from './BeneficiaryModal';
 
 // Import additional necessary components and libraries
 interface KYCFormData {
@@ -31,6 +37,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) => {
   const {language} = useLanguage();
   const [selectedTab, setSelectedTab] = React.useState(0);
+  const [selectedBeneficiary, setSelectedBeneficiary] = React.useState<Beneficiary>({} as Beneficiary);
+  const [beneficiaryModalOpen, setBeneficiaryModalOpen] = React.useState(false);
 
   const handleIdTypeSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -64,6 +72,43 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
   const handleBackImageChange = (url) => updateUser((prevData) => ({ ...prevData, backImage: url }))
   const handleBackImageClear = () => updateUser((prevData) => ({ ...prevData, frontImage: '' }))
   
+  const handleSelectBeneficiary = (beneficiary: Beneficiary) => {
+    setSelectedBeneficiary(beneficiary);
+    setBeneficiaryModalOpen(true);
+  }
+
+  const handleNewBeneficiary = () => {
+    setSelectedBeneficiary({
+      id: uuidv4(),
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      street: '',
+      street2: '',
+      city: '',
+      province: '',
+      postalCode: '',
+      country: '',
+    } as Beneficiary);
+    setBeneficiaryModalOpen(true);
+  }
+
+  const handleSaveBeneficiary = (beneficiary: Beneficiary) => {
+    updateUser((prevData) => ({
+      ...prevData,
+      beneficiaries: [...prevData.beneficiaries.filter((ben) => ben.id !== beneficiary.id), beneficiary],
+    }));
+  }
+
+  const handleDeleteBeneficiary = (beneficiary: Beneficiary) => {
+    updateUser((prevData) => ({
+      ...prevData,
+      beneficiaries: prevData.beneficiaries.filter((ben) => ben.id !== beneficiary.id),
+    }));
+  }
+
   const IdentificationHelpText = () => {
     return (
       <Box p={5}>
@@ -98,12 +143,38 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
     )
   }
 
+  const columns: GridColDef[] = [
+    { field: 'firstName', headerName: 'First Name', flex: 1, headerClassName: 'primaryBackground--header', },
+    { field: 'lastName', headerName: 'Last Name', flex: 1, headerClassName: 'primaryBackground--header', },
+    { field: 'email', headerName: 'Email', flex: 1, headerClassName: 'primaryBackground--header', },
+    {
+      field: 'view',
+      headerName: '',
+      sortable: false,
+      headerClassName: 'primaryBackground--header',
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+            <IconButton 
+              aria-label={`${params.row.firstName} ${params.row.lastName}`}
+              onClick={() => handleSelectBeneficiary(params.row as Beneficiary)}
+            >
+              <ArrowForwardIcon />
+            </IconButton>
+          </Stack>
+        )
+      },
+    },
+  ];
+
   const isProfileComplete =  !isNull(user.idCardNumber) && !isNull(user.idExpirationDate) && !isNull(user.idIssueDate) && !isNull(user.backImage) && !isNull(user.frontImage);
+  
   return (
     <>
-      <Tabs value={selectedTab} onChange={handleTabChange} aria-label="basic tabs example" sx={{alignItems: 'center',justifyContent: 'space-between', display: 'flex'}} component={Stack} direction={'row'} width={'100%'}>
+      <Tabs value={selectedTab} onChange={handleTabChange} aria-label="basic tabs example" sx={{alignItems: 'center',justifyContent: 'space-between', display: 'flex'}} className={'group-space-between'} component={Stack} justifyContent={'space-between'} direction={'row'} width={'100%'}>
           <Tab label={languageData[language].Edit.personal_information}  />
           <Tab label={languageData[language].Edit.id_section} />
+          <Tab label={languageData[language].Edit.beneficiary_section} />
       </Tabs>
       {selectedTab === 0 && 
         <Grid container spacing={2}>
@@ -282,7 +353,42 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
           </Grid>
         </Grid>
       }
-      
+
+      {selectedTab === 2 &&
+        <Grid container spacing={2}>
+          <Grid size={12}>
+            <Stack direction={'row'} spacing={2} sx={{py:0}} alignItems="center" justifyContent={'start'}>
+              <IconButton onClick={handleNewBeneficiary}><AddIcon /></IconButton>
+            </Stack>
+          </Grid>
+          <Grid size={12}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <DataGrid
+              rows={user.beneficiaries}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[10, 25]}
+              getRowId={(row) => row.id}
+              sx={{    
+                '& .primaryBackground--header': {
+                  backgroundColor: 'rgb(5,46,37)',
+                  '--DataGrid-containerBackground' : 'rgb(5,46,37)',
+                  '--DataGrid-pinnedBackground' : 'rgb(5,46,37)'
+                },
+              }}
+            />
+            </div>
+          </Grid>
+        </Grid>
+      }
+
+      <BeneficiaryModal open={beneficiaryModalOpen} onClose={setBeneficiaryModalOpen} beneficiary={selectedBeneficiary} saveBeneficiary={handleSaveBeneficiary} deleteBeneficiary={handleDeleteBeneficiary}/>
     </>
   );
 };
