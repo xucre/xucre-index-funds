@@ -5,9 +5,13 @@ import {
   Typography,
   TextField,
   Button,
-  Grid2 as Grid
+  Grid2 as Grid,
+  Dialog,
+  DialogContent,
+  DialogTitle
 } from '@mui/material';
 import { Beneficiary } from '@/service/types';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface BeneficiaryModalProps {
   open: boolean;
@@ -24,7 +28,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
   saveBeneficiary
 }) => {
   const [formData, setFormData] = useState<Beneficiary>(beneficiary);
-  
+  const {language, languageData} = useLanguage();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -46,27 +50,13 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
   useEffect(() => {setFormData(beneficiary)}, [beneficiary]);
 
   return (
-    <Modal open={open} onClose={handleCancel}>
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          bgcolor: 'background.paper',
-          borderRadius: 2,
-          p: 3,
-          width: '80%',
-          maxWidth: 600
-        }}
-      >
-        <Typography variant="h6" mb={2}>
-          Beneficiary Information
-        </Typography>
-        <Grid container spacing={2}>
+    <Dialog open={open} onClose={handleCancel}>
+      <DialogTitle>{languageData[language].Edit.beneficiary_modal_title}</DialogTitle>      
+      <DialogContent sx={{minHeight: 200, py: 1}}>
+        <Grid container spacing={2} py={1}>
           <Grid size={4}>
             <TextField
-              label="First Name"
+              label={languageData[language].Edit.firstName_label}
               name="firstName"
               fullWidth
               value={formData.firstName}
@@ -75,7 +65,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
           </Grid>
           <Grid size={4}>
             <TextField
-              label="Middle Name"
+              label={languageData[language].Edit.middleName_label}
               name="middleName"
               fullWidth
               value={formData.middleName}
@@ -84,7 +74,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
           </Grid>
           <Grid size={4}>
             <TextField
-              label="Last Name"
+              label={languageData[language].Edit.lastName_label}
               name="lastName"
               fullWidth
               value={formData.lastName}
@@ -93,7 +83,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
           </Grid>
           <Grid size={8}>
             <TextField
-              label="Email"
+              label={languageData[language].Edit.email_label}
               name="email"
               fullWidth
               value={formData.email}
@@ -102,7 +92,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
           </Grid>
           <Grid size={4}>
             <TextField
-              label="Phone"
+              label={languageData[language].Edit.phone_label}
               name="phone"
               fullWidth
               value={formData.phone}
@@ -110,11 +100,11 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
             />
           </Grid>
           <Grid size={12}>
-            <Typography fontWeight="bold">Address</Typography>
+            <Typography fontWeight="bold">{languageData[language].Edit.address_section}</Typography>
           </Grid>
           <Grid size={6}>
             <TextField
-              label="Street"
+              label={languageData[language].Edit.street_label}
               name="street"
               fullWidth
               value={formData.street}
@@ -123,7 +113,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
           </Grid>
           <Grid size={6}>
             <TextField
-              label="Street 2"
+              label={languageData[language].Edit.street2_label}
               name="street2"
               fullWidth
               value={formData.street2}
@@ -132,7 +122,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
           </Grid>
           <Grid size={6}>
             <TextField
-              label="City"
+              label={languageData[language].Edit.city_label}
               name="city"
               fullWidth
               value={formData.city}
@@ -141,7 +131,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
           </Grid>
           <Grid size={6}>
             <TextField
-              label="Province"
+              label={languageData[language].Edit.province_label}
               name="province"
               fullWidth
               value={formData.province}
@@ -150,7 +140,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
           </Grid>
           <Grid size={6}>
             <TextField
-              label="Postal Code"
+              label={languageData[language].Edit.postalCode_label}
               name="postalCode"
               fullWidth
               value={formData.postalCode}
@@ -159,7 +149,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
           </Grid>
           <Grid size={6}>
             <TextField
-              label="Country"
+              label={languageData[language].Edit.country_label}
               name="country"
               fullWidth
               value={formData.country}
@@ -170,14 +160,14 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
 
         <Box mt={3} display="flex" justifyContent="flex-end" gap={2}>
           <Button variant="outlined" onClick={handleCancel}>
-            Cancel
+            {languageData[language].ui.cancel}
           </Button>
           <Button variant="contained" onClick={handleSubmit}>
-            Submit
+            {languageData[language].ui.submit}
           </Button>
         </Box>
-      </Box>
-    </Modal>
+        </DialogContent>
+    </Dialog>
   );
 };
 

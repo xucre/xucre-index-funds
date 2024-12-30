@@ -4,7 +4,6 @@ import ImageUpload from './ImageUpload';
 import { Beneficiary, SFDCUserData } from '@/service/types';
 import AddressAutocomplete from 'mui-address-autocomplete';
 import { useLanguage } from '@/hooks/useLanguage';
-import languageData, { Language } from '@/metadata/translations';
 import CloseIcon from '@mui/icons-material/Close';
 import ReusableModal from '../ui/ReusableModal';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -35,7 +34,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) => {
-  const {language} = useLanguage();
+  const {language, languageData} = useLanguage();
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [selectedBeneficiary, setSelectedBeneficiary] = React.useState<Beneficiary>({} as Beneficiary);
   const [beneficiaryModalOpen, setBeneficiaryModalOpen] = React.useState(false);
@@ -144,24 +143,23 @@ const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) =>
   }
 
   const columns: GridColDef[] = [
-    { field: 'firstName', headerName: 'First Name', flex: 1, headerClassName: 'primaryBackground--header', },
-    { field: 'lastName', headerName: 'Last Name', flex: 1, headerClassName: 'primaryBackground--header', },
-    { field: 'email', headerName: 'Email', flex: 1, headerClassName: 'primaryBackground--header', },
+    { field: 'firstName', headerName: languageData[language].Edit.firstName_label, flex: 1, headerClassName: 'primaryBackground--header', },
+    { field: 'lastName', headerName: languageData[language].Edit.lastName_label, flex: 1, headerClassName: 'primaryBackground--header', },
+    { field: 'email', headerName: languageData[language].Edit.email_label, flex: 1.8, headerClassName: 'primaryBackground--header', },
     {
       field: 'view',
       headerName: '',
       sortable: false,
+      flex: 0.5,
       headerClassName: 'primaryBackground--header',
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
             <IconButton 
               aria-label={`${params.row.firstName} ${params.row.lastName}`}
               onClick={() => handleSelectBeneficiary(params.row as Beneficiary)}
             >
               <ArrowForwardIcon />
             </IconButton>
-          </Stack>
         )
       },
     },
