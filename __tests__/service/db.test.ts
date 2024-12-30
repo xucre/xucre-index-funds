@@ -158,6 +158,7 @@ describe("db.ts", () => {
         idIssueDate: "",
         frontImage: "",
         backImage: "",
+        beneficiaries: [],
         wallets: [],
       };
 
