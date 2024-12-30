@@ -3,7 +3,7 @@ import { getOrganizationMembers } from '@/service/clerk';
 import { getUserDetails, getSafeAddress } from '@/service/db';
 import { OrganizationMembership } from '@clerk/backend';
 import { useOrganization } from '@clerk/nextjs';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { Box, Chip, Fade, Stack, Typography } from '@mui/material';
 import { InvoiceMember } from '@/service/types';
 import languageData from '@/metadata/translations'
@@ -83,6 +83,16 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
     setHasChanges(hasChanges);
   }, [members, initialMembers]); 
 
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarExport printOptions={{
+          hideFooter: true,
+          hideToolbar: true,
+        }}/>
+      </GridToolbarContainer>
+    );
+  }
   return (
     <Box sx={{
       '& .primaryBackground--header': {
@@ -110,12 +120,13 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
         rows={members}
         rowSelection={false}
         sx={{ width: '100%', mb: 10 }}
+        slots={{ toolbar: CustomToolbar }}
         columns={[
-          { field: 'id', headerName: languageData[language].Invoice.detail_table_column_id, flex:2, headerClassName: 'primaryBackground--header' },
+          { field: 'id', headerName: languageData[language].Invoice.detail_table_column_id, flex:1, headerClassName: 'primaryBackground--header' },
           { field: 'email', headerName: languageData[language].Invoice.detail_table_column_email, flex:1, headerClassName: 'primaryBackground--header' },
           { field: 'firstName', headerName: languageData[language].Invoice.detail_table_column_first, flex:1, headerClassName: 'primaryBackground--header' },
           { field: 'lastName', headerName: languageData[language].Invoice.detail_table_column_last, flex:1, headerClassName: 'primaryBackground--header' },
-          { field: 'salaryContribution', headerName: languageData[language].Invoice.detail_table_column_amount, flex:1, editable: true, headerClassName: 'primaryBackground--header' },
+          { field: 'salaryContribution', headerName: languageData[language].Invoice.detail_table_column_amount, flex:0.5, editable: true, headerClassName: 'primaryBackground--header' },
           { field: 'safeWalletAddress', headerName: languageData[language].Invoice.detail_table_column_wallet, flex:2, headerClassName: 'primaryBackground--header' },
         ]}        
         processRowUpdate={(params) => {

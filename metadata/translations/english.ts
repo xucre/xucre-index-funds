@@ -298,6 +298,7 @@ const values : TranslationType = {
     cancel: "Cancel",
     confirm: "Confirm",
     featured: 'Featured',
+    export: 'Export',
     all: 'All',
     save: 'Save',
     error: 'Error',

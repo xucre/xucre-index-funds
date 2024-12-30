@@ -305,6 +305,7 @@ const values : TranslationType  = {
     add: 'Adicionar',
     yes: 'Sim',
     no: 'Não',
+    export: 'Exportar',
     submit: 'Enviar',
     subtract: 'Subtrair',
     coming_soon: 'Em breve',

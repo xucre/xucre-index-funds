@@ -308,6 +308,7 @@ const values : TranslationType = {
     error: 'Error',
     add: 'Añadir',
     subtract: 'Restar',
+    export: 'Exportar',
     coming_soon: "Próximamente",
     no_items: "No se encontraron artículos",
     address_not_found: "Dirección no encontrada",
