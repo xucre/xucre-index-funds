@@ -32,12 +32,12 @@ interface ProfileData {
   signedMessage?: string;
 }
 
-const EditUserProfile = () => {
+const EditUserProfile = ({selectedTab}) => {
   const {language} = useLanguage();
   //const router = useRouter();
   const { user } = useClerkUser();
   const { isAdmin } = useIsAdmin();
-  const [selectedTab, setSelectedTab] = React.useState(0);
+  const [_selectedTab, setSelectedTab] = React.useState(0);
   const { sfdcUser, updateUser, refresh } = useSFDC();
   //const sfdcUser = useMemo(() => (sfdcUserRaw), [sfdcUserRaw]);
   const [modifiedUser, setModifiedUser] = useState<SFDCUserData>(sfdcUser);

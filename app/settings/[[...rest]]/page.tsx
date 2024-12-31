@@ -11,7 +11,9 @@ import SocialIcons from "@/components/ui/socialIcons";
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 import WalletIcon from '@mui/icons-material/Wallet';
 import BadgeIcon from '@mui/icons-material/Badge';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import EditUserProfile from "@/components/settings/EditUserProfile";
 import { useLanguage } from '@/hooks/useLanguage';
 import EditUserPortfolio from "@/components/settings/EditUserPortfolio";
@@ -46,7 +48,9 @@ export default function Settings() {
   )
   
   
-  const isProfileComplete = useMemo(() => !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country) && !isNull(sfdcUser.idCardNumber) && !isNull(sfdcUser.idExpirationDate) && !isNull(sfdcUser.idIssueDate) && !isNull(sfdcUser.backImage) && !isNull(sfdcUser.frontImage), [sfdcUser.lastName, sfdcUser.firstName, sfdcUser.street, sfdcUser.city, sfdcUser.province, sfdcUser.postalCode, sfdcUser.country, sfdcUser.idCardNumber, sfdcUser.idExpirationDate, sfdcUser.idIssueDate, sfdcUser.backImage, sfdcUser.frontImage]);
+  const isPersonalInformationComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country);
+  const isIdentificationComplete = !isNull(sfdcUser.idCardNumber) && !isNull(sfdcUser.idExpirationDate) && !isNull(sfdcUser.idIssueDate) && !isNull(sfdcUser.backImage) && !isNull(sfdcUser.frontImage);
+  const isBeneficiaryComplete = true;//!isNull(sfdcUser.beneficiaries);
   const isPortfolioComplete = useMemo(() => !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution), [sfdcUser.riskTolerance, sfdcUser.salaryContribution]);
   const UserProfileMemoized = React.memo(UserProfile);
   return (
@@ -57,8 +61,14 @@ export default function Settings() {
             <UserProfile.Page label={languageData[language].Settings.view_portfolio} labelIcon={isPortfolioComplete ? <WalletIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="portfolio">
               <EditUserPortfolio />
             </UserProfile.Page>
-            <UserProfile.Page label={languageData[language].Settings.view_indentification} labelIcon={isProfileComplete ? <BadgeIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="identification">
-              <EditUserProfile />
+            <UserProfile.Page label={languageData[language].Edit.personal_information} labelIcon={isPersonalInformationComplete ? <BadgeIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="personal">
+              <EditUserProfile selectedTab={0}/>
+            </UserProfile.Page>
+            <UserProfile.Page label={languageData[language].Edit.id_section} labelIcon={isIdentificationComplete ? <ContactMailIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="identification">
+              <EditUserProfile selectedTab={1}/>
+            </UserProfile.Page>
+            <UserProfile.Page label={languageData[language].Edit.beneficiary_section} labelIcon={isBeneficiaryComplete ? <RecentActorsIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="beneficiaries">
+              <EditUserProfile selectedTab={2}/>
             </UserProfile.Page>
             <UserProfile.Page label={languageData[language].Settings.view_web3} labelIcon={<LinkIcon fontSize="small" />} url="web3">
               <WalletManagement />
