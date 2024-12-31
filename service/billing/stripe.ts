@@ -14,7 +14,7 @@ const DOMAIN = process.env.DOMAIN ? process.env.DOMAIN : 'app.xucre.net';
 //       method: 'POST',
 //       path: 'crypto/onramp_sessions',
 //     }),
-//   });
+//   })
 const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID;
 
 export async function getCustomerSubscription (organization) {
