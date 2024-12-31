@@ -46,7 +46,7 @@ const BeneficiaryModal: React.FC<BeneficiaryModalProps> = ({
     onClose(false);
   };
 
-  useEffect(() => {console.log(formData)}, [formData]);
+  //useEffect(() => {console.log(formData)}, [formData]);
   useEffect(() => {setFormData(beneficiary)}, [beneficiary]);
 
   return (

@@ -33,9 +33,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const KYC = ({user, updateUser} : {user: SFDCUserData, updateUser: Function}) => {
+const KYC = ({user, updateUser, selectedTab, setSelectedTab} : {user: SFDCUserData, updateUser: Function, selectedTab: number, setSelectedTab: Function}) => {
   const {language, languageData} = useLanguage();
-  const [selectedTab, setSelectedTab] = React.useState(0);
   const [selectedBeneficiary, setSelectedBeneficiary] = React.useState<Beneficiary>({} as Beneficiary);
   const [beneficiaryModalOpen, setBeneficiaryModalOpen] = React.useState(false);
 
