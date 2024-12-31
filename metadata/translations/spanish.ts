@@ -38,6 +38,7 @@ const values : TranslationType = {
     total_balance: 'Saldo total',
     transaction_in: 'Entrada',
     transaction_out: 'Salida',
+    no_transactions: 'No se encontraron transacciones',
   },
   Edit: {
     image_upload: 'Subir imagen',

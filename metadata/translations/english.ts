@@ -36,6 +36,7 @@ const values : TranslationType = {
     total_balance: 'Total Balance',
     transaction_in: 'In',
     transaction_out: 'Out',
+    no_transactions: 'No transactions found',
   },
   Edit: {
     image_upload: 'Upload Image',

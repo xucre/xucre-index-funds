@@ -74,6 +74,7 @@ export default function DashboardTransactionList({ address, truncate = true, tra
 
             )
           })}
+          {groupedTransactions.length === 0 && <Typography fontSize={14} fontWeight={'normal'} color="text.secondary" >{languageData[language].Dashboard.no_transactions}</Typography>}
         </Stack>
       </CardContent>
     </OpaqueCard>
