@@ -168,11 +168,11 @@ const KYC = ({user, updateUser, selectedTab, setSelectedTab} : {user: SFDCUserDa
   
   return (
     <>
-      <Tabs value={selectedTab} onChange={handleTabChange} aria-label="basic tabs example" sx={{alignItems: 'center',justifyContent: 'space-between', display: 'flex'}} className={'group-space-between'} component={Stack} justifyContent={'space-between'} direction={'row'} width={'100%'}>
+      {false && <Tabs value={selectedTab} onChange={handleTabChange} aria-label="basic tabs example" sx={{alignItems: 'center',justifyContent: 'space-between', display: 'flex'}} className={'group-space-between'} component={Stack} justifyContent={'space-between'} direction={'row'} width={'100%'}>
           <Tab label={languageData[language].Edit.personal_information}  />
           <Tab label={languageData[language].Edit.id_section} />
           <Tab label={languageData[language].Edit.beneficiary_section} />
-      </Tabs>
+      </Tabs>}
       {selectedTab === 0 && 
         <Grid container spacing={2}>
           <Grid size={12}><Typography fontWeight={'bold'}>{languageData[language].Edit.personal_section}</Typography></Grid>
