@@ -12,10 +12,12 @@ import DashboardTransaction from "./DashboardTransaction";
 import OpaqueCard from "../ui/OpaqueCard";
 import { getTextColor } from "@/service/theme";
 import { fetchInfo, getTokenInfo } from "@/service/lambda";
-import { getChainNameRainbowKit } from '../../service/helpers';
 import { TokenDetails } from "@/service/types";
 import DashboardBalanceItem from "./DashboardBalanceItem";
 import { isAddressEqual } from "viem";
+import Dashboard from '../../app/dashboard/page';
+import { getTokenMetadata, setTokenMetadata } from "@/service/db";
+import { globalChainId } from "@/service/constants";
 
 const BASEURL = 'https://xucre-public.s3.sa-east-1.amazonaws.com/';// + coinIconNames[token.chainId as keyof typeof coinIconNames].toLowerCase() + '.png'
 
@@ -26,7 +28,7 @@ export default function DashboardBalanceList({ address }: { address: string }) {
   const textColor = getTextColor(theme);
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const _address = '0x358eB621894B55805CE16225b2504523d421d3A6';
-  const { transactions, history, balance, change } = useWalletData({ address: _address });
+  const { transactions, history, balance, change } = useWalletData({ address });
   const [tokenMap, setTokenMap] = useState(null as [string, TokenDetails] | null);
   const [loaded, setLoaded] = useState(false);
 
@@ -35,15 +37,22 @@ export default function DashboardBalanceList({ address }: { address: string }) {
   const syncTokenDetails = async () => {
     setLoaded(false);
     const tokenDetails = await Promise.all(balances.map(async (balance) => {
-      const token = await getTokenInfo(137, balance.contract_address);
+      let token: TokenDetails;
+      const token1 = await getTokenMetadata(globalChainId, balance.contract_address);
+      if (token1) {
+        token = token1 as TokenDetails;
+      } else {
+        token = await getTokenInfo(globalChainId, balance.contract_address);
+        await setTokenMetadata(globalChainId, balance.contract_address, token as TokenDetails);
+      }
       if (isAddressEqual(balance.contract_address, '0x924442A46EAC25646b520Da8D78218Ae8FF437C2')) {
         return { ...token, logo: BASEURL + 'xucre.png' };
       }
       if (!token.logo && isAddressEqual(balance.contract_address, "0x0000000000000000000000000000000000001010")) {
-        return { ...token, logo: BASEURL + coinIconNames[137] + '.png', defaultLogo: false };
+        return { ...token, logo: BASEURL + coinIconNames[globalChainId] + '.png', defaultLogo: false };
       }
       if (!token.logo) {
-        return { ...token, logo: BASEURL + coinIconNames[137] + '.png', defaultLogo: true };
+        return { ...token, logo: BASEURL + coinIconNames[globalChainId] + '.png', defaultLogo: true };
       }
       return token;
     }));
@@ -61,7 +70,7 @@ export default function DashboardBalanceList({ address }: { address: string }) {
   }, [balances])
   return (
     <OpaqueCard>
-      <CardHeader sx={{ py: 1, mb: 0 }} title={<Typography variant="body1" color="text.secondary">Balances</Typography>} />
+      <CardHeader sx={{ py: 1, mb: 0 }} title={<Typography variant="body1" color="text.secondary">{languageData[language].Dashboard.balances}</Typography>} />
       <CardContent sx={{ py: 0 }} >
         <List>
           {tokenMap ? balances.map((balance, index) => {

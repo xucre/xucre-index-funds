@@ -1,8 +1,11 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isPublicRoute = createRouteMatcher(['/', '/about-us(.*)', '/index-fund(.*)'])
-const isAdminRoute = createRouteMatcher(['/index-builder(.*)', '/organization(.*)', '/billing(.*)'])
-const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
+const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/about-us(.*)'])
+const isAdminRoute = createRouteMatcher(['/organization(.*)', '/billing(.*)', '/api/billing(.*)', '/api/invoice(.*)'])
+const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/edit(.*)', '/settings(.*)', '/wallets(.*)', '/transactions(.*)', '/api(.*)', '/fund(.*)'])
+const isInternalRoute = createRouteMatcher(['/organizations(.*)', '/index-manager(.*)', '/index-builder(.*)'])
+
+export const adminUserList = (process.env.ADMIN_USER_LIST as string).split(',');
 
 export default clerkMiddleware((_auth, req) => {
   const auth = _auth();
@@ -10,16 +13,22 @@ export default clerkMiddleware((_auth, req) => {
   if (!auth.userId) {
     // Add custom logic to run before redirecting
     return auth.redirectToSignIn()
+  } else if (isInternalRoute(req)) {
+    auth.protect((has) => {
+      return (
+        has({role: 'org:superadmin'}) || adminUserList.includes(auth.userId)
+      )
+    })
   } else if (isAdminRoute(req)) {
     auth.protect((has) => {
       return (
-        has({ role: 'org:admin' })
+        has({ role: 'org:admin' }) || has({role: 'org:superadmin'})
       )
     })
   } else if (isProtectedRoute(req)) {
     auth.protect(() => {
       return (
-        auth.orgId !== undefined && auth.orgId !== null
+        auth.userId !== undefined && auth.userId !== null
       )
     })
   }

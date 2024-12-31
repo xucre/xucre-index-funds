@@ -3,5 +3,7 @@
     "**/.next": true,
     "**/.next/**": true,
     "**/node_modules/**": true
-  }
+  },
+  "editor.tabCompletion": "on",
+  "accessibility.verbosity.inlineCompletions": true
 }

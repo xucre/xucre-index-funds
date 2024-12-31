@@ -7,8 +7,11 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useLanguage } from "@/hooks/useLanguage";
 import languageData from '@/metadata/translations';
 import { useMixpanel } from "@/hooks/useMixpanel";
+import OpaqueCard from "../ui/OpaqueCard";
+import { useAccount } from "wagmi";
+import AccountButton from "../accountButton";
 
-export const BuyItem = ({ status, confirmationHash, portfolio, sourceToken, sourceTokens, setSourceToken, balance, rawAmount, handleAmountUpdate, amount, handleApproval, loading, allowance, allowanceAmount, handleSpot }) => {
+export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, sourceToken, sourceTokens, setSourceToken, balance, rawAmount, handleAmountUpdate, amount, handleApproval, loading, allowance, allowanceAmount, handleSpot }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -19,10 +22,11 @@ export const BuyItem = ({ status, confirmationHash, portfolio, sourceToken, sour
   };
   const mixpanel = useMixpanel();
   const { language } = useLanguage();
+  const { isConnected, address, chainId, chain } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const [currentAction, setCurrentAction] = useState('');
   const isReadyToApprove = amount > BigInt(0);
-  const isReadyToBuy = isReadyToApprove && BigInt(allowance) >= BigInt(amount);
+  const isReadyToBuy = isReadyToApprove && ((allowance && BigInt(allowance) >= BigInt(amount)) || (isNativeToken && BigInt(balance) >= BigInt(amount)));
   const step = isReadyToBuy ? 1 : 0;
 
   useEffect(() => { setIsLoading(false) }, []);
@@ -72,15 +76,10 @@ export const BuyItem = ({ status, confirmationHash, portfolio, sourceToken, sour
     }
   }, [confirmationHash]);
 
-  useEffect(() => {
-    //console.log(sourceToken);
-  }, [sourceToken])
-  //useEffect(() => { console.log('buyItemBalance', balance) }, [balance])
-
   if (!sourceToken) return null;
   return (
     <Stack justifyContent={'center'} alignItems={'center'} spacing={2} >
-      <Card sx={{ maxWidth: 500 }}>
+      <OpaqueCard sx={{ maxWidth: 500 }}>
         <Collapse in={!isReadyToApprove}>
           <CardMedia
             sx={{ height: 340, width: 350, display: { xs: 'none', sm: 'block' } }}
@@ -130,7 +129,7 @@ export const BuyItem = ({ status, confirmationHash, portfolio, sourceToken, sour
               }}
               value={rawAmount}
               color={'success'}
-              helperText={`${languageData[language].ui.balance}: $${balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}`}
+              helperText={`${languageData[language].ui.balance}: ${balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}`}
               onChange={handleAmountUpdate}
             />
             <Collapse in={isReadyToApprove} sx={{}}>
@@ -155,12 +154,17 @@ export const BuyItem = ({ status, confirmationHash, portfolio, sourceToken, sour
           {/*<LoadingButton variant="contained" fullWidth disabled={amount === BigInt(0)} onClick={handleApproval} loading={loading} loadingIndicator="Approve">
             Approve
           </LoadingButton>*/}
-
-          <LoadingButton variant="contained" fullWidth disabled={!isReadyToApprove} onClick={executeCombinedFlow} loading={isLoading} loadingIndicator={languageData[language].ui.executing}>
-            {isReadyToBuy ? languageData[language].Buttons_Header.buy : languageData[language].ui.approve_and_buy}
-          </LoadingButton>
+          {!isConnected &&
+            <AccountButton />
+          }
+          {isConnected && 
+            <LoadingButton variant="contained" fullWidth disabled={!isReadyToApprove} onClick={executeCombinedFlow} loading={isLoading} loadingIndicator={languageData[language].ui.executing}>
+              {isReadyToBuy ? languageData[language].Buttons_Header.buy : languageData[language].ui.approve_and_buy}
+            </LoadingButton>
+          }
+          
         </CardActions>
-      </Card>
+      </OpaqueCard>
     </Stack>
   )
 };

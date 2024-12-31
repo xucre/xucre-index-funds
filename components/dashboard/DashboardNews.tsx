@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import DashboardNewsCard from "./DashboardNewsCard";
 //import AccountButton from "./accountButton";
 import dayjs from 'dayjs';
+import { Language } from "@/metadata/translations";
 
 export interface NewsItem {
   title: string;
@@ -24,7 +25,16 @@ export default function DashboardNews() {
 
   const refresh = async () => {
     const feed = await getFeed();
-    setNews(feed);
+    const _feed = feed.reduce((acc: NewsItem[], item: NewsItem) => {
+      if (item.link.includes(`https://www.xucre.net/en/`)) {
+        if (language === Language.EN) return [...acc, item];
+        return acc;
+      } else {
+        if (language !== Language.EN) return [...acc, item];
+      }
+      return acc;
+    }, []);
+    setNews(_feed);
   }
 
   useEffect(() => {
@@ -32,18 +42,21 @@ export default function DashboardNews() {
   }, [])
   const newsList = news.length < 4 ? news : news.slice(0, 3);
   return (
-    <Stack direction={'column'} spacing={2} pt={0}>
-      {/*<Typography variant={'h6'} color={textColor}>News</Typography>*/}
-      {news.length > 0 ?
-        newsList.map((item, index) => (
-          <DashboardNewsCard key={index} publishDate={dayjs(item.isoDate).format('DD/MM/YYYY')} title={item.title} text={item.content} url={item.link} />
-        )) :
-        <>
-          <Skeleton variant="rounded" width={210} height={100} />
-          <Skeleton variant="rounded" width={210} height={100} />
-          <Skeleton variant="rounded" width={210} height={100} />
-        </>
-      }
+
+    <Stack direction={'column'} spacing={2} px={2} maxWidth={!matches ? '100%' : '35%'}>
+      <Stack direction={'column'} spacing={2} pt={0}>
+        {/*<Typography variant={'h6'} color={textColor}>News</Typography>*/}
+        {news.length > 0 ?
+          newsList.map((item, index) => (
+            <DashboardNewsCard key={index} publishDate={dayjs(item.isoDate).format('DD/MM/YYYY')} title={item.title} text={item.content} url={item.link} />
+          )) :
+          <>
+            <Skeleton variant="rounded" width={210} height={100} />
+            <Skeleton variant="rounded" width={210} height={100} />
+            <Skeleton variant="rounded" width={210} height={100} />
+          </>
+        }
+      </Stack>
     </Stack>
   );
 };

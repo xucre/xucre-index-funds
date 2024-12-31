@@ -7,11 +7,14 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import { PortfolioItem } from '@/hooks/useIndexFunds';
-import { PriceData } from '@/service/types';
+import { PortfolioItem, PriceData } from '@/service/types';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const DEFAULT_LOGO = "/icon-green.png"
+
+const rounder = (num: number) => {
+  return Number(num.toFixed(2)).toLocaleString();
+}
 
 export default function PortfolioItemList({ portfolioItems, priceMap }: { portfolioItems: PortfolioItem[], priceMap: { [key: string]: PriceData } }) {
   const { language } = useLanguage();
@@ -55,7 +58,7 @@ export default function PortfolioItemList({ portfolioItems, priceMap }: { portfo
                       variant="body1"
                       sx={{ color: 'text.primary', display: 'inline', pl: 1 }}
                     >
-                      ({price && price.items[0].price ? `$${price.items[0].price.toFixed(2)}` : 'N/A'})
+                      ({price && price.items[0].price ? `$${rounder(price.items[0].price)}` : 'N/A'})
                     </Typography>
                   </React.Fragment>
                 }

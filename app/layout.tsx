@@ -14,6 +14,7 @@ import { headers } from 'next/headers' // added
 import Wrapper from './clientWrapper';
 import { ContextProvider } from '@/context'
 import { Suspense } from 'react';
+import { LanguageContextProvider } from '@/hooks/useLanguage';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -37,14 +38,16 @@ export default function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content={metadata.description} />
+        <meta name="description" content={metadata.description as string} />
         <title>Xucre: Index Funds dApp</title>
       </head>
       <body>
         <Suspense>
-          <ContextProvider cookies={cookies}>
-            <Wrapper children={children} />
-          </ContextProvider>
+          <LanguageContextProvider>
+            <ContextProvider cookies={cookies}>
+              <Wrapper children={children} />
+            </ContextProvider>
+          </LanguageContextProvider>
         </Suspense>
       </body>
     </html>

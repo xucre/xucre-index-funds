@@ -1,6 +1,6 @@
 'use client'
 import { useLanguage } from "@/hooks/useLanguage";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Box, CardContent, CardHeader, Chip, Divider, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import AccountButton from '@/components/accountButton';
 import languageData from '@/metadata/translations'
@@ -32,11 +32,10 @@ const groupTransactionsByWeek = (transactions: CovalentTransactionV3[]): Transac
     }
     groupedTransactions[weekStart].push(transaction);
   });
-
   return Object.keys(groupedTransactions).map((weekStart) => ({
     weekStart,
     transactions: groupedTransactions[weekStart],
-  }));
+  } as TransactionGroup));
 };
 
 
@@ -49,18 +48,26 @@ export default function DashboardTransactionList({ address, truncate = true, tra
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const _address = '0x358eB621894B55805CE16225b2504523d421d3A6';
   const _transactions = transactions && truncate ? transactions.length > 5 ? transactions.slice(0, 5) : transactions : transactions;
+  const [groupedTransactions, setGroupedTransactions] = useState<TransactionGroup[]>([]);
+  
+  useEffect(() => {
+    if (_transactions.length > 0) {
+      setGroupedTransactions(groupTransactionsByWeek(_transactions));
+    }
+  }, [transactions])
+  
   return (
     <OpaqueCard>
-      <CardHeader sx={{ pb: 1, mb: 0, pt: 0 }} title={<Typography fontSize={18} fontWeight={'normal'} color="text.secondary">Transactions</Typography>} />
+      <CardHeader sx={{ pb: 1, mb: 0, pt: 0 }} title={<Typography fontSize={18} fontWeight={'normal'} color="text.secondary">{languageData[language].Dashboard.transactions}</Typography>} />
       <CardContent sx={{ py: 0 }} >
         <Stack direction={'column'} spacing={1} justifyContent={'center'} alignItems={'flex-start'}>
-          {groupTransactionsByWeek(_transactions).map((tx, index) => {
+          {groupedTransactions.map((tx, index) => {
             return (
               <Box key={index} width={'100%'}>
                 <Typography fontSize={14} fontWeight={'normal'} color="text.secondary" >{dayjs(tx.weekStart).fromNow()}</Typography>
                 {tx.transactions.map((transaction, index2) => {
                   return (
-                    <DashboardTransaction key={index2} transaction={transaction} address={_address} />
+                    <DashboardTransaction key={index2} transaction={transaction} address={address} />
                   )
                 })}
               </Box>

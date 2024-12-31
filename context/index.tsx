@@ -3,14 +3,18 @@
 import React, { ReactNode, useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SnackbarProvider } from 'notistack';
-import { ClerkProvider } from '@clerk/nextjs'
+import { ClerkLoaded, ClerkProvider } from '@clerk/nextjs'
 import { wagmiAdapter, config, projectId, networks } from '@/config'
 import { createAppKit } from '@reown/appkit/react'
 import { mainnet, polygon, type AppKitNetwork } from '@reown/appkit/networks'
 import { cookieToInitialState, State, WagmiProvider, type Config } from 'wagmi'
+import { dark, shadesOfPurple, experimental_createTheme } from '@clerk/themes'
+import { esMX, enUS, ptBR } from '@clerk/localizations'
 
 import { useTheme } from '@mui/material'
 import { SFDCProvider } from '@/hooks/useSFDC'
+import { useLanguage } from '@/hooks/useLanguage';
+import { Language } from '@/metadata/translations/index';
 
 // Setup queryClient
 const queryClient = new QueryClient()
@@ -44,44 +48,43 @@ export function ContextProvider({
   children: ReactNode
   cookies?: string | null
 }) {
+  const {language} = useLanguage();
   const theme = useTheme();
   const [isLoaded, setIsLoaded] = React.useState(false);
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
   //const [modalState, setModalState] = React.useState(null as any);
   useEffect(() => {
-    console.log('theme', theme.palette.mode)
-    /*const result = createWeb3Modal({
-      defaultChain: polygon,
-      projectId,
-      wagmiConfig: _config,
-      enableAnalytics: true,
-      excludeWalletIds: [
-        //'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
-        //'4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0'
-      ],
-      includeWalletIds: [
-        //'3e2f036d9c513d07af5468ad7672e42a27432a54eb1242e498d1a1be1f488c4d',
-      ],
-      themeMode: theme.palette.mode,
-      themeVariables: {
-        '--w3m-color-mix': theme.palette.mode === 'dark' ? '#D4E815' : '#1B1E3F',
-        //'--w3m-color-mix-strength': 40
-      }
-    })*/
-    //setModalState(result)
     setIsLoaded(true)
   }, [])
-
+  const customTheme = experimental_createTheme({})
+  const activeLanguage = language === Language.EN ? enUS : language === Language.PT ? ptBR : esMX;
   if (!isLoaded) return null;
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
-        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+        <ClerkProvider 
+          signInUrl={'/sign-in'}
+          signInFallbackRedirectUrl={'/dashboard'}
+          signUpFallbackRedirectUrl={'/dashboard'}
+          signUpForceRedirectUrl={'/dashboard'}
+          signInForceRedirectUrl={'/dashboard'}
+          signUpUrl={'/sign-up'} 
+          afterSignOutUrl={'/sign-in'} 
+          afterMultiSessionSingleSignOutUrl={'/sign-in'}
+          afterSignInUrl={'/dashboard'}
+          appearance={{
+            baseTheme: dark
+          }}
+          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          localization={activeLanguage}
+          touchSession={false}
+        >
           <SnackbarProvider maxSnack={3} >
-
+          <ClerkLoaded>
             <SFDCProvider>
               {children}
             </SFDCProvider>
+          </ClerkLoaded>
           </SnackbarProvider>
         </ClerkProvider>
       </QueryClientProvider>

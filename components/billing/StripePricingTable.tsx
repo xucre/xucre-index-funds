@@ -1,9 +1,11 @@
 'use client'
-import { useOrganization, useUser } from "@clerk/nextjs";
+import { useClerkUser } from "@/hooks/useClerkUser";
+import { useOrganization } from "@clerk/nextjs";
+import { Box } from "@mui/material";
 import React, { useEffect } from "react";
 const StripePricingTable = () => {
   const { organization } = useOrganization();
-  const { user } = useUser();
+  const { user } = useClerkUser();
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -22,11 +24,11 @@ const StripePricingTable = () => {
   }) : <></>;
 
   return (
-    <>
+    <Box py={10} mx={4} px={2} borderRadius={25} bgcolor={'white'}>
       {organization && user &&
         ele
       }
-    </>
+    </Box>
   )
 };
 export default StripePricingTable;

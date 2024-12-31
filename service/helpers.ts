@@ -29,7 +29,7 @@ export function distributeWeights(items: any[]): any[] {
 }
 
 export function chainValidation(chainId:number): boolean {
-  return chainId === 137 || chainId === 19819 || chainId === 20208 || chainId === 1;
+  return chainId === 137 || chainId === 19819 || chainId === 20208 || chainId === 1 || chainId === 8453 || chainId === 31337;
 }
 
 export function normalizeDevChains(chainId: number) : number {
@@ -46,6 +46,7 @@ export function getChainNameRainbowKit(_chainId: number) : string {
 export function convertHexToNumber(hex: string) {
   try {
     //return encoding.hexToNumber(hex);
+    return hex;
   } catch (e) {
     return hex;
   }
@@ -54,6 +55,7 @@ export function convertHexToNumber(hex: string) {
 export function convertHexToUtf8(hex: string) {
   try {
     //return encoding.hexToUtf8(hex);
+    return hex;
   } catch (e) {
     return hex;
   }
@@ -82,4 +84,20 @@ export const coinIconNames = {
   80001: 'matic',
   42220: 'celo',
   20090103: 'btc'
+}
+
+
+export function encodeStringToBigInt(str: string): bigint {
+  let sum = BigInt(0);
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    if (/^[a-zA-Z0-9_-]$/.test(c)) {
+      sum += BigInt(c.charCodeAt(0));
+    }
+  }
+  return sum;
+}
+
+export const isNull = (value: any) => {
+  return value === null || value === undefined || value === '';
 }

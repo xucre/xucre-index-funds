@@ -2,7 +2,7 @@ import { createPublicClient, http, parseTransaction, parseEventLogs, erc20Abi } 
 import { polygon } from 'viem/chains';
 import { kv } from '@vercel/kv';
 import { getTransactionDetailsDb, setTransactionDetailsDb } from './db';
-export type Transfer = { from: string, to: string, value: string };
+export type Transfer = { from: string, to: string, value: string, token: string, event: string };
 export interface TransactionDetails {
   transactionHash: string;
   //logs: any[];
@@ -10,11 +10,11 @@ export interface TransactionDetails {
   contractCreated: boolean;
 }
 
-export type erc20Transfer = { from: string, to: string, value: string };
+export type erc20Transfer = { from: string, to: string, value: string, token: string, event: string };
 
 export async function retrieveTransactionDetails(address: string, txHash: string): Promise<TransactionDetails> {
   try {
-    const kvKey = `${address}:${txHash}`;
+    const kvKey = `transaction:${address}:${txHash}`;
 
     // Check if transaction details are already stored in Vercel KV
     const cachedTransaction = await getTransactionDetailsDb(kvKey);
@@ -35,32 +35,35 @@ export async function retrieveTransactionDetails(address: string, txHash: string
     }
 
     // Initialize an empty array to store ERC20 token transfers and a flag for contract creation
-    const erc20Transfers = [];
-    let contractCreated = false;
-
+    let erc20Transfers = [] as Transfer[];
+    let contractCreated = false;0
     // Parse the logs from the transaction receipt to extract ERC20 transfer events
     const logs = parseEventLogs({
       abi: erc20Abi, // Use the ERC20 ABI to parse the logs
       logs: receipt.logs,
     });
 
+    
     // Iterate through the parsed logs to identify ERC20 transfer events
     for (const log of logs) {
       const transferEventSignature = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
-
       // If the log matches the ERC20 transfer event signature
       if (log.topics && log.topics[0] === transferEventSignature) {
         // Different ERC20 implementations may use different argument names (e.g., 'owner' vs 'from')
         if ('owner' in log.args) {
-          const from = log.args.owner;
-          const to = log.args.spender;
+          const from = log.args.owner as string;
+          const to = log.args.spender as string;
+          const contractAddress = log.address as string;
+          const event = log.eventName as string;
           const value = BigInt(log.data).toString(); // Convert the value from hexadecimal to a string
-          erc20Transfers.push({ from, to, value }); // Add the transfer details to the array
+          erc20Transfers = [...erc20Transfers, { from, to, value, token: contractAddress, event  }]; // Add the transfer details to the array
         } else {
-          const from = log.args.from;
-          const to = log.args.to;
+          const from = log.args.from as string;
+          const to = log.args.to as string;
+          const contractAddress = log.address as string;
+          const event = log.eventName as string;
           const value = BigInt(log.data).toString(); // Convert the value from hexadecimal to a string
-          erc20Transfers.push({ from, to, value }); // Add the transfer details to the array
+          erc20Transfers.push({ from, to, value, token: contractAddress, event }); // Add the transfer details to the array
         }
       }
     }
@@ -77,7 +80,6 @@ export async function retrieveTransactionDetails(address: string, txHash: string
       erc20Transfers,
       contractCreated,
     };
-    console.log(transactionDetails);
     // Save the transaction details to Vercel KV for future retrieval
     await setTransactionDetailsDb(kvKey, transactionDetails);
 

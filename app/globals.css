@@ -116,3 +116,36 @@ html {
 .side-image {
   max-width: 2rem;
 }
+
+.opaqueMenu {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.opaqueMenu .MuiSpeedDial-actions {
+  justify-content: center;
+  align-items: center;
+  padding-top:33px !important;
+}
+
+#onramp-message {
+  color: rgb(105, 115, 134);
+  font-size: 16px;
+  line-height: 20px;
+  padding-top: 12px;
+  text-align: center;
+}
+
+#onramp-element {
+  min-width: min(450px, 60vw);
+  margin-bottom: 24px;
+}
+
+.gutterless-accordion > .MuiAccordionSummary-content {
+  margin: 0 !important;
+  margin-top:0;
+  margin-bottom:0;
+}
+
+.group-space-between [role="tablist"] {
+  /*justify-content: space-between;*/
+}

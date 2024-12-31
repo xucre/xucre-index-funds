@@ -1,9 +1,8 @@
 'use client'
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { PriceData } from '@/service/types';
+import { PortfolioItem, PriceData } from '@/service/types';
 import { useEffect, useState } from 'react';
-import { PortfolioItem } from '@/hooks/useIndexFunds';
 
 const colorSet = ['#182158', '#103D50', '#2D1657', '#D4E815', '#FFA000'];
 
@@ -34,11 +33,14 @@ export default function FundChart({ prices, portfolio }: { prices: PriceData[], 
           }
         })
       }
-      const newPriceData = acc.map((item, index) => {
-        return {
-          ...item,
-          [_prices.symbol.toLowerCase()]: _prices.items[index].price * _priceWeights[_prices.address.toLowerCase()] * .0001
+      const newPriceData = acc.map((item : object, index) => {
+        if (typeof item === 'object' && item !== null) {
+          return {
+            ...item,
+            [_prices.symbol.toLowerCase()]: _prices.items[index].price * _priceWeights[_prices.address.toLowerCase()] * .0001
+          }
         }
+        return item;
       });
       return newPriceData;
     }, []);
@@ -53,14 +55,14 @@ export default function FundChart({ prices, portfolio }: { prices: PriceData[], 
       label: item,
       dataKey: item.toLowerCase(),
       stack: 'total',
-      color: portfolioItem.chartColor || colorSet[i],
+      color: portfolioItem ? portfolioItem.chartColor || colorSet[i] : colorSet[i],
       area: true,
       showMark: false,
     }
   });
 
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div>...</div>
 
   return (
     <LineChart

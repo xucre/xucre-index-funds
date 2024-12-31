@@ -1,33 +1,59 @@
 'use client'
-import { OrganizationProfile, Protect, useOrganization, useUser } from "@clerk/nextjs";
-import { Box, useTheme } from "@mui/material"
+import { OrganizationProfile, OrganizationSwitcher, Protect, useOrganization, useOrganizationList } from "@clerk/nextjs";
+import { Box, Chip, Stack, Typography, useTheme } from "@mui/material"
 import router from "next/router";
 import { dark } from "@clerk/themes";
-import React from "react";
+import React, { useEffect } from "react";
 import EmptyOrganization from "@/components/organization/EmptyOrganization";
+import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
+import OrganizationMembersTable from "@/components/organization/OrganizationMembersTable";
+import CreateUserModal from "@/components/organization/CreateUserModal";
+import OpaqueCard from "@/components/ui/OpaqueCard";
+import { setOrganizationSafeAddress } from "@/service/db";
+import { isDev } from "@/service/constants";
+import { useClerkUser } from "@/hooks/useClerkUser";
 
 // components/LoadingIndicator.tsx
 export default function Organization() {
   const theme = useTheme();
-  const { user } = useUser();
-  const { organization } = useOrganization();
-
+  const { user } = useClerkUser();
+  const {userMemberships, setActive} = useOrganizationList();
+  const { organization, isLoaded } = useOrganization();
   const isDarkTheme = theme.palette.mode === 'dark';
 
+  useEffect(() => {
+    if (!userMemberships || !userMemberships.count || !setActive) return;
+    if (userMemberships.count > 0) {
+      const org = userMemberships.data[0];
+      setActive({organization: org.id});
+    }
+  }, [organization, userMemberships])
+  
   return (
-    <>
-      {organization &&
+    <Box alignItems={'center'} display={'flex'} justifyContent={'center'} width={'full'} mx={5} my={1} pb={10}>
+      {isLoaded && false && 
         <Protect permission={'org:sys_memberships:manage'}>
-          <Box alignItems={'center'} display={'flex'} justifyContent={'center'} width={'full'} mx={5} my={1} pb={10}>
-            <OrganizationProfile appearance={{ baseTheme: isDarkTheme ? dark : undefined, }} path="/organization" />
-          </Box>
+          <OpaqueCard sx={{px:2}}>
+            <Stack direction={'column'} alignItems={'start'} display={'flex'} justifyContent={'center'} mx={5} my={1} pb={10}>
+              
+              <Stack direction={'row'} alignItems={'center'} width={'100%'} justifyContent={'space-between'} mb={2}>
+                <Typography variant={'h5'}>Members</Typography>
+              </Stack>
+              <OrganizationMembersTable />
+            </Stack>
+          </OpaqueCard>
         </Protect>
       }
-      {!organization &&
-        <EmptyOrganization onCreateOrganization={() => router.push('/organization/create')} />
+      {isLoaded && 
+        <>
+          <Protect permission={'org:sys_memberships:manage'}>
+              <OrganizationProfile appearance={{ baseTheme: isDarkTheme ? dark : undefined, }} path="/organization" />
+          </Protect>
+        </>
       }
-    </>
-
-
+      {!organization &&
+        <></>
+      }
+    </Box>
   );
 };

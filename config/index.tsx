@@ -1,8 +1,8 @@
 import { cookieStorage, createStorage } from '@wagmi/core'
 import { ChainMetadata } from '@/context/types';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { mainnet, celo, type AppKitNetwork } from '@reown/appkit/networks'
-import { defineChain } from 'viem';
+import { mainnet, celo, base,bsc, type AppKitNetwork } from '@reown/appkit/networks'
+import { defineChain, http } from 'viem';
 
 // Get projectId at https://cloud.walletconnect.com
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
@@ -65,6 +65,24 @@ const ethereumDev = defineChain({
   testnet: false,
 })
 
+const hardhat = defineChain({
+  id: 31337,
+  name: 'hardhat',
+  nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['http://127.0.0.1:8545/'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Basescan',
+      url: 'https://basescan.org/',
+    },
+  },
+  testnet: false,
+})
+
 
 
 export function getChainMetadata(chainId: string): ChainMetadata {
@@ -76,7 +94,7 @@ export function getChainMetadata(chainId: string): ChainMetadata {
   return metadata;
 }
 
-export const networks = [mainnet, ethereumDev, polygon2, celo, customChain] as [AppKitNetwork, ...AppKitNetwork[]]
+export const networks = [mainnet, ethereumDev, polygon2, celo, base,bsc,hardhat, customChain] as [AppKitNetwork, ...AppKitNetwork[]]
 
 // Set up the Wagmi Adapter (Config)
 export const wagmiAdapter = new WagmiAdapter({
@@ -85,16 +103,10 @@ export const wagmiAdapter = new WagmiAdapter({
   }),
   ssr: true,
   projectId,
-  networks
+  networks,
+  transports: {
+    [base.id]: http(), 
+  },
 })
 
 export const config = wagmiAdapter.wagmiConfig
-
-// 0. Setup chains
-/*const chains = [solana, solanaTestnet]
-
-export const solanaConfig = defaultSolanaConfig({
-  metadata,
-  chains,
-  projectId
-})*/

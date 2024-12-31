@@ -3,18 +3,9 @@ import React from 'react';
 import { normalizeDevChains } from '@/service/helpers';
 import { getTokenList } from '@/service/lambda';
 import { useEffect, useMemo, useState } from 'react';
+import { Token, TokenListResponse } from '@/service/types';
 
-export interface Token {
-  address: string;
-  chainId: number;
-  decimals: number;
-  name: string;
-  symbol: string;
-}
 
-export type TokenListResponse = {
-  tokens: Token[];
-}
 
 const TokenListContext = React.createContext({ tokens: [] } as TokenListResponse);
 
@@ -24,6 +15,7 @@ export function TokenListProvider({ children, chainId }: { children: any, chainI
   const [tokens, setTokens] = useState([] as Token[]);
 
   const getTokens = async () => {
+    if (!chainId) return;
     const dataRaw = await getTokenList(chainId);
     const data: Token[] = dataRaw.tokens;
     const _chainId = normalizeDevChains(chainId);
@@ -49,6 +41,7 @@ export function useTokenListRaw({ chainId }: { chainId?: number }) {
   const [tokens, setTokens] = useState([] as Token[]);
 
   const getTokens = async () => {
+    if (!chainId) return;
     const dataRaw = await getTokenList(chainId);
     const data: Token[] = dataRaw.tokens;
     const _chainId = normalizeDevChains(chainId);

@@ -28,7 +28,7 @@ export default function LanguageSelect({ type }: { type: 'button' | 'menu' }) {
         type === 'menu' &&
         <>
           <Button
-            color={theme.palette.mode === 'dark' ? 'warning' : 'info'}
+            color={theme.palette.mode === 'dark' ? 'inherit' : 'inherit'}
             aria-label="open drawer"
             onClick={handleMenuOpen}
             sx={{ ml: 2 }}
@@ -52,7 +52,7 @@ export default function LanguageSelect({ type }: { type: 'button' | 'menu' }) {
       }
 
       {type === 'button' &&
-        <ButtonGroup variant="contained" color={theme.palette.mode === 'dark' ? 'warning' : 'info'} disableElevation>
+        <ButtonGroup variant="contained" color={theme.palette.mode === 'dark' ? 'inherit' : 'inherit'} disableElevation>
           {languages.map((item) => (
             <Button onClick={() => setLanguage(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2, fontWeight: language === item ? 900 : 200 }}>{Language[item]}</Button>
           ))}

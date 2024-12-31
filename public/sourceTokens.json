@@ -23,7 +23,7 @@
   },
   {
     "name": "USDC",
-    "active": false,
+    "active": true,
     "chainId": 137,
     "address": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
     "weight": 1,
@@ -64,6 +64,50 @@
     },
     "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/usdc.png",
     "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+    "links": ["https://www.tether.to/"]
+  },
+  {
+    "name": "USDC",
+    "active": true,
+    "chainId": 8453,
+    "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", 
+    "weight": 1,
+    "decimals": 6,
+    "poolFee": 3000,
+    "sourceFees": {
+      "0xdAC17F958D2ee523a2206206994597C13D831ec7": 3000,
+      "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 3000,
+      "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 3000
+    },
+    "chartColor": "#FFD700",
+    "description": {
+      "0": "USDC is a stablecoin pegged to the US Dollar.",
+      "1": "USDC es una stablecoin anclada al Dólar Estadounidense.",
+      "2": "USDC é uma stablecoin atrelada ao Dólar Americano."
+    },
+    "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/usdc.png",
+    "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/matic.png",
+    "links": ["https://www.tether.to/"]
+  },
+  {
+    "name": "ETH",
+    "active": false,
+    "chainId": 8453,
+    "address": "0x4200000000000000000000000000000000000006", 
+    "weight": 1,
+    "decimals": 18,
+    "poolFee": 3000,
+    "sourceFees": {
+      "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 500
+    },
+    "chartColor": "#FFD700",
+    "description": {
+      "0": "ETH is a stablecoin pegged to the US Dollar.",
+      "1": "ETH es una stablecoin anclada al Dólar Estadounidense.",
+      "2": "ETH é uma stablecoin atrelada ao Dólar Americano."
+    },
+    "logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/eth.png",
+    "chain_logo": "https://xucre-public.s3.sa-east-1.amazonaws.com/base.png",
     "links": ["https://www.tether.to/"]
   }
 ]

@@ -1,6 +1,4 @@
 'use client'
-import HorizontalLinearStepper from "@/components/onboarding/horizontalStepper";
-import Step1Component from "@/components/onboarding/step1";
 import { Box, useTheme } from "@mui/material"
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -14,10 +12,6 @@ export default function Onboarding() {
   return (
     <Suspense>
       <Box height={'full'} width={'full'} m={5}>
-        <HorizontalLinearStepper step={step} setStep={setStep} />
-        {step === 1 &&
-          <Step1Component />
-        }
       </Box>
     </Suspense>
   );

@@ -1,6 +1,6 @@
 import { getOrganization, updateOrganizationLicenses } from "@/service/clerk";
 import { upsertOrganization } from "@/service/sfdc";
-import { getCustomerSubscription } from "@/service/stripe";
+import { getCustomerSubscription } from "@/service/billing/stripe";
 import { NextRequest } from "next/server"
 import Stripe from "stripe";
 
@@ -16,11 +16,11 @@ export async function GET(request: NextRequest) {
     const _subscription = subscriptionData.subscription as Stripe.Subscription;
     if (_subscription && (_subscription.status === 'active' || _subscription.status === 'trialing')) {
       const seatCount = _subscription.items.data[0].quantity;
-      await upsertOrganization(organizationId, organizationData.name, seatCount);
-      await updateOrganizationLicenses(organizationId, seatCount);
+      await upsertOrganization(organizationId, organizationData.name, seatCount || 1);
+      //await updateOrganizationLicenses(organizationId, seatCount || 1);
     } else {
       await upsertOrganization(organizationId, organizationData.name, 1);
-      await updateOrganizationLicenses(organizationId, 1);
+      //await updateOrganizationLicenses(organizationId, 1);
     }
     return Response.redirect(`${origin}/billing`);
   } catch (err) {
