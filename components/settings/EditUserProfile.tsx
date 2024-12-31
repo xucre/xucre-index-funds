@@ -34,24 +34,28 @@ interface ProfileData {
 
 const EditUserProfile = () => {
   const {language} = useLanguage();
-  const router = useRouter();
+  //const router = useRouter();
   const { user } = useClerkUser();
   const { isAdmin } = useIsAdmin();
-  
-  const { sfdcUser: sfdcUserRaw, updateUser, refresh } = useSFDC();
-  const sfdcUser = useMemo(() => (sfdcUserRaw), [sfdcUserRaw]);
-  const [modifiedUser, setModifiedUser] = useState<SFDCUserData | null>(null);
+  const [selectedTab, setSelectedTab] = React.useState(0);
+  const { sfdcUser, updateUser, refresh } = useSFDC();
+  //const sfdcUser = useMemo(() => (sfdcUserRaw), [sfdcUserRaw]);
+  const [modifiedUser, setModifiedUser] = useState<SFDCUserData>(sfdcUser);
   const clearSafewallet = async () => {
     if (!user) return;
     setSafeAddress(user.id, '');
-    router.refresh()
+    //router.refresh()
   }
+
+  useEffect(() => {
+    console.log('edit user profile loaded')
+  }, []);
   
   useEffect(() => {
-    if (!sfdcUser) return;
-    if (modifiedUser === null) {
+    if (!sfdcUser || sfdcUser === null) return;
+    
       setModifiedUser(sfdcUser);
-    }
+    
   }, [sfdcUser])
 
   const handleSaveProfile = async () => {
@@ -86,57 +90,13 @@ const EditUserProfile = () => {
       beneficiaries: modifiedUser.beneficiaries || [],
     } as SFDCUserData;
 
-    // if (signedMessage) {
-    //   profileData.wallets = [{
-    //     walletAddress: address,
-    //     primary: true,
-    //     chainId: 'EVM',
-    //     //signedMessage: signedMessage
-    //   } as SFDCWallet];
-    //   //profileData.signedMessage = signedMessage;
-    // }
-
     // Call saveProfile with the collected data
     await updateUser(profileData);
-    refresh();
-    //router.push('/dashboard')
   };
-
-  // useEffect(() => {
-  //   // setModifiedUser(
-  //   //   {
-  //   //     firstName: '',
-  //   //     middleName: '',
-  //   //     lastName: '',
-  //   //     address: '',
-  //   //     street: '',
-  //   //     street2: '',
-  //   //     city: '',
-  //   //     province: '',
-  //   //     postalCode: '',
-  //   //     country: '',
-  //   //     placeId: '',
-  //   //     idCardNumber: '',
-  //   //     idExpirationDate: '',
-  //   //     idIssueDate: '',
-  //   //     frontImage: '',
-  //   //     backImage: '',
-  //   //     riskTolerance: 'Moderate',
-  //   //     salaryContribution: 0,
-  //   //     role: '',
-  //   //     userId: user ? user.id : '',
-  //   //     organizationId: user ? user.organizationMemberships[0].organization.id : '',
-  //   //     userEmail: '',
-  //   //     status: '',
-  //   //     wallets: [] as SFDCWallet[]
-  //   // } as SFDCUserData
-  //   // );
-  // }, [])
-  //console.log('edit profile rendered');
+  
   if (modifiedUser === null) return null;
 
-
-  const isProfileComplete = !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.street) && !isNull(modifiedUser.city) && !isNull(modifiedUser.province) && !isNull(modifiedUser.postalCode) && !isNull(modifiedUser.country);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
+  const isProfileComplete = modifiedUser && !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.street) && !isNull(modifiedUser.city) && !isNull(modifiedUser.province) && !isNull(modifiedUser.postalCode) && !isNull(modifiedUser.country);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
   //const KYCMemo = React.memo(KYC);
   return (
       <OpaqueCard sx={{
@@ -152,7 +112,7 @@ const EditUserProfile = () => {
       
         <Stack direction={'column'} spacing={2} my={3} justifyContent={'space-between'} alignItems={'flex-start'} >
           <Stack direction={'column'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
-            <KYC user={modifiedUser} updateUser={setModifiedUser}/>
+            <KYC user={modifiedUser} updateUser={setModifiedUser} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
           </Stack>
         </Stack>
         <Stack direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'} >

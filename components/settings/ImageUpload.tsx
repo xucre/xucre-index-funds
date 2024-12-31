@@ -59,7 +59,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imageUpload, imageUrl }) => {
             src={currentImageUrl}
             variant='square'
             alt={languageData[language].Edit.image_upload}
-            sx={{ width: 150, height: 150, cursor: 'pointer' }}
+            sx={{ width: 200, height: 200, cursor: 'pointer', img: { objectPosition: '0px 0px', objectFit: 'contain' } }}
             onClick={handleView}
           />
           <input
@@ -72,7 +72,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imageUpload, imageUrl }) => {
         </>
       ) : (
         <>
-          <SquareCard sx={{m:2, height: 150, width: 150, alignItems: 'center', justifyContent: 'center', display: 'flex'}}><Link onClick={handleClick}>{languageData[language].Edit.image_upload}</Link></SquareCard>
+          <SquareCard sx={{m:2, height: 200, width: 200, alignItems: 'center', justifyContent: 'center', display: 'flex'}}><Link onClick={handleClick}>{languageData[language].Edit.image_upload}</Link></SquareCard>
           <input
             type="file"
             accept="image/*"
@@ -89,6 +89,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imageUpload, imageUrl }) => {
         slides={[
           { src: currentImageUrl },
         ]}
+        render={{
+          buttonPrev: () => null,
+          buttonNext: () => null,
+        }}
       />
     </Box>
   );

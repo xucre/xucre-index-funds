@@ -2,7 +2,7 @@
 import { SignOutButton, UserProfile } from "@clerk/nextjs";
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/material"
 import LinkIcon from '@mui/icons-material/Link';
-import { Suspense } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { dark } from "@clerk/themes";
 import WalletManagement from "@/components/settings/WalletManagement";
 import { ThemeSwitcherElement } from "@/hooks/useThemeSwitcher";
@@ -24,7 +24,8 @@ export default function Settings() {
   const theme = useTheme();
   const {language, languageData} = useLanguage();
   const isDarkTheme = theme.palette.mode === 'dark';
-  const {sfdcUser, refresh} = useSFDC();
+  const {sfdcUser: sfdcUserRaw, refresh} = useSFDC();
+  const sfdcUser = useMemo(() => (sfdcUserRaw), [sfdcUserRaw]);
   const Display = () => (
     <Stack direction="column" spacing={2}>
       <Stack direction="row" spacing={2} width={'100%'} justifyContent={'space-between'} >
@@ -44,12 +45,12 @@ export default function Settings() {
     </Stack>
   )
   
-  const isProfileComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country) && !isNull(sfdcUser.idCardNumber) && !isNull(sfdcUser.idExpirationDate) && !isNull(sfdcUser.idIssueDate) && !isNull(sfdcUser.backImage) && !isNull(sfdcUser.frontImage);
-  const isPortfolioComplete = !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution);
+  
+  const isProfileComplete = useMemo(() => !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country) && !isNull(sfdcUser.idCardNumber) && !isNull(sfdcUser.idExpirationDate) && !isNull(sfdcUser.idIssueDate) && !isNull(sfdcUser.backImage) && !isNull(sfdcUser.frontImage), [sfdcUser.lastName, sfdcUser.firstName, sfdcUser.street, sfdcUser.city, sfdcUser.province, sfdcUser.postalCode, sfdcUser.country, sfdcUser.idCardNumber, sfdcUser.idExpirationDate, sfdcUser.idIssueDate, sfdcUser.backImage, sfdcUser.frontImage]);
+  const isPortfolioComplete = useMemo(() => !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution), [sfdcUser.riskTolerance, sfdcUser.salaryContribution]);
   const UserProfileMemoized = React.memo(UserProfile);
   return (
       <Box alignItems={'center'} display={'flex'} justifyContent={'center'} width={'full'} mx={5} my={1} pb={10}>
-
           <UserProfile
             appearance={{ baseTheme: isDarkTheme ? dark : undefined, }}
           >
