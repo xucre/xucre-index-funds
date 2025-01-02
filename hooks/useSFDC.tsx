@@ -1,4 +1,3 @@
-'use client'
 
 import { getUser, upsertUserDetails } from '@/service/sfdc';
 import { SFDCUserData } from '@/service/types';

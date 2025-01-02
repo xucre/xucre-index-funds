@@ -5,7 +5,7 @@ import { Alert, Box, CardContent, CardHeader, Chip, Divider, Link, Stack, Typogr
 import AccountButton from '@/components/accountButton';
 import languageData from '@/metadata/translations'
 import { getDashboardBorderColor } from "@/service/helpers";
-import { CovalentTransactionV3, useWalletData } from "@/hooks/useWalletData";
+import { CovalentTransactionV3 } from "@/hooks/useWalletData";
 import truncateEthAddress from "truncate-eth-address";
 import dayjs from 'dayjs'
 import DashboardTransaction from "./DashboardTransaction";
@@ -52,6 +52,7 @@ export default function DashboardTransactionList({ address, truncate = true, tra
   
   useEffect(() => {
     if (_transactions.length > 0) {
+      console.log('grouping transactions');
       setGroupedTransactions(groupTransactionsByWeek(_transactions));
     }
   }, [transactions])
@@ -61,7 +62,7 @@ export default function DashboardTransactionList({ address, truncate = true, tra
       <CardHeader sx={{ pb: 1, mb: 0, pt: 0 }} title={<Typography fontSize={18} fontWeight={'normal'} color="text.secondary">{languageData[language].Dashboard.transactions}</Typography>} />
       <CardContent sx={{ py: 0 }} >
         <Stack direction={'column'} spacing={1} justifyContent={'center'} alignItems={'flex-start'}>
-          {groupedTransactions.map((tx, index) => {
+          {true && groupedTransactions.map((tx, index) => {
             return (
               <Box key={index} width={'100%'}>
                 <Typography fontSize={14} fontWeight={'normal'} color="text.secondary" >{dayjs(tx.weekStart).fromNow()}</Typography>

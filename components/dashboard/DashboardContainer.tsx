@@ -24,7 +24,7 @@ export default function DashboardContainer({ address }: { address: string }) {
       {!hasHistory && <BalanceBlock balance={0} change={0} address={address} loaded={loaded} />}
      
 
-      <DashboardTransactionList address={address} transactions={transactions} />
+      {<DashboardTransactionList address={address} transactions={transactions} /> }
     </Stack>
   );
 };
