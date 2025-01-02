@@ -42,13 +42,13 @@ export default function RootLayout({
         <title>Xucre: Index Funds dApp</title>
       </head>
       <body>
-        
+        <Suspense>
           <LanguageContextProvider>
             <ContextProvider cookies={cookies}>
               <Wrapper children={children} />
             </ContextProvider>
           </LanguageContextProvider>
-        
+        </Suspense>
       </body>
     </html>
   );

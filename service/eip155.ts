@@ -19,8 +19,10 @@ export async function retrieveTransactionDetails(address: string, txHash: string
     // Check if transaction details are already stored in Vercel KV
     const cachedTransaction = await getTransactionDetailsDb(kvKey);
     if (cachedTransaction) {
+      console.log('cached transaction retrieved');
       return cachedTransaction; // Return cached transaction details if they exist
     }
+    console.log('non cached transaction');
 
     // Initialize a public client for the Polygon network (can be adjusted for other networks)
     const client = createPublicClient({

@@ -6,7 +6,7 @@ import { CovalentTransactionV3 } from '@/hooks/useWalletData';
 import { getDashboardBorderColor } from '@/service/helpers';
 import truncateEthAddress from 'truncate-eth-address';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { formatEther, formatUnits } from 'viem';
+import { formatEther, formatUnits, getAddress } from 'viem';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData from '@/metadata/translations';
 import { TokenDetails } from '@/service/types';
@@ -34,9 +34,11 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
 
   const computeTransactionType = (details: TransactionDetails) => {
     const myEvents = details.erc20Transfers.filter((transfer) => {return transfer.to === address || transfer.from === address});
-
+    
     if (myEvents.length === 0) return languageData[language].Dashboard.unknown;
     if (myEvents.length === 1) return myEvents[0].to === address ? languageData[language].Dashboard.deposit : languageData[language].Dashboard.withdrawal;
+    
+    //if (myEvents.length > 1 ) return languageData[language].Dashboard.unknown;
     if (myEvents.length > 1) return languageData[language].Dashboard.investment;
     
     return languageData[language].Dashboard.unknown;
@@ -50,6 +52,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
       if (token1) {
         token = token1 as TokenDetails;
       } else {
+        //token = {name: 'Unknown', symbol: 'UNK', decimals: 18, logo: '', defaultLogo: true};
         token = await getTokenInfo(globalChainId,  transfer.token);
         await setTokenMetadata(globalChainId,  transfer.token, token as TokenDetails);
       }
@@ -60,16 +63,19 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
   }
 
   useEffect(() => {
-    if (transactionDetails) {
+    //console.log('transactionDetails', transactionDetails);
+    if (transactionDetails && transactionType !== languageData[language].Dashboard.unknown && transactionDetails.erc20Transfers.length <= 25) {
       enrichTransfers();
+    } else if (transactionDetails && transactionType !== languageData[language].Dashboard.unknown && transactionDetails.erc20Transfers.length > 25) {
+      setTransactionType(languageData[language].Dashboard.unknown);
     }
-  }, [transactionDetails]);
+  }, [transactionDetails, transactionType]);
 
   useEffect(() => {
     const fetchTransactionDetails = async () => {
       const details = await retrieveTransactionDetails(address, transaction.tx_hash);
-      setTransactionDetails(details);
       setTransactionType(computeTransactionType(details));
+      setTransactionDetails(details);
     };
 
     if (transaction && address) fetchTransactionDetails();
@@ -81,6 +87,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
   const direction = transactionType === languageData[language].Dashboard.deposit ? '+' : transactionType === languageData[language].Dashboard.withdrawal ? '-' : '';
   const isInvestment = transactionType === languageData[language].Dashboard.investment;
   const hasTransfers = transfers.length > 0;
+  const isSpam = transactionDetails.erc20Transfers.length > 25;
   const BasicEntry = () => {
     return (
       <Stack direction={'row'} spacing={1} justifyContent={'space-between'} alignItems={'center'} width={'100%'} >
@@ -163,8 +170,10 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
 
   return (
     <Box width={'full'}>
+
       {transactionDetails !== null && !isInvestment && <BasicEntry />}
-      {transactionDetails !== null && isInvestment && <InvestmentEntry />}
+      {transactionDetails !== null && isInvestment && isSpam && <BasicEntry />}
+      {transactionDetails !== null && isInvestment && !isSpam && <InvestmentEntry />}
     </Box>
 
   );
