@@ -61,7 +61,7 @@ function Header() {
   const themeSwitcher = useThemeSwitcher();
   const { isConnected, address } = useAccount();
   const { hasEscrowAddress, loading : isOrganizationWalletLoading } = useOrganizationWallet();
-  const { isAdmin } = useIsAdmin();
+  const { isAdmin, isSuperAdmin } = useIsAdmin();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const url = 'xucre.expo.client://ViewWallet';
@@ -222,7 +222,7 @@ function Header() {
                     </Box>
                     <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
                       <SignedIn>
-                        {user && user.publicMetadata.superAdmin as boolean &&
+                        {user && (isSuperAdmin || !user.publicMetadata.superAdmin as boolean) && 
                           <OrganizationSwitcher
                             appearance={{
                               baseTheme: isDarkTheme ? dark : undefined,
@@ -236,7 +236,7 @@ function Header() {
                             organizationProfileUrl='/organization'
                           />
                         }
-                        {user && !user.publicMetadata.superAdmin &&
+                        {user && !isSuperAdmin && !user.publicMetadata.superAdmin as boolean &&
                           <UserButton
                             appearance={{
                               baseTheme: isDarkTheme ? dark : undefined,
@@ -269,7 +269,7 @@ function Header() {
 
                       <SignedIn>
                         <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
-                          {user && user.publicMetadata.superAdmin as boolean &&
+                          {user && (isSuperAdmin || !user.publicMetadata.superAdmin as boolean) &&
                             <OrganizationSwitcher
                               appearance={{
                                 baseTheme: isDarkTheme ? dark : undefined,
