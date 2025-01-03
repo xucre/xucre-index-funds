@@ -260,6 +260,7 @@ const values : TranslationType = {
     view_theme: 'Theme',
     view_social: 'Social',
     view_indentification: 'Identification',
+    view_privacy: 'Privacy Policy',
   },
   SelectLanguage: {
     en: "English",
@@ -341,8 +342,13 @@ const values : TranslationType = {
     button_Accept: "Accept",
     title: "Terms and Conditions",
     accept_terms: "I accept the terms and conditions"
-
-  } 
+  },
+  Privacy: {
+    title: "Privacy Policy",
+    description: "By using Xucre Investments services, you agree to our Privacy Policy. Please accept to continue.",
+    accept_button: "Accept",
+    policy_acceptance_message: "By using Xucre Investments services, you agree to our Privacy Policy. Please accept to continue."
+  },
 };
 
 export default values;

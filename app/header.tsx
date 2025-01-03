@@ -189,10 +189,10 @@ function Header() {
         
   return (
     <div>
-      {user && 
+      {true && 
         <KnockProvider
           apiKey={knockPublicKey}
-          userId={user.id}
+          userId={user ? user.id : 'unknown'}
         >
           <KnockI18nProvider i18n={{
             translations: {
