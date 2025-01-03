@@ -305,3 +305,10 @@ export const ORIGIN_OPTIONS = [
     label: "UNKNOWN",
   },
 ];
+
+
+export const Database = {
+  name: "xucre-investments-db",
+  version: 1,
+  tables: ['transactions', 'tokens'],
+};

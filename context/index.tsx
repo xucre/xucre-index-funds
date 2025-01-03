@@ -15,6 +15,7 @@ import { useTheme } from '@mui/material'
 import { SFDCProvider } from '@/hooks/useSFDC'
 import { useLanguage } from '@/hooks/useLanguage';
 import { Language } from '@/metadata/translations/index';
+import { IndexDbContextProvider } from '@/hooks/useIndexedDB';
 
 // Setup queryClient
 const queryClient = new QueryClient()
@@ -62,57 +63,34 @@ export function ContextProvider({
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
-        <ClerkProvider 
-          signInUrl={'/sign-in'}
-          signInFallbackRedirectUrl={'/dashboard'}
-          signUpFallbackRedirectUrl={'/dashboard'}
-          signUpForceRedirectUrl={'/dashboard'}
-          signInForceRedirectUrl={'/dashboard'}
-          signUpUrl={'/sign-up'} 
-          afterSignOutUrl={'/sign-in'} 
-          afterMultiSessionSingleSignOutUrl={'/sign-in'}
-          afterSignInUrl={'/dashboard'}
-          appearance={{
-            baseTheme: dark
-          }}
-          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-          localization={activeLanguage}
-          touchSession={false}
-        >
-          <SnackbarProvider maxSnack={3} >
-          <ClerkLoaded>
-            <SFDCProvider>
-              {children}
-            </SFDCProvider>
-          </ClerkLoaded>
-          </SnackbarProvider>
-        </ClerkProvider>
+        <IndexDbContextProvider>
+          <ClerkProvider 
+            signInUrl={'/sign-in'}
+            signInFallbackRedirectUrl={'/dashboard'}
+            signUpFallbackRedirectUrl={'/dashboard'}
+            signUpForceRedirectUrl={'/dashboard'}
+            signInForceRedirectUrl={'/dashboard'}
+            signUpUrl={'/sign-up'} 
+            afterSignOutUrl={'/sign-in'} 
+            afterMultiSessionSingleSignOutUrl={'/sign-in'}
+            afterSignInUrl={'/dashboard'}
+            appearance={{
+              baseTheme: dark
+            }}
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+            localization={activeLanguage}
+            touchSession={false}
+          >
+            <SnackbarProvider maxSnack={3} >
+            <ClerkLoaded>
+              <SFDCProvider>
+                {children}
+              </SFDCProvider>
+            </ClerkLoaded>
+            </SnackbarProvider>
+          </ClerkProvider>
+        </IndexDbContextProvider>
       </QueryClientProvider>
     </WagmiProvider>
   )
 }
-
-/*
-
-import { GoldRushProvider } from '@covalenthq/goldrush-kit'
-import '@covalenthq/goldrush-kit/styles.css'
-<GoldRushProvider
-              apikey={process.env.NEXT_PUBLIC_COVALENT_API_KEY} //use your API key
-              theme={{
-                mode: theme.palette.mode,
-                colors: {
-                  light: {
-                    primary: '#1B1E3F',
-                    secondary: '#1B1E3F',
-                    background: '#ffffff',
-                    foreground: '#ffffff'
-                  },
-                  dark: {
-                    primary: '#D4E815',
-                    secondary: '#1B1E3F',
-                    background: '#121212 !important',
-                    foreground: '#ffffff'
-                  }
-                }
-              }}
-            ></GoldRushProvider>*/
