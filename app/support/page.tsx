@@ -11,6 +11,7 @@ import OpaqueCard from "@/components/ui/OpaqueCard";
 import SupportHeader from "@/components/support/SupportHeader";
 import { useSFDC } from "@/hooks/useSFDC";
 import CreateCase from "@/components/support/CreateCase";
+import { useIndexedDB } from "@/hooks/useIndexedDB";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 export default function AboutUs() {
@@ -27,7 +28,6 @@ export default function AboutUs() {
       mixpanel.track('FAQ Page View');
     }
   }, [mixpanel])
-
 
   return (
     <Stack direction={matches ? 'row' : 'column'} spacing={4} justifyContent={'space-between'} px={5} pb={10}>

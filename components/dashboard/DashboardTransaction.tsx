@@ -14,6 +14,7 @@ import { getTokenMetadata, setTokenMetadata } from '@/service/db';
 import { getTokenInfo } from '@/service/lambda';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { globalChainId } from '@/service/constants';
+import { useIndexedDB } from '@/hooks/useIndexedDB';
 
 dayjs.extend(relativeTime)
 
@@ -31,6 +32,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
   const [transactionDetails, setTransactionDetails] = useState<TransactionDetails | null>(null);
   const [transactionType, setTransactionType] = useState<String>(languageData[language].Dashboard.unknown);
   const [transfers, setTransfers] = useState<TransferExtended[]>([]);
+  const {getValue, putValue, isDBConnecting} = useIndexedDB();
 
   const computeTransactionType = (details: TransactionDetails) => {
     const myEvents = details.erc20Transfers.filter((transfer) => {return transfer.to === address || transfer.from === address});
@@ -46,6 +48,12 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
 
   const enrichTransfers = async () => {
     if (transactionDetails === null) return;
+    const cachedTransfers = await getValue(`transactions`,`transaction:${address}:${transaction.tx_hash}:transfers`);
+    if (cachedTransfers) {
+      const transferList = cachedTransfers.transfers as TransferExtended[];
+      setTransfers(transferList);;
+      return;
+    }
     const transferList = await Promise.all(transactionDetails.erc20Transfers.map(async (transfer) => {
       let token: TokenDetails;
       const token1 = await getTokenMetadata(globalChainId,  transfer.token);
@@ -60,6 +68,8 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
       return { ...transfer, tokenMetadata: token as TokenDetails };
     }));
     setTransfers(transferList);
+    await putValue(`transactions`, {id: `transaction:${address}:${transaction.tx_hash}:transfers`, transfers: transferList});
+    //localStorage.setItem(`transaction:${address}:${transaction.tx_hash}:transfers`, JSON.stringify(transferList));
   }
 
   useEffect(() => {
@@ -73,13 +83,23 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
 
   useEffect(() => {
     const fetchTransactionDetails = async () => {
+      //const cachedDetails = localStorage.getItem(`transaction:${address}:${transaction.tx_hash}`);
+      const cachedDetails = await getValue(`transactions`, `transaction:${address}:${transaction.tx_hash}`);
+      if (cachedDetails) {
+        const details = cachedDetails.details as TransactionDetails;
+        setTransactionDetails(details);
+        setTransactionType(computeTransactionType(details));
+        return;
+      }
       const details = await retrieveTransactionDetails(address, transaction.tx_hash);
       setTransactionType(computeTransactionType(details));
       setTransactionDetails(details);
+      await putValue(`transactions`, {id: `transaction:${address}:${transaction.tx_hash}`, details: details});
+      //localStorage.setItem(`transaction:${address}:${transaction.tx_hash}`, JSON.stringify(details));
     };
 
-    if (transaction && address) fetchTransactionDetails();
-  }, [transaction, address]);
+    if (transaction && address && !isDBConnecting) fetchTransactionDetails();
+  }, [transaction, address, isDBConnecting]);
 
   if (!transactionDetails) {
     return <Skeleton variant="text" sx={{ fontSize: '1rem' }} />

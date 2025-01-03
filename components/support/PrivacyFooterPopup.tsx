@@ -8,7 +8,7 @@ const PrivacyFooterPopup: React.FC = () => {
   const [open, setOpen] = useState(false);
   const {language, languageData} = useLanguage();
   useEffect(() => {
-    localStorage.setItem(POLICY_ACCEPTANCE_KEY, 'false');
+    //localStorage.setItem(POLICY_ACCEPTANCE_KEY, 'false');
     const accepted = localStorage.getItem(POLICY_ACCEPTANCE_KEY);
     if (accepted !== 'true') {
       setOpen(true);
