@@ -15,11 +15,13 @@ import ContactMailIcon from '@mui/icons-material/ContactMail';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import EditUserProfile from "@/components/settings/EditUserProfile";
+import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
 import { useLanguage } from '@/hooks/useLanguage';
 import EditUserPortfolio from "@/components/settings/EditUserPortfolio";
 import { useSFDC } from "@/hooks/useSFDC";
 import { isNull } from "@/service/helpers";
 import React from "react";
+import PrivacyPolicy from "@/components/support/PrivacyPolicy";
 
 // components/LoadingIndicator.tsx
 export default function Settings() {
@@ -76,6 +78,9 @@ export default function Settings() {
             <UserProfile.Page label={languageData[language].Settings.view_display} labelIcon={<DisplaySettingsIcon fontSize="small" />} url="display">
               <Display />
             </UserProfile.Page>
+            {/* <UserProfile.Page label={languageData[language].Settings.view_privacy} labelIcon={<PrivacyTipIcon fontSize="small" />} url="privacy">
+              <PrivacyPolicy />
+            </UserProfile.Page> */}
             {/* <UserProfile.Page label="Logout" labelIcon={<LinkIcon fontSize="small" />} url="logout">
               <SignOutButton />
             </UserProfile.Page> */}

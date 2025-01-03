@@ -262,6 +262,7 @@ const values : TranslationType = {
     view_theme: 'Tema',
     view_social: 'Social',
     view_indentification: 'Identificación',
+    view_privacy: 'Privacidad',
   },
   SelectLanguage: {
     en: "Inglés",
@@ -343,7 +344,13 @@ const values : TranslationType = {
     button_Accept: "Aceptar",
     title: "Términos y condiciones",
     accept_terms: "Acepto los términos y condiciones"
-  }
+  },
+  Privacy: {
+    title: "Política de privacidad",
+    description: "Lea nuestra política de privacidad para comprender cómo recopilamos, usamos y protegemos su información personal cuando utiliza XucreWallet.",
+    accept_button: "Aceptar",
+    policy_acceptance_message: "Acepto la política de privacidad",
+  },
 };
 
 export default values;

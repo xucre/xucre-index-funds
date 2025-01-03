@@ -24,6 +24,7 @@ import {
   NotificationFeedPopover,
 } from "@knocklabs/react";
 import { useClerkUser } from '@/hooks/useClerkUser';
+import PrivacyFooterPopup from '@/components/support/PrivacyFooterPopup';
 
 //import { TokenListProvider } from '@/hooks/useTokenList';
 export default function Wrapper({
@@ -34,7 +35,7 @@ export default function Wrapper({
   const {user} = useClerkUser();
   const pathname = usePathname();
   const hasUser = user !== null;
-  const hideLoginButton = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || ( !hasUser && pathname.includes('/fund'))
+  const hideLoginButton = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || pathname === '/privacy' || ( !hasUser && pathname.includes('/fund'))
   
   return (
     <Box>
@@ -42,9 +43,9 @@ export default function Wrapper({
           <MixpanelProvider>
             <ThemeSwitcherProvider>
                   <CssBaseline enableColorScheme />
-                  
+                  <Stack direction={'column'} justifyContent={'space-between'} minHeight={'100vh'}>
                     <Header />
-                    <Stack direction={'column'} justifyContent={'space-between'} minHeight={'full'}>
+                    <Stack direction={'column'} justifyContent={'space-between'}>
                       <Stack spacing={2} direction="row" width={'full'} alignItems={'top'}>
                         <SignedIn>
                           {!hideLoginButton && 
@@ -61,7 +62,9 @@ export default function Wrapper({
                       {/* <CTA type={'main'} /> */}
                     </Stack>
 
-                    {/* <Footer /> */}
+                    { <Footer /> }
+                    <PrivacyFooterPopup />
+                  </Stack>
             </ThemeSwitcherProvider>
           </MixpanelProvider>
     </Box>

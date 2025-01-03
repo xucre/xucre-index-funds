@@ -31,6 +31,7 @@ export interface TranslationType {
   ui: any,
   Edit: any,
   Settings: any,
+  Privacy: any
 }
 
 

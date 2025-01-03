@@ -3,14 +3,16 @@ import AccountButton from '@/components/accountButton';
 import LanguageSelect from '@/components/ui/languageSelect';
 import SettingsButton from '@/components/ui/settingsButton';
 import SocialIcons from '@/components/ui/socialIcons';
+import { useLanguage } from '@/hooks/useLanguage';
 import { ThemeSwitcherElement } from '@/hooks/useThemeSwitcher';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
-import { AppBar, Box, Toolbar } from '@mui/material';
+import { AppBar, Box, Link, Toolbar, Typography } from '@mui/material';
 
 import { usePathname, useSearchParams } from 'next/navigation';
 
 
 export default function Footer() {
+  const { language, languageData } = useLanguage();
   const pathname = usePathname();
   const searchParams = useSearchParams()
   const color = searchParams.get('color');
@@ -21,17 +23,24 @@ export default function Footer() {
   const hideWalletConnectButton = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email'
   
   return (
-    <AppBar position={'relative'} color={'default'} sx={{ mt:4, top: 'auto', bottom: 0, display: { xs: 'none', md: 'block' } }}>
+    <AppBar position={'relative'} color={'transparent'} sx={{ /*mt:4, top: 'auto', bottom: 0, display: { xs: 'block', md: 'block' },*/ boxShadow: 'none' }}>
       <Toolbar>
         {/* <SignedIn><SettingsButton /></SignedIn> */}
-        {!hideWalletConnectButton && 
+        {/* {!hideWalletConnectButton && false && 
           <SignedOut>
             <AccountButton />
           </SignedOut>
-        }
+        } */}
         
         <ThemeSwitcherElement />
         <LanguageSelect type={'menu'} />
+        <Box sx={{ flexGrow: 1 }} />
+          <Typography variant="body2" color="text.secondary" sx={{ mr: 2 }}>
+          2024 Xucre Technologies, Inc. · 
+          <Link href="/privacy" variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+            {languageData[language].termsConditions.title}
+          </Link>
+          </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <Social />
       </Toolbar>
