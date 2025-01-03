@@ -26,7 +26,6 @@ import {
 import { useClerkUser } from '@/hooks/useClerkUser';
 import PrivacyFooterPopup from '@/components/support/PrivacyFooterPopup';
 
-//import { TokenListProvider } from '@/hooks/useTokenList';
 export default function Wrapper({
   children
 }: {
