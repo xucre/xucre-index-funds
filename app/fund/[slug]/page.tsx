@@ -33,26 +33,15 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   const mixpanel = useMixpanel();
   const { isSignedIn } = useClerkUser();
   const slugString = params.slug as string;
-  //const _indexFund = JSON.parse(atob(decodeURIComponent(slugString))) as IndexFund;
   const textColor = getTextColor(theme);
-  // const { isConnected, chainId, isConnecting, isReconnecting } = useAccount();
-  // const { indexFunds } = useIndexFunds({ chainId: normalizeDevChains(chainId || globalChainId) });
-  // const _indexFund = indexFunds.find((fund) => {
-  //   return languages.reduce((returnVal, lang) => {
-  //     if (returnVal) return returnVal;
-  //     return encodeURIComponent(fund.name[lang]) === slugString || normalizeDevChains(chainId || globalChainId) === fund.chainId;
-  //   }, false);
-  // });
 
   const [_indexFund, setIndexFund] = useState<IndexFund | undefined>(undefined);
-  //const _indexFund = demoPortfolio;
-  //const [_indexFund, setIndexFund] = useState(indexFundFound);
   const { balance, allowance, hash, error, loading, isNativeToken, confirmationHash, approveContract, initiateSpot, sourceToken, sourceTokens, setSourceToken, status } = useConnectedIndexFund({ fund: _indexFund });
   const [amount, setAmount] = useState<BigInt>(BigInt(0));
   const [rawAmount, setRawAmount] = useState<string>('');
   const [priceData, setPriceData] = useState([] as PriceData[]);
   const [priceMap, setPriceMap] = useState({} as { [key: string]: PriceData });
-  //const { isSubscribed } = usePaidPlanCheck();
+  
   const getPrices = async () => {
     if (!_indexFund) return;
     const addresses = _indexFund.portfolio.map((item) => item.address).join(',');
