@@ -46,6 +46,12 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
 
   const enrichTransfers = async () => {
     if (transactionDetails === null) return;
+    const cachedTransfers = localStorage.getItem(`transaction:${address}:${transaction.tx_hash}:transfers`);
+    if (cachedTransfers && cachedTransfers.length > 0) {
+      const transferList = JSON.parse(cachedTransfers) as TransferExtended[];
+      setTransfers(transferList);
+      return;
+    }
     const transferList = await Promise.all(transactionDetails.erc20Transfers.map(async (transfer) => {
       let token: TokenDetails;
       const token1 = await getTokenMetadata(globalChainId,  transfer.token);
@@ -60,6 +66,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
       return { ...transfer, tokenMetadata: token as TokenDetails };
     }));
     setTransfers(transferList);
+    localStorage.setItem(`transaction:${address}:${transaction.tx_hash}:transfers`, JSON.stringify(transferList));
   }
 
   useEffect(() => {
@@ -73,9 +80,17 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
 
   useEffect(() => {
     const fetchTransactionDetails = async () => {
+      const cachedDetails = localStorage.getItem(`transaction:${address}:${transaction.tx_hash}`);
+      if (cachedDetails && cachedDetails.length > 0) {
+        const details = JSON.parse(cachedDetails) as TransactionDetails;
+        setTransactionDetails(details);
+        setTransactionType(computeTransactionType(details));
+        return;
+      }
       const details = await retrieveTransactionDetails(address, transaction.tx_hash);
       setTransactionType(computeTransactionType(details));
       setTransactionDetails(details);
+      localStorage.setItem(`transaction:${address}:${transaction.tx_hash}`, JSON.stringify(details));
     };
 
     if (transaction && address) fetchTransactionDetails();
