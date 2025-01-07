@@ -32,13 +32,15 @@ const WalletManagement: React.FC = () => {
   return (
     <Box>
       <Stack direction={'column'} spacing={2} mb={2} >
-        <Typography variant={'h5'}>{languageData[language].Profile.wallet_management}</Typography>
-        <Divider />
-        {hasSafe ? 
-          <WalletButton address={safe} />: 
+        <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+          <Typography variant={'h4'}>{languageData[language].Profile.wallet_management}</Typography>
           <AccountButton />
+        </Stack>
+        <Divider />
+        {hasSafe && 
+          <WalletButton address={safe} />
         }
-        
+         
       </Stack>
     </Box>
   );

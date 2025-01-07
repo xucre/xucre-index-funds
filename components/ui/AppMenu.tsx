@@ -15,6 +15,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import CasesOutlinedIcon from '@mui/icons-material/CasesOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
@@ -24,10 +25,12 @@ import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
 import { useSFDC } from '@/hooks/useSFDC';
 import { isNull } from '@/service/helpers';
+import { SignOutButton, useAuth } from '@clerk/nextjs';
 
 const AppMenu: React.FC = () => {
   const {language} = useLanguage();
   const {isAdmin, isSuperAdmin} = useIsAdmin();
+  const {signOut} = useAuth();
   //const isAdmin = false;
   const [isOpen, setIsOpen] = React.useState(true);
   const router = useRouter();
@@ -35,6 +38,7 @@ const AppMenu: React.FC = () => {
   const pathname = usePathname();
   const {sfdcUser, isLoaded} = useSFDC();
   const [isOnboardingComplete, setIsOnboardingComplete] = React.useState(false);
+  const [staticRef, setStaticRef] = React.useState<React.RefObject<HTMLButtonElement>>();
   useEffect(() => {
     if (isLoaded) {
       const _isOnboardingComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution)
@@ -95,6 +99,15 @@ const AppMenu: React.FC = () => {
             path: '/settings',
             ref: React.createRef<HTMLButtonElement>(),
           },
+          {
+            icon: <LogoutIcon />,
+            name: 'Sign Out',
+            apiName: 'sign_out',
+            path: '/sign-out',
+            content: <SignOutButton />,
+            ref: React.createRef<HTMLButtonElement>(),
+          },
+          
         ],
       },
     ],
@@ -155,6 +168,14 @@ const AppMenu: React.FC = () => {
             path: '/settings',
             ref: React.createRef<HTMLButtonElement>(),
           },
+          {
+            icon: <LogoutIcon />,
+            name: 'Sign Out',
+            apiName: 'sign_out',
+            path: '/sign-out',
+            content: <SignOutButton />,
+            ref: React.createRef<HTMLButtonElement>(),
+          },
         ],
       },
     ],
@@ -186,7 +207,11 @@ const AppMenu: React.FC = () => {
   );
 
   const handleNavigation = (path: string) => {
-    router.push(path);
+    if (path === '/sign-out') {
+      signOut({redirectUrl: '/sign-in'});
+    } else {
+      router.push(path);
+    }    
   };
 
   const backgroundRef = useRef<HTMLDivElement>(null);
@@ -220,8 +245,17 @@ const AppMenu: React.FC = () => {
         });
       });
     }
-
-    if (!currentItemRef) return;
+    console.log(currentItemRef);
+    if (!currentItemRef.current) {
+      console.log('No current item ref found');
+      if (isAdmin) {
+        currentItemRef = adminMenuGroups[0].items[0].ref;
+      } else {
+        currentItemRef = menuGroups[0].items[0].ref;
+      }
+    };
+    
+    setStaticRef(currentItemRef);
 
     if (currentItemRef.current && backgroundRef.current) {
       const itemRect = currentItemRef.current.getBoundingClientRect();
@@ -301,7 +335,7 @@ const AppMenu: React.FC = () => {
                   FabProps={{
                     sx: {
                       padding: theme.spacing(1),
-                      color: !pathname.startsWith('/organizations') && pathname === item.path || (item.path === '/settings' && pathname.includes(item.path)) 
+                      color: (!pathname.startsWith('/organizations') && pathname === item.path || (item.path === '/settings' && pathname.includes(item.path))) || (staticRef === item.ref)
                         ? theme.palette.success.main
                         : 'default',
                       backgroundColor: 'transparent',
@@ -334,7 +368,7 @@ const AppMenu: React.FC = () => {
                   FabProps={{
                     sx: {
                       padding: theme.spacing(1),
-                      color: !pathname.startsWith('/organizations') && pathname.includes(item.path)
+                      color: (!pathname.startsWith('/organizations') && pathname.includes(item.path)) || (staticRef === item.ref)
                         ? theme.palette.success.main
                         : 'default',
                       backgroundColor: 'transparent',

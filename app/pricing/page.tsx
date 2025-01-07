@@ -1,10 +1,11 @@
 'use client'
+import StripePricingTable from "@/components/billing/StripePricingTable";
 import { Box, useTheme } from "@mui/material"
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
 // components/LoadingIndicator.tsx
-export default function Onboarding() {
+export default function Pricing() {
   const theme = useTheme();
   const params = useSearchParams();
   const _step = params.get('step');
@@ -12,6 +13,7 @@ export default function Onboarding() {
   return (
     <Suspense>
       <Box height={'full'} width={'full'} m={5}>
+        <StripePricingTable />
       </Box>
     </Suspense>
   );

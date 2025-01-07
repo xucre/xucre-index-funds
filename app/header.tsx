@@ -60,7 +60,6 @@ function Header() {
   const textColor = getTextColor(theme);
   const themeSwitcher = useThemeSwitcher();
   const { isConnected, address } = useAccount();
-  const { hasEscrowAddress, loading : isOrganizationWalletLoading } = useOrganizationWallet();
   const { isAdmin, isSuperAdmin } = useIsAdmin();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -126,7 +125,7 @@ function Header() {
   }, [user])
 
   const headerButton = (
-    <Button variant="text" onClick={() => router.push('/')} >
+    <Button variant="text" onClick={() => router.push('/dashboard')} >
       <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
         <img src={'/icon_new2.png'} className="side-image" alt="menuLogo" />
         {<Typography color={theme.palette.mode === 'dark' ? 'white' : 'black'} textTransform={'none'} fontSize={24} fontWeight={'400'} >{languageData[language].Home.title_2}</Typography>}
@@ -222,7 +221,7 @@ function Header() {
                     </Box>
                     <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
                       <SignedIn>
-                        {user && (isSuperAdmin || !user.publicMetadata.superAdmin as boolean) && 
+                        {user && 
                           <OrganizationSwitcher
                             appearance={{
                               baseTheme: isDarkTheme ? dark : undefined,
@@ -234,9 +233,10 @@ function Header() {
                             }}
                             organizationProfileMode='navigation'
                             organizationProfileUrl='/organization'
+                            hidePersonal={true}
                           />
                         }
-                        {user && !isSuperAdmin && !user.publicMetadata.superAdmin as boolean &&
+                        {user && !isSuperAdmin && !user.publicMetadata.superAdmin as boolean && false &&
                           <UserButton
                             appearance={{
                               baseTheme: isDarkTheme ? dark : undefined,
@@ -269,7 +269,7 @@ function Header() {
 
                       <SignedIn>
                         <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
-                          {user && (isSuperAdmin || !user.publicMetadata.superAdmin as boolean) &&
+                          {user &&
                             <OrganizationSwitcher
                               appearance={{
                                 baseTheme: isDarkTheme ? dark : undefined,
@@ -279,9 +279,9 @@ function Header() {
                                   baseTheme: isDarkTheme ? dark : undefined,
                                 }
                               }}
-                              hidePersonal={true}
                               organizationProfileMode='navigation'
                               organizationProfileUrl='/organization'
+                              hidePersonal={true}
                             />
                           }
                           <NotificationIconButton
@@ -293,7 +293,7 @@ function Header() {
                             isVisible={isNotificationOpen}
                             onClose={() => setIsNotificationOpen(false)}
                           />
-                          {user &&
+                          {user && false && 
                             <UserButton
                               appearance={{
                                 baseTheme: isDarkTheme ? dark : undefined,

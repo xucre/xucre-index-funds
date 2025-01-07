@@ -355,7 +355,7 @@ const KYC = ({user, updateUser, selectedTab, setSelectedTab} : {user: SFDCUserDa
         <Grid container spacing={2}>
           <Grid size={12}>
             <Stack direction={'row'} spacing={2} sx={{py:0}} alignItems="center" justifyContent={'start'}>
-              <IconButton onClick={handleNewBeneficiary}><AddIcon /></IconButton>
+              <Button onClick={handleNewBeneficiary}>Add Beneficiary</Button>
             </Stack>
           </Grid>
           <Grid size={12}>

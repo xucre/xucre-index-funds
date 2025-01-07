@@ -46,6 +46,7 @@ export function useStripeBilling() {
   }
 
   const openPortal = async () => {
+    if (!customerId) return;
     const portalUrl = await createPortalLink(customerId);
     if (!portalUrl) return;
     window.location.assign(portalUrl);
@@ -56,9 +57,9 @@ export function useStripeBilling() {
       reset();
     }
   }, [organization])
-
+  const isManualBilling = organization ? organization.publicMetadata.manualBilling === true : false;
   return useMemo(
-    () => ({ hasSignedUp, organization, seatCount, subscription, portalSession, createStripeAccount, openPortal, reset }),
-    [organization, hasSignedUp],
+    () => ({ hasSignedUp, isManualBilling, organization, seatCount, subscription, portalSession, createStripeAccount, openPortal, reset }),
+    [organization, hasSignedUp, isManualBilling],
   );
 }

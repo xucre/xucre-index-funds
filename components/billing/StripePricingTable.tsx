@@ -24,7 +24,7 @@ const StripePricingTable = () => {
   }) : <></>;
 
   return (
-    <Box py={10} mx={4} px={2} borderRadius={25} bgcolor={'white'}>
+    <Box py={10} mx={4} px={2} borderRadius={25} bgcolor={'#1b6756'}>
       {organization && user &&
         ele
       }

@@ -4,10 +4,13 @@ import { Avatar, Box, Button, Chip, Stack, Typography } from '@mui/material';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData from '@/metadata/translations'
+import { useClerkUser } from '@/hooks/useClerkUser';
 
 export default function Home() {
   const {language} = useLanguage();
   const router = useRouter();
+
+  const {user, isSignedIn} = useClerkUser();
 
   return (
     <main>
@@ -22,12 +25,10 @@ export default function Home() {
         </Stack>
         <Stack direction={'column'} spacing={2} justifyContent={'center'} alignItems={'flex-start'}>
           <Typography variant={'body2'} color={'textSecondary'}>{languageData[language].Home.button_header}</Typography>
-          <SignedIn>
-          <Chip label={languageData[language].Home.button} onClick={() => { router.push('/dashboard') }} color={'primary'} sx={{fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} />
-          </SignedIn>
-          <SignedOut>
+          {isSignedIn ? 
+            <Chip label={languageData[language].Menu.dashboard} onClick={() => { router.push('/dashboard') }} color={'primary'} sx={{fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} /> : 
             <Chip label={languageData[language].Home.button} onClick={() => { router.push('/sign-in') }} color={'primary'} sx={{fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} />
-          </SignedOut>
+          }
         </Stack>
       </Stack>
     </main>
