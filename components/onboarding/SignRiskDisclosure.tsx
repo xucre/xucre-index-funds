@@ -76,11 +76,11 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
 
   const customCss = `
     #form_container {
-      color: ${getTextColor(theme)};
+      color: #000000;
     }
 
     div {
-      color: ${getTextColor(theme)};
+      color: #000000;
     }
 
     p {
@@ -129,15 +129,19 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
       
       <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth={'lg'}>
         {/* <DialogTitle>{languageData[language].Onboarding.empty_disclosure_title}</DialogTitle> */}
-        <DialogContent sx={{ display: 'flex'}}>
+        <DialogContent sx={{ display: 'block'}}>
             <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} mx={5} my={1} spacing={3} width={'100%'}>
-                {user && user.primaryEmailAddress && templateId.length > 0 && 
+                {user && user.primaryEmailAddress && templateId.length > 0 && sfdcUser && 
                   <DocusealForm
                     src={`https://docuseal.com/d/${templateId}`}
                     email={user.primaryEmailAddress.emailAddress}
                     onComplete={handleComplete}
                     logo={'/icon.png'}
                     customCss={customCss}
+                    values={{
+                      Name: sfdcUser.firstName || '' + ' ' + sfdcUser.lastName || '',
+                    }}
+                    withTitle={false}
                   />
                 }
             </Stack>
