@@ -6,24 +6,34 @@ import { Button } from '@mui/material';
 import { useAccount } from 'wagmi';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
+import truncateEthAddress from 'truncate-eth-address';
 
 const AccountButton = ({ showBalance = true }) => {
   const {language} = useLanguage();
   const [showButton, setShowButton] = useState(false);
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { open, close } = useAppKit();
 
   useMemo(() => {
     if (showButton) {
-      open();
+      //open();
     } else {
-      close();
+      //close();
     }
   }, [showButton, open, close]);
+
+  const handleClick= () => {
+    //setShowButton(!showButton);
+    open();
+  }
   return (
     <Box>
       {/* <w3m-button balance={showBalance ? 'show' : 'hide'} /> */}
-      <Button variant={'contained'} color={'primary'} onClick={() => setShowButton(!showButton)} sx={{borderRadius: 25}}>{!isConnected? languageData[language].Settings.connect_wallet : languageData[language].Settings.view_wallet}</Button>
+      {isConnected ? 
+        <Button variant={'contained'} color={'primary'} onClick={handleClick} sx={{borderRadius:2}}>{`${truncateEthAddress(address as string)}`}</Button> :
+        <Button variant={'contained'} color={'primary'} onClick={handleClick} sx={{borderRadius: 25}}>{languageData[language].Settings.connect_wallet}</Button>
+      }
+      
     </Box>
   )
 }

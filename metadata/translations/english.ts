@@ -171,6 +171,10 @@ const values : TranslationType = {
   },
   Billing: {
     manage_subscription: "Manage Subscription",
+    manual_subscription: "Manual Subscription",
+    disbursement_modal_title: 'Processing Disbursement',
+    disbursement_modal_disbursing: 'Disbursing USDT to users',
+    disbursement_modal_executing: 'Executing user transactions',
   },
   Home: {
     title_1: 'Welcome to',

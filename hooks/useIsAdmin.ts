@@ -11,7 +11,6 @@ export function useIsAdmin() {
     const runAsync = async () => {
       if (!user) return;
       if (user.organizationMemberships.length > 0) {
-        console.log('evaluate user permissions');
         const hasAdmin = user.organizationMemberships.find((mem) => mem.organization.id === organization?.id)?.permissions.find((permission) => permission === 'org:sys_memberships:manage');
         //const hasAdmin = user.organizationMemberships[0].permissions.find((permission) => permission === 'org:sys_memberships:manage');
         

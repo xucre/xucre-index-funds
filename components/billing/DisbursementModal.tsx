@@ -131,18 +131,18 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
 
     return (
         <Dialog open={open} onClose={(event, reason) => {}} fullWidth={true} maxWidth={'md'} >
-            <DialogTitle>Processing Disbursement</DialogTitle>
+            <DialogTitle>{languageData[language].Billing.disbursement_modal_title}</DialogTitle>
             <DialogContent>
                 <Stack direction={'column'} spacing={1} justifyContent={'center'} alignItems={'center'}>
                     <List>
                         <ListItem>
                             <ListItemIcon>{getIcon(steps.disbursing)}</ListItemIcon>
-                            <ListItemText primary="Disbursing USDT to users" />
+                            <ListItemText primary={languageData[language].Billing.disbursement_modal_disbursing} />
                         </ListItem>
                         <ListItem>
                             <ListItemIcon>{getIcon(steps.executing)}</ListItemIcon>
                             <ListItemText
-                            primary={`Executing user transactions ${
+                            primary={`${languageData[language].Billing.disbursement_modal_executing} ${
                                 `${currentCount}/${totalCount}`
                             }`}
                             />

@@ -25,6 +25,10 @@ const values : TranslationType = {
   },
   Billing: {
     manage_subscription: "Administrar suscripción",
+    manual_subscription: "Suscripción manual",
+    disbursement_modal_title: 'Procesando desembolso',
+    disbursement_modal_disbursing: 'Desembolsando USDT a los usuarios',
+    disbursement_modal_executing: 'Ejecutando transacciones de usuario',
   },
   Dashboard : {
     balances: 'Saldos',

@@ -25,6 +25,10 @@ const values : TranslationType  = {
   },
   Billing: {
     manage_subscription: "Gerenciar assinatura",
+    manual_subscription: "Assinatura manual",
+    disbursement_modal_title: 'Processamento de dispersão',
+    disbursement_modal_disbursing: 'Dispersando USDT para usuários',
+    disbursement_modal_executing: 'Executando transações de usuários',
   },
   Home: {
     title_1: 'Bem-vindo a',

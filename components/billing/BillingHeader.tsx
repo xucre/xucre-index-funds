@@ -50,7 +50,7 @@ export default function BillingHeader({ portalSession, openPortal, hasSignedUp, 
             <Chip color={'primary'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={openStripePortal} label={languageData[language].Billing.manage_subscription} /> : 
             <Chip color={'primary'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={openStripePricing} label={languageData[language].Billing.manage_subscription} />
           }
-        </> : <Box></Box>
+        </> : <Box><Chip color={'primary'} disabled sx={{fontWeight: 'bold', px: 3, py: 1}} label={languageData[language].Billing.manual_subscription} /></Box>
       }
     </Stack>
   );

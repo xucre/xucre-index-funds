@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Skeleton, Chip, Dialog, DialogContent, DialogTitle, MenuItem, Select, Stack, TextField, useTheme } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -25,7 +25,7 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
   const {user} = useClerkUser();
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
+  const [templateId, setTemplateId] = useState('');
   const {sfdcUser, updateUser} = useSFDC();
 
   const handleOpen = () => setOpen(true);
@@ -41,6 +41,22 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
     handleClose();
     refresh();
   }
+
+  useEffect(() => {
+    const runAsync = async () => {
+      // const response = await fetch('/api/docuseal');
+      // const data = await response.json();
+      // if (data.templateId){
+      //   setTemplateId(data.templateId);
+      // }   
+      if (language === Language.EN) {
+        setTemplateId(process.env.NEXT_PUBLIC_DOCUSEAL_TEMPLATE_ID_EN as string);
+      } else {
+        setTemplateId(process.env.NEXT_PUBLIC_DOCUSEAL_TEMPLATE_ID_ES as string);
+      }
+    }
+    runAsync();
+  }, [])
 
   const openDocumentSign = async () => {
     // setLoading(true);
@@ -114,20 +130,16 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
       <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth={'lg'}>
         {/* <DialogTitle>{languageData[language].Onboarding.empty_disclosure_title}</DialogTitle> */}
         <DialogContent sx={{ display: 'flex'}}>
-            <Stack direction={'column'} alignItems={'center'} justifyContent={'space-between'} mx={5} my={1} spacing={3} >
-                {user && user.primaryEmailAddress && 
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} mx={5} my={1} spacing={3} width={'100%'}>
+                {user && user.primaryEmailAddress && templateId.length > 0 && 
                   <DocusealForm
-                    src={`https://docuseal.com/d/${process.env.NEXT_PUBLIC_DOCUSEAL_TEMPLATE_ID}`}
+                    src={`https://docuseal.com/d/${templateId}`}
                     email={user.primaryEmailAddress.emailAddress}
                     onComplete={handleComplete}
                     logo={'/icon.png'}
                     customCss={customCss}
                   />
                 }
-                {/*                 
-                <Stack direction={'row'} spacing={2}>
-                    <Chip color={'primary'} sx={{fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} label={'Create User'} onClick={openDocumentSign} />
-                </Stack> */}
             </Stack>
         </DialogContent>
       </Dialog>
