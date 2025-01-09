@@ -245,7 +245,6 @@ const AppMenu: React.FC = () => {
         });
       });
     }
-    console.log(currentItemRef);
     if (!currentItemRef.current) {
       console.log('No current item ref found');
       if (isAdmin) {

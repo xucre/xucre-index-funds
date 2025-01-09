@@ -165,11 +165,19 @@ export function useWalletData({ address }: { address?: string } = {}) {
 
   const computeTotals = async (_history: WalletHistory) => {
     const _balance = _history.data.items.reduce((acc, item) => {
+      if (item.holdings[0].quote_rate === null) {
+        const latest = item.holdings[1];
+        return acc + latest.close.quote;
+      }
       const latest = item.holdings[0];
       return acc + latest.close.quote;
     }, 0);
     setBalance(_balance);
     const _previousDayBalance = _history.data.items.reduce((acc, item) => {
+      if (item.holdings[0].quote_rate === null) {
+        const previousDay = item.holdings[2];
+        return acc + previousDay.close.quote;
+      }
       const previousDay = item.holdings[1];
       return acc + previousDay.close.quote;
     }, 0);
@@ -179,28 +187,29 @@ export function useWalletData({ address }: { address?: string } = {}) {
     setLoaded(true);
   }
 
-  useEffect(() => {
-    const runAsync = async () => {
-      setLoaded(false);
-      if (!address) return;
-      const result = (await getWalletTransactions(address, 'matic-mainnet'));
-      
-      if (result && result.covalent) setTransactions(result.covalent.items as CovalentTransactionV3[]);
-      const result2 = await getWalletHistory(address, 'matic-mainnet');
-      console.log('has history');
-      if (result2) {
-        setHasHistory(true);
-        setHistory(result2 as WalletHistory);
-      } else {
-        setHasHistory(false);
-      }
-      if (result2) computeTotals(result2);
+  const refresh = async (hard: boolean = false) => {
+    setLoaded(false);
+    if (!address) return;
+    const result = (await getWalletTransactions(address, 'matic-mainnet'));
+    
+    if (result && result.covalent) setTransactions(result.covalent.items as CovalentTransactionV3[]);
+    const result2 = await getWalletHistory(address, 'matic-mainnet', hard);
+    console.log('has history', result2);
+    if (result2) {
+      setHasHistory(true);
+      setHistory(result2 as WalletHistory);
+    } else {
+      setHasHistory(false);
     }
-    if (address) runAsync()
+    if (result2) computeTotals(result2);
+  }
+
+  useEffect(() => {
+    if (address) refresh()
   }, [address])
 
   return useMemo(
-    () => ({ transactions, history, balance, change, loaded, hasHistory }),
+    () => ({ transactions, history, balance, change, loaded, hasHistory, refresh }),
     [transactions, history, balance, change, loaded],
   );
 }

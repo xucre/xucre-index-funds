@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemIcon, ListItemText, Button, CircularProgress, Chip, Stack } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
-import { useOrganization } from '@clerk/nextjs';
 import { IndexFund, Invoice, InvoiceStatuses } from '@/service/types';
 import { globalChainId, isDev } from '@/service/constants';
 import { CreateInvoiceOptions, createInvoiceTransaction, createInvoiceTransactionV2, executeUserSpotExecution } from '@/service/safe';
 import { getAllFunds, getFundDetails, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useClerkOrganization } from '@/hooks/useClerkOrganization';
 
 interface DisbursementModalProps {
     invoice: Invoice;
@@ -17,7 +17,7 @@ interface DisbursementModalProps {
 }
 const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, closeFunction }) => {
     const {language, languageData} = useLanguage();
-    const {organization} = useOrganization();
+    const {organization} = useClerkOrganization();
     // ...existing code...
     const [steps, setSteps] = useState({
         disbursing: 'pending',

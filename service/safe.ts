@@ -639,6 +639,62 @@ function createUserSourceTransfer(member: InvoiceMember) {
   };
 }
 
+export interface TokenWithdrawalToWalletOptions {
+  to: string;
+  tokenAddress: string;
+  amount: number;
+  decimals: number;
+  from: string;
+  chainId: number;
+}
+
+export async function executeTokenWithdrawalToWallet({to, tokenAddress, amount, decimals, from, chainId}: TokenWithdrawalToWalletOptions) {
+    const recipientAddress = getAddress(to);
+    const _amount = parseUnits(amount.toString(), decimals);
+  
+    const rawTransferData = encodeFunctionData({
+      abi: ERC20_ABI,
+      functionName: 'transfer',
+      args: [recipientAddress, _amount],
+    });
+    const transaction = {
+      to: getAddress(tokenAddress),
+      data: rawTransferData,
+      value: '0'
+    };
+    console.log(from);
+    const packData = {
+        provider: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
+        signer : process.env.DEVACCOUNTKEY,
+        bundlerUrl: bundlerUrl(chainId || 11155111),
+        options: {
+          safeAddress: from,
+        },
+        paymasterOptions: {
+            isSponsored: true,
+            paymasterUrl: paymasterUrl(chainId || 11155111),
+        }
+    } as Safe4337InitOptions;
+    const safe4337Pack = await Safe4337Pack.init(packData);
+    const safeAddress = await safe4337Pack.protocolKit.getAddress();
+    const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
+    if (!client) return '';
+    const transactionData = {
+      transactions: [transaction]
+    } as Safe4337CreateTransactionProps;
+    const safeTransaction = await safe4337Pack.createTransaction(transactionData);
+    const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
+      safeOperation: safeTransaction
+    })
+    const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
+    const userOperationHash = await safe4337Pack.executeTransaction({
+      executable: signedSafeOperation
+    })
+    console.log('userOperationHash for withdrawal ', userOperationHash);
+    
+  
+}
+
 export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: string, chainid: number, invoiceId: string, fundMap: {[key: string]: IndexFund}) {
   try {
     await createUserSpotExecution(member, rpcUrl, chainid, fundMap);

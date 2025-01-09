@@ -5,7 +5,7 @@ import { useAccount, useSignMessage } from 'wagmi';
 import CircleIcon from '@mui/icons-material/Circle';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AccountButton from '@/components/accountButton';
-
+import _ from 'lodash';
 import { useSFDC } from '@/hooks/useSFDC';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { SFDCUserData, SFDCWallet } from '@/service/types';
@@ -48,14 +48,16 @@ const EditUserProfile = ({selectedTab}) => {
   }
 
   useEffect(() => {
-    console.log('edit user profile loaded')
+    console.log('edit user profile mounted')
+    return () => {
+      console.log('edit user profile unmounted')
+    }
   }, []);
   
   useEffect(() => {
     if (!sfdcUser || sfdcUser === null) return;
-    
-      setModifiedUser(sfdcUser);
-    
+    if (_.isEqual(sfdcUser, modifiedUser)) return;
+    setModifiedUser(sfdcUser);
   }, [sfdcUser])
 
   const handleSaveProfile = async () => {
@@ -94,7 +96,7 @@ const EditUserProfile = ({selectedTab}) => {
     await updateUser(profileData);
   };
   
-  if (modifiedUser === null) return null;
+  //if (modifiedUser === null) return null;
 
   const isProfileComplete = modifiedUser && !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.street) && !isNull(modifiedUser.city) && !isNull(modifiedUser.province) && !isNull(modifiedUser.postalCode) && !isNull(modifiedUser.country);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
   //const KYCMemo = React.memo(KYC);

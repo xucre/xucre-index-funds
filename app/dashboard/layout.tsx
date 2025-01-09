@@ -36,21 +36,9 @@ export default function DashboardLayout({
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   //const signer = useWalletClient({ chainId })
   const router = useRouter();
-  const { user } = useClerkUser();
-  const [safeWallet, setSafeWallet] = useState<string | null>(null);
+  const { user, safeWallet, refreshSafeWallet: syncSafeWallet } = useClerkUser();
   const [needsToTransfer, setNeedsToTransfer] = useState(false);
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
-
-  const syncSafeWallet = async () => {
-    if (!user) return;
-    //setSafeWallet(null);
-    const walletAddress = await getSafeAddress(user.id);
-    if (walletAddress) {
-      setSafeWallet(walletAddress);
-    } else {
-      setSafeWallet(null);
-    }
-  }
 
   const handleCheckSafeOwnership = async () => {
     if (!safeWallet) return;
@@ -92,7 +80,7 @@ export default function DashboardLayout({
   useEffect(() => {
     console.log('user has reloaded');
     if (user && user.id) {
-      syncSafeWallet();
+      //syncSafeWallet();
       //setSafeAddress(user.id, '');
     }
   }, [user])

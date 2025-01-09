@@ -1,10 +1,10 @@
 'use client'
+import { useClerkOrganization } from "@/hooks/useClerkOrganization";
 import { useClerkUser } from "@/hooks/useClerkUser";
-import { useOrganization } from "@clerk/nextjs";
 import { Box } from "@mui/material";
 import React, { useEffect } from "react";
 const StripePricingTable = () => {
-  const { organization } = useOrganization();
+  const { organization } = useClerkOrganization();
   const { user } = useClerkUser();
 
   useEffect(() => {

@@ -221,7 +221,7 @@ function Header() {
                     </Box>
                     <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
                       <SignedIn>
-                        {user && 
+                        {
                           <OrganizationSwitcher
                             appearance={{
                               baseTheme: isDarkTheme ? dark : undefined,
@@ -269,7 +269,7 @@ function Header() {
 
                       <SignedIn>
                         <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
-                          {user &&
+                          {
                             <OrganizationSwitcher
                               appearance={{
                                 baseTheme: isDarkTheme ? dark : undefined,

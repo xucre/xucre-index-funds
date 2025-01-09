@@ -49,6 +49,9 @@ export default function Settings() {
     </Stack>
   )
   
+  useEffect(() => {
+    console.log('loading settings page');
+  }, [])
   
   const isPersonalInformationComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.city) && !isNull(sfdcUser.province) && !isNull(sfdcUser.postalCode) && !isNull(sfdcUser.country);
   const isIdentificationComplete = !isNull(sfdcUser.idCardNumber) && !isNull(sfdcUser.idExpirationDate) && !isNull(sfdcUser.idIssueDate) && !isNull(sfdcUser.backImage) && !isNull(sfdcUser.frontImage);
@@ -85,8 +88,7 @@ export default function Settings() {
               <SignOutButton />
             </UserProfile.Page> */}
 
-          </UserProfile>
-        
+          </UserProfile>      
       </Box>
   );
 };

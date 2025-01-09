@@ -25,7 +25,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
   const refresh = async () => {
     if (!user) return;
     console.log('refreshing sfdc data');
-    const org = user?.organizationMemberships?.length > 0 ? user?.organizationMemberships[0].id : '';
+    //const org = user?.organizationMemberships?.length > 0 ? user?.organizationMemberships[0].id : '';
     const response = await getUserDetails(user.id);
     if (response && response.firstName) {
       setSfdcUser({

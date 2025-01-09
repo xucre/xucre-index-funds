@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { getOrganizationMembers } from '@/service/clerk';
 import { getUserDetails, getSafeAddress } from '@/service/db';
 import { OrganizationMembership } from '@clerk/backend';
-import { useOrganization } from '@clerk/nextjs';
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { Box, Chip, Fade, Stack, Typography } from '@mui/material';
 import { InvoiceMember } from '@/service/types';
 import languageData from '@/metadata/translations'
 import { useLanguage } from '@/hooks/useLanguage';
 import SaveIcon from '@mui/icons-material/Save';
+import { useClerkOrganization } from '@/hooks/useClerkOrganization';
 
 interface InvoiceDetailTableProps {
   existingMembers?: InvoiceMember[];
@@ -18,7 +18,7 @@ interface InvoiceDetailTableProps {
 
 
 const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : InvoiceDetailTableProps) => {
-  const {organization} = useOrganization();
+  const {organization} = useClerkOrganization();
   const [hasChanges, setHasChanges] = useState(false);
   const [members, setMembers] = useState([] as InvoiceMember[]);
   const [initialMembers, setInitialMembers] = useState([] as InvoiceMember[]);

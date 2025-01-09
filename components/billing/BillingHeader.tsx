@@ -6,16 +6,17 @@ import languageData from '@/metadata/translations'
 import { useRouter } from "next/navigation";
 import React from "react";
 import Stripe from "stripe";
-import { useOrganization } from "@clerk/nextjs";
+
 import { setOrganizationSafeAddress } from "@/service/db";
 import { isDev } from "@/service/constants";
 import { uid } from "uid-promise";
+import { useClerkOrganization } from "@/hooks/useClerkOrganization";
 // components/LoadingIndicator.tsx
 export default function BillingHeader({ portalSession, openPortal, hasSignedUp, isManualBilling }: { portalSession: Stripe.BillingPortal.Session | null, openPortal: Function, hasSignedUp: boolean, isManualBilling: boolean }) {
   const theme = useTheme();
   const router = useRouter();
   const { language } = useLanguage();
-  const { organization } = useOrganization();
+  const { organization } = useClerkOrganization();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const createNewDisbursement = async () => {

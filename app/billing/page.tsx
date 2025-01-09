@@ -14,7 +14,6 @@ import { useOrganizationWallet } from "@/hooks/useOrganizationWallet";
 import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
-import { useOrganization } from "@clerk/nextjs";
 import { getSafeOwner, transferSignerOwnership } from "@/service/safe";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import { globalChainId } from "@/service/constants";

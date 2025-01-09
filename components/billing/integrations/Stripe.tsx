@@ -9,11 +9,11 @@ import Campfire from "@/components/campfire";
 import WalletNotConnected from "@/components/walletNotConnected";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useMixpanel } from "@/hooks/useMixpanel";
-import { useOrganization } from "@clerk/nextjs";
 import { generateToken } from "@/service/billing/stripe";
 import { CryptoElements, OnrampElement } from "./StripeCryptoElements";
 import { loadStripeOnramp } from "@stripe/crypto";
 import { setStripePaymentId } from "@/service/db";
+import { useClerkOrganization } from "@/hooks/useClerkOrganization";
 
 const stripeOnrampPromise = loadStripeOnramp(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
@@ -23,7 +23,7 @@ export default function Stripe({ invoiceId, destination, amount }: { invoiceId: 
     const mixpanel = useMixpanel();
     const theme = useTheme();
     const textColor = getTextColor(theme);
-    const {organization} = useOrganization();
+    const {organization} = useClerkOrganization();
     const router = useRouter();
     const { language } = useLanguage();
     const [isLocked, setIsLocked] = useState(true);

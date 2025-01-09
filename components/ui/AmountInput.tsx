@@ -1,4 +1,4 @@
-import { Slider, TextField } from "@mui/material";
+import { Box, Slider, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 
 export interface AmountInputProps {
@@ -9,42 +9,58 @@ export interface AmountInputProps {
 
 }
 
-const AmountInput: React.FC<AmountInputProps>  = ({}) => {
-  const [val, setVal] = useState(20);
+const AmountInput: React.FC<AmountInputProps>  = ({max, decimals, quote, onChange}) => {
+  const [val, setVal] = useState(0);
   const handleChange = (event, newValue) => {
-    const sliderVal = newValue;
-    const textFieldVal = event.target.value;
     setVal(newValue); 
+    onChange(newValue);
   };
+  const handleTextFieldChange = (event) => {
+    const value = event.target.value;
+    setVal(value);
+    onChange(value);
+  }
+
   const marks = [
     {
-      value: 20,
-      label: "20 +"
+      value: 0,
+      label: "0"
     },
     {
-      value: 200,
-      label: "200 +"
+      value: max/2,
+      label: '50%'
+      //label: `$${((max/2)*quote).toFixed(2)}`
+    },
+    {
+      value: max,
+      label: '100%'
+      //label: `$${((max)*quote).toFixed(2)}`
     }
   ];
+  const usdValue = (val * quote).toFixed(2);
   return (
-    <div className="App">
-      <Slider
-        defaultValue={20}
-        valueLabelDisplay="auto"
-        step={10}
-        marks={marks}
-        min={20}
-        max={200}
-        onChange={handleChange}
-      />
+    <Stack direction={'column'} spacing={2} justifyContent={'space-betweeen'} alignItems={'center'} >
 
       <TextField
         name="yearlyDelay"
         variant="outlined"
         id="yearlyDelay"
         value={val}
+        type="number"
+        helperText={`$${usdValue}`}
+        onChange={handleTextFieldChange}
       />
-    </div>
+      <Slider
+        defaultValue={0}
+        valueLabelDisplay="auto"
+        step={max/100}
+        marks={marks}
+        min={0}
+        max={max}
+        onChange={handleChange}
+      />
+
+    </Stack>
   );
 }
 

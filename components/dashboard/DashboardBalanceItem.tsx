@@ -16,10 +16,11 @@ interface DashboardBalanceItemProps {
   metadata: TokenDetails;
   details: Item;
   address: string;
+  refreshAll: any;
 }
 
 
-const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, metadata, address }) => {
+const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, metadata, address, refreshAll }) => {
   const theme = useTheme();
   const borderColor = getDashboardBorderColor(theme);
   const [modalOpen, setModalOpen] = useState(false);
@@ -41,11 +42,12 @@ const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, me
     setModalOpen(true);
   }
 
-  const handleCloseWidthdrawModal = () => {
+  const handleCloseWidthdrawModal = (event) => {
     setModalOpen(false);
+    if (event === 'refresh') refreshAll(true);
   }
-  
-  const computedAmount = details.holdings[0].close.quote < 1 ? details.holdings[0].close.quote : details.holdings[0].close.quote.toFixed(2);
+  const quote = details.holdings[0].quote_rate === null ? details.holdings[1].close.quote : details.holdings[0].close.quote;
+  const computedAmount = quote < 1 ? quote : quote.toFixed(2);
   return (
     <ListItem alignItems="flex-start"
       secondaryAction={
@@ -53,7 +55,7 @@ const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, me
           <Typography variant="body2" color="text.primary" fontWeight={'bold'}>
             ${computedAmount}
           </Typography>
-          {/*<IconButton
+          <IconButton
             aria-label="more"
             id="long-button"
             aria-controls={open ? 'long-menu' : undefined}
@@ -82,7 +84,7 @@ const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, me
             <MenuItem onClick={handleOpenWidthdrawModal}>
               Withdraw
             </MenuItem>
-          </Menu> */}
+          </Menu>
         </Stack>
       }
 
@@ -115,7 +117,7 @@ const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, me
           </React.Fragment>
         }
       />
-      {modalOpen && <WithdrawTokenToWallet details={details} metadata={metadata} open={modalOpen} closeFunction={handleCloseWidthdrawModal} />}
+      {modalOpen && <WithdrawTokenToWallet address={address} details={details} metadata={metadata} open={modalOpen} closeFunction={handleCloseWidthdrawModal} />}
     </ListItem>
   );
 };
