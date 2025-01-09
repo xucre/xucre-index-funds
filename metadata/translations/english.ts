@@ -333,6 +333,8 @@ const values : TranslationType = {
     welcome_message_1: "Hello ",
     welcome_message_2: ", welcome back",
     wallet_not_connected: "Wallet must be connected to use this feature.",
+    withdraw_title: 'Withdraw Token',
+    transaction_error: "Transaction Failed",
   },
   IndexBuilder: {
     successfulAddition: "Successfully added to the index fund",

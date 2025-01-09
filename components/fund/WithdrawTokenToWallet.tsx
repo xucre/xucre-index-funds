@@ -61,13 +61,13 @@ const WithdrawTokenToWallet: React.FC<WithdrawTokenToWalletProps> = ({ details, 
           decimals: metadata.decimals,
           chainId: globalChainId,
         });
-        enqueueSnackbar(`Successfully submitted transaction`, {
+        enqueueSnackbar(languageData[language].ui.transaction_successful, {
           variant: 'success',
           autoHideDuration: 1000,
         });
         closeFunction('refresh');
       } catch (err) {
-        enqueueSnackbar(`Error submitting transaction`, {
+        enqueueSnackbar(languageData[language].ui.transaction_error, {
           variant: 'error',
           autoHideDuration: 1000,
         });
@@ -96,7 +96,7 @@ const WithdrawTokenToWallet: React.FC<WithdrawTokenToWalletProps> = ({ details, 
     return (
         <Dialog open={open} onClose={(event, reason) => {}} fullWidth={true} maxWidth={'md'} sx={{zIndex:'auto'}} PaperProps={{ elevation:6, sx: { borderRadius: 4, zIndex:0 } }}>
             <Stack direction={'row'} spacing={1} justifyContent={'space-between'} padding={2} alignItems={'center'}>
-              <Typography variant={'h6'} sx={{paddingY:1}}>{'Withdraw Token'}</Typography>
+              <Typography variant={'h6'} sx={{paddingY:1}}>{languageData[language].ui.withdraw_title}</Typography>
               <IconButton aria-label={languageData[language].ui.close} onClick={handleClose}><ClearIcon /></IconButton>
             </Stack>
             <DialogContent>

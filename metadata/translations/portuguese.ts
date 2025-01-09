@@ -334,6 +334,8 @@ const values : TranslationType  = {
     welcome_message_1: "Olá ",
     welcome_message_2: ", seja bem vindo novamente", 
     wallet_not_connected: "A carteira deve estar conectada para usar esta função.",
+    withdraw_title: 'Retirar Token',
+    transaction_error: "Transação Falhou",
   },
   IndexBuilder: {
     successfulAddition: "Adicionado com sucesso ao fundo de índice",
