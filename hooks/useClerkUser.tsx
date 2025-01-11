@@ -6,6 +6,7 @@ export function useClerkUser() {
   const {user: clerkUser, isSignedIn} = useUser();
   const [user, setUser] = useState(clerkUser);
   const [safeWallet, setSafeWallet] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const syncSafeWallet = async () => {
     if (!user) return;
@@ -27,9 +28,10 @@ export function useClerkUser() {
     setUser(clerkUser);
   };
 
-  const runSyncs = () => {
-    syncUser();
-    syncSafeWallet();
+  const runSyncs = async () => {
+    await syncUser();
+    await syncSafeWallet();
+    setLoading(false);
   }
   useEffect(() => {
     runSyncs();
@@ -39,9 +41,10 @@ export function useClerkUser() {
     user,
     isSignedIn,
     safeWallet,
+    loading,
     refresh: () => syncUser(),
     refreshSafeWallet: () => syncSafeWallet(),
-  }), [user, isSignedIn, safeWallet]);
+  }), [user, isSignedIn, safeWallet, loading]);
 
   return memoizedValue;
 }

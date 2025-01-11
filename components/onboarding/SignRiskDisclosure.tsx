@@ -18,7 +18,7 @@ import { useSFDC } from '@/hooks/useSFDC';
 import dayjs from 'dayjs';
 import { useClerkUser } from '@/hooks/useClerkUser';
 
-const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
+const SignRiskDisclosure = ({ type, refresh}: {type: 'card'|'modal', refresh: Function}) => {
   const {language} = useLanguage();
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
@@ -91,6 +91,8 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
       color: #000000;
     }
   `;
+
+  if (loading) return <Skeleton variant={'rounded'} width="100%" height={200} />;
   return (
     <Box
       display="flex"
@@ -101,7 +103,7 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
       height="100%"
       p={4}
     >
-      {!loading && 
+      {type === 'modal' && 
         <>
           <AccountCircleIcon color="action" fontSize="large" />
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
@@ -123,10 +125,26 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
         </>
       }
       
-      {loading &&
-        <Skeleton variant={'rounded'} width="100%" height={200} />
+      {type === 'card' && 
+        <Box sx={{ display: 'block'}}>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} mx={5} my={1} spacing={3} width={'100%'}>
+              {user && user.primaryEmailAddress && templateId.length > 0 && sfdcUser && 
+                <DocusealForm
+                  src={`https://docuseal.com/d/${templateId}`}
+                  email={user.primaryEmailAddress.emailAddress}
+                  onComplete={handleComplete}
+                  logo={'/icon.png'}
+                  customCss={customCss}
+                  values={{
+                    Name: sfdcUser.firstName || '' + ' ' + sfdcUser.lastName || '',
+                  }}
+                  withTitle={false}
+                />
+              }
+          </Stack>
+        </Box>
       }
-      
+
       <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth={'lg'}>
         {/* <DialogTitle>{languageData[language].Onboarding.empty_disclosure_title}</DialogTitle> */}
         <DialogContent sx={{ display: 'block'}}>

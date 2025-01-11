@@ -86,7 +86,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
       const receipt = await waitForTransactionReceipt(config, { hash: result });
       const receipt2 = receipt as TransactionReceipt;
       if (receipt2.status === 'success') {
-        enqueueSnackbar(`${languageData[language].ui.transaction_successful}:`, { variant: 'success', autoHideDuration: 5000 });
+        enqueueSnackbar(`${languageData[language].ui.transaction_successful}:`, { variant: 'success', autoHideDuration: 2000 });
         await initiateSpot(amount);
       } else {
         enqueueSnackbar(`${languageData[language].ui.error}`, { variant: 'error', autoHideDuration: 5000 });
@@ -130,7 +130,7 @@ export function useConnectedIndexFund({ fund }: { fund: IndexFund | undefined })
       };
       
       const result = await writeContractAsync(requestOptions);
-      enqueueSnackbar(`${languageData[language].ui.transaction_successful}: ${result}`, { variant: 'success', autoHideDuration: 5000 });
+      enqueueSnackbar(`${languageData[language].ui.transaction_successful}: ${result}`, { variant: 'success', autoHideDuration: 2000 });
       setConfirmationHash(result);
       setIsLoading(false);
     } catch (err) {

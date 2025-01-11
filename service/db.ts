@@ -16,7 +16,7 @@ export const setSafeAddress = async (userId: string, walletAddress: string) => {
 }
 
 export const getSafeAddress = async (userId: string) => {
-  return await kv.hget(`${tenant}:user:wallet:${userId}`, 'safeWalletAddress') as string;
+  return await kv.hget(`${tenant}:user:wallet:${userId}`, 'safeWalletAddress') as string | null;
 }
 
 export const getTransactionDetailsDb = async (kvKey: string) => {
@@ -38,7 +38,7 @@ export const setUserDetails = async (userId: string, userDetails: SFDCUserData) 
 }
 
 export const getUserDetails = async (userId: string) => {
-  const data = await kv.hgetall(`${tenant}:user:${userId}`) as SFDCUserData;
+  const data = await kv.hgetall(`${tenant}:user:${userId}`) as SFDCUserData | null;
   return data;
 }
 

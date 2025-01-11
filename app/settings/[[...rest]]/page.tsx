@@ -22,6 +22,7 @@ import { useSFDC } from "@/hooks/useSFDC";
 import { isNull } from "@/service/helpers";
 import React from "react";
 import PrivacyPolicy from "@/components/support/PrivacyPolicy";
+import OpaqueCard from "@/components/ui/OpaqueCard";
 
 // components/LoadingIndicator.tsx
 export default function Settings() {
@@ -64,16 +65,16 @@ export default function Settings() {
             appearance={{ baseTheme: isDarkTheme ? dark : undefined, }}
           >
             <UserProfile.Page label={languageData[language].Settings.view_portfolio} labelIcon={isPortfolioComplete ? <WalletIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="portfolio">
-              <EditUserPortfolio />
+              <OpaqueCard sx={{px: 4, py: 2}}><EditUserPortfolio /></OpaqueCard>
             </UserProfile.Page>
             <UserProfile.Page label={languageData[language].Edit.personal_information} labelIcon={isPersonalInformationComplete ? <BadgeIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="personal">
-              <EditUserProfile selectedTab={0}/>
+              <OpaqueCard sx={{px: 4, py: 2}}><EditUserProfile selectedTab={0}/></OpaqueCard>
             </UserProfile.Page>
             <UserProfile.Page label={languageData[language].Edit.id_section} labelIcon={isIdentificationComplete ? <ContactMailIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="identification">
-              <EditUserProfile selectedTab={1}/>
+              <OpaqueCard sx={{px: 4, py: 2}}><EditUserProfile selectedTab={1}/></OpaqueCard>
             </UserProfile.Page>
             <UserProfile.Page label={languageData[language].Edit.beneficiary_section} labelIcon={isBeneficiaryComplete ? <RecentActorsIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="beneficiaries">
-              <EditUserProfile selectedTab={2}/>
+              <OpaqueCard sx={{px: 4, py: 2}}><EditUserProfile selectedTab={2}/></OpaqueCard>
             </UserProfile.Page>
             <UserProfile.Page label={languageData[language].Settings.view_web3} labelIcon={<LinkIcon fontSize="small" />} url="web3">
               <WalletManagement />

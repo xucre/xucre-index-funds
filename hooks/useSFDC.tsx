@@ -8,7 +8,7 @@ import languageData from '@/metadata/translations'
 import { useTheme } from '@mui/material';
 import { getUserDetails, setUserDetails } from '@/service/db';
 import { useClerkUser } from './useClerkUser';
-const defaultContext = { sfdcUser: {} as SFDCUserData, updateUser: (user: SFDCUserData) => { }, refresh: () => { }, isLoaded: false };
+const defaultContext = { sfdcUser: {} as SFDCUserData, updateUser: (user: SFDCUserData) => { }, refresh: () => { }, isLoaded: false, hasOnboarded: false };
 const SFDCContext = React.createContext(defaultContext);
 
 export const useSFDC = () => React.useContext(SFDCContext);
@@ -20,20 +20,20 @@ export const SFDCProvider = ({ children }: { children: any }) => {
   const { language } = useLanguage();
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [sfdcUser, setSfdcUser] = React.useState({} as SFDCUserData);
-
+  const hasOnboarded = sfdcUser.onboardingStatus === 'complete';
 
   const refresh = async () => {
     if (!user) return;
     console.log('refreshing sfdc data');
     //const org = user?.organizationMemberships?.length > 0 ? user?.organizationMemberships[0].id : '';
     const response = await getUserDetails(user.id);
-    if (response && response.firstName) {
+    if (response && response.userEmail) {
       setSfdcUser({
         ...response, 
         beneficiaries: response.beneficiaries || [],
       });
     } else {
-      setSfdcUser({
+      const newUser = {
         riskTolerance: '',
         salaryContribution: 0,
         userEmail: user.emailAddresses[0].emailAddress,
@@ -59,7 +59,10 @@ export const SFDCProvider = ({ children }: { children: any }) => {
         backImage: '',
         placeId: '',
         beneficiaries: [],
-      } as SFDCUserData);
+      } as SFDCUserData;
+      await setUserDetails(user.id, newUser);
+      setSfdcUser(newUser);
+      
     }
     setIsLoaded(true);
   }
@@ -70,7 +73,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
       setIsLoaded(false);
       await upsertUserDetails(user2);
       await setUserDetails(user2.userId, user2);
-      enqueueSnackbar(`${languageData[language].ui.profile_saved}`, { variant: 'success', autoHideDuration: 5000 });
+      enqueueSnackbar(`${languageData[language].ui.profile_saved}`, { variant: 'success', autoHideDuration: 2000 });
       setSfdcUser((prev) => ({ ...prev, ...user2 }));
       setIsLoaded(true);
       //await refresh();
@@ -91,8 +94,8 @@ export const SFDCProvider = ({ children }: { children: any }) => {
     }
     //refresh();
   }, [user])
-  const rawValue = { sfdcUser , updateUser, refresh, isLoaded };
-  const value = useMemo(() => (rawValue), [sfdcUser]);
+  const rawValue = { sfdcUser , updateUser, refresh, isLoaded, hasOnboarded };
+  const value = useMemo(() => (rawValue), [sfdcUser, isLoaded, hasOnboarded]);
   
   return <SFDCContext.Provider value={value}>{children}</SFDCContext.Provider>;
 };

@@ -707,6 +707,7 @@ export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: s
 async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
   const memberDetails = await getUserDetails(member.id);
   //console.log(memberDetails);
+  if (memberDetails === null) return;
   const selectedFund = fundMap[memberDetails.riskTolerance] || DEMO_PORTFOLIO;
   //console.log('building portfolio for user', member.safeWalletAddress);
   //console.log(memberDetails.riskTolerance, selectedFund);
@@ -834,6 +835,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
 
 async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
   const memberDetails = await getUserDetails(member.id);
+  if (memberDetails === null) return;
   const selectedFund = fundMap[memberDetails.riskTolerance] || DEMO_PORTFOLIO;
   const safeAccountConfig = {
     safeAddress: member.safeWalletAddress,

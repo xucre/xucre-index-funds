@@ -18,8 +18,8 @@ export default function DashboardHeader() {
   const router = useRouter();
   const textColor = getTextColor(theme);
   const { language } = useLanguage();
-  const {sfdcUser} = useSFDC();
-  const isNewUser = !sfdcUser || !sfdcUser.firstName || sfdcUser.firstName === '' || !sfdcUser.riskTolerance || sfdcUser.riskTolerance === '';
+  const {sfdcUser, hasOnboarded} = useSFDC();
+  const isNewUser = !hasOnboarded || !sfdcUser || !sfdcUser.firstName || sfdcUser.firstName === '' || !sfdcUser.riskTolerance || sfdcUser.riskTolerance === '';
 
 
   return (

@@ -38,6 +38,7 @@ const AppMenu: React.FC = () => {
   const pathname = usePathname();
   const {sfdcUser, isLoaded} = useSFDC();
   const [isOnboardingComplete, setIsOnboardingComplete] = React.useState(false);
+  const [hideHighlight, setHideHighlight] = React.useState(false);
   const [staticRef, setStaticRef] = React.useState<React.RefObject<HTMLButtonElement>>();
   useEffect(() => {
     if (isLoaded) {
@@ -217,7 +218,7 @@ const AppMenu: React.FC = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   const computeHighlightPosition = () => {
-    let currentItemRef: React.RefObject<HTMLButtonElement> = {} as React.RefObject<HTMLButtonElement>;
+    let currentItemRef: React.RefObject<HTMLButtonElement> | null = null as React.RefObject<HTMLButtonElement> | null;
     if (isAdmin) {
       adminMenuGroups.forEach((group) => {
         group.items.forEach((item) => {
@@ -245,7 +246,7 @@ const AppMenu: React.FC = () => {
         });
       });
     }
-    if (!currentItemRef.current) {
+    if (currentItemRef && !currentItemRef.current) {
       console.log('No current item ref found');
       if (isAdmin) {
         currentItemRef = adminMenuGroups[0].items[0].ref;
@@ -254,9 +255,10 @@ const AppMenu: React.FC = () => {
       }
     };
     
-    setStaticRef(currentItemRef);
 
-    if (currentItemRef.current && backgroundRef.current) {
+    if (currentItemRef && currentItemRef.current && backgroundRef.current) {
+      setHideHighlight(false);
+      setStaticRef(currentItemRef);
       const itemRect = currentItemRef.current.getBoundingClientRect();
       const containerRect = backgroundRef.current.parentElement!.getBoundingClientRect();
       const translateY = itemRect.top - containerRect.top;
@@ -267,6 +269,9 @@ const AppMenu: React.FC = () => {
         duration: 500,
         easing: 'easeOutQuad',
       });
+    } else { 
+      setStaticRef(undefined);
+      setHideHighlight(true);
     }
   }
 
@@ -301,6 +306,7 @@ const AppMenu: React.FC = () => {
         >
           <Box
             ref={backgroundRef}
+            hidden={hideHighlight}
             sx={{
               position: 'absolute',
               right: 0,
