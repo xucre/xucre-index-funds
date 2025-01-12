@@ -5,7 +5,6 @@ import DashboardNavigation from "@/components/dashboard/DashboardNavigation";
 import DashboardNews from "@/components/dashboard/DashboardNews";
 import AdditionalInfoContainer from "@/components/onboarding/AdditionalInfoContainer";
 import CreateDelegateContainer from "@/components/onboarding/CreateDelegateContainer";
-import CreateProfileContainer from "@/components/onboarding/CreateProfileContainer";
 import CreateSafeContainer from "@/components/onboarding/CreateSafeContainer";
 import EmptyDelegateOnSafe from "@/components/onboarding/EmptyDelegateOnSafe";
 import EmptyProfileState from "@/components/onboarding/EmptyProfile";
