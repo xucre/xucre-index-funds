@@ -40,7 +40,7 @@ export default function OnboardingPage() {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   //const signer = useWalletClient({ chainId })
   const router = useRouter();
-  const { user, safeWallet, refreshSafeWallet: syncSafeWallet } = useClerkUser();
+  const { user, safeWallet, refreshSafeWallet: syncSafeWallet, loading } = useClerkUser();
   const [needsToTransfer, setNeedsToTransfer] = useState(false);
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
   const [hasCheckedProposer, setHasCheckedProposer] = useState(false);
@@ -48,7 +48,13 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0);
 
   const handleCheckSafeProposer = async () => {
-    if (!safeWallet) return;
+    if (!safeWallet) {
+      console.log('has checked proposer but no safe wallet');
+      setNeedsToSetProposer(true);
+      setHasCheckedProposer(true);
+      return;
+    }
+    console.log('checking safe proposer', safeWallet, user);
     const params = {
       chainid: globalChainId,
       safeWallet: safeWallet
@@ -63,10 +69,10 @@ export default function OnboardingPage() {
   }
 
   useEffect(() => {
-    if (safeWallet && user) {
+    if (!loading && user) {
       handleCheckSafeProposer();
     }
-  }, [safeWallet])
+  }, [loading, user])
 
   useEffect(() => {
     console.log('user has reloaded');
@@ -97,7 +103,7 @@ export default function OnboardingPage() {
 
   if (!disclosureSigned) return (
     <Box width={'full'} px={5} py={4}>
-      <OpaqueCard><SignRiskDisclosure type={'card'} refresh={refresh}/></OpaqueCard>
+      <OpaqueCard><SignRiskDisclosure type={'modal'} refresh={refresh}/></OpaqueCard>
     </Box>
   )
   return (

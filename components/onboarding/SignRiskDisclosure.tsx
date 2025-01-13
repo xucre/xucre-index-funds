@@ -93,6 +93,24 @@ const SignRiskDisclosure = ({ type, refresh}: {type: 'card'|'modal', refresh: Fu
   `;
 
   if (loading) return <Skeleton variant={'rounded'} width="100%" height={200} />;
+  
+  // if (type === 'card') return (
+  //   <>
+  //     {user && user.primaryEmailAddress && templateId.length > 0 && sfdcUser && 
+  //       <DocusealForm
+  //         src={`https://docuseal.com/d/${templateId}`}
+  //         email={user.primaryEmailAddress.emailAddress}
+  //         onComplete={handleComplete}
+  //         logo={'/icon.png'}
+  //         customCss={customCss}
+  //         values={{
+  //           Name: sfdcUser.firstName || '' + ' ' + sfdcUser.lastName || '',
+  //         }}
+  //         withTitle={false}
+  //       />
+  //     }
+  //   </>
+  // )
   return (
     <Box
       display="flex"
@@ -103,47 +121,27 @@ const SignRiskDisclosure = ({ type, refresh}: {type: 'card'|'modal', refresh: Fu
       height="100%"
       p={4}
     >
-      {type === 'modal' && 
-        <>
-          <AccountCircleIcon color="action" fontSize="large" />
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            {languageData[language].Onboarding.empty_disclosure}
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            {languageData[language].Onboarding.empty_disclosure_description}
-          </Typography>
-          {
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ mt: 3 }}
-              onClick={handleOpen}
-            >
-              {languageData[language].Onboarding.empty_disclosure_button}
-            </Button>  
-          } 
-        </>
-      }
       
-      {type === 'card' && 
-        <Box sx={{ display: 'block'}}>
-          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} mx={5} my={1} spacing={3} width={'100%'}>
-              {user && user.primaryEmailAddress && templateId.length > 0 && sfdcUser && 
-                <DocusealForm
-                  src={`https://docuseal.com/d/${templateId}`}
-                  email={user.primaryEmailAddress.emailAddress}
-                  onComplete={handleComplete}
-                  logo={'/icon.png'}
-                  customCss={customCss}
-                  values={{
-                    Name: sfdcUser.firstName || '' + ' ' + sfdcUser.lastName || '',
-                  }}
-                  withTitle={false}
-                />
-              }
-          </Stack>
-        </Box>
-      }
+      <>
+        <AccountCircleIcon color="action" fontSize="large" />
+        <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+          {languageData[language].Onboarding.empty_disclosure}
+        </Typography>
+        <Typography variant="body1" color="textSecondary">
+          {languageData[language].Onboarding.empty_disclosure_description}
+        </Typography>
+        {
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3 }}
+            onClick={handleOpen}
+          >
+            {languageData[language].Onboarding.empty_disclosure_button}
+          </Button>  
+        } 
+      </>
+      
 
       <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth={'lg'}>
         {/* <DialogTitle>{languageData[language].Onboarding.empty_disclosure_title}</DialogTitle> */}
