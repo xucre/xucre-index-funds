@@ -40,7 +40,7 @@ export default function OnboardingPage() {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   //const signer = useWalletClient({ chainId })
   const router = useRouter();
-  const { user, safeWallet, refreshSafeWallet: syncSafeWallet } = useClerkUser();
+  const { user, safeWallet, refreshSafeWallet: syncSafeWallet, loading } = useClerkUser();
   const [needsToTransfer, setNeedsToTransfer] = useState(false);
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
   const [hasCheckedProposer, setHasCheckedProposer] = useState(false);
@@ -69,10 +69,10 @@ export default function OnboardingPage() {
   }
 
   useEffect(() => {
-    if (safeWallet && user) {
+    if (!loading && user) {
       handleCheckSafeProposer();
     }
-  }, [safeWallet, user])
+  }, [loading, user])
 
   useEffect(() => {
     console.log('user has reloaded');
