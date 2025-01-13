@@ -49,6 +49,7 @@ export default function OnboardingPage() {
 
   const handleCheckSafeProposer = async () => {
     if (!safeWallet) {
+      console.log('has checked proposer but no safe wallet');
       setNeedsToSetProposer(true);
       setHasCheckedProposer(true);
       return;
