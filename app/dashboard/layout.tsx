@@ -57,9 +57,9 @@ export default function DashboardLayout({
           <OpaqueCard><IncompleteOnboarding onNavigateToWallet={openOnboarding} /></OpaqueCard>
         }
 
-        {/* {!disclosureSigned && profileFilled &&
+        {!disclosureSigned && profileFilled && false && 
           <OpaqueCard><SignRiskDisclosure type={'modal'} refresh={refresh}/></OpaqueCard>
-        } */}
+        } 
 
         {profileFilled && 
           <Stack direction={matches ? 'row' : 'column'} spacing={8} justifyContent={'space-between'} px={5}>

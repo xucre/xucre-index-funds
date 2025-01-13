@@ -103,7 +103,7 @@ export default function OnboardingPage() {
 
   if (!disclosureSigned) return (
     <Box width={'full'} px={5} py={4}>
-      <OpaqueCard><SignRiskDisclosure type={'card'} refresh={refresh}/></OpaqueCard>
+      <OpaqueCard><SignRiskDisclosure type={'modal'} refresh={refresh}/></OpaqueCard>
     </Box>
   )
   return (
