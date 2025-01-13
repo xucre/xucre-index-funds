@@ -54,6 +54,7 @@ export default function OnboardingPage() {
       setHasCheckedProposer(true);
       return;
     }
+    console.log('checking safe proposer', safeWallet, user);
     const params = {
       chainid: globalChainId,
       safeWallet: safeWallet
@@ -71,7 +72,7 @@ export default function OnboardingPage() {
     if (safeWallet && user) {
       handleCheckSafeProposer();
     }
-  }, [safeWallet])
+  }, [safeWallet, user])
 
   useEffect(() => {
     console.log('user has reloaded');
