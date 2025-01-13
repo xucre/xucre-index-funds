@@ -48,7 +48,11 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0);
 
   const handleCheckSafeProposer = async () => {
-    if (!safeWallet) return;
+    if (!safeWallet) {
+      setNeedsToSetProposer(true);
+      setHasCheckedProposer(true);
+      return;
+    }
     const params = {
       chainid: globalChainId,
       safeWallet: safeWallet
