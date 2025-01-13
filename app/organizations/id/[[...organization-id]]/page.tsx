@@ -39,10 +39,10 @@ const OrganizationDetails: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const fetchDatabaseData = async (_members: OrganizationUserData[]) => {
-    const data = await Promise.all(_members.map(async (member: OrganizationUserData) => {
+    const data = (await Promise.all(_members.map(async (member: OrganizationUserData) => {
       const userData = await getUserDetails(member.id);
-      return userData;
-    }));
+      if (userData) return userData;
+    }))).filter((data) => data !== undefined) as SFDCUserData[];
     setDatabaseUserData(data);
   };
 

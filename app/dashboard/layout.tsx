@@ -6,6 +6,7 @@ import DashboardNews from "@/components/dashboard/DashboardNews";
 import EmptyDelegateOnSafe from "@/components/onboarding/EmptyDelegateOnSafe";
 import EmptyProfileState from "@/components/onboarding/EmptyProfile";
 import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
+import IncompleteOnboarding from "@/components/onboarding/IncompleteOnboarding";
 import SignRiskDisclosure from "@/components/onboarding/SignRiskDisclosure";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import TransferSafeWallet from "@/components/onboarding/TransferSafeWallet";
@@ -31,111 +32,43 @@ export default function DashboardLayout({
 }) {
   const theme = useTheme();
   const isSignedUp = false;
-  const { sfdcUser, isLoaded, refresh } = useSFDC();
+  const { sfdcUser, isLoaded, hasOnboarded, refresh } = useSFDC();
   const { address, chainId, isConnected } = useAccount();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   //const signer = useWalletClient({ chainId })
   const router = useRouter();
-  const { user } = useClerkUser();
-  const [safeWallet, setSafeWallet] = useState<string | null>(null);
-  const [needsToTransfer, setNeedsToTransfer] = useState(false);
-  const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
-
-  const syncSafeWallet = async () => {
-    if (!user) return;
-    //setSafeWallet(null);
-    const walletAddress = await getSafeAddress(user.id);
-    if (walletAddress) {
-      setSafeWallet(walletAddress);
-    } else {
-      setSafeWallet(null);
-    }
-  }
-
-  const handleCheckSafeOwnership = async () => {
-    if (!safeWallet) return;
-    const owners = await getSafeOwner(globalChainId, safeWallet);
-    const hasCorrectOwner = owners.includes(process.env.NEXT_PUBLIC_SIGNER_SAFE_ADDRESS_POLYGON as string);
-    if (!hasCorrectOwner) {
-      setNeedsToTransfer(true);
-      //createEscrowAddress();
-    }
-  }
-
-  const handleCheckSafeProposer = async () => {
-    if (!safeWallet) return;
-    const params = {
-      chainid: globalChainId,
-      safeWallet: safeWallet
-    }
-    const delegates = await getSafeProposer(params);
-    if (delegates.count === 0) {
-      setNeedsToSetProposer(true);
-    } else {
-      setNeedsToSetProposer(false);
-    }
-    // const hasCorrectProposer = proposer === address;
-    // if (!hasCorrectProposer) {
-    //   setNeedsToSetProposer(true);
-    // }
-  }
-
-  const handeTransferOwnership = async () => {
-    if (!safeWallet) return;
-    await transferSignerOwnership({
-      chainid: globalChainId,
-      safeWallet: safeWallet
-    });
-    setNeedsToTransfer(false);
-  }
-
-  useEffect(() => {
-    console.log('user has reloaded');
-    if (user && user.id) {
-      syncSafeWallet();
-      //setSafeAddress(user.id, '');
-    }
-  }, [user])
-
-
-  useEffect(() => {
-    if (safeWallet && user) {
-      handleCheckSafeProposer();
-    }
-  }, [safeWallet])
+  const { user, safeWallet, refreshSafeWallet: syncSafeWallet } = useClerkUser();
 
   const disclosureSigned = sfdcUser && sfdcUser.riskDisclosureSigned;
-  const profileFilled = isLoaded && sfdcUser && sfdcUser.status === 'Active';
-  
+  const profileFilled = isLoaded && sfdcUser && sfdcUser.status === 'Active' && hasOnboarded;
+  const openOnboarding = () => {
+    router.push('/onboarding');
+  }
+
+  if (!isLoaded) return (
+    <Box width={'full'} px={5} py={4}>
+      <Skeleton variant={'rounded'} width="100%" height={200} />
+    </Box>
+  )
   return (
     <Suspense>
       <Box width={'full'} px={5} py={4}>
         {!profileFilled &&
-          <OpaqueCard><EmptyProfileState onCreateProfile={(() => { router.push('/settings/portfolio') })} /></OpaqueCard>
+          <OpaqueCard><IncompleteOnboarding onNavigateToWallet={openOnboarding} /></OpaqueCard>
         }
 
-        {!disclosureSigned && profileFilled &&
-          <OpaqueCard><SignRiskDisclosure refresh={refresh}/></OpaqueCard>
-        }
+        {/* {!disclosureSigned && profileFilled &&
+          <OpaqueCard><SignRiskDisclosure type={'modal'} refresh={refresh}/></OpaqueCard>
+        } */}
 
-        {profileFilled && disclosureSigned && 
-          <>
-            <DashboardHeader />
-            {!safeWallet ?
-                <OpaqueCard><EmptySafeWallet id={user ? user.id : ''} refresh={syncSafeWallet} /></OpaqueCard> : 
-              needsToSetProposer ?
-                <OpaqueCard><EmptyDelegateOnSafe id={safeWallet ? safeWallet : ''} refresh={syncSafeWallet} /></OpaqueCard> :
-                <>
-                  <Stack direction={matches ? 'row' : 'column'} spacing={8} justifyContent={'space-between'} px={5}>
-                    <Stack direction={'column'} spacing={2} flexGrow={2}>
-                      <DashboardNavigation />
-                      {children}
-                    </Stack>
-                    <DashboardNews />
-                  </Stack>
-                </>
-            }
-          </>
+        {profileFilled && 
+          <Stack direction={matches ? 'row' : 'column'} spacing={8} justifyContent={'space-between'} px={5}>
+            <Stack direction={'column'} spacing={2} flexGrow={2}>
+              <DashboardNavigation />
+              {children}
+            </Stack>
+            <DashboardNews />
+          </Stack>
         }
       </Box>
     </Suspense>

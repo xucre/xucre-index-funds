@@ -3,6 +3,7 @@ import { kv } from '@vercel/kv'
 import { TransactionDetails } from './eip155';
 import { IndexFund, Invoice, SFDCUserData, TokenDetails } from './types';
 import { isDev } from './constants';
+import dayjs from 'dayjs';
 const tenant = isDev ? 'dev' : 'prod';
 
 export const setSafeAddress = async (userId: string, walletAddress: string) => {
@@ -15,7 +16,7 @@ export const setSafeAddress = async (userId: string, walletAddress: string) => {
 }
 
 export const getSafeAddress = async (userId: string) => {
-  return await kv.hget(`${tenant}:user:wallet:${userId}`, 'safeWalletAddress') as string;
+  return await kv.hget(`${tenant}:user:wallet:${userId}`, 'safeWalletAddress') as string | null;
 }
 
 export const getTransactionDetailsDb = async (kvKey: string) => {
@@ -37,7 +38,7 @@ export const setUserDetails = async (userId: string, userDetails: SFDCUserData) 
 }
 
 export const getUserDetails = async (userId: string) => {
-  const data = await kv.hgetall(`${tenant}:user:${userId}`) as SFDCUserData;
+  const data = await kv.hgetall(`${tenant}:user:${userId}`) as SFDCUserData | null;
   return data;
 }
 
@@ -118,4 +119,15 @@ export const getFailureLog = async (key: string) => {
 export const delFailureLog = async (key: string) => {
   await kv.srem(`${tenant}:errors`, key);
   return await kv.del(`${tenant}:errors:${key}`);
+}
+
+export const saveWithdrawalLog = async (userId: string, token: string, signedMessage: string) => {
+  const today = dayjs().format();
+  const key = `${tenant}:withdrawal:${userId}:${token}:${today}`;
+  await kv.sadd(`${tenant}:withdrawal:${userId}`, key);
+  return await kv.hmset(key, {
+    userId,
+    createdAt: today,
+    message: signedMessage
+  });
 }

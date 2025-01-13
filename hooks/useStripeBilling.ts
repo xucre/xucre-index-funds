@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import mixpanelFull, { Mixpanel } from 'mixpanel-browser';
-import { useOrganization } from '@clerk/nextjs';
 import { createCustomer, createPortalLink, getCustomer, getCustomerSubscription } from '@/service/billing/stripe';
 import Stripe from 'stripe';
 import { useClerkUser } from './useClerkUser';
+import { useClerkOrganization } from './useClerkOrganization';
 
 export function useStripeBilling() {
-  const { organization } = useOrganization();
+  const { organization } = useClerkOrganization();
   const { user } = useClerkUser();
   const [hasSignedUp, setHasSignedUp] = useState(false);
   const [customerId, setCustomerId] = useState('');
@@ -46,6 +46,7 @@ export function useStripeBilling() {
   }
 
   const openPortal = async () => {
+    if (!customerId) return;
     const portalUrl = await createPortalLink(customerId);
     if (!portalUrl) return;
     window.location.assign(portalUrl);
@@ -56,9 +57,9 @@ export function useStripeBilling() {
       reset();
     }
   }, [organization])
-
+  const isManualBilling = organization ? organization.publicMetadata.manualBilling === true : false;
   return useMemo(
-    () => ({ hasSignedUp, organization, seatCount, subscription, portalSession, createStripeAccount, openPortal, reset }),
-    [organization, hasSignedUp],
+    () => ({ hasSignedUp, isManualBilling, organization, seatCount, subscription, portalSession, createStripeAccount, openPortal, reset }),
+    [organization, hasSignedUp, isManualBilling],
   );
 }

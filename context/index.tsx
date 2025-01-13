@@ -55,6 +55,7 @@ export function ContextProvider({
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
   //const [modalState, setModalState] = React.useState(null as any);
   useEffect(() => {
+    console.log('context mounted')
     setIsLoaded(true)
   }, [])
   const customTheme = experimental_createTheme({})
@@ -73,13 +74,13 @@ export function ContextProvider({
             signUpUrl={'/sign-up'} 
             afterSignOutUrl={'/sign-in'} 
             afterMultiSessionSingleSignOutUrl={'/sign-in'}
-            afterSignInUrl={'/dashboard'}
             appearance={{
               baseTheme: dark
             }}
             publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
             localization={activeLanguage}
             touchSession={false}
+            polling={true}
           >
             <SnackbarProvider maxSnack={3} >
             <ClerkLoaded>

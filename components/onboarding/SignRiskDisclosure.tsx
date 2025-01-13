@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Skeleton, Chip, Dialog, DialogContent, DialogTitle, MenuItem, Select, Stack, TextField, useTheme } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -18,14 +18,14 @@ import { useSFDC } from '@/hooks/useSFDC';
 import dayjs from 'dayjs';
 import { useClerkUser } from '@/hooks/useClerkUser';
 
-const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
+const SignRiskDisclosure = ({ type, refresh}: {type: 'card'|'modal', refresh: Function}) => {
   const {language} = useLanguage();
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const {user} = useClerkUser();
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
+  const [templateId, setTemplateId] = useState('');
   const {sfdcUser, updateUser} = useSFDC();
 
   const handleOpen = () => setOpen(true);
@@ -41,6 +41,22 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
     handleClose();
     refresh();
   }
+
+  useEffect(() => {
+    const runAsync = async () => {
+      // const response = await fetch('/api/docuseal');
+      // const data = await response.json();
+      // if (data.templateId){
+      //   setTemplateId(data.templateId);
+      // }   
+      if (language === Language.EN) {
+        setTemplateId(process.env.NEXT_PUBLIC_DOCUSEAL_TEMPLATE_ID_EN as string);
+      } else {
+        setTemplateId(process.env.NEXT_PUBLIC_DOCUSEAL_TEMPLATE_ID_ES as string);
+      }
+    }
+    runAsync();
+  }, [])
 
   const openDocumentSign = async () => {
     // setLoading(true);
@@ -60,11 +76,11 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
 
   const customCss = `
     #form_container {
-      color: ${getTextColor(theme)};
+      color: #000000;
     }
 
     div {
-      color: ${getTextColor(theme)};
+      color: #000000;
     }
 
     p {
@@ -75,6 +91,8 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
       color: #000000;
     }
   `;
+
+  if (loading) return <Skeleton variant={'rounded'} width="100%" height={200} />;
   return (
     <Box
       display="flex"
@@ -85,7 +103,7 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
       height="100%"
       p={4}
     >
-      {!loading && 
+      {type === 'modal' && 
         <>
           <AccountCircleIcon color="action" fontSize="large" />
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
@@ -107,27 +125,43 @@ const SignRiskDisclosure = ({refresh}: {refresh: Function}) => {
         </>
       }
       
-      {loading &&
-        <Skeleton variant={'rounded'} width="100%" height={200} />
+      {type === 'card' && 
+        <Box sx={{ display: 'block'}}>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} mx={5} my={1} spacing={3} width={'100%'}>
+              {user && user.primaryEmailAddress && templateId.length > 0 && sfdcUser && 
+                <DocusealForm
+                  src={`https://docuseal.com/d/${templateId}`}
+                  email={user.primaryEmailAddress.emailAddress}
+                  onComplete={handleComplete}
+                  logo={'/icon.png'}
+                  customCss={customCss}
+                  values={{
+                    Name: sfdcUser.firstName || '' + ' ' + sfdcUser.lastName || '',
+                  }}
+                  withTitle={false}
+                />
+              }
+          </Stack>
+        </Box>
       }
-      
+
       <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth={'lg'}>
         {/* <DialogTitle>{languageData[language].Onboarding.empty_disclosure_title}</DialogTitle> */}
-        <DialogContent sx={{ display: 'flex'}}>
-            <Stack direction={'column'} alignItems={'center'} justifyContent={'space-between'} mx={5} my={1} spacing={3} >
-                {user && user.primaryEmailAddress && 
+        <DialogContent sx={{ display: 'block'}}>
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} mx={5} my={1} spacing={3} width={'100%'}>
+                {user && user.primaryEmailAddress && templateId.length > 0 && sfdcUser && 
                   <DocusealForm
-                    src={`https://docuseal.com/d/${process.env.NEXT_PUBLIC_DOCUSEAL_TEMPLATE_ID}`}
+                    src={`https://docuseal.com/d/${templateId}`}
                     email={user.primaryEmailAddress.emailAddress}
                     onComplete={handleComplete}
                     logo={'/icon.png'}
                     customCss={customCss}
+                    values={{
+                      Name: sfdcUser.firstName || '' + ' ' + sfdcUser.lastName || '',
+                    }}
+                    withTitle={false}
                   />
                 }
-                {/*                 
-                <Stack direction={'row'} spacing={2}>
-                    <Chip color={'primary'} sx={{fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25 }} label={'Create User'} onClick={openDocumentSign} />
-                </Stack> */}
             </Stack>
         </DialogContent>
       </Dialog>

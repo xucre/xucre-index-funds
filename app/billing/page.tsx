@@ -14,7 +14,6 @@ import { useOrganizationWallet } from "@/hooks/useOrganizationWallet";
 import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
-import { useOrganization } from "@clerk/nextjs";
 import { getSafeOwner, transferSignerOwnership } from "@/service/safe";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import { globalChainId } from "@/service/constants";
@@ -23,8 +22,7 @@ import { globalChainId } from "@/service/constants";
 export default function Billing() {
   const theme = useTheme();
   const params = useSearchParams();
-  const { organization } = useOrganization();
-  const { hasSignedUp, seatCount, portalSession, reset, openPortal } = useStripeBilling();
+  const { hasSignedUp, seatCount, isManualBilling, organization, portalSession, reset, openPortal } = useStripeBilling();
   const session = params.get('session');
   const [trigger, setTrigger] = useState(false);
   const { escrowAddress, hasEscrowAddress, createEscrowAddress, loading: walletLoading, refresh } = useOrganizationWallet();
@@ -83,7 +81,7 @@ export default function Billing() {
   return (
     <Suspense>
       {hasLoaded && 
-        <Box m={5} pb={10}>
+        <Box m={5}>
           {/* <Button onClick={handeTransferOwnership} variant="contained" color="primary">Manual Ownership Transfer</Button> */}
           {!hasSignedUp && false && 
             <StripePricingTable />
@@ -99,7 +97,7 @@ export default function Billing() {
 
           {hasLoaded && true && true && hasEscrowAddress && !needsToTransfer &&
             <>
-              <BillingHeader portalSession={portalSession} openPortal={openPortal} />
+              <BillingHeader portalSession={portalSession} openPortal={openPortal} hasSignedUp={hasSignedUp} isManualBilling={isManualBilling}/>
               <InvoiceTable />
             </>
           }

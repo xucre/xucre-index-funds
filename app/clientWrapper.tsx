@@ -42,27 +42,30 @@ export default function Wrapper({
           <MixpanelProvider>
             <ThemeSwitcherProvider>
                   <CssBaseline enableColorScheme />
-                  <Stack direction={'column'} justifyContent={'space-between'} minHeight={'100vh'}>
-                    <Header />
-                    <Stack direction={'column'} justifyContent={'space-between'}>
-                      <Stack spacing={2} direction="row" width={'full'} alignItems={'top'}>
-                        <SignedIn>
-                          {!hideLoginButton && 
-                            <Box minWidth={200}>
-                              <AppMenu />
-                            </Box>
-                          }
-                          
-                        </SignedIn>
-                        <Box flexGrow={1}>
-                          {children}
-                        </Box>
-                      </Stack>              
-                      {/* <CTA type={'main'} /> */}
+                  <Stack direction={'column'} justifyContent={'space-between'} minHeight={'100dvh'}>
+                    <Stack direction={'column'} justifyContent={'flex-start'}>
+                      <Header />
+                      <Stack direction={'column'} justifyContent={'start'}>
+                        <Stack spacing={2} direction="row" width={'full'} alignItems={'top'}>
+                          <SignedIn>
+                            {!hideLoginButton && 
+                              <Box minWidth={200}>
+                                <AppMenu />
+                              </Box>
+                            }
+                            
+                          </SignedIn>
+                          <Box flexGrow={1}>
+                            {children}
+                          </Box>
+                        </Stack>              
+                        {/* <CTA type={'main'} /> */}
+                      </Stack>
                     </Stack>
-
-                    { <Footer /> }
-                    <PrivacyFooterPopup />
+                    <Stack direction={'column'}> 
+                      { <Footer /> }
+                      <PrivacyFooterPopup />
+                    </Stack>
                   </Stack>
             </ThemeSwitcherProvider>
           </MixpanelProvider>

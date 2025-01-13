@@ -29,7 +29,7 @@ export default function DashboardBalanceList({ address }: { address: string }) {
   const textColor = getTextColor(theme);
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const _address = '0x358eB621894B55805CE16225b2504523d421d3A6';
-  const { transactions, history, balance, change } = useWalletData({ address });
+  const { transactions, history, balance, change, refresh } = useWalletData({ address });
   const [tokenMap, setTokenMap] = useState(null as [string, TokenDetails] | null);
   const [loaded, setLoaded] = useState(false);
     const {getValue, putValue, isDBConnecting} = useIndexedDB();
@@ -92,7 +92,7 @@ export default function DashboardBalanceList({ address }: { address: string }) {
             const metadata = tokenMap[balance.contract_address];
             return (
               <Box key={index} width={'100%'}>
-                <DashboardBalanceItem key={index} details={balance} address={balance.contract_address} metadata={metadata} />
+                <DashboardBalanceItem refreshAll={refresh} key={index} details={balance} address={balance.contract_address} metadata={metadata} />
               </Box>
             )
           }) :

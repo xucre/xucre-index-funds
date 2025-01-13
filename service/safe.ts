@@ -1,5 +1,5 @@
 'use server';
-import Safe, { buildContractSignature, buildSignatureBytes, ContractNetworksConfig, CreateTransactionProps, ExternalSigner, PredictedSafeProps, SafeAccountConfig, SafeDeploymentConfig, SigningMethod } from '@safe-global/protocol-kit';
+import Safe, { buildContractSignature, buildSignatureBytes, ContractNetworksConfig, CreateTransactionProps, ExternalClient, ExternalSigner, PredictedSafeProps, SafeAccountConfig, SafeDeploymentConfig, SigningMethod } from '@safe-global/protocol-kit';
 import {
   EthSafeOperation,
   Safe4337CreateTransactionProps,
@@ -127,11 +127,6 @@ export interface CreateAccountOptions {
   //signer: SafeSigner;
 }
 
-export interface TransferSignerOwnershipOptions {
-  chainid: number;
-  safeWallet: string;
-}
-
 export async function createAccount(options: CreateAccountOptions): Promise<string> {
   const { owner, threshold, rpcUrl, singleOwner, chainid, id } = options;
   console.log('createSafe',owner, threshold, rpcUrl);
@@ -158,12 +153,34 @@ export async function createAccount(options: CreateAccountOptions): Promise<stri
   const safe4337Pack = await Safe4337Pack.init(packData);
   const safeAddress = await safe4337Pack.protocolKit.getAddress();
   
-  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-  const pubClient = publicClient(chainid || 11155111);
-  if (!client) return '';
+  executeSafeCreation({
+    safeAddress,
+    rpcUrl: rpcUrl,
+    chainid: chainid || 11155111,
+    safe4337Pack: safe4337Pack
+  }).catch(error => {
+    console.error('Error in executeSafeCreation:', error);
+  });;  
   
+  console.log('safeAddress', safeAddress);
+  
+  return safeAddress;
+}
+
+interface CreateSafeOptions {
+  safeAddress: string;
+  rpcUrl: string;
+  chainid: number;
+  safe4337Pack: Safe4337Pack;
+}
+async function executeSafeCreation(options: CreateSafeOptions) {
+  const { safeAddress, rpcUrl, chainid, safe4337Pack } = options;
+  const pubClient = publicClient(chainid || 11155111);
+
   const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-  console.log('IsSafeDeployed', isSafeDeployed)
+  console.log('IsSafeDeployed', isSafeDeployed, safeAddress)
+  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
+  if (!client) return '';
   if (!isSafeDeployed) {
     const deploymentTransaction = await safe4337Pack.protocolKit.createSafeDeploymentTransaction()
     const transactionHash = await client.sendTransaction({
@@ -182,13 +199,10 @@ export async function createAccount(options: CreateAccountOptions): Promise<stri
   }
   const allowance = await getCurrentERC20Allowance(chainid || globalChainId, safeAddress);
   if (allowance < BigInt(MAX_UINT256)) {
+    console.log('running allowance creation');
     await createERC20Approval(chainid || globalChainId, rpcUrl, safe4337Pack);
   } 
 
-  
-  console.log('safeAddress', safeAddress);
-  
-  return safeAddress;
 }
 
 export async function createAccountV2(options: CreateAccountOptions): Promise<string> {
@@ -246,6 +260,11 @@ export async function createAccountV2(options: CreateAccountOptions): Promise<st
   console.log('safeAddress', safeAddress);
   
   return safeAddress;
+}
+
+export interface TransferSignerOwnershipOptions {
+  chainid: number;
+  safeWallet: string;
 }
 
 export async function transferSignerOwnership(options: TransferSignerOwnershipOptions): Promise<void> {
@@ -620,6 +639,62 @@ function createUserSourceTransfer(member: InvoiceMember) {
   };
 }
 
+export interface TokenWithdrawalToWalletOptions {
+  to: string;
+  tokenAddress: string;
+  amount: number;
+  decimals: number;
+  from: string;
+  chainId: number;
+}
+
+export async function executeTokenWithdrawalToWallet({to, tokenAddress, amount, decimals, from, chainId}: TokenWithdrawalToWalletOptions) {
+    const recipientAddress = getAddress(to);
+    const _amount = parseUnits(amount.toString(), decimals);
+  
+    const rawTransferData = encodeFunctionData({
+      abi: ERC20_ABI,
+      functionName: 'transfer',
+      args: [recipientAddress, _amount],
+    });
+    const transaction = {
+      to: getAddress(tokenAddress),
+      data: rawTransferData,
+      value: '0'
+    };
+    console.log(from);
+    const packData = {
+        provider: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
+        signer : process.env.DEVACCOUNTKEY,
+        bundlerUrl: bundlerUrl(chainId || 11155111),
+        options: {
+          safeAddress: from,
+        },
+        paymasterOptions: {
+            isSponsored: true,
+            paymasterUrl: paymasterUrl(chainId || 11155111),
+        }
+    } as Safe4337InitOptions;
+    const safe4337Pack = await Safe4337Pack.init(packData);
+    const safeAddress = await safe4337Pack.protocolKit.getAddress();
+    const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
+    if (!client) return '';
+    const transactionData = {
+      transactions: [transaction]
+    } as Safe4337CreateTransactionProps;
+    const safeTransaction = await safe4337Pack.createTransaction(transactionData);
+    const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
+      safeOperation: safeTransaction
+    })
+    const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
+    const userOperationHash = await safe4337Pack.executeTransaction({
+      executable: signedSafeOperation
+    })
+    console.log('userOperationHash for withdrawal ', userOperationHash);
+    
+  
+}
+
 export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: string, chainid: number, invoiceId: string, fundMap: {[key: string]: IndexFund}) {
   try {
     await createUserSpotExecution(member, rpcUrl, chainid, fundMap);
@@ -632,6 +707,7 @@ export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: s
 async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
   const memberDetails = await getUserDetails(member.id);
   //console.log(memberDetails);
+  if (memberDetails === null) return;
   const selectedFund = fundMap[memberDetails.riskTolerance] || DEMO_PORTFOLIO;
   //console.log('building portfolio for user', member.safeWalletAddress);
   //console.log(memberDetails.riskTolerance, selectedFund);
@@ -759,6 +835,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
 
 async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
   const memberDetails = await getUserDetails(member.id);
+  if (memberDetails === null) return;
   const selectedFund = fundMap[memberDetails.riskTolerance] || DEMO_PORTFOLIO;
   const safeAccountConfig = {
     safeAddress: member.safeWalletAddress,
@@ -898,6 +975,7 @@ async function createERC20Approval (chainid: number, rpcUrl: string, safe4337Pac
 
   let isOperationSuccess = false;
   while (!isOperationSuccess) {
+    console.log('checking allowance for success');
     const userOperationResult = await safe4337Pack.getUserOperationReceipt(userOperationHash);
     isOperationSuccess = userOperationResult !== null;
   } 

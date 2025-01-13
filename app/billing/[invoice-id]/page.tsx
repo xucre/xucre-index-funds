@@ -6,7 +6,6 @@ import { updateOrganizationLicenses } from "@/service/clerk";
 import { getInvoiceDetails, getOrganizationSafeAddress, setInvoiceDetails } from "@/service/db";
 import { upsertOrganization } from "@/service/sfdc";
 import { Invoice, InvoiceStatuses } from "@/service/types";
-import { useOrganization } from "@clerk/nextjs";
 import { Box, Stack, useTheme } from "@mui/material"
 import dayjs from "dayjs";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -17,6 +16,7 @@ import { useEscrowBalance } from "@/hooks/useEscrowBalance";
 import { useLanguage } from "@/hooks/useLanguage";
 import languageData, { Language } from '@/metadata/translations';
 import { useStripeBilling } from "@/hooks/useStripeBilling";
+import { useClerkOrganization } from "@/hooks/useClerkOrganization";
 
 // components/LoadingIndicator.tsx
 export default function InvoicePage() {
@@ -24,7 +24,7 @@ export default function InvoicePage() {
   const router = useRouter();
   const params = useParams();
   const { language } = useLanguage();
-  const { organization } = useOrganization();
+  const { organization } = useClerkOrganization();
   const invoiceId = params['invoice-id'] as string;
   const [invoiceDetails, setInvoiceDetailsState] = useState(null as Invoice | null);
   const [escrowWallet, setEscrowWallet] = useState('');

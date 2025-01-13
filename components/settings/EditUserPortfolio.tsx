@@ -1,6 +1,6 @@
 'use client'
 import React, { use, useEffect, useState } from 'react';
-import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid, Slider, useTheme, Tooltip, List, ListItem, ListItemText, ListItemIcon, IconButton } from '@mui/material';
+import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid, Slider, useTheme, Tooltip, List, ListItem, ListItemText, ListItemIcon, IconButton, Skeleton } from '@mui/material';
 import { useAccount, useSignMessage } from 'wagmi';
 import CircleIcon from '@mui/icons-material/Circle';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -29,7 +29,7 @@ interface ProfileData {
   signedMessage?: string;
 }
 
-const EditProfile = ({ }) => {
+const EditProfile = ({direction = 'column', showOpaqueCard = true, saveType = 'save', showPrevious=false, setStep = (number) => {}} : {direction?: 'column' | 'row', showOpaqueCard? : boolean, saveType?: 'save' | 'next', showPrevious?: boolean, setStep? : (number) => void}) => {
   const {language} = useLanguage();
   const [signedMessage, setSignedMessage] = useState('');
   // const [message, setMessage] = useState('');
@@ -61,48 +61,34 @@ const EditProfile = ({ }) => {
   const handleSaveProfile = async () => {
     if (!user || !modifiedUser) return;
     const profileData = {
-      userEmail: user.emailAddresses[0].emailAddress,
-      userId: user.id,
-      role: isAdmin ? 'Administrator' : 'User',
-      organizationId: user.organizationMemberships[0].organization.id,
+      ...sfdcUser,
       status: 'Active',
-      wallets: [],
-      firstName: sfdcUser.firstName,
-      middleName: sfdcUser.middleName,
-      lastName: sfdcUser.lastName,
-      address: sfdcUser.address,
-      placeId: sfdcUser.placeId,
-      idCardNumber: sfdcUser.idCardNumber,
-      street: sfdcUser.street,
-      street2: sfdcUser.street2,
-      city: sfdcUser.city,
-      province: sfdcUser.province,
-      postalCode: sfdcUser.postalCode,
-      country: sfdcUser.country,
-      idExpirationDate: sfdcUser.idExpirationDate,
-      idIssueDate: sfdcUser.idIssueDate,
-      frontImage: sfdcUser.frontImage,
-      backImage: sfdcUser.backImage,
       riskTolerance: modifiedUser.riskTolerance,
-      salaryContribution: modifiedUser.salaryContribution,
-      beneficiaries: sfdcUser.beneficiaries || [],
+      salaryContribution: modifiedUser.salaryContribution
     } as SFDCUserData;
 
-    if (signedMessage) {
-      profileData.wallets = [{
-        walletAddress: address,
-        primary: true,
-        chainId: 'EVM',
-        //signedMessage: signedMessage
-      } as SFDCWallet];
-      //profileData.signedMessage = signedMessage;
-    }
+    // if (signedMessage) {
+    //   profileData.wallets = [{
+    //     walletAddress: address,
+    //     primary: true,
+    //     chainId: 'EVM',
+    //     //signedMessage: signedMessage
+    //   } as SFDCWallet];
+    //   //profileData.signedMessage = signedMessage;
+    // }
 
     // Call saveProfile with the collected data
     await updateUser(profileData);
     //router.push('/dashboard')
     refresh();
+    if (saveType === 'next') {
+      setStep((prev) => prev + 1);
+    }
   };
+
+  const goBack = () => {
+    setStep((prev) => prev - 1);
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!modifiedUser) return;
@@ -196,105 +182,86 @@ const EditProfile = ({ }) => {
   }
   
   const isProfileComplete = modifiedUser && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
+  if (!modifiedUser) return <Skeleton variant={'rounded'} width="100%" height={200} />;
+
   return (
-      <OpaqueCard sx={{
-        px: 4,
-        py: 2
-      }}>
+      <Box sx={{px: showOpaqueCard ? 0: 4}}>
         {/* <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
           <Typography variant="h6" gutterBottom>
             {languageData[language].Edit.title}
           </Typography>
           <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} />
         </Stack> */}
-      
-        <Stack direction={'column'} spacing={2} my={3} justifyContent={'space-between'} alignItems={'flex-start'} >
-          <Stack direction={'column'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
-            <Grid container spacing={2}>
-              <Grid size={12}><Typography fontWeight={'bold'}>{languageData[language].Edit.porfolio_section}</Typography></Grid>
-              <Grid size={12}>
-                <TextField
-                  select
-                  label={<>
-                    <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
-                      <Typography color={'text.secondary'} variant={'body1'}>{languageData[language].Edit.tolerance_label}</Typography>
-                      <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
-                        <RiskToleranceHelpText />
-                      </ReusableModal>
-                    </Stack>
-                  </>}
-                  defaultValue={''}
-                  value={modifiedUser ? modifiedUser.riskTolerance || 'Moderate' : 'Moderate'}
-                  name={'riskTolerance'}
-                  onChange={handleChange}
-                  fullWidth
-                >
-                  {riskOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {languageData[language].Edit[option.label]}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid size={12}>
-                <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
-                  <Typography color={'text.secondary'} variant={'caption'}>{languageData[language].Edit.salary_label}</Typography>
-                  <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
-                    <SalaryContributionHelpText />
-                  </ReusableModal>
-                </Stack>
-                {/* <NumberInput onChange={(_, value) => {
-                    setModifiedUser((prevData) => ({
-                      ...prevData,
-                      salaryContribution: Math.round(value as number * 10) / 10,
-                    }));
-                  }} 
-                  aria-label={languageData[language].Edit.salary_label} 
-                  min={0} 
-                  max={50} 
-                  step={1}
-                  value={modifiedUser.salaryContribution} 
-                />     */}
-                {<Slider
-                  aria-label={languageData[language].Edit.salary_label}
-                  value={modifiedUser ? modifiedUser.salaryContribution || 0 : 0}
-                  getAriaValueText={(value) => `$${value}`}
-                  step={10}
-                  marks={[100,200,300,400,500].map((value) => ({value, label: `$${value}`}))}
-                  min={0}
-                  max={500}
-                  valueLabelDisplay="auto"
-                  onChange={(e, value) => {
-                    if (!modifiedUser) return;
-                    setModifiedUser({
-                      ...modifiedUser,
-                      salaryContribution: value as number,
-                    });
-                  }}
-                />}
-                {/* <TextField
-                  label={languageData[language].Edit.salary_label}
-                  type="number"
-                  name={'salaryContribution'}
-                  value={modifiedUser.salaryContribution}
-                  onChange={handleChange}
-                  fullWidth
-                /> */}
-                
-              </Grid>
-            </Grid>
+
+        <Typography fontWeight={'bold'}>{languageData[language].Edit.porfolio_section}</Typography>
+        <Stack direction={direction} spacing={direction === 'column' ? 2: 5} justifyContent={direction === 'column' ? 'space-between' : 'space-between'} alignItems={'center'} width={'100%'} my={direction === 'column' ? 0 : 5}>
+          <TextField
+            sx={{maxWidth: 300, flexGrow: 2}}
+            select
+            label={<>
+              <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
+                <Typography color={'text.secondary'} variant={'body1'}>{languageData[language].Edit.tolerance_label}</Typography>
+                <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
+                  <RiskToleranceHelpText />
+                </ReusableModal>
+              </Stack>
+            </>}
+            defaultValue={''}
+            value={modifiedUser.riskTolerance}
+            name={'riskTolerance'}
+            onChange={handleChange}
+            fullWidth
+          >
+            {riskOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {languageData[language].Edit[option.label]}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Stack direction={'column'} spacing={2} flexGrow={1}>
+            <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
+              <Typography color={'text.secondary'} variant={'caption'}>{languageData[language].Edit.salary_label}</Typography>
+              <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
+                <SalaryContributionHelpText />
+              </ReusableModal>
+            </Stack>
+            <Slider
+              aria-label={languageData[language].Edit.salary_label}
+              value={modifiedUser.salaryContribution}
+              getAriaValueText={(value) => `$${value}`}
+              step={10}
+              marks={[100,200,300,400,500].map((value) => ({value, label: `$${value}`}))}
+              min={0}
+              max={500}
+              valueLabelDisplay="auto"
+              onChange={(e, value) => {
+                if (!modifiedUser) return;
+                setModifiedUser({
+                  ...modifiedUser,
+                  salaryContribution: value as number,
+                });
+              }}
+            />
           </Stack>
         </Stack>
-        <Stack direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'} >
+        <Stack direction={'row'} spacing={2} justifyContent={showPrevious ? 'space-between' : 'flex-end'} alignItems={'center'} >
+          {showPrevious &&
+            <Chip 
+              label={languageData[language].ui.previous}
+              onClick={goBack} 
+              color={'primary'}
+              sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
+            />
+          }
           <Chip 
-            label={languageData[language].Edit.save}
+            label={saveType === 'save' ? languageData[language].Edit.save : languageData[language].ui.next}
             onClick={handleSaveProfile} 
             disabled={!isProfileComplete}
             color={'primary'}
             sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
           />
         </Stack>
-      </OpaqueCard>
+      </Box>
       
   );
 };

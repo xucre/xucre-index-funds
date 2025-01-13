@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getAllOrganizationInvoices, getInvoiceDetails } from '@/service/db';
-import { useOrganization } from '@clerk/nextjs';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, IconButton } from '@mui/material';
 import languageData from '@/metadata/translations';
@@ -10,10 +9,11 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import { useClerkOrganization } from '@/hooks/useClerkOrganization';
 dayjs.extend(localizedFormat);
 
 const InvoiceTable = () => {
-  const { organization } = useOrganization();
+  const { organization } = useClerkOrganization();
   const [invoices, setInvoices] = useState([] as Invoice[]);
   const { language } = useLanguage();
   const router = useRouter();

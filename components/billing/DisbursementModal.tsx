@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemIcon, ListItemText, Button, CircularProgress, Chip, Stack } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
-import { useOrganization } from '@clerk/nextjs';
 import { IndexFund, Invoice, InvoiceStatuses } from '@/service/types';
 import { globalChainId, isDev } from '@/service/constants';
 import { CreateInvoiceOptions, createInvoiceTransaction, createInvoiceTransactionV2, executeUserSpotExecution } from '@/service/safe';
 import { getAllFunds, getFundDetails, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useClerkOrganization } from '@/hooks/useClerkOrganization';
 
 interface DisbursementModalProps {
     invoice: Invoice;
@@ -17,7 +17,7 @@ interface DisbursementModalProps {
 }
 const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, closeFunction }) => {
     const {language, languageData} = useLanguage();
-    const {organization} = useOrganization();
+    const {organization} = useClerkOrganization();
     // ...existing code...
     const [steps, setSteps] = useState({
         disbursing: 'pending',
@@ -131,18 +131,18 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
 
     return (
         <Dialog open={open} onClose={(event, reason) => {}} fullWidth={true} maxWidth={'md'} >
-            <DialogTitle>Processing Disbursement</DialogTitle>
+            <DialogTitle>{languageData[language].Billing.disbursement_modal_title}</DialogTitle>
             <DialogContent>
                 <Stack direction={'column'} spacing={1} justifyContent={'center'} alignItems={'center'}>
                     <List>
                         <ListItem>
                             <ListItemIcon>{getIcon(steps.disbursing)}</ListItemIcon>
-                            <ListItemText primary="Disbursing USDT to users" />
+                            <ListItemText primary={languageData[language].Billing.disbursement_modal_disbursing} />
                         </ListItem>
                         <ListItem>
                             <ListItemIcon>{getIcon(steps.executing)}</ListItemIcon>
                             <ListItemText
-                            primary={`Executing user transactions ${
+                            primary={`${languageData[language].Billing.disbursement_modal_executing} ${
                                 `${currentCount}/${totalCount}`
                             }`}
                             />

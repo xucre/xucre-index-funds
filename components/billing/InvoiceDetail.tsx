@@ -6,12 +6,12 @@ import { Invoice, InvoiceStatuses } from '@/service/types';
 import InvoiceStatus from './InvoiceStatus';
 import { useRouter } from 'next/navigation';
 import { CreateInvoiceOptions, createInvoiceTransaction } from '@/service/safe';
-import { useOrganization } from '@clerk/nextjs';
 import { isDev } from '@/service/constants';
 import { setInvoiceDetails } from '@/service/db';
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
 import DisbursementModal from './DisbursementModal';
+import { useClerkOrganization } from '@/hooks/useClerkOrganization';
 
 interface InvoiceDetailProps {
   invoice: Invoice;
@@ -21,7 +21,7 @@ interface InvoiceDetailProps {
 
 const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, reload }) => {
     const router = useRouter();
-    const {organization} = useOrganization();
+    const {organization} = useClerkOrganization();
     const {language} = useLanguage();
     const [loading, setLoading] = useState(false);
     const [openDisbursement, setOpenDisbursement] = useState(false);

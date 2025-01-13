@@ -9,7 +9,6 @@ import Campfire from "@/components/campfire";
 import WalletNotConnected from "@/components/walletNotConnected";
 import { useMixpanel } from "@/hooks/useMixpanel";
 import { chainValidation } from "@/service/helpers";
-import { useOrganization } from "@clerk/nextjs";
 import { getInvoiceDetails } from "@/service/db";
 import { Invoice, InvoiceStatuses, PaymentOption } from "@/service/types";
 import Unlimit from "@/components/billing/integrations/Unlimit";
@@ -17,6 +16,7 @@ import PaymentOptionCard from "@/components/billing/PaymentOptionCard";
 import Stripe from "@/components/billing/integrations/Stripe";
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
+import { useClerkOrganization } from "@/hooks/useClerkOrganization";
 
 export default function InvoicePaymentPage() {
   const mixpanel = useMixpanel();
@@ -27,7 +27,7 @@ export default function InvoicePaymentPage() {
   const [isLocked, setIsLocked] = useState(true);
   const { isConnected, address, chainId } = useAccount();
   const params = useParams();
-  const { organization } = useOrganization();
+  const { organization } = useClerkOrganization();
   const [invoiceDetails, setInvoiceDetailsState] = useState({} as Invoice);
   const invoiceId = params['invoice-id'] as string;
   const [selectedProvider, setSelectedProvider] = useState(null as ReactElement | null);

@@ -1,12 +1,12 @@
 export const maxDuration = 60; // Applies to the action
 import { useEffect, useMemo, useState } from 'react';
-import { useOrganization } from '@clerk/nextjs';
 import { getOrganizationSafeAddress, setOrganizationSafeAddress } from '@/service/db';
 import { createAccount, CreateAccountOptions, createAccountV2 } from '@/service/safe';
 import { globalChainId, isDev } from '@/service/constants';
+import { useClerkOrganization } from './useClerkOrganization';
 
 export function useOrganizationWallet() {
-    const {organization} = useOrganization();
+    const {organization} = useClerkOrganization();
     const [loading, setLoading] = useState(true);
     const [escrowAddress, setEscrowAddress] = useState(null as string | null);
     const [selfAddress, setSelfAddress] = useState(null as string | null);

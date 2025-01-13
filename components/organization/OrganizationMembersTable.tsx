@@ -3,16 +3,16 @@ import React, { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, Modal, Box, Typography, IconButton, Stack, Dialog } from '@mui/material';
 import { getOrganizationMembers, removeUserFromOrganization } from '../../service/clerk';
-import { useOrganization } from '@clerk/nextjs';
 import { OrganizationMembership } from '@clerk/backend';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateUserModal from './CreateUserModal';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData from '@/metadata/translations';
+import { useClerkOrganization } from '@/hooks/useClerkOrganization';
 
 const OrganizationMembersTable: React.FC = () => {
   const {language} = useLanguage();
-  const { organization } = useOrganization();
+  const { organization } = useClerkOrganization();
   const [members, setMembers] = useState([] as OrganizationMembership[]);
   const [selectedMember, setSelectedMember] = useState(null as OrganizationMembership | null);
   const [modalOpen, setModalOpen] = useState(false);

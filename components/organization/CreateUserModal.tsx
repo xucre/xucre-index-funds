@@ -2,15 +2,15 @@
 import React, { useState } from 'react';
 import { Button, Modal, Box, TextField, Select, MenuItem, IconButton, Dialog, DialogContent, DialogTitle, Stack, Chip } from '@mui/material';
 import { createUserWithRole } from '../../service/clerk';
-import { useOrganization } from '@clerk/nextjs';
 import AddIcon from '@mui/icons-material/Add';
 import { Roles } from '@/service/types';
+import { useClerkOrganization } from '@/hooks/useClerkOrganization';
 
 export default function CreateUserModal() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [role, setRole] = useState(Roles.Member);
-  const { organization } = useOrganization();
+  const { organization } = useClerkOrganization();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

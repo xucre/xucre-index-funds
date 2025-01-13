@@ -5,7 +5,7 @@ import { useAccount, useSignMessage } from 'wagmi';
 import CircleIcon from '@mui/icons-material/Circle';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AccountButton from '@/components/accountButton';
-
+import _ from 'lodash';
 import { useSFDC } from '@/hooks/useSFDC';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { SFDCUserData, SFDCWallet } from '@/service/types';
@@ -32,7 +32,7 @@ interface ProfileData {
   signedMessage?: string;
 }
 
-const EditUserProfile = ({selectedTab}) => {
+const EditUserProfile = ({selectedTab, showOpaqueCard = true, saveType = 'save', showPrevious=false, setStep = (number) => {}}: {selectedTab: number, showOpaqueCard?: boolean, saveType?: 'save' | 'next', showPrevious?: boolean, setStep? : (number) => void}) => {
   const {language} = useLanguage();
   //const router = useRouter();
   const { user } = useClerkUser();
@@ -48,26 +48,24 @@ const EditUserProfile = ({selectedTab}) => {
   }
 
   useEffect(() => {
-    console.log('edit user profile loaded')
+    console.log('edit user profile mounted')
+    return () => {
+      console.log('edit user profile unmounted')
+    }
   }, []);
   
   useEffect(() => {
     if (!sfdcUser || sfdcUser === null) return;
-    
-      setModifiedUser(sfdcUser);
-    
+    if (_.isEqual(sfdcUser, modifiedUser)) return;
+    setModifiedUser(sfdcUser);
   }, [sfdcUser])
 
   const handleSaveProfile = async () => {
     if (!user || !modifiedUser) return;
     console.log('handle save profile');
     const profileData = {
-      userEmail: user.emailAddresses[0].emailAddress,
-      userId: user.id,
-      role: isAdmin ? 'Administrator' : 'User',
-      organizationId: user.organizationMemberships[0].organization.id,
+      ...sfdcUser,
       status: 'Active',
-      wallets: [],
       firstName: modifiedUser.firstName,
       middleName: modifiedUser.middleName,
       lastName: modifiedUser.lastName,
@@ -85,47 +83,57 @@ const EditUserProfile = ({selectedTab}) => {
       idIssueDate: modifiedUser.idIssueDate,
       frontImage: modifiedUser.frontImage,
       backImage: modifiedUser.backImage,
-      riskTolerance: sfdcUser.riskTolerance,
-      salaryContribution: sfdcUser.salaryContribution,
       beneficiaries: modifiedUser.beneficiaries || [],
     } as SFDCUserData;
 
     // Call saveProfile with the collected data
     await updateUser(profileData);
+
+    if (saveType === 'next') {
+      setStep((prev) => prev + 1);
+    }
   };
+
+  const goBack = () => {
+    setStep((prev) => prev - 1);
+  }
   
-  if (modifiedUser === null) return null;
+  //if (modifiedUser === null) return null;
 
   const isProfileComplete = modifiedUser && !isNull(modifiedUser.lastName) && !isNull(modifiedUser.firstName) && !isNull(modifiedUser.street) && !isNull(modifiedUser.city) && !isNull(modifiedUser.province) && !isNull(modifiedUser.postalCode) && !isNull(modifiedUser.country);// && !isNull(modifiedUser.riskTolerance) && !isNull(modifiedUser.salaryContribution);
   //const KYCMemo = React.memo(KYC);
   return (
-      <OpaqueCard sx={{
-        px: 4,
-        py: 2
-      }}>
-        {/* <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
-          <Typography variant="h6" gutterBottom>
-            {languageData[language].Edit.title}
-          </Typography>
-          <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} />
-        </Stack> */}
-      
-        <Stack direction={'column'} spacing={2} my={3} justifyContent={'space-between'} alignItems={'flex-start'} >
-          <Stack direction={'column'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
-            <KYC user={modifiedUser} updateUser={setModifiedUser} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-          </Stack>
+    <Box sx={{px: showOpaqueCard ? 0: 4}}>      
+      {/* <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
+        <Typography variant="h6" gutterBottom>
+          {languageData[language].Edit.title}
+        </Typography>
+        <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} />
+      </Stack> */}
+      <Stack direction={'column'} spacing={2} my={3} justifyContent={'space-between'} alignItems={'flex-start'} >
+        <Stack direction={'column'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
+          <KYC user={modifiedUser} updateUser={setModifiedUser} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </Stack>
-        <Stack direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'} >
+      </Stack>
+      <Stack direction={'row'} spacing={2} justifyContent={showPrevious ? 'space-between' : 'flex-end'} alignItems={'center'} >
+        {showPrevious &&
           <Chip 
-            label={languageData[language].Edit.save}
-            onClick={handleSaveProfile} 
-            disabled={!isProfileComplete}
+            label={languageData[language].ui.previous}
+            onClick={goBack} 
             color={'primary'}
             sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
           />
-        </Stack>
-      </OpaqueCard>
-      
+        }
+        
+        <Chip 
+          label={saveType === 'save' ? languageData[language].Edit.save : languageData[language].ui.next}
+          onClick={handleSaveProfile} 
+          disabled={!isProfileComplete}
+          color={'primary'}
+          sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
+        />
+      </Stack>
+    </Box>
   );
 };
 
