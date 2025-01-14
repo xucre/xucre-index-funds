@@ -252,7 +252,11 @@ const values : TranslationType = {
     creating_safe_title: 'Creating Safe Wallet',
     linking_safe_title: 'Linking Safe Wallet',
     safe_created: 'Safe Wallet Created',
-    additional_info_title: 'Additional Information',
+    additional_info_title: 'Onboarding Complete',
+    additional_info_item_1: 'Setup a beneficiary',
+    additional_info_item_2: 'Link your personal wallet',
+    additional_info_item_3: 'Latest Crypto Recommendations',
+    additional_info_item_4: 'Trade Live Today',
   },
   Organization: {
     organization_member_table_user_id: 'User ID',

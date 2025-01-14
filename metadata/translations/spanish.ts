@@ -254,7 +254,11 @@ const values : TranslationType = {
     creating_safe_title: 'Creando Safe',
     linking_safe_title: 'Vinculando Safe',
     safe_created: 'Safe creado',
-    additional_info_title: 'Información Adicional',
+    additional_info_title: 'Incorporación completa',
+    additional_info_item_1: 'Configurar un beneficiario',
+    additional_info_item_2: 'Vincula tu billetera personal',
+    additional_info_item_3: 'Últimas recomendaciones sobre criptomonedas',
+    additional_info_item_4: 'Comercio en vivo hoy',
   },
   Organization: {
     organization_member_table_user_id: 'ID de usuario',
