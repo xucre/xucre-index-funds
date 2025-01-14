@@ -132,11 +132,11 @@ export default function OnboardingPage() {
           <OpaqueCard><CreateSafeContainer id={user.id} setStep={setStep}/></OpaqueCard> 
         }
 
-        {step === 4 && 
+        {/* {step === 4 && 
           <OpaqueCard><CreateDelegateContainer setStep={setStep} id={user.id} /></OpaqueCard> 
-        }
+        } */}
 
-        {step === 5 && 
+        {step === 4 && 
           <OpaqueCard><AdditionalInfoContainer setStep={setStep} /></OpaqueCard> 
         }
       </Box>

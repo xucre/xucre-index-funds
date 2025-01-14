@@ -1,34 +1,119 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import AccountButton from '../accountButton';
-import { Box, Chip, Divider, Link, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Chip, Divider, LinearProgress, Link, Stack, Typography, useTheme } from '@mui/material';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useSFDC } from '@/hooks/useSFDC';
 import { getSafeAddress } from '@/service/db';
 import truncateEthAddress from 'truncate-eth-address';
 import WalletQRCode from './WalletQRCode';
+import { globalChainId } from '@/service/constants';
 import { useClerkUser } from '@/hooks/useClerkUser';
+import { addProposer, AddProposerOptions, getSafeProposer } from '@/service/safe';
+import { useAccount } from 'wagmi';
 
 const WalletManagement: React.FC = () => {
   const {language} = useLanguage();
-  const {user} = useClerkUser();
-  const [safe, setSafe] = useState('');
-  const syncSafe = async () => {
-    if (!user) return;
-    const safe = await getSafeAddress(user.id)
-    if (safe && safe.length > 0) {
-      setSafe(safe);
-    } else {
-      setSafe('');
-    }
+  const { address, isConnected } = useAccount();
+  const [loading, setLoading] = useState(false);
+  const { user, safeWallet, refreshSafeWallet: syncSafeWallet, loading: clerkUserLoading } = useClerkUser();
+  const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
+  const [hasCheckedProposer, setHasCheckedProposer] = useState(false);
+
+  const saveWallet = async () => {
+    if (!safeWallet || !isConnected) return;
+    setLoading(true);
+    const safePayload = {
+      chainid: globalChainId,
+      safeWallet: safeWallet,
+      proposer: address,
+      name: user ? user.fullName : 'Xucre Client',
+    } as AddProposerOptions;
+    await addProposer(safePayload);
+    setLoading(false);
+    handleCheckSafeProposer();
   }
+
+
   useEffect(() => {
-    if (user) {
-      syncSafe();
+    if (safeWallet && user) {
+      handleCheckSafeProposer();
     }
-  }, [user])
-  const hasSafe = safe.length > 0;
+  }, [safeWallet])
+
+  const handleCheckSafeProposer = async () => {
+      if (!safeWallet) return;
+      const params = {
+        chainid: globalChainId,
+        safeWallet: safeWallet
+      }
+      const delegates = await getSafeProposer(params);
+      if (delegates.count === 0) {
+        setNeedsToSetProposer(true);
+      } else {
+        setNeedsToSetProposer(false);
+      }
+      setHasCheckedProposer(true);
+  }
+
+  const hasSafe = safeWallet ? safeWallet.length > 0 : false;
+  if (!hasCheckedProposer || !user) return (
+    <Box width={'full'} px={5} py={4}>
+      {/* <Skeleton variant={'rounded'} width="100%" height={200} /> */}
+    </Box>
+  )
+
+  if (needsToSetProposer) return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      textAlign="center"
+      height="100%"
+      p={4}
+    >
+      {!loading && 
+        <>
+          <AccountCircleIcon color="action" fontSize="large" />
+          {needsToSetProposer && 
+            <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+              {languageData[language].Onboarding.empty_delegate}
+            </Typography> 
+          }
+          <Typography variant="body1" color="textSecondary">
+            {needsToSetProposer ? languageData[language].Onboarding.empty_delegate_description : languageData[language].Onboarding.empty_delegate_description_complete}
+          </Typography>
+          { isConnected && needsToSetProposer && 
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mt: 3 }}
+              onClick={saveWallet}
+            >
+              {languageData[language].Onboarding.empty_delegate_button}
+            </Button>  
+          } 
+          {
+            !isConnected &&
+            <AccountButton />
+          }
+        </>
+      }
+      
+      {loading &&
+        <>
+          <LinearProgress />
+          <Typography variant="body1" color="textSecondary">
+            {languageData[language].Onboarding.linking_safe_title}
+          </Typography>
+        </>
+      }
+      
+    </Box>
+  )
   return (
     <Box>
       <Stack direction={'column'} spacing={2} mb={2} >
@@ -38,7 +123,7 @@ const WalletManagement: React.FC = () => {
         </Stack>
         <Divider />
         {hasSafe && 
-          <WalletButton address={safe} />
+          <WalletButton address={safeWallet ? safeWallet : ''} />
         }
          
       </Stack>
