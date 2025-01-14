@@ -53,11 +53,11 @@ const CreateDelegateContainer = ({ id, setStep = (number) => {}}: {id: string, s
   }, [safeWallet, user, clerkUserLoading])
 
   const saveWallet = async () => {
-      if (!id || !isConnected) return;
+      if (!safeWallet || !isConnected) return;
       setLoading(true);
       const safePayload = {
         chainid: globalChainId,
-        safeWallet: id,
+        safeWallet: safeWallet,
         proposer: address,
         name: user ? user.fullName : 'Xucre Client',
       } as AddProposerOptions;
@@ -139,7 +139,7 @@ const CreateDelegateContainer = ({ id, setStep = (number) => {}}: {id: string, s
         <>
           <LinearProgress />
           <Typography variant="body1" color="textSecondary">
-            {languageData[language].Onboarding.creating_safe_title}
+            {languageData[language].Onboarding.linking_safe_title}
           </Typography>
         </>
       }
