@@ -251,6 +251,8 @@ const values : TranslationType  = {
     empty_onboarding_button: 'Concluir integração',
     onboarding_title: 'Integração',
     creating_safe_title: 'Criando seguro',
+    linking_safe_title: 'Vinculando seguro',
+    safe_created: 'Seguro criado',
     additional_info_title: 'Informações adicionais',
   },
   Organization: {

@@ -250,6 +250,7 @@ const values : TranslationType = {
     empty_onboarding_button: 'Start',
     onboarding_title: 'User Onboarding',
     creating_safe_title: 'Creating Safe Wallet',
+    linking_safe_title: 'Linking Safe Wallet',
     safe_created: 'Safe Wallet Created',
     additional_info_title: 'Additional Information',
   },

@@ -19,30 +19,37 @@ const CreateSafeContainer = ({ id, setStep = (number) => {}}: {id: string, setSt
   const { address, isConnected } = useAccount();
   const { user, safeWallet, refreshSafeWallet: syncSafeWallet, loading: clerkUserLoading } = useClerkUser();
   const router = useRouter();
-
+  const showInternalOptions = false;
   const safeCreated = safeWallet && safeWallet !== '';
 
   useEffect(() => {
     if (clerkUserLoading === false && user && !safeWallet) {
-      createSafeWallet();
+      //createSafeWallet();
     }
   }, [safeWallet, user, clerkUserLoading])
 
   const createSafeWallet = async () => {
-    if (!id) return;
+    if (!user) return;
     setLoading(true);
     const safePayload = {
       rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
       owner: '',
       threshold: 1,
-      id: id,
+      id: user.id,
       chainid: globalChainId
     } as CreateAccountOptions;
     const safeAddress = await createAccount(safePayload);
-    setSafeAddress(id, safeAddress);
-    updateSafeWalletDetails(id, safeAddress);
+    await setSafeAddress(user.id, safeAddress);
+    await updateSafeWalletDetails(user.id, safeAddress);
     setLoading(false);
+    await syncSafeWallet();
     //callback();
+  }
+
+  const clearSafewallet = async () => {
+    if (!user) return;
+    setSafeAddress(user.id, '');
+    await syncSafeWallet();
   }
 
   const goBack = () => {
@@ -52,10 +59,6 @@ const CreateSafeContainer = ({ id, setStep = (number) => {}}: {id: string, setSt
   const handleNext = () => {
     setStep((prev) => prev + 1);
   }
-
-  useEffect(() => {
-    
-  }, [safeWallet])
   return (
     <Box
       display="flex"
@@ -88,6 +91,18 @@ const CreateSafeContainer = ({ id, setStep = (number) => {}}: {id: string, setSt
               {languageData[language].Onboarding.create_safe}
             </Button>  
           }
+
+          {safeCreated && showInternalOptions && 
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mt: 3 }}
+              onClick={clearSafewallet}
+            >
+              {'clear wallet'}
+            </Button>  
+          }
+          
           <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} width={'100%'} >
             {
               <Chip 
