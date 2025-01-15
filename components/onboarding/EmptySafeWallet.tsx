@@ -46,7 +46,6 @@ const EmptySafeWallet = ({ id, refresh }: {id: string, refresh: Function}) => {
     >
       {!loading && 
         <>
-          <AccountCircleIcon color="action" fontSize="large" />
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
             {languageData[language].Onboarding.empty_safe}
           </Typography>
