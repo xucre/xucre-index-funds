@@ -3,13 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Skeleton, LinearProgress, Chip, Stack, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useLanguage } from '@/hooks/useLanguage';
-import languageData, { Language } from '@/metadata/translations';
 import { useRouter } from 'next/navigation';
 import { globalChainId } from '@/service/constants';
 import { useClerkUser } from '@/hooks/useClerkUser';
 
 const AdditionalInfoContainer = ({ setStep = (number) => {}}: {setStep? : (number) => void}) => {
-  const {language} = useLanguage();
+  const {language, languageData} = useLanguage();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const goBack = () => {
@@ -21,23 +20,24 @@ const AdditionalInfoContainer = ({ setStep = (number) => {}}: {setStep? : (numbe
   }
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      textAlign="center"
+      flexGrow={1}
       height="100%"
       p={4}
     >
       {!loading && 
-        <>
-          <AccountCircleIcon color="action" fontSize="large" />
-          
-          <Typography variant="h5" color="textPrimary" gutterBottom>
-            {languageData[language].Onboarding.additional_info_title}
+        <>          
+          <Typography variant="h5" color="textPrimary" gutterBottom sx={{fontWeight: 'bold'}}>
+            {languageData[language].Onboarding.onboarding_complete_title}
+          </Typography>
+          <Typography variant="body1" color="textSecondary" gutterBottom>
+            {languageData[language].Onboarding.onboarding_complete_description}
           </Typography>
           
-          <List>
+
+          <Typography variant="body1" color="textSecondary">
+            {languageData[language].Onboarding.additional_info_subtext}
+          </Typography>
+          <List dense sx={{mb:2}}>
             <ListItem>
               <ListItemButton component="a" href="/settings/beneficiaries">
                 <ListItemText primary={languageData[language].Onboarding.additional_info_item_1} />
@@ -65,7 +65,7 @@ const AdditionalInfoContainer = ({ setStep = (number) => {}}: {setStep? : (numbe
             <Chip 
               label={languageData[language].ui.previous}
               onClick={goBack} 
-              color={'primary'}
+              color={'default'}
               sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
             />            
             

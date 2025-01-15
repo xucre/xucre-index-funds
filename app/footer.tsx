@@ -5,7 +5,6 @@ import SettingsButton from '@/components/ui/settingsButton';
 import SocialIcons from '@/components/ui/socialIcons';
 import { useLanguage } from '@/hooks/useLanguage';
 import { ThemeSwitcherElement } from '@/hooks/useThemeSwitcher';
-import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { AppBar, Box, Link, Toolbar, Typography } from '@mui/material';
 
 import { usePathname, useSearchParams } from 'next/navigation';

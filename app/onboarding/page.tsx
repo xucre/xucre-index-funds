@@ -10,6 +10,8 @@ import EmptyDelegateOnSafe from "@/components/onboarding/EmptyDelegateOnSafe";
 import EmptyProfileState from "@/components/onboarding/EmptyProfile";
 import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
 import IncompleteOnboarding from "@/components/onboarding/IncompleteOnboarding";
+import IntroductionContainer from "@/components/onboarding/IntroductionContainer";
+import OnboardingNavigation from "@/components/onboarding/OnboardingNavigation";
 import SignRiskDisclosure from "@/components/onboarding/SignRiskDisclosure";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import TransferSafeWallet from "@/components/onboarding/TransferSafeWallet";
@@ -45,7 +47,7 @@ export default function OnboardingPage() {
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
   const [hasCheckedProposer, setHasCheckedProposer] = useState(false);
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(5);
 
   const handleCheckSafeProposer = async () => {
     if (!safeWallet) {
@@ -83,10 +85,10 @@ export default function OnboardingPage() {
   }, [user])
 
   useEffect(() => {
-    if (step === 5) {
+    if (step === 5 && sfdcUser && sfdcUser.userId.length > 0 && sfdcUser.onboardingStatus !== 'complete') {
       updateUser({...sfdcUser, status: 'Active', onboardingStatus: 'complete'})
     }
-  }, [step]);
+  }, [step, sfdcUser]);
   
 
   const disclosureSigned = sfdcUser && sfdcUser.riskDisclosureSigned;
@@ -107,38 +109,38 @@ export default function OnboardingPage() {
     </Box>
   )
   return (
-      <Box width={'full'} px={5} py={4}>
-        <Typography variant={'h5'} pb={2}>{languageData[language].Onboarding.onboarding_title}</Typography>
-        {step === 0 && false && 
-          <>
-            {/* <OpaqueCard><EmptySafeWallet id={user ? user.id : ''} refresh={syncSafeWallet} /></OpaqueCard> 
-            <OpaqueCard><EmptyDelegateOnSafe id={safeWallet ? safeWallet : ''} refresh={syncSafeWallet} /></OpaqueCard>  */}
-          </>
-        }
+    <OpaqueCard sx={{mx:4, p:0, my:4}}>
+      <Stack direction={'row'} spacing={2} width={'full'}>
+        
+          <OnboardingNavigation step={step} setStep={setStep}/>
+          {step === 0 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px'}}><IntroductionContainer setStep={setStep}/></OpaqueCard> 
+          }
 
-        {step === 0 && 
-          <OpaqueCard><EditUserProfile selectedTab={0} showOpaqueCard={false} setStep={setStep} saveType={'next'}/></OpaqueCard>
-        }
+          {step === 1 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px'}}><EditUserProfile selectedTab={0} showOpaqueCard={false} setStep={setStep} saveType={'next'}/></OpaqueCard>
+          }
 
-        {step === 1 && 
-          <OpaqueCard><EditUserProfile selectedTab={1} showOpaqueCard={false} showPrevious={true} setStep={setStep} saveType={'next'}/></OpaqueCard> 
-        }
+          {step === 2 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px'}}><EditUserProfile selectedTab={1} showOpaqueCard={false} showPrevious={true} setStep={setStep} saveType={'next'}/></OpaqueCard> 
+          }
 
-        {step === 2 && 
-          <OpaqueCard><EditUserPortfolio direction={'row'} showOpaqueCard={false} showPrevious={true} setStep={setStep} saveType={'next'}/></OpaqueCard> 
-        }
+          {step === 3 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px', flexGrow: 1}}><EditUserPortfolio direction={'row'} showOpaqueCard={false} showPrevious={true} setStep={setStep} saveType={'next'}/></OpaqueCard> 
+          }
 
-        {step === 3 && 
-          <OpaqueCard><CreateSafeContainer id={user.id} setStep={setStep}/></OpaqueCard> 
-        }
+          {step === 4 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px', flexGrow: 1}}><CreateSafeContainer id={user.id} setStep={setStep}/></OpaqueCard> 
+          }
 
-        {/* {step === 4 && 
-          <OpaqueCard><CreateDelegateContainer setStep={setStep} id={user.id} /></OpaqueCard> 
-        } */}
+          {/* {step === 4 && 
+            <OpaqueCard><CreateDelegateContainer setStep={setStep} id={user.id} /></OpaqueCard> 
+          } */}
 
-        {step === 4 && 
-          <OpaqueCard><AdditionalInfoContainer setStep={setStep} /></OpaqueCard> 
-        }
-      </Box>
+          {step === 5 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px', flexGrow: 1}}><AdditionalInfoContainer setStep={setStep} /></OpaqueCard> 
+          }
+      </Stack>
+    </OpaqueCard>   
   );
 };

@@ -67,20 +67,22 @@ const CreateSafeContainer = ({ id, setStep = (number) => {}}: {id: string, setSt
       alignItems="center"
       textAlign="center"
       height="100%"
+      minWidth="100%"
+      width={'100%'}
       p={4}
     >
       {!loading && !clerkUserLoading && 
-        <>
-          <AccountCircleIcon color="action" fontSize="large" />
-          <Typography variant="h6" gutterBottom sx={{ mt: 2, mb: safeCreated ? 3 : 1 }}>
-            {safeCreated ? languageData[language].Onboarding.safe_created : languageData[language].Onboarding.empty_safe}
-          </Typography>
+        <Stack direction="column" spacing={2} minHeight={'50vh'} justifyContent={'space-between'} alignItems={'center'} width={'100%'}>
+          <Box>
+            <Typography variant="h6" gutterBottom sx={{ mt: 2, mb: safeCreated ? 3 : 1 }}>
+              {safeCreated ? languageData[language].Onboarding.safe_created : languageData[language].Onboarding.empty_safe}
+            </Typography>
+            
+            <Typography variant="body1" color="textSecondary">
+              {!safeCreated ? languageData[language].Onboarding.empty_safe_description : `matic:${safeWallet}`}
+            </Typography>
           
-          <Typography variant="body1" color="textSecondary">
-            {!safeCreated ? languageData[language].Onboarding.empty_safe_description : `matic:${safeWallet}`}
-          </Typography>
-          
-
+          </Box>
           {!safeCreated && 
             <Button
               variant="contained"
@@ -103,12 +105,12 @@ const CreateSafeContainer = ({ id, setStep = (number) => {}}: {id: string, setSt
             </Button>  
           }
           
-          <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} width={'100%'} >
+          <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} width={'100%'}>
             {
               <Chip 
                 label={languageData[language].ui.previous}
                 onClick={goBack} 
-                color={'primary'}
+                color={'default'}
                 sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
               />
             }
@@ -121,7 +123,7 @@ const CreateSafeContainer = ({ id, setStep = (number) => {}}: {id: string, setSt
               sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
             />
           </Stack>
-        </>
+        </Stack>
       }
       
       {loading &&

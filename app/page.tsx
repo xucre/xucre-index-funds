@@ -1,7 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { Avatar, Box, Button, Chip, Stack, Typography } from '@mui/material';
-import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData from '@/metadata/translations'
 import { useClerkUser } from '@/hooks/useClerkUser';

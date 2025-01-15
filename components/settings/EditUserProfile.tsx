@@ -120,7 +120,7 @@ const EditUserProfile = ({selectedTab, showOpaqueCard = true, saveType = 'save',
           <Chip 
             label={languageData[language].ui.previous}
             onClick={goBack} 
-            color={'primary'}
+            color={'default'}
             sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
           />
         }

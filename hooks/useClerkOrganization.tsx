@@ -1,17 +1,28 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useOrganization, useUser } from '@clerk/nextjs';
+import { useOrganization, useOrganizationList, useUser } from '@clerk/nextjs';
 
 export function useClerkOrganization() {
   const {organization: clerkOrganization, isLoaded} = useOrganization();
   const [organization, setOrganization] = useState(clerkOrganization);
+
+  const {userMemberships, setActive} = useOrganizationList();
+
+  useEffect(() => {
+    if (!userMemberships || !userMemberships.count || !setActive || !isLoaded) return;
+    if (userMemberships.count > 0 && !organization) {
+      console.log('setting active organization', userMemberships);
+      const org = userMemberships.data[0];
+      setActive({organization: org.id});
+    }
+  }, [organization, userMemberships])
+  
   const [balance, setBalance] = useState<number | null>(null);
   //const [isLoaded, setIsLoaded] = useState(false);
 
-  const syncOrganization = async () => {
+  const syncOrganization = () => {
     if (!clerkOrganization) return;
     if (organization && clerkOrganization.id === organization.id) return;
-    setOrganization(clerkOrganization);
-    
+    setOrganization(clerkOrganization);   
   };
 
   useEffect(() => {

@@ -185,16 +185,11 @@ const EditProfile = ({direction = 'column', showOpaqueCard = true, saveType = 's
   if (!modifiedUser) return <Skeleton variant={'rounded'} width="100%" height={200} />;
 
   return (
-      <Box sx={{px: showOpaqueCard ? 0: 4}}>
-        {/* <Stack direction={'row'} spacing={2} justifyContent={'space-between'} alignItems={'center'} >
-          <Typography variant="h6" gutterBottom>
-            {languageData[language].Edit.title}
-          </Typography>
-          <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} />
-        </Stack> */}
-
+      <Stack sx={{px: showOpaqueCard ? 0: 4}} width={'100%'} minHeight={direction === 'column' ? 0 : '50vh'} direction={'column'} justifyContent={'space-between'} >
+        
+        <>
         <Typography fontWeight={'bold'}>{languageData[language].Edit.porfolio_section}</Typography>
-        <Stack direction={direction} spacing={direction === 'column' ? 2: 5} justifyContent={direction === 'column' ? 'space-between' : 'space-between'} alignItems={'center'} width={'100%'} my={direction === 'column' ? 0 : 5}>
+        <Stack direction={direction} spacing={direction === 'column' ? 2: 5} justifyContent={direction === 'column' ? 'space-between' : 'space-between'} alignItems={'center'} my={direction === 'column' ? 0 : 5}>
           <TextField
             sx={{maxWidth: 300, flexGrow: 2}}
             select
@@ -244,12 +239,13 @@ const EditProfile = ({direction = 'column', showOpaqueCard = true, saveType = 's
             />
           </Stack>
         </Stack>
+        </>
         <Stack direction={'row'} spacing={2} justifyContent={showPrevious ? 'space-between' : 'flex-end'} alignItems={'center'} >
           {showPrevious &&
             <Chip 
               label={languageData[language].ui.previous}
               onClick={goBack} 
-              color={'primary'}
+              color={'default'}
               sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
             />
           }
@@ -261,7 +257,7 @@ const EditProfile = ({direction = 'column', showOpaqueCard = true, saveType = 's
             sx={{ fontSize: 18, fontWeight: 'bold', py: 2.5, px: 10, borderRadius: 25, mt: 3 }} 
           />
         </Stack>
-      </Box>
+      </Stack>
       
   );
 };
