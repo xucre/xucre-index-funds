@@ -47,7 +47,7 @@ export default function OnboardingPage() {
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
   const [hasCheckedProposer, setHasCheckedProposer] = useState(false);
 
-  const [step, setStep] = useState(5);
+  const [step, setStep] = useState(0);
 
   const handleCheckSafeProposer = async () => {
     if (!safeWallet) {
