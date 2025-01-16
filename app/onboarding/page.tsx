@@ -85,7 +85,7 @@ export default function OnboardingPage() {
   }, [user])
 
   useEffect(() => {
-    if (step === 5 && sfdcUser && sfdcUser.userId.length > 0 && sfdcUser.onboardingStatus !== 'complete') {
+    if (step === 5 && sfdcUser && sfdcUser.userId && sfdcUser.userId.length > 0 && sfdcUser.onboardingStatus !== 'complete') {
       updateUser({...sfdcUser, status: 'Active', onboardingStatus: 'complete'})
     }
   }, [step, sfdcUser]);
