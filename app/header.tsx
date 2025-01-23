@@ -233,10 +233,10 @@ function Header() {
                             }}
                             organizationProfileMode='navigation'
                             organizationProfileUrl='/organization'
-                            hidePersonal={true}
+                            hidePersonal={false}
                           />
                         }
-                        {user && !isSuperAdmin && !user.publicMetadata.superAdmin as boolean && false &&
+                        {user &&
                           <UserButton
                             appearance={{
                               baseTheme: isDarkTheme ? dark : undefined,
@@ -246,8 +246,7 @@ function Header() {
                                 baseTheme: isDarkTheme ? dark : undefined,
                               }
                             }}
-                            userProfileUrl='/settings'
-                            userProfileMode='navigation'
+                            userProfileMode='modal'
                           />
                         }
                       </SignedIn>
@@ -281,7 +280,7 @@ function Header() {
                               }}
                               organizationProfileMode='navigation'
                               organizationProfileUrl='/organization'
-                              hidePersonal={true}
+                              hidePersonal={false}
                             />
                           }
                           <NotificationIconButton
@@ -293,7 +292,7 @@ function Header() {
                             isVisible={isNotificationOpen}
                             onClose={() => setIsNotificationOpen(false)}
                           />
-                          {user && false && 
+                          {user && 
                             <UserButton
                               appearance={{
                                 baseTheme: isDarkTheme ? dark : undefined,
@@ -303,9 +302,7 @@ function Header() {
                                   baseTheme: isDarkTheme ? dark : undefined,
                                 }
                               }}
-                              userProfileUrl='/settings'
-                              userProfileMode='navigation'
-                              
+                              userProfileMode='modal'
                             />
                           }
                         </Stack>

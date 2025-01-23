@@ -144,6 +144,29 @@ export type PaymentOption = {
   limit: number;
 };
 
+
+
+export type IndexFund = {
+  id?: string;
+  toleranceLevels?: ToleranceLevels[];
+  name: {
+    [key in Language]: string;
+  };
+  cardSubtitle: {
+    [key in Language]: string;
+  };
+  description: {
+    [key in Language]: string;
+  };
+  image: string;
+  imageSmall: string;
+  color: string;
+  chainId: number;
+  custom: boolean | undefined;
+  sourceToken: PortfolioItem | undefined;
+  portfolio: PortfolioItem[]
+};
+
 export type PortfolioItem = {
   name: string;
   chainId: number;
@@ -169,27 +192,6 @@ export enum ToleranceLevels {
   Moderate = 'Moderate',
   Conservative = 'Conservative',
 }
-
-export type IndexFund = {
-  id?: string;
-  toleranceLevels?: ToleranceLevels[];
-  name: {
-    [key in Language]: string;
-  };
-  cardSubtitle: {
-    [key in Language]: string;
-  };
-  description: {
-    [key in Language]: string;
-  };
-  image: string;
-  imageSmall: string;
-  color: string;
-  chainId: number;
-  custom: boolean | undefined;
-  sourceToken: PortfolioItem | undefined;
-  portfolio: PortfolioItem[]
-};
 
 export interface PoolData {
   id: string;

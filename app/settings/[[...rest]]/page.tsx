@@ -1,12 +1,15 @@
 'use client'
-import { SignOutButton, UserProfile } from "@clerk/nextjs";
-import { Box, Divider, Stack, Typography, useTheme } from "@mui/material"
+import { SignOutButton, UserButton, UserProfile } from "@clerk/nextjs";
+import { Box, Divider, List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, useTheme } from "@mui/material"
 import LinkIcon from '@mui/icons-material/Link';
-import { Suspense, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { dark } from "@clerk/themes";
 import WalletManagement from "@/components/settings/WalletManagement";
 import { ThemeSwitcherElement } from "@/hooks/useThemeSwitcher";
 import LanguageSelect from "@/components/ui/languageSelect";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import TonalityIcon from '@mui/icons-material/Tonality';
 import SocialIcons from "@/components/ui/socialIcons";
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 import WalletIcon from '@mui/icons-material/Wallet';
@@ -23,10 +26,13 @@ import { isNull } from "@/service/helpers";
 import React from "react";
 import PrivacyPolicy from "@/components/support/PrivacyPolicy";
 import OpaqueCard from "@/components/ui/OpaqueCard";
+import IntroductionContainer from "@/components/onboarding/IntroductionContainer";
+import { step } from "viem/chains";
 
 // components/LoadingIndicator.tsx
 export default function Settings() {
   const theme = useTheme();
+  const [step, setStep] = useState(0);
   const {language, languageData} = useLanguage();
   const isDarkTheme = theme.palette.mode === 'dark';
   const {sfdcUser: sfdcUserRaw, refresh} = useSFDC();
@@ -59,10 +65,82 @@ export default function Settings() {
   const isBeneficiaryComplete = true;//!isNull(sfdcUser.beneficiaries);
   const isPortfolioComplete = useMemo(() => !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution), [sfdcUser.riskTolerance, sfdcUser.salaryContribution]);
   const UserProfileMemoized = React.memo(UserProfile);
+  
+  const navigationList = [
+    {
+      label: languageData[language].Settings.view_portfolio,
+    },
+    {
+      label: languageData[language].Edit.personal_information,
+    },
+    {
+      label: languageData[language].Edit.id_section,
+    },
+    {
+      label: languageData[language].Edit.beneficiary_section,
+    },
+    {
+      label: languageData[language].Settings.view_web3,
+    },
+    {
+      label: languageData[language].Settings.view_display,
+    }
+  ]
+
+  const getProfileIcon = (index: number) => {
+    const portfolioIcon = isPortfolioComplete ? <WalletIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>;
+    const personalIcon = isPersonalInformationComplete ? <BadgeIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>;
+    const idIcon = isIdentificationComplete ? <ContactMailIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>;
+    const beneficiaryIcon = isBeneficiaryComplete ? <RecentActorsIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>;
+    const icons = [portfolioIcon, personalIcon, idIcon, beneficiaryIcon, <LinkIcon fontSize="small" />, <DisplaySettingsIcon fontSize="small" />];
+    return icons[index];
+  }
+  return (
+    <OpaqueCard sx={{mx:4, p:0, my:4}}>
+      <Stack direction={'row'} spacing={2} width={'full'}>
+        
+          <List sx={{minWidth: '15rem', pt:2}} >
+            {
+              navigationList.map((item, index) => {
+                return <ListItemButton key={index} onClick={() => setStep(index)} >
+                  <ListItemIcon>
+                      {getProfileIcon(index)}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.label}
+                  />
+                </ListItemButton>
+              })
+            }
+          </List>
+          {step === 0 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px', width: '-webkit-fill-available'}}><EditUserPortfolio /></OpaqueCard> 
+          }
+          {step === 1 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px', width: '-webkit-fill-available'}}><EditUserProfile selectedTab={0}/></OpaqueCard> 
+          }
+          {step === 2 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px', width: '-webkit-fill-available'}}><EditUserProfile selectedTab={1}/></OpaqueCard> 
+          }
+          {step === 3 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px', width: '-webkit-fill-available'}}><EditUserProfile selectedTab={2}/></OpaqueCard> 
+          }
+          {step === 4 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px', width: '-webkit-fill-available'}}><WalletManagement /></OpaqueCard> 
+          }
+          {step === 5 && 
+            <OpaqueCard sx={{borderRadius: '0px 5px 5px 0px', width: '-webkit-fill-available'}}><Display /></OpaqueCard> 
+          }
+      </Stack>
+    </OpaqueCard>
+  )
+  
   return (
       <Box alignItems={'center'} display={'flex'} justifyContent={'center'} width={'full'} mx={5} my={1} pb={10}>
+        
           <UserProfile
             appearance={{ baseTheme: isDarkTheme ? dark : undefined, }}
+
           >
             <UserProfile.Page label={languageData[language].Settings.view_portfolio} labelIcon={isPortfolioComplete ? <WalletIcon fontSize="small" /> : <WarningAmberIcon color={'warning'} fontSize="small"/>} url="portfolio">
               <OpaqueCard sx={{px: 4, py: 2}}><EditUserPortfolio /></OpaqueCard>
@@ -89,7 +167,9 @@ export default function Settings() {
               <SignOutButton />
             </UserProfile.Page> */}
 
-          </UserProfile>      
+          </UserProfile>   
+
+          <OpaqueCard sx={{px: 4, py: 2}}><EditUserPortfolio/></OpaqueCard>   
       </Box>
   );
 };

@@ -79,15 +79,15 @@ export function ContextProvider({
             }}
             publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
             localization={activeLanguage}
-            touchSession={false}
+            touchSession={true}
             polling={true}
           >
             <SnackbarProvider maxSnack={3} >
-            <ClerkLoaded>
+            {/* <ClerkLoaded> */}
               <SFDCProvider>
                 {children}
               </SFDCProvider>
-            </ClerkLoaded>
+            {/* </ClerkLoaded> */}
             </SnackbarProvider>
           </ClerkProvider>
         </IndexDbContextProvider>

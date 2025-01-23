@@ -1,6 +1,6 @@
 'use client'
 import React, { use, useEffect, useState } from 'react';
-import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid, Slider, useTheme, Tooltip, List, ListItem, ListItemText, ListItemIcon, IconButton, Skeleton } from '@mui/material';
+import { Box, Typography, Button, TextField, MenuItem, Chip, Stack, Grid2 as Grid, Slider, useTheme, Tooltip, List, ListItem, ListItemText, ListItemIcon, IconButton, Skeleton, Paper } from '@mui/material';
 import { useAccount, useSignMessage } from 'wagmi';
 import CircleIcon from '@mui/icons-material/Circle';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -29,7 +29,7 @@ interface ProfileData {
   signedMessage?: string;
 }
 
-const EditProfile = ({direction = 'column', showOpaqueCard = true, saveType = 'save', showPrevious=false, setStep = (number) => {}} : {direction?: 'column' | 'row', showOpaqueCard? : boolean, saveType?: 'save' | 'next', showPrevious?: boolean, setStep? : (number) => void}) => {
+const EditProfile = ({direction = 'column', showOpaqueCard = false, saveType = 'save', showPrevious=false, setStep = (number) => {}} : {direction?: 'column' | 'row', showOpaqueCard? : boolean, saveType?: 'save' | 'next', showPrevious?: boolean, setStep? : (number) => void}) => {
   const {language} = useLanguage();
   const [signedMessage, setSignedMessage] = useState('');
   // const [message, setMessage] = useState('');
@@ -53,6 +53,7 @@ const EditProfile = ({direction = 'column', showOpaqueCard = true, saveType = 's
 
   useEffect(() => {
       if (!sfdcUser) return;
+      console.log('setmodifyuser',sfdcUser.riskTolerance);
       if (modifiedUser === null) {
         setModifiedUser({...sfdcUser, riskTolerance: sfdcUser.riskTolerance || 'Moderate', salaryContribution: sfdcUser.salaryContribution || 0});
       }
@@ -185,11 +186,11 @@ const EditProfile = ({direction = 'column', showOpaqueCard = true, saveType = 's
   if (!modifiedUser) return <Skeleton variant={'rounded'} width="100%" height={200} />;
 
   return (
-      <Stack sx={{px: showOpaqueCard ? 0: 4}} width={'100%'} minHeight={direction === 'column' ? 0 : '50vh'} direction={'column'} justifyContent={'space-between'} >
+      <Stack sx={{px: showOpaqueCard ? 0: 4, py: 2, "& .MuiPaper-root": {width: "--webkit-fill-available"}}} width={'--webkit-fill-available'} minHeight={direction === 'column' ? 0 : '50vh'} direction={'column'} justifyContent={'space-between'} useFlexGap>
         
         <>
         <Typography fontWeight={'bold'}>{languageData[language].Edit.porfolio_section}</Typography>
-        <Stack direction={direction} spacing={direction === 'column' ? 2: 5} justifyContent={direction === 'column' ? 'space-between' : 'space-between'} alignItems={'center'} my={direction === 'column' ? 0 : 5}>
+        <Stack direction={direction} spacing={direction === 'column' ? 2: 5} justifyContent={direction === 'column' ? 'space-between' : 'space-between'} alignItems={'center'} my={direction === 'column' ? 2 : 5}>
           <TextField
             sx={{maxWidth: 300, flexGrow: 2}}
             select
@@ -240,7 +241,7 @@ const EditProfile = ({direction = 'column', showOpaqueCard = true, saveType = 's
           </Stack>
         </Stack>
         </>
-        <Stack direction={'row'} spacing={2} justifyContent={showPrevious ? 'space-between' : 'flex-end'} alignItems={'center'} >
+        <Stack direction={'row'} spacing={2} justifyContent={showPrevious ? 'space-between' : 'flex-end'} alignItems={'center'} mt={5}>
           {showPrevious &&
             <Chip 
               label={languageData[language].ui.previous}
