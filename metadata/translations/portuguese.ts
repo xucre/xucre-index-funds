@@ -289,6 +289,7 @@ const values : TranslationType  = {
     view_social: 'Social',
     view_indentification: 'Identificação',
     view_privacy: 'Privacidade',
+    view_profile: 'Perfil',
   },
   SelectLanguage : {
     en: 'InglÃªs',
