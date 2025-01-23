@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, useMemo } from 'react';
 import { useOrganization, useOrganizationList, useUser } from '@clerk/nextjs';
 
@@ -10,9 +12,9 @@ export function useClerkOrganization() {
   useEffect(() => {
     if (!userMemberships || !userMemberships.count || !setActive || !isLoaded) return;
     if (userMemberships.count > 0 && !organization) {
-      console.log('setting active organization', userMemberships);
-      const org = userMemberships.data[0];
-      setActive({organization: org.id});
+      //console.log('setting active organization', userMemberships);
+      //const org = userMemberships.data[0];
+      //setActive({organization: org.id});
     }
   }, [organization, userMemberships])
   
@@ -20,8 +22,8 @@ export function useClerkOrganization() {
   //const [isLoaded, setIsLoaded] = useState(false);
 
   const syncOrganization = () => {
-    if (!clerkOrganization) return;
-    if (organization && clerkOrganization.id === organization.id) return;
+    //if (!clerkOrganization) return;
+    if (organization && clerkOrganization?.id === organization.id) return;
     setOrganization(clerkOrganization);   
   };
 
@@ -34,7 +36,7 @@ export function useClerkOrganization() {
     organization,
     isLoaded,
     refresh: () => syncOrganization(),
-  }), [balance]);
+  }), [organization, isLoaded]);
 
   return memoizedValue;
 }

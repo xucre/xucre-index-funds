@@ -27,12 +27,12 @@ import { useSFDC } from '@/hooks/useSFDC';
 import { isNull } from '@/service/helpers';
 import { SignOutButton, useAuth } from '@clerk/nextjs';
 
-const AppMenu: React.FC = () => {
+const AppMenu = () => {
   const {language} = useLanguage();
   const {isAdmin, isSuperAdmin} = useIsAdmin();
   const {signOut} = useAuth();
   //const isAdmin = false;
-  const [isOpen, setIsOpen] = React.useState(true);
+  const [isOpen, setIsOpen] = React.useState(false);
   const router = useRouter();
   const theme = useTheme();
   const pathname = usePathname();
@@ -40,12 +40,17 @@ const AppMenu: React.FC = () => {
   const [isOnboardingComplete, setIsOnboardingComplete] = React.useState(false);
   const [hideHighlight, setHideHighlight] = React.useState(false);
   const [staticRef, setStaticRef] = React.useState<React.RefObject<HTMLButtonElement>>();
+
   useEffect(() => {
     if (isLoaded) {
+      setIsOpen(true);
       const _isOnboardingComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution)
       setIsOnboardingComplete(_isOnboardingComplete);
+    } else {
+      setIsOpen(false);
     }    
   }, [sfdcUser, isLoaded]);
+
   const menuGroups = React.useMemo(
     () => [
       {
@@ -290,12 +295,12 @@ const AppMenu: React.FC = () => {
   }, [])  
 
   useEffect(() => {
-    setIsOpen(true);
+    //setIsOpen(true);
   }, []);
-
+  if (!isLoaded) return null;
   return (
     <>
-      {true && 
+      { 
         <Stack
           direction="column"
           py={2}
