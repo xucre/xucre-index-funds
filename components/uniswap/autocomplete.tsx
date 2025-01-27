@@ -35,7 +35,7 @@ const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
   const initialFilteredTokens = [sourceToken] as Token[];
   //const [initialFilteredTokens, seInitialFilteredTokens] = useState<Token[]>([]);
   
-  const { tokens } = useTokenListRaw({ chainId });
+  //const { tokens } = useTokenListRaw({ chainId });
 
   // useEffect(() => {
   //   const result = [
