@@ -41,16 +41,6 @@ const AppMenu = () => {
   const [hideHighlight, setHideHighlight] = React.useState(false);
   const [staticRef, setStaticRef] = React.useState<React.RefObject<HTMLButtonElement>>();
 
-  useEffect(() => {
-    if (isLoaded) {
-      setIsOpen(true);
-      const _isOnboardingComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution)
-      setIsOnboardingComplete(_isOnboardingComplete);
-    } else {
-      setIsOpen(false);
-    }    
-  }, [sfdcUser, isLoaded]);
-
   const menuGroups = React.useMemo(
     () => [
       {
@@ -292,7 +282,17 @@ const AppMenu = () => {
     // return () => {
     //   clearInterval(id)
     // }
-  }, [])  
+  }, []) 
+  
+  useEffect(() => {
+    if (isLoaded) {
+      setIsOpen(true);
+      const _isOnboardingComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution)
+      setIsOnboardingComplete(_isOnboardingComplete);
+    } else {
+      setIsOpen(false);
+    }    
+  }, [sfdcUser, isLoaded]);
 
   useEffect(() => {
     //setIsOpen(true);
@@ -300,7 +300,7 @@ const AppMenu = () => {
   if (!isLoaded) return null;
   return (
     <>
-      { 
+      { isOpen && 
         <Stack
           direction="column"
           py={2}
