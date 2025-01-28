@@ -21,13 +21,13 @@ const WalletManagement: React.FC = () => {
   const { user, safeWallet, refreshSafeWallet: syncSafeWallet, loading: clerkUserLoading } = useClerkUser();
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
   const [hasCheckedProposer, setHasCheckedProposer] = useState(false);
-
+  //const needsToSetProposer = true;
   const saveWallet = async () => {
     if (!safeWallet || !isConnected) return;
     setLoading(true);
     const safePayload = {
       chainid: globalChainId,
-      safeWallet: safeWallet,
+      safeWallet: '0x7aEfB1e7084F6ee940Dd01F2143f09F4e48Ce223',//safeWallet,
       proposer: address,
       name: user ? user.fullName : 'Xucre Client',
     } as AddProposerOptions;
@@ -47,7 +47,7 @@ const WalletManagement: React.FC = () => {
       if (!safeWallet) return;
       const params = {
         chainid: globalChainId,
-        safeWallet: safeWallet
+        safeWallet: '0x7aEfB1e7084F6ee940Dd01F2143f09F4e48Ce223',//safeWallet
       }
       const delegates = await getSafeProposer(params);
       if (delegates.count === 0) {

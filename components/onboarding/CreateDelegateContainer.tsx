@@ -21,9 +21,9 @@ const CreateDelegateContainer = ({ id, setStep = (number) => {}}: {id: string, s
   const router = useRouter();
 
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
+  // const needsToSetProposer = true;
   const [hasCheckedProposer, setHasCheckedProposer] = useState(false);
 
-  const safeCreated = safeWallet && safeWallet !== '';
 
   const handleCheckSafeProposer = async () => {
       if (!safeWallet) return;

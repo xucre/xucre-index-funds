@@ -704,6 +704,113 @@ export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: s
   }
 }
 
+export async function createUserSpotExecutionReversed(userId: string, safeWalletAddress: string, rpcUrl: string, chainid: number, amount: string, decimals: number, poolFee: number) {
+  const memberDetails = await getUserDetails(userId);
+  //console.log(memberDetails);
+  if (memberDetails === null) return;
+  //console.log('building portfolio for user', member.safeWalletAddress);
+  //console.log(memberDetails.riskTolerance, selectedFund);
+  const safeAccountConfig = {
+    safeAddress: safeWalletAddress,
+  };
+
+  const packData = {
+      provider: rpcUrl,
+      signer : process.env.DEVACCOUNTKEY,
+      bundlerUrl: bundlerUrl(chainid || 11155111),
+      options: safeAccountConfig,
+      paymasterOptions: {
+          isSponsored: true,
+          paymasterUrl: paymasterUrl(chainid || 11155111),
+      }
+  } as Safe4337InitOptions;
+  
+  const safe4337Pack = await Safe4337Pack.init(packData);
+  const safeAddress = await safe4337Pack.protocolKit.getAddress();
+  
+  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
+  const pubClient = publicClient(chainid || 11155111);
+  if (!client) {
+    console.log('client not found');
+    return;
+  }
+  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
+  console.log('IsUserSafeDeployed', isSafeDeployed);
+  
+  const memberContribution = parseUnits(amount, decimals);
+  await validateCurrentERC20Allowance(chainid || globalChainId, safeAddress, memberContribution, safe4337Pack);
+
+  console.log('building portfolio for user', safeWalletAddress);
+  // const portfolio = selectedFund.portfolio;
+  // const activeItems = portfolio.filter((item) => item.active);
+  // const tokenAllocations = portfolio.map((item) => item.weight);
+  // //const tokenAllocations = distributeWeights(activeItems);
+  // const tokenAddresses = activeItems.map((item) => getAddress(item.address));
+  // const tokenPoolFees = activeItems.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
+  const tokenAllocations =[10000];
+  const tokenAddresses = [getAddress(USDT_ADDRESS)];
+  const tokenPoolFees = [poolFee];
+  const unencodedData = {
+    abi: XUCREINDEXFUNDS_ABI.abi,
+    functionName: 'spotExecution',
+    args: [
+      safeAddress,
+      tokenAddresses,
+      tokenAllocations,
+      tokenPoolFees,
+      getAddress(USDT_ADDRESS),
+      memberContribution
+    ],
+  }
+  
+  //console.log('unencodedData', unencodedData);
+  const rawDisbursmentData = encodeFunctionData(unencodedData);
+  //console.log('rawDisbursmentData', rawDisbursmentData);
+  const userDisbursementTransactions = {
+    to: getAddress(contractAddressMap[chainid || globalChainId]),
+    data: rawDisbursmentData,
+    value: '0',
+  }
+
+  console.log('userDisbursementTransactions', userDisbursementTransactions.to);
+
+  const userDisbursementTransactionData = {
+    transactions: [
+      userDisbursementTransactions
+    ]
+  } as CreateTransactionProps;
+  console.log('UserDisbursementTransactionData');
+  let secondTransaction;
+  //try { 
+    secondTransaction = await safe4337Pack.createTransaction({
+      transactions: userDisbursementTransactionData.transactions
+    });
+  // } catch (err) {
+  //   console.log(err);
+  //   throw err;
+  // }
+
+  console.log('secondTransaction complete');
+  const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
+    safeOperation: secondTransaction
+  })
+  console.log('identifiedSafeOperation complete');
+  const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
+  console.log('signedSafeOperation complete');
+  const userOperationHash = await safe4337Pack.executeTransaction({
+    executable: signedSafeOperation
+  })
+  console.log('userOperationHash', userOperationHash);
+  
+  let isOperationSuccess = false;
+  while (!isOperationSuccess) {
+    const userOperationResult = await safe4337Pack.getUserOperationReceipt(userOperationHash);
+    isOperationSuccess = userOperationResult !== null && userOperationResult.success;
+  } 
+  
+  return ''//finalHash;
+}
+
 async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
   const memberDetails = await getUserDetails(member.id);
   //console.log(memberDetails);
@@ -809,26 +916,6 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
     const userOperationResult = await safe4337Pack.getUserOperationReceipt(userOperationHash);
     isOperationSuccess = userOperationResult !== null && userOperationResult.success;
   } 
-
-  // const userDisbursementTransaction = await safe4337Pack.protocolKit.createTransaction({
-  //   transactions: userDisbursementTransactionData.transactions,
-  // });  
-  //
-  // console.log('UserDisbursementSafeOperation');
-  // const signedUserDisbursementSafeOperation = await safe4337Pack.protocolKit.signTransaction(userDisbursementTransaction)
-  // let finalHash = '';
-  // try {
-  //   const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
-  //   console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
-  //   finalHash = userDisbursementOperationHash.hash;
-  // } catch (err) {
-  //   //console.log(err);
-  //   console.log('error executing spot for member', member.safeWalletAddress);
-  //   console.log('retrying disbursement');
-  //   const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
-  //   console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
-  //   finalHash = userDisbursementOperationHash.hash;    
-  // }
   
   return ''//finalHash;
 }
@@ -1102,6 +1189,11 @@ export async function addProposer(options: AddProposerOptions): Promise<void> {
     signer,
   }
   
+  try {
+    await apiKit.addSafeDelegate(conf);
+  } catch (err) {
+    console.log('error adding proposer', err);
+  }
   await apiKit.addSafeDelegate(conf);
   return;
 }
