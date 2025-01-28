@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import AccountButton from '../accountButton';
-import { Box, Button, Chip, Divider, LinearProgress, Link, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Chip, Divider, LinearProgress, Link, Skeleton, Stack, Typography, useTheme } from '@mui/material';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -13,6 +13,7 @@ import { globalChainId } from '@/service/constants';
 import { useClerkUser } from '@/hooks/useClerkUser';
 import { addProposer, AddProposerOptions, getSafeProposer } from '@/service/safe';
 import { useAccount } from 'wagmi';
+import { enqueueSnackbar } from 'notistack';
 
 const WalletManagement: React.FC = () => {
   const {language} = useLanguage();
@@ -27,17 +28,18 @@ const WalletManagement: React.FC = () => {
     setLoading(true);
     const safePayload = {
       chainid: globalChainId,
-      safeWallet: '0x7aEfB1e7084F6ee940Dd01F2143f09F4e48Ce223',//safeWallet,
+      safeWallet: safeWallet,
       proposer: address,
-      name: (user && user.fullName) ? user.fullName : 'Xucre Client',
+      name: (user && user.fullName) ? user.fullName : `Xucre Proposer - ${address}`,
     } as AddProposerOptions;
-    console.log(safePayload);
     const {success, message} = await addProposer(safePayload);
     if (success) {
       setLoading(false);
+      enqueueSnackbar(`${languageData[language].ui.success}`, { variant: 'success', autoHideDuration: 5000 });
       handleCheckSafeProposer();
     } else {
-      console.log(success, message);
+      setLoading(false);
+      enqueueSnackbar(`${languageData[language].ui.error}`, { variant: 'error', autoHideDuration: 5000 });
     }
     
   }
@@ -53,7 +55,7 @@ const WalletManagement: React.FC = () => {
       if (!safeWallet) return;
       const params = {
         chainid: globalChainId,
-        safeWallet: '0x7aEfB1e7084F6ee940Dd01F2143f09F4e48Ce223',//safeWallet
+        safeWallet: safeWallet
       }
       const delegates = await getSafeProposer(params);
       if (delegates.count === 0) {
@@ -67,7 +69,7 @@ const WalletManagement: React.FC = () => {
   const hasSafe = safeWallet ? safeWallet.length > 0 : false;
   if (!hasCheckedProposer || !user) return (
     <Box width={'full'} px={5} py={4}>
-      {/* <Skeleton variant={'rounded'} width="100%" height={200} /> */}
+      { <Skeleton variant={'rounded'} width="100%" height={200} /> }
     </Box>
   )
 
