@@ -31,9 +31,14 @@ const WalletManagement: React.FC = () => {
       proposer: address,
       name: user ? user.fullName : 'Xucre Client',
     } as AddProposerOptions;
-    await addProposer(safePayload);
-    setLoading(false);
-    handleCheckSafeProposer();
+    const {success, message} = await addProposer(safePayload);
+    if (success) {
+      setLoading(false);
+      handleCheckSafeProposer();
+    } else {
+      console.log(success, message);
+    }
+    
   }
 
 

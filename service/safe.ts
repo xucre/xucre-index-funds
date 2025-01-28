@@ -1173,7 +1173,7 @@ export interface AddProposerOptions {
   name: string;
 }
 
-export async function addProposer(options: AddProposerOptions): Promise<void> {
+export async function addProposer(options: AddProposerOptions): Promise<{success: boolean, message: string}> {
   const { chainid, safeWallet, proposer, name } = options;
   const signer = createWalletClient({
     account: CORP_ACCOUNT,
@@ -1193,7 +1193,11 @@ export async function addProposer(options: AddProposerOptions): Promise<void> {
     await apiKit.addSafeDelegate(conf);
   } catch (err) {
     console.log('error adding proposer', err);
+    return {success: false, message: JSON.stringify(err)};
   }
-  await apiKit.addSafeDelegate(conf);
-  return;
+  //await apiKit.addSafeDelegate(conf);
+  return {
+    success: true,
+    message: ''
+  };
 }
