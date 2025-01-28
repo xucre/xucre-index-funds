@@ -21,7 +21,7 @@ const WalletManagement: React.FC = () => {
   const { user, safeWallet, refreshSafeWallet: syncSafeWallet, loading: clerkUserLoading } = useClerkUser();
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
   const [hasCheckedProposer, setHasCheckedProposer] = useState(false);
-
+  //const needsToSetProposer = true;
   const saveWallet = async () => {
     if (!safeWallet || !isConnected) return;
     setLoading(true);
