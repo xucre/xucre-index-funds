@@ -29,8 +29,9 @@ const WalletManagement: React.FC = () => {
       chainid: globalChainId,
       safeWallet: '0x7aEfB1e7084F6ee940Dd01F2143f09F4e48Ce223',//safeWallet,
       proposer: address,
-      name: user ? user.fullName : 'Xucre Client',
+      name: (user && user.fullName) ? user.fullName : 'Xucre Client',
     } as AddProposerOptions;
+    console.log(safePayload);
     const {success, message} = await addProposer(safePayload);
     if (success) {
       setLoading(false);
