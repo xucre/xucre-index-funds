@@ -28,10 +28,12 @@ import PrivacyPolicy from "@/components/support/PrivacyPolicy";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import IntroductionContainer from "@/components/onboarding/IntroductionContainer";
 import { step } from "viem/chains";
+import { usePathname } from 'next/navigation';
 
 // components/LoadingIndicator.tsx
 export default function Settings() {
   const theme = useTheme();
+  const pathname = usePathname();
   const [step, setStep] = useState(0);
   const {language, languageData} = useLanguage();
   const isDarkTheme = theme.palette.mode === 'dark';
@@ -95,6 +97,24 @@ export default function Settings() {
     const icons = [portfolioIcon, personalIcon, idIcon, beneficiaryIcon, <LinkIcon fontSize="small" />, <DisplaySettingsIcon fontSize="small" />];
     return icons[index];
   }
+
+  useEffect(() => {
+    console.log('pathname', pathname);
+    const path = pathname.split('/').pop();
+    if (path === 'portfolio') {
+      setStep(0);
+    } else if (path === 'personal') {
+      setStep(1);
+    } else if (path === 'identification') {
+      setStep(2);
+    } else if (path === 'beneficiaries') {
+      setStep(3);
+    } else if (path === 'web3') {
+      setStep(4);
+    } else if (path === 'display') {
+      setStep(5);
+    }
+  }, [pathname])
   return (
     <OpaqueCard sx={{mx:4, p:0, my:4}}>
       <Stack direction={'row'} spacing={2} width={'full'}>
@@ -102,7 +122,7 @@ export default function Settings() {
           <List sx={{minWidth: '15rem', pt:2}} >
             {
               navigationList.map((item, index) => {
-                return <ListItemButton key={index} onClick={() => setStep(index)} >
+                return <ListItemButton key={index} selected={step === index} onClick={() => setStep(index)} >
                   <ListItemIcon>
                       {getProfileIcon(index)}
                   </ListItemIcon>
