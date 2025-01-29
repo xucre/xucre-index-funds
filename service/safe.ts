@@ -1187,23 +1187,23 @@ export async function addProposer(options: AddProposerOptions): Promise<{success
     safeAddress: safeWallet, // Optional
     delegateAddress: proposer,
     delegatorAddress: CORP_PUBLIC_ADDRESS as `0x${string}`,
-    label: name,
+    label: name.length > 50 ? name.substring(0,49): name,
     signer,
   }
   
   try {
-    const data = await signDelegate(signer, conf.delegateAddress, _chainid);
-    const result = await superagent.post('https://safe-transaction-polygon.safe.global/api/v2/delegates/') // Replace with actual endpoint
-      .set('Content-Type', 'application/json')
-      .send({
-        safe: safeWallet,
-        delegate: conf.delegateAddress,
-        signature: data,
-        delegator: CORP_PUBLIC_ADDRESS as `0x${string}`,
-        label: name,
-      })
-      console.log(result);
-    //await apiKit.addSafeDelegate(conf)
+    // const data = await signDelegate(signer, conf.delegateAddress, _chainid);
+    // const result = await superagent.post('https://safe-transaction-polygon.safe.global/api/v2/delegates/') // Replace with actual endpoint
+    //   .set('Content-Type', 'application/json')
+    //   .send({
+    //     safe: safeWallet,
+    //     delegate: conf.delegateAddress,
+    //     signature: data,
+    //     delegator: CORP_PUBLIC_ADDRESS as `0x${string}`,
+    //     label: name,
+    //   })
+    //   console.log(result);
+    await apiKit.addSafeDelegate(conf)
     // .catch((err) => {
     //   console.log('error adding proposer', err.success, err.message, conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label, signer.account.address);
     //   return {success: false, message: err.message};
