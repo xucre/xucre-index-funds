@@ -362,6 +362,7 @@ const values : TranslationType = {
     wallet_not_connected: "Wallet must be connected to use this feature.",
     withdraw_title: 'Withdraw Token',
     transaction_error: "Transaction Failed",
+    success: "Success",
   },
   IndexBuilder: {
     successfulAddition: "Successfully added to the index fund",
