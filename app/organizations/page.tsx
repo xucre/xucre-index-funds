@@ -122,3 +122,5 @@ const OrganizationsTable: React.FC = () => {
 };
 
 export default OrganizationsTable;
+
+export const dynamic = "force-dynamic"

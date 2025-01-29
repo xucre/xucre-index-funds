@@ -46,3 +46,5 @@ export default function IndexFunds() {
 
   return <></>;
 };
+
+export const dynamic = "force-dynamic"
