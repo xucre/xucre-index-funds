@@ -1188,11 +1188,12 @@ export async function addProposer(options: AddProposerOptions): Promise<{success
     label: name,
     signer,
   }
-  
+  let results;
   try {
-    const results = await apiKit.addSafeDelegate(conf);
+    results = await apiKit.addSafeDelegate(conf);
     console.log(results);
   } catch (err) {
+    console.log(results);
     console.log('error adding proposer', JSON.stringify(err), conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label, signer.account.address);
     return {success: false, message: JSON.stringify(err)};
   }
