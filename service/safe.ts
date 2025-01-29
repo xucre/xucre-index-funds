@@ -1190,8 +1190,8 @@ export async function addProposer(options: AddProposerOptions): Promise<{success
   }
   // try {
     apiKit.addSafeDelegate(conf).catch((err) => {
-      console.log('error adding proposer', JSON.stringify(err), conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label, signer.account.address);
-      return {success: false, message: JSON.stringify(err)};
+      console.log('error adding proposer', err.success, err.message, conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label, signer.account.address);
+      return {success: false, message: err.message};
     });
   // } catch (err) {
   //   console.log('error adding proposer', JSON.stringify(err), conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label, signer.account.address);
