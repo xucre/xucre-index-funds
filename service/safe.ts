@@ -1178,7 +1178,7 @@ export async function addProposer(options: AddProposerOptions): Promise<{success
   const signer = createWalletClient({
     account: CORP_ACCOUNT,
     chain: chainIdToChain[chainid],
-    transport: http(),
+    transport: publicTransport(),
   });
   const _chainid = BigInt(chainid || globalChainId);
   console.log('chainid', _chainid);
