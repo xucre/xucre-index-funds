@@ -24,3 +24,5 @@ export default function Privacy() {
     </Box>
   )
 };
+
+export const dynamic = "force-dynamic"

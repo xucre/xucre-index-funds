@@ -12,7 +12,7 @@ import {
   BundlerOptions
 } from '@safe-global/sdk-starter-kit'
 import { SafeSignature } from '@safe-global/types-kit'
-
+import superagent from 'superagent';
 import { globalChainId, isDev } from './constants';
 import { polygon, sepolia } from 'viem/chains'
 import { ByteArray, Chain, Client, ClientConfig, defineChain, EIP1193RequestFn, encodeFunctionData, getAddress, parseUnits, TransportConfig } from 'viem';
@@ -1178,21 +1178,38 @@ export async function addProposer(options: AddProposerOptions): Promise<{success
   const signer = createWalletClient({
     account: CORP_ACCOUNT,
     chain: chainIdToChain[chainid],
-    transport: http(),
+    transport: publicTransport(),
   });
-  const apiKit = new SafeApiKit({ chainId: BigInt(chainid || globalChainId)})
+  const _chainid = BigInt(chainid || globalChainId);
+  console.log('chainid', _chainid);
+  const apiKit = new SafeApiKit({ chainId: _chainid})
   const conf: AddSafeDelegateProps = {
     safeAddress: safeWallet, // Optional
     delegateAddress: proposer,
     delegatorAddress: CORP_PUBLIC_ADDRESS as `0x${string}`,
-    label: name,
+    label: name.length > 50 ? name.substring(0,49): name,
     signer,
   }
   
   try {
-    await apiKit.addSafeDelegate(conf);
+    // const data = await signDelegate(signer, conf.delegateAddress, _chainid);
+    // const result = await superagent.post('https://safe-transaction-polygon.safe.global/api/v2/delegates/') // Replace with actual endpoint
+    //   .set('Content-Type', 'application/json')
+    //   .send({
+    //     safe: safeWallet,
+    //     delegate: conf.delegateAddress,
+    //     signature: data,
+    //     delegator: CORP_PUBLIC_ADDRESS as `0x${string}`,
+    //     label: name,
+    //   })
+    //   console.log(result);
+    await apiKit.addSafeDelegate(conf)
+    // .catch((err) => {
+    //   console.log('error adding proposer', err.success, err.message, conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label, signer.account.address);
+    //   return {success: false, message: err.message};
+    // });
   } catch (err) {
-    //console.log('error adding proposer', JSON.stringify(err), conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label);
+    console.log('error adding proposer', JSON.stringify(err), conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label, signer.account.address);
     return {success: false, message: JSON.stringify(err)};
   }
   //await apiKit.addSafeDelegate(conf);
@@ -1200,4 +1217,30 @@ export async function addProposer(options: AddProposerOptions): Promise<{success
     success: true,
     message: ''
   };
+}
+
+async function signDelegate(walletClient : {signTypedData: Function}, delegateAddress, chainId) {
+  const domain = {
+      name: 'Safe Transaction Service',
+      version: '1.0',
+      chainId: Number(chainId)
+  };
+  const types = {
+      EIP712Domain: [
+          {"name": "name", "type": "string"},
+          {"name": "version", "type": "string"},
+          {"name": "chainId", "type": "uint256"},
+      ],
+      Delegate: [
+          { name: 'delegateAddress', type: 'address' },
+          { name: 'totp', type: 'uint256' }
+      ]
+  };
+  const totp = Math.floor(Date.now() / 1000 / 3600);
+  return walletClient.signTypedData({
+      domain,
+      types,
+      primaryType: 'Delegate',
+      message: { delegateAddress, totp }
+  });
 }

@@ -18,3 +18,5 @@ export default function Pricing() {
     </Suspense>
   );
 };
+
+export const dynamic = "force-dynamic"

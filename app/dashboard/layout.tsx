@@ -74,3 +74,4 @@ export default function DashboardLayout({
     </Suspense>
   );
 };
+export const dynamic = "force-dynamic"

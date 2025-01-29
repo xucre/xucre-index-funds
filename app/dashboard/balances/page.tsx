@@ -32,3 +32,5 @@ export default function DashboardBalances() {
     <DashboardBalanceList address={safeWallet} />
   );
 };
+
+export const dynamic = "force-dynamic"

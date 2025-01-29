@@ -57,7 +57,9 @@ const WalletManagement: React.FC = () => {
         chainid: globalChainId,
         safeWallet: safeWallet
       }
+      console.log('handleCheckSafeProposer', params);
       const delegates = await getSafeProposer(params);
+      console.log('delegates', delegates);
       if (delegates.count === 0) {
         setNeedsToSetProposer(true);
       } else {

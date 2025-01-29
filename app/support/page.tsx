@@ -54,3 +54,5 @@ export default function AboutUs() {
     </Stack>
   );
 };
+
+export const dynamic = "force-dynamic"

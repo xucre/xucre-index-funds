@@ -144,3 +144,5 @@ export default function OnboardingPage() {
     </OpaqueCard>   
   );
 };
+
+export const dynamic = "force-dynamic"

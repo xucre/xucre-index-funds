@@ -36,3 +36,5 @@ export default function DashboardTransactions() {
     <DashboardTransactionList address={safeWallet} transactions={transactions} truncate={false} />
   );
 };
+
+export const dynamic = "force-dynamic"

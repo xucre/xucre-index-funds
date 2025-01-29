@@ -41,3 +41,5 @@ export default function Dashboard() {
     <DashboardContainer address={safeWallet} />
   );
 };
+
+export const dynamic = "force-dynamic"

@@ -48,3 +48,5 @@ export default function IndexManagerLayout({
     </Suspense>
   );
 };
+
+export const dynamic = "force-dynamic"

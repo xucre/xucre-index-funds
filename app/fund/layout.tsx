@@ -23,3 +23,5 @@ export default function FundLayout({
     </Suspense>
   );
 };
+
+export const dynamic = "force-dynamic"

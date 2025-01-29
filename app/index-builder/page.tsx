@@ -39,3 +39,4 @@ export default function IndexBuilder() {
   )
 
 };
+export const dynamic = "force-dynamic"
