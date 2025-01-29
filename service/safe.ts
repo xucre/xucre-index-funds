@@ -1180,7 +1180,9 @@ export async function addProposer(options: AddProposerOptions): Promise<{success
     chain: chainIdToChain[chainid],
     transport: http(),
   });
-  const apiKit = new SafeApiKit({ chainId: BigInt(chainid || globalChainId)})
+  const _chainid = BigInt(chainid || globalChainId);
+  console.log('chainid', _chainid);
+  const apiKit = new SafeApiKit({ chainId: _chainid})
   const conf: AddSafeDelegateProps = {
     safeAddress: safeWallet, // Optional
     delegateAddress: proposer,
