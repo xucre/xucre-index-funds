@@ -5,7 +5,9 @@ import { GateFiDisplayModeEnum, GateFiLangEnum, GateFiSDK, GateFiEventTypes } fr
 import { useLanguage } from '@/hooks/useLanguage';
 import { Language } from '@/metadata/translations';
 import { useMixpanel } from '@/hooks/useMixpanel';
-import { BASEURL } from '@/service/constants';
+//import { BASEURL } from '@/service/constants';
+
+const BASEURL = 'https://app.xucre.net'
 export default function Unlimit({ invoiceId, destination, amount }: { invoiceId: string, destination: string, amount: number }) {
   const theme = useTheme();
   const { language } = useLanguage();
@@ -24,7 +26,7 @@ export default function Unlimit({ invoiceId, destination, amount }: { invoiceId:
         currency: 'USDT_BEP20',
         amount: amount.toString()
       },
-      isSandbox: true,
+      isSandbox: false,
       hideBrand: true,
       hideThemeSwitcher: true,
       fiatAmountLock: true,

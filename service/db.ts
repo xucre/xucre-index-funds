@@ -1,7 +1,7 @@
 'use server'
 import { kv } from '@vercel/kv'
 import { TransactionDetails } from './eip155';
-import { IndexFund, Invoice, SFDCUserData, TokenDetails } from './types';
+import { IndexFund, Invoice, OrganizationSettings, SFDCUserData, TokenDetails } from './types';
 import { isDev } from './constants';
 import dayjs from 'dayjs';
 const tenant = isDev ? 'dev' : 'prod';
@@ -131,3 +131,12 @@ export const saveWithdrawalLog = async (userId: string, token: string, signedMes
     message: signedMessage
   });
 }
+
+export const setOrganizationSettings = async (organizationId: string, settings: OrganizationSettings) => {
+  return await kv.hmset(`${tenant}:organization:${organizationId}:settings`, settings);
+}
+
+export const getOrganizationSettings = async (organizationId: string) => {
+  const data = await kv.hgetall(`${tenant}:organization:${organizationId}:settings`) as OrganizationSettings | null;
+  return data;
+} 

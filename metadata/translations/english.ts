@@ -291,6 +291,7 @@ const values : TranslationType = {
     view_indentification: 'Identification',
     view_privacy: 'Privacy Policy',
     view_profile: 'Profile',
+    view_organization_setting: 'Organization Settings',
   },
   SelectLanguage: {
     en: "English",
