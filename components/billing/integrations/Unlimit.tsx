@@ -23,7 +23,7 @@ export default function Unlimit({ invoiceId, destination, amount }: { invoiceId:
       nodeSelector: "#container",
       walletAddress: destination,
       defaultCrypto: {
-        currency: 'USDT_BEP20',
+        currency: 'USDT-MATIC',
         amount: amount.toString()
       },
       isSandbox: false,
