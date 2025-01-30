@@ -35,7 +35,7 @@ export default function Footer() {
         <LanguageSelect type={'menu'} />
         <Box sx={{ flexGrow: 1 }} />
           <Typography variant="body2" color="text.secondary" sx={{ mr: 2 }}>
-          2024 Xucre Technologies, Inc. · 
+          2025 Xucre Technologies, Inc. · 
           <Link href="/privacy" variant="body2" color="text.secondary" sx={{ ml: 1 }}>
             {languageData[language].termsConditions.title}
           </Link>
