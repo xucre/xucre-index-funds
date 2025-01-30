@@ -37,6 +37,8 @@ const values : TranslationType = {
     transaction_in: 'In',
     transaction_out: 'Out',
     no_transactions: 'No transactions found',
+    withdraw_to_wallet: 'Withdraw to Wallet',
+    exit_position: 'Exit Position',
   },
   Edit: {
     image_upload: 'Upload Image',

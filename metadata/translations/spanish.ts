@@ -43,6 +43,8 @@ const values : TranslationType = {
     transaction_in: 'Entrada',
     transaction_out: 'Salida',
     no_transactions: 'No se encontraron transacciones',
+    withdraw_to_wallet: 'Retirar a la billetera',
+    exit_position: 'Salir de la posición',
   },
   Edit: {
     image_upload: 'Subir imagen',

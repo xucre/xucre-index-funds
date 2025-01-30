@@ -2,7 +2,6 @@
 import DashboardContainer from "@/components/dashboard/DashboardContainer";
 import { useClerkUser } from "@/hooks/useClerkUser";
 import { useSFDC } from "@/hooks/useSFDC";
-import { getSafeAddress, setSafeAddress } from "@/service/db";
 import { updateSafeWalletDetails } from "@/service/sfdc";
 import { Box, useTheme } from "@mui/material"
 import { useRouter } from "next/navigation";
@@ -19,23 +18,15 @@ export default function Dashboard() {
   //const signer = useWalletClient({ chainId })
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { user } = useClerkUser();
-  const [safeWallet, setSafeWallet] = useState<string>('');
-  const syncSafeWallet = async () => {
-    if (!user) return;
-    const walletAddress = await getSafeAddress(user.id);
-    if (walletAddress) {
-      setSafeWallet(walletAddress);
-    } else {
-      setSafeWallet('');
-    }
-  }
+  const { user, safeWallet, refreshSafeWallet: syncSafeWallet } = useClerkUser();
 
   useEffect(() => {
     if (user && user.id) {
       syncSafeWallet();
     }
   }, [user])
+
+  if (!safeWallet) return null;
 
   return (
     <DashboardContainer address={safeWallet} />

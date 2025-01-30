@@ -7,7 +7,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { IndexFund, Invoice, InvoiceStatuses, TokenDetails } from '@/service/types';
 import truncateEthAddress from 'truncate-eth-address';
 import { globalChainId, isDev } from '@/service/constants';
-import { CreateInvoiceOptions, createInvoiceTransaction, createInvoiceTransactionV2, executeTokenWithdrawalToWallet, executeUserSpotExecution } from '@/service/safe';
+import { CreateInvoiceOptions, createInvoiceTransaction, createInvoiceTransactionV2, executeTokenWithdrawalToSource, executeTokenWithdrawalToWallet, executeUserSpotExecution } from '@/service/safe';
 import { getAllFunds, getFundDetails, saveWithdrawalLog, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Item } from '@/hooks/useWalletData';
@@ -17,6 +17,8 @@ import AmountInput from '../ui/AmountInput';
 import { useClerkOrganization } from '@/hooks/useClerkOrganization';
 import { useClerkUser } from '@/hooks/useClerkUser';
 import { useSnackbar } from 'notistack';
+import { useIndexFunds } from '@/hooks/useIndexFunds';
+import { getAddress } from 'viem';
 
 interface WithdrawTokenToSourceProps {
     details: Item;
@@ -28,7 +30,15 @@ const WithdrawTokenToSource: React.FC<WithdrawTokenToSourceProps> = ({ details, 
     const {language, languageData} = useLanguage();
     const {organization} = useClerkOrganization();
     const {user, safeWallet} = useClerkUser();
+    const [funds, setFunds] = useState([] as IndexFund[]);
 
+    const fee = funds.reduce((match, fund) => {
+      if (match) return match;
+      const itemMatch = fund.portfolio.find((item) => getAddress(item.address) === getAddress(details.contract_address));
+      if (!itemMatch) return match;
+      const _poolFee = Object.keys(itemMatch.sourceFees).reduce((_fee, key) => getAddress(key) === getAddress(details.contract_address) ? itemMatch.sourceFees[key] : _fee, 3000);
+      return _poolFee;
+    }, null) || 3000;
     const { enqueueSnackbar } = useSnackbar();
     const {address: wcAddress, isConnected} = useAccount();
     const { signMessage } = useSignMessage({
@@ -51,14 +61,16 @@ const WithdrawTokenToSource: React.FC<WithdrawTokenToSourceProps> = ({ details, 
       if (!user || !wcAddress || !safeWallet) return;
       try {
         await saveWithdrawalLog(user.id,details.contract_address,signedMessage);
-        await executeTokenWithdrawalToWallet({
-          tokenAddress: details.contract_address,
-          amount: amount,
-          from: safeWallet,
-          to: wcAddress,
-          decimals: metadata.decimals,
-          chainId: globalChainId,
-        });
+        await executeTokenWithdrawalToSource(
+          user.id,
+          safeWallet,
+          process.env.NEXT_PUBLIC_SAFE_RPC_URL as string,
+          globalChainId,
+          amount,
+          metadata.decimals,
+          fee,
+          details.contract_address,
+        );
         enqueueSnackbar(languageData[language].ui.transaction_successful, {
           variant: 'success',
           autoHideDuration: 1000,
@@ -86,6 +98,20 @@ const WithdrawTokenToSource: React.FC<WithdrawTokenToSourceProps> = ({ details, 
     const onAmountChange = (value: number) => {
       setAmount(value);
     }
+
+    useEffect(() => {
+      const fetchFunds = async () => {
+        const fundIds = await getAllFunds(globalChainId);
+        const fundDetails = await Promise.all(
+            fundIds.map(async (id) => {
+                const details = await getFundDetails(globalChainId, id);
+                return { id, ...details };
+            })
+        );
+        setFunds(fundDetails);
+      };
+      fetchFunds();
+    }, []);
 
     const quote = details.holdings[0].quote_rate === null ? details.holdings[1] : details.holdings[0];
     const currentValue = quote.quote_rate;
