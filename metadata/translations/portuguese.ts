@@ -292,6 +292,7 @@ const values : TranslationType  = {
     view_indentification: 'Identificação',
     view_privacy: 'Privacidade',
     view_profile: 'Perfil',
+    view_organization_setting: 'Configuração da organização',
   },
   SelectLanguage : {
     en: 'InglÃªs',

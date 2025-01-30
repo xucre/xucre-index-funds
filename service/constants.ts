@@ -6,6 +6,6 @@ export const objectFields = {
   'Wallet__c' : ['Id', 'Address__c	', 'Chain__c', 'Organization_User__c']
 }
 
-export const BASEURL = 'https:/localhost:3000';
+export const BASEURL = 'https://localhost:3000';
 export const isDev = process.env.NEXT_PUBLIC_TEST_ENV === 'true';
 export const globalChainId = 137;

@@ -34,7 +34,7 @@ export default function Wrapper({
   const {user} = useClerkUser();
   const pathname = usePathname();
   const hasUser = user !== null;
-  const hideLoginButton = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || pathname === '/privacy' || ( !hasUser && pathname.includes('/fund'))
+  const hideMenu = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || pathname === '/privacy' || ( !hasUser && pathname.includes('/fund')) || pathname === '/onboarding'
   
   return (
     <Box>
@@ -48,7 +48,7 @@ export default function Wrapper({
                       <Stack direction={'column'} justifyContent={'start'}>
                         <Stack spacing={2} direction="row" width={'full'} alignItems={'top'}>
                           <SignedIn>
-                            {!hideLoginButton && 
+                            {!hideMenu && 
                               <Box minWidth={200}>
                                 <AppMenu />
                               </Box>

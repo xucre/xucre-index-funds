@@ -213,3 +213,9 @@ export interface Token {
 export type TokenListResponse = {
   tokens: Token[];
 }
+
+export type OrganizationSettings = {
+  organizationId: string;
+  matchType: 'none' | 'fixed' | 'percentage';
+  employerContribution: number;
+}
