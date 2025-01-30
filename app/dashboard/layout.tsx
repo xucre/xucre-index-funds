@@ -13,11 +13,6 @@ import TransferSafeWallet from "@/components/onboarding/TransferSafeWallet";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import { useClerkUser } from "@/hooks/useClerkUser";
 import { useSFDC } from "@/hooks/useSFDC";
-import { globalChainId, isDev } from "@/service/constants";
-import { getSafeAddress, setSafeAddress } from "@/service/db";
-import { getDashboardBorderColor } from "@/service/helpers";
-import { getSafeOwner, transferSignerOwnership, getSafeProposer } from "@/service/safe";
-import { updateSafeWalletDetails } from "@/service/sfdc";
 import { Box, Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material"
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";

@@ -205,62 +205,62 @@ async function executeSafeCreation(options: CreateSafeOptions) {
 
 }
 
-export async function createAccountV2(options: CreateAccountOptions): Promise<string> {
-  const { owner, threshold, rpcUrl, singleOwner, chainid, id } = options;
-  console.log('createSafe',owner, threshold, rpcUrl);
-  const safeAccountConfig = singleOwner || owner === '' ? {
-    owners: [CORP_SIGNER_SAFE as `0x${string}`],
-    threshold: 1,
-    saltNonce: encodeStringToBigInt(id).toString()
-  } :{
-    owners: [owner, CORP_SIGNER_SAFE as `0x${string}`],
-    threshold: 1,
-    saltNonce: encodeStringToBigInt(id).toString()
-  };
-  const packData = {
-      provider: rpcUrl,
-      signer : process.env.DEVACCOUNTKEY,
-      bundlerUrl: bundlerUrl(chainid || 11155111),
-      options: safeAccountConfig,
-      paymasterOptions: {
-          isSponsored: true,
-          paymasterUrl: paymasterUrl(chainid || 11155111),
-      }
-  } as Safe4337InitOptions;
-  const safe4337Pack = await Safe4337Pack.init(packData);
-  const safeAddress = await safe4337Pack.protocolKit.getAddress();
+// export async function createAccountV2(options: CreateAccountOptions): Promise<string> {
+//   const { owner, threshold, rpcUrl, singleOwner, chainid, id } = options;
+//   console.log('createSafe',owner, threshold, rpcUrl);
+//   const safeAccountConfig = singleOwner || owner === '' ? {
+//     owners: [CORP_SIGNER_SAFE as `0x${string}`],
+//     threshold: 1,
+//     saltNonce: encodeStringToBigInt(id).toString()
+//   } :{
+//     owners: [owner, CORP_SIGNER_SAFE as `0x${string}`],
+//     threshold: 1,
+//     saltNonce: encodeStringToBigInt(id).toString()
+//   };
+//   const packData = {
+//       provider: rpcUrl,
+//       signer : process.env.DEVACCOUNTKEY,
+//       bundlerUrl: bundlerUrl(chainid || 11155111),
+//       options: safeAccountConfig,
+//       paymasterOptions: {
+//           isSponsored: true,
+//           paymasterUrl: paymasterUrl(chainid || 11155111),
+//       }
+//   } as Safe4337InitOptions;
+//   const safe4337Pack = await Safe4337Pack.init(packData);
+//   const safeAddress = await safe4337Pack.protocolKit.getAddress();
   
-  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-  console.log('IsSafeDeployed', isSafeDeployed)
-  if (!isSafeDeployed) {
-    const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-    const pubClient = publicClient(chainid || 11155111);
-    if (!client) return '';
-    const deploymentTransaction = await safe4337Pack.protocolKit.createSafeDeploymentTransaction()
-    const transactionHash = await client.sendTransaction({
-      to: deploymentTransaction.to,
-      value: BigInt(deploymentTransaction.value),
-      data: deploymentTransaction.data as `0x${string}`,
-      account: CORP_ACCOUNT,
-      chain: chainIdToChain[chainid ? chainid : 11155111],
-      kzg: undefined
-    });
-    console.log('transactionHash', transactionHash);
-    const deploymentReceipt = await pubClient.waitForTransactionReceipt( 
-      { hash: transactionHash }
-    )
-    console.log('deploymentReceipt found');
-  }
+//   const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
+//   console.log('IsSafeDeployed', isSafeDeployed)
+//   if (!isSafeDeployed) {
+//     const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
+//     const pubClient = publicClient(chainid || 11155111);
+//     if (!client) return '';
+//     const deploymentTransaction = await safe4337Pack.protocolKit.createSafeDeploymentTransaction()
+//     const transactionHash = await client.sendTransaction({
+//       to: deploymentTransaction.to,
+//       value: BigInt(deploymentTransaction.value),
+//       data: deploymentTransaction.data as `0x${string}`,
+//       account: CORP_ACCOUNT,
+//       chain: chainIdToChain[chainid ? chainid : 11155111],
+//       kzg: undefined
+//     });
+//     console.log('transactionHash', transactionHash);
+//     const deploymentReceipt = await pubClient.waitForTransactionReceipt( 
+//       { hash: transactionHash }
+//     )
+//     console.log('deploymentReceipt found');
+//   }
 
-  const allowance = await getCurrentERC20Allowance(chainid || globalChainId, safeAddress);
-  if (allowance < BigInt(MAX_UINT256)) {
-    await createERC20ApprovalV2(chainid || globalChainId, rpcUrl, safeAddress);
-  } 
+//   const allowance = await getCurrentERC20Allowance(chainid || globalChainId, safeAddress);
+//   if (allowance < BigInt(MAX_UINT256)) {
+//     await createERC20ApprovalV2(chainid || globalChainId, rpcUrl, safeAddress);
+//   } 
   
-  console.log('safeAddress', safeAddress);
+//   console.log('safeAddress', safeAddress);
   
-  return safeAddress;
-}
+//   return safeAddress;
+// }
 
 export interface TransferSignerOwnershipOptions {
   chainid: number;
@@ -704,7 +704,7 @@ export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: s
   }
 }
 
-export async function createUserSpotExecutionReversed(userId: string, safeWalletAddress: string, rpcUrl: string, chainid: number, amount: string, decimals: number, poolFee: number) {
+export async function executeTokenWithdrawalToSource(userId: string, safeWalletAddress: string, rpcUrl: string, chainid: number, amount: number, decimals: number, poolFee: number, tokenAddress: string) {
   const memberDetails = await getUserDetails(userId);
   //console.log(memberDetails);
   if (memberDetails === null) return;
@@ -729,7 +729,6 @@ export async function createUserSpotExecutionReversed(userId: string, safeWallet
   const safeAddress = await safe4337Pack.protocolKit.getAddress();
   
   const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-  const pubClient = publicClient(chainid || 11155111);
   if (!client) {
     console.log('client not found');
     return;
@@ -737,16 +736,10 @@ export async function createUserSpotExecutionReversed(userId: string, safeWallet
   const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
   console.log('IsUserSafeDeployed', isSafeDeployed);
   
-  const memberContribution = parseUnits(amount, decimals);
-  await validateCurrentERC20Allowance(chainid || globalChainId, safeAddress, memberContribution, safe4337Pack);
+  const memberContribution = parseUnits(amount.toString(), decimals);
+  await validateCurrentERC20Allowance(chainid || globalChainId, safeAddress, memberContribution, safe4337Pack, getAddress(tokenAddress));
 
   console.log('building portfolio for user', safeWalletAddress);
-  // const portfolio = selectedFund.portfolio;
-  // const activeItems = portfolio.filter((item) => item.active);
-  // const tokenAllocations = portfolio.map((item) => item.weight);
-  // //const tokenAllocations = distributeWeights(activeItems);
-  // const tokenAddresses = activeItems.map((item) => getAddress(item.address));
-  // const tokenPoolFees = activeItems.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
   const tokenAllocations =[10000];
   const tokenAddresses = [getAddress(USDT_ADDRESS)];
   const tokenPoolFees = [poolFee];
@@ -758,7 +751,7 @@ export async function createUserSpotExecutionReversed(userId: string, safeWallet
       tokenAddresses,
       tokenAllocations,
       tokenPoolFees,
-      getAddress(USDT_ADDRESS),
+      getAddress(tokenAddress),
       memberContribution
     ],
   }
@@ -774,10 +767,16 @@ export async function createUserSpotExecutionReversed(userId: string, safeWallet
 
   console.log('userDisbursementTransactions', userDisbursementTransactions.to);
 
+  const safeNoOnce = await safe4337Pack.protocolKit.getNonce();
+  console.log('noonce for safe', safeNoOnce);
+
   const userDisbursementTransactionData = {
     transactions: [
       userDisbursementTransactions
-    ]
+    ],
+    options: {
+      nonce: safeNoOnce
+    }
   } as CreateTransactionProps;
   console.log('UserDisbursementTransactionData');
   let secondTransaction;
@@ -1012,19 +1011,19 @@ async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, 
   return finalHash;
 }
 
-async function validateCurrentERC20Allowance (chainid: number, safeAddress: string, memberContribution: bigint, safe4337Pack: Safe4337Pack) {
-  const _allowance = await getCurrentERC20Allowance(chainid, safeAddress);
+async function validateCurrentERC20Allowance (chainid: number, safeAddress: string, memberContribution: bigint, safe4337Pack: Safe4337Pack, tokenAddress: string = getAddress(USDT_ADDRESS)) {
+  const _allowance = await getCurrentERC20Allowance(chainid, safeAddress, tokenAddress);
   //console.log(_allowance, memberContribution, _allowance < memberContribution);
   if (_allowance < memberContribution) {
-    await createERC20Approval(chainid, process.env.NEXT_PUBLIC_SAFE_RPC_URL as string, safe4337Pack);
+    await createERC20Approval(chainid, process.env.NEXT_PUBLIC_SAFE_RPC_URL as string, safe4337Pack, tokenAddress);
   }
 }
 
-async function getCurrentERC20Allowance (chainid: number, safeAddress: string) {
+async function getCurrentERC20Allowance (chainid: number, safeAddress: string, tokenAddress: string = getAddress(USDT_ADDRESS)) {
   const pubCli = publicClient(chainid);
   
   const _allowance = await pubCli.readContract({
-    address: getAddress(USDT_ADDRESS),
+    address: tokenAddress,
     abi: ERC20_ABI,
     functionName: 'allowance',
     args: [safeAddress, contractAddressMap[chainid || globalChainId]]
@@ -1033,7 +1032,7 @@ async function getCurrentERC20Allowance (chainid: number, safeAddress: string) {
 
 }
 
-async function createERC20Approval (chainid: number, rpcUrl: string, safe4337Pack: Safe4337Pack) {
+async function createERC20Approval (chainid: number, rpcUrl: string, safe4337Pack: Safe4337Pack, tokenAddress: string = getAddress(USDT_ADDRESS)) {
   const rawApprovalData = encodeFunctionData({
     abi: ERC20_ABI,
     functionName: 'approve',
@@ -1042,7 +1041,7 @@ async function createERC20Approval (chainid: number, rpcUrl: string, safe4337Pac
   const secondTransactionData = {
     transactions: [
       {
-        to: getAddress(USDT_ADDRESS),
+        to: tokenAddress,
         data: rawApprovalData,
         value: '0',
       }
@@ -1065,73 +1064,76 @@ async function createERC20Approval (chainid: number, rpcUrl: string, safe4337Pac
     console.log('checking allowance for success');
     const userOperationResult = await safe4337Pack.getUserOperationReceipt(userOperationHash);
     isOperationSuccess = userOperationResult !== null;
+    if (isOperationSuccess) {
+      console.log('allowance success');
+    }
   } 
 
 }
 
-async function createERC20ApprovalV2 (chainid: number, rpcUrl: string, safeAddress: string) {
-  const safeAccountConfig = {
-    safeAddress: CORP_SIGNER_SAFE as `0x${string}`,
-  };
-  const packData = {
-      provider: rpcUrl,
-      signer : process.env.DEVACCOUNTKEY,
-      bundlerUrl: bundlerUrl(chainid || 11155111),
-      options: safeAccountConfig,
-      paymasterOptions: {
-          isSponsored: true,
-          paymasterUrl: paymasterUrl(chainid || 11155111),
-      }
-  } as Safe4337InitOptions;
-  const safe4337Pack = await Safe4337Pack.init(packData);
+// async function createERC20ApprovalV2 (chainid: number, rpcUrl: string, safeAddress: string) {
+//   const safeAccountConfig = {
+//     safeAddress: CORP_SIGNER_SAFE as `0x${string}`,
+//   };
+//   const packData = {
+//       provider: rpcUrl,
+//       signer : process.env.DEVACCOUNTKEY,
+//       bundlerUrl: bundlerUrl(chainid || 11155111),
+//       options: safeAccountConfig,
+//       paymasterOptions: {
+//           isSponsored: true,
+//           paymasterUrl: paymasterUrl(chainid || 11155111),
+//       }
+//   } as Safe4337InitOptions;
+//   const safe4337Pack = await Safe4337Pack.init(packData);
 
-  const rawApprovalData = encodeFunctionData({
-    abi: ERC20_ABI,
-    functionName: 'approve',
-    args: [contractAddressMap[chainid || globalChainId], MAX_UINT256],
-  });
-  const transaction = {
-    to: getAddress(USDT_ADDRESS),
-    data: rawApprovalData,
-    value: '0',
-  };
+//   const rawApprovalData = encodeFunctionData({
+//     abi: ERC20_ABI,
+//     functionName: 'approve',
+//     args: [contractAddressMap[chainid || globalChainId], MAX_UINT256],
+//   });
+//   const transaction = {
+//     to: getAddress(USDT_ADDRESS),
+//     data: rawApprovalData,
+//     value: '0',
+//   };
 
-  const controllingSafe = await safe4337Pack.protocolKit.connect({
-    provider: rpcUrl,
-    signer: process.env.DEVACCOUNTKEY,
-    safeAddress: CORP_SIGNER_SAFE
-  });
+//   const controllingSafe = await safe4337Pack.protocolKit.connect({
+//     provider: rpcUrl,
+//     signer: process.env.DEVACCOUNTKEY,
+//     safeAddress: CORP_SIGNER_SAFE
+//   });
 
-  const trans = await controllingSafe.createTransaction({transactions: [transaction], onlyCalls: true});
+//   const trans = await controllingSafe.createTransaction({transactions: [transaction], onlyCalls: true});
 
-  const signedTransaction =  await controllingSafe.signTransaction(
-    trans,
-    SigningMethod.SAFE_SIGNATURE,
-    CORP_SIGNER_SAFE // Parent Safe address
-  )
+//   const signedTransaction =  await controllingSafe.signTransaction(
+//     trans,
+//     SigningMethod.SAFE_SIGNATURE,
+//     CORP_SIGNER_SAFE // Parent Safe address
+//   )
 
-  const secondTransactionData = {
-    transactions: [
-      {
-        to: signedTransaction.data.to,
-        data: signedTransaction.data.data,
-        value: signedTransaction.data.value
-      }
-    ]
-  } as CreateTransactionProps;
+//   const secondTransactionData = {
+//     transactions: [
+//       {
+//         to: signedTransaction.data.to,
+//         data: signedTransaction.data.data,
+//         value: signedTransaction.data.value
+//       }
+//     ]
+//   } as CreateTransactionProps;
 
-  const secondTransaction = await safe4337Pack.createTransaction({
-    transactions: secondTransactionData.transactions,
-  });
+//   const secondTransaction = await safe4337Pack.createTransaction({
+//     transactions: secondTransactionData.transactions,
+//   });
 
-  const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
-    safeOperation: secondTransaction
-  })
-  const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
-  const userOperationHash = await safe4337Pack.executeTransaction({
-    executable: signedSafeOperation
-  })
-}
+//   const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
+//     safeOperation: secondTransaction
+//   })
+//   const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
+//   const userOperationHash = await safe4337Pack.executeTransaction({
+//     executable: signedSafeOperation
+//   })
+// }
 
 export async function getSafeOwner (chainid: number, safeAddress: string) {
   const pubCli = publicClient(chainid);

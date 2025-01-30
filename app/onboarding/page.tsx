@@ -22,8 +22,6 @@ import { useClerkUser } from "@/hooks/useClerkUser";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useSFDC } from "@/hooks/useSFDC";
 import { globalChainId, isDev } from "@/service/constants";
-import { getSafeAddress, setSafeAddress } from "@/service/db";
-import { getDashboardBorderColor } from "@/service/helpers";
 import { getSafeOwner, transferSignerOwnership, getSafeProposer } from "@/service/safe";
 import { updateSafeWalletDetails } from "@/service/sfdc";
 import { Box, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
