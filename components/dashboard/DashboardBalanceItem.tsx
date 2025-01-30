@@ -9,7 +9,9 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { formatEther, formatUnits, transactionType } from 'viem';
 import { TokenDetails } from '@/service/types';
+import { useLanguage } from "@/hooks/useLanguage";
 import WithdrawTokenToWallet from '../fund/WithdrawTokenToWallet';
+import WithdrawTokenToSource from '../fund/WithdrawTokenToSource';
 dayjs.extend(relativeTime)
 
 interface DashboardBalanceItemProps {
@@ -22,8 +24,10 @@ interface DashboardBalanceItemProps {
 
 const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, metadata, address, refreshAll }) => {
   const theme = useTheme();
+  const {language, languageData} = useLanguage();
   const borderColor = getDashboardBorderColor(theme);
   const [modalOpen, setModalOpen] = useState(false);
+  const [exitModalOpen, setExitModalOpen] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -44,6 +48,16 @@ const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, me
 
   const handleCloseWidthdrawModal = (event) => {
     setModalOpen(false);
+    if (event === 'refresh') refreshAll(true);
+  }
+
+  const handleOpenExitModal = () => {
+    handleClose();
+    setExitModalOpen(true);
+  }
+
+  const handleCloseExitModal = (event) => {
+    setExitModalOpen(false);
     if (event === 'refresh') refreshAll(true);
   }
   const quote = details.holdings[0].quote_rate === null ? details.holdings[1].close.quote : details.holdings[0].close.quote;
@@ -82,7 +96,10 @@ const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, me
             }}
           >
             <MenuItem onClick={handleOpenWidthdrawModal}>
-              Withdraw
+              {languageData[language].Dashboard.withdraw_to_wallet}
+            </MenuItem>
+            <MenuItem onClick={handleOpenExitModal}>              
+              {languageData[language].Dashboard.exit_position}
             </MenuItem>
           </Menu>
         </Stack>
@@ -118,6 +135,7 @@ const DashboardBalanceItem: React.FC<DashboardBalanceItemProps> = ({ details, me
         }
       />
       {modalOpen && <WithdrawTokenToWallet address={address} details={details} metadata={metadata} open={modalOpen} closeFunction={handleCloseWidthdrawModal} />}
+      {exitModalOpen && <WithdrawTokenToSource details={details} metadata={metadata} open={exitModalOpen} closeFunction={handleCloseExitModal} />}
     </ListItem>
   );
 };

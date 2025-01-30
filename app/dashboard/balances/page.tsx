@@ -1,7 +1,6 @@
 'use client'
 import DashboardBalanceList from "@/components/dashboard/DashboardBalanceList";
 import { useClerkUser } from "@/hooks/useClerkUser";
-import { getSafeAddress, setSafeAddress } from "@/service/db";
 import { Box, useTheme } from "@mui/material"
 import { Suspense, useEffect, useState } from "react";
 //import '@covalenthq/goldrush-kit/styles.css'
@@ -10,17 +9,7 @@ import { Suspense, useEffect, useState } from "react";
 export default function DashboardBalances() {
   const theme = useTheme();
   const isSignedUp = false;
-  const { user } = useClerkUser();
-  const [safeWallet, setSafeWallet] = useState<string>('');
-  const syncSafeWallet = async () => {
-    if (!user) return;
-    const walletAddress = await getSafeAddress(user.id);
-    if (walletAddress) {
-      setSafeWallet(walletAddress);
-    } else {
-      setSafeWallet('');
-    }
-  }
+  const { user,safeWallet, refreshSafeWallet: syncSafeWallet } = useClerkUser();
 
   useEffect(() => {
     if (user && user.id) {
@@ -28,6 +17,7 @@ export default function DashboardBalances() {
     }
   }, [user])
 
+  if (!safeWallet) return null;
   return (
     <DashboardBalanceList address={safeWallet} />
   );

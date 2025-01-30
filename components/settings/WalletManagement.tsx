@@ -6,7 +6,6 @@ import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useSFDC } from '@/hooks/useSFDC';
-import { getSafeAddress } from '@/service/db';
 import truncateEthAddress from 'truncate-eth-address';
 import WalletQRCode from './WalletQRCode';
 import { globalChainId } from '@/service/constants';
