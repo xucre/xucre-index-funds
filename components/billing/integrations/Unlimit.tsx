@@ -26,6 +26,9 @@ export default function Unlimit({ invoiceId, destination, amount }: { invoiceId:
         currency: 'USDT-MATIC',
         amount: amount.toString()
       },
+      defaultFiat: {
+        currency: 'USD',
+      },
       isSandbox: false,
       hideBrand: true,
       hideThemeSwitcher: true,
