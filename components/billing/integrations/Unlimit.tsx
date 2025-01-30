@@ -18,7 +18,7 @@ export default function Unlimit({ invoiceId, destination, amount }: { invoiceId:
     //if (instance) {
 
     _instance = new GateFiSDK({
-      merchantId: process.env.NEXT_PUBLIC_UNLIMIT_KEY_TEST as string,
+      merchantId: process.env.NEXT_PUBLIC_UNLIMIT_KEY as string,
       displayMode: GateFiDisplayModeEnum.Embedded,
       nodeSelector: "#container",
       walletAddress: destination,
