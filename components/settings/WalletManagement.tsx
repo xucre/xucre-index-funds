@@ -18,6 +18,7 @@ const WalletManagement: React.FC = () => {
   const {language} = useLanguage();
   const { address, isConnected } = useAccount();
   const [loading, setLoading] = useState(false);
+  const {sfdcUser} = useSFDC();
   const { user, safeWallet, refreshSafeWallet: syncSafeWallet, loading: clerkUserLoading } = useClerkUser();
   const [needsToSetProposer, setNeedsToSetProposer] = useState(false);
   const [hasCheckedProposer, setHasCheckedProposer] = useState(false);
@@ -29,7 +30,7 @@ const WalletManagement: React.FC = () => {
       chainid: globalChainId,
       safeWallet: safeWallet,
       proposer: address,
-      name: (user && user.fullName) ? user.fullName : `Xucre Proposer - ${address}`,
+      name: (sfdcUser && sfdcUser.firstName && sfdcUser.lastName) ? `${Array.from(sfdcUser.firstName)[0]}${Array.from(sfdcUser.lastName)[0]} - ${address}` : `Xucre Proposer - ${address}`,
     } as AddProposerOptions;
     const {success, message} = await addProposer(safePayload);
     if (success) {

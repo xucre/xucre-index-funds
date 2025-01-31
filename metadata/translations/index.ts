@@ -30,6 +30,7 @@ export interface TranslationType {
   termsConditions: any,
   ui: any,
   Edit: any,
+  OrganizationEdit: any,
   Settings: any,
   Privacy: any
 }

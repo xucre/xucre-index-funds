@@ -5,7 +5,7 @@ import StripePricingTable from "@/components/billing/StripePricingTable";
 import { updateOrganizationLicenses } from "@/service/clerk";
 import { getInvoiceDetails, getOrganizationSafeAddress, setInvoiceDetails } from "@/service/db";
 import { upsertOrganization } from "@/service/sfdc";
-import { Invoice, InvoiceStatuses } from "@/service/types";
+import { Invoice, InvoiceMember, InvoiceStatuses } from "@/service/types";
 import { Box, Stack, useTheme } from "@mui/material"
 import dayjs from "dayjs";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -33,9 +33,9 @@ export default function InvoicePage() {
   const { subscription } = useStripeBilling();
   //const billingOnboarded = false;
 
-  const saveMembers = async (members) => {
+  const saveMembers = async (members: InvoiceMember[]) => {
     if (!invoiceDetails || !organization) return;
-    const total = members.reduce((acc, member) => acc + Number(member.salaryContribution), 0);
+    const total = members.reduce((acc, member) => acc + member.salaryContribution + member.organizationContribution, 0);
     const _invoice = {
       ...invoiceDetails,
       members,
@@ -83,12 +83,12 @@ export default function InvoicePage() {
   }
 
   useEffect(() => {
-    if (invoiceId !== 'new') {
+    if (invoiceId !== 'new' && organization) {
       fetchInvoiceDetails();
     } else {
       //createInvoice();
     }
-  }, [invoiceId])
+  }, [invoiceId, organization])
 
   const showButtons = (invoiceDetails && (invoiceDetails.status === InvoiceStatuses.Draft || invoiceDetails.status === InvoiceStatuses.New)) as boolean;
 

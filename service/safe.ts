@@ -623,9 +623,10 @@ export interface InvoiceTransactionOptions {
 
 function createUserSourceTransfer(member: InvoiceMember) {
   const recipientAddress = getAddress(member.safeWalletAddress);
-  const amount = parseUnits(member.salaryContribution.toString(), 6);
+  const contributionTotal = member.salaryContribution + member.organizationContribution;
+  const amount = parseUnits(contributionTotal.toString(), 6);
 
-  if (member.salaryContribution < .01) return null;
+  if (contributionTotal < .01) return null;
 
   const rawTransferData = encodeFunctionData({
     abi: ERC20_ABI,
@@ -811,10 +812,10 @@ export async function executeTokenWithdrawalToSource(userId: string, safeWalletA
 }
 
 async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
-  const memberDetails = await getUserDetails(member.id);
+  //const memberDetails = await getUserDetails(member.id);
   //console.log(memberDetails);
-  if (memberDetails === null) return;
-  const selectedFund = fundMap[memberDetails.riskTolerance] || DEMO_PORTFOLIO;
+  //if (memberDetails === null) return;
+  const selectedFund = fundMap[member.riskTolerance] || DEMO_PORTFOLIO;
   //console.log('building portfolio for user', member.safeWalletAddress);
   //console.log(memberDetails.riskTolerance, selectedFund);
   const safeAccountConfig = {

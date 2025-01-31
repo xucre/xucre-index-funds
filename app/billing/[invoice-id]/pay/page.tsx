@@ -56,6 +56,7 @@ export default function InvoicePaymentPage() {
   const fetchInvoiceDetails = async () => {
     if (!organization) return;
     const details = (await getInvoiceDetails(organization.id, invoiceId)) as Invoice;
+    console.log(details);
     setInvoiceDetailsState(details);
   }
 
@@ -66,14 +67,15 @@ export default function InvoicePaymentPage() {
   }
 
   const handleCloseProvider = () => {
-    setSelectedProvider({} as ReactElement);
+    setSelectedProvider(null);
   }
 
   useEffect(() => {
-    if (invoiceId) {
+    if (invoiceId && organization) {
+      console.log(invoiceId);
       fetchInvoiceDetails();
     }
-  }, [invoiceId])
+  }, [invoiceId, organization])
 
   return (
     <Box p={4}>

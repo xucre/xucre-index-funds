@@ -5,7 +5,9 @@ import { GateFiDisplayModeEnum, GateFiLangEnum, GateFiSDK, GateFiEventTypes } fr
 import { useLanguage } from '@/hooks/useLanguage';
 import { Language } from '@/metadata/translations';
 import { useMixpanel } from '@/hooks/useMixpanel';
-import { BASEURL } from '@/service/constants';
+//import { BASEURL } from '@/service/constants';
+
+const BASEURL = 'https://app.xucre.net'
 export default function Unlimit({ invoiceId, destination, amount }: { invoiceId: string, destination: string, amount: number }) {
   const theme = useTheme();
   const { language } = useLanguage();
@@ -16,15 +18,18 @@ export default function Unlimit({ invoiceId, destination, amount }: { invoiceId:
     //if (instance) {
 
     _instance = new GateFiSDK({
-      merchantId: process.env.NEXT_PUBLIC_UNLIMIT_KEY_TEST as string,
+      merchantId: process.env.NEXT_PUBLIC_UNLIMIT_KEY as string,
       displayMode: GateFiDisplayModeEnum.Embedded,
       nodeSelector: "#container",
       walletAddress: destination,
       defaultCrypto: {
-        currency: 'USDT_BEP20',
+        currency: 'USDT-MATIC',
         amount: amount.toString()
       },
-      isSandbox: true,
+      defaultFiat: {
+        currency: 'USD',
+      },
+      isSandbox: false,
       hideBrand: true,
       hideThemeSwitcher: true,
       fiatAmountLock: true,

@@ -11,12 +11,16 @@ import CreateUserModal from "@/components/organization/CreateUserModal";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import { setOrganizationSafeAddress } from "@/service/db";
 import { isDev } from "@/service/constants";
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useClerkUser } from "@/hooks/useClerkUser";
 import { useClerkOrganization } from "@/hooks/useClerkOrganization";
+import EditOrganizationSettings from "@/components/settings/EditOrganizationSettings";
+import { useLanguage } from "@/hooks/useLanguage";
 
 // components/LoadingIndicator.tsx
 export default function Organization() {
   const theme = useTheme();
+  const {language, languageData} = useLanguage();
   const { user } = useClerkUser();
   const {userMemberships, setActive} = useOrganizationList();
   const { organization, isLoaded } = useClerkOrganization();
@@ -50,7 +54,12 @@ export default function Organization() {
       {isLoaded && 
         <>
           <Protect permission={'org:sys_memberships:manage'}>
-              <OrganizationProfile appearance={{ baseTheme: isDarkTheme ? dark : undefined, }} path="/organization" />
+              <OrganizationProfile appearance={{ baseTheme: isDarkTheme ? dark : undefined, }} path="/organization" >
+                <OrganizationProfile.Page label={languageData[language].Settings.view_organization_setting} labelIcon={<SettingsIcon fontSize="small" />} url="contribution">
+                  <OpaqueCard sx={{px: 4, py: 2}}><EditOrganizationSettings /></OpaqueCard>
+                </OrganizationProfile.Page>
+
+              </OrganizationProfile>
           </Protect>
         </>
       }

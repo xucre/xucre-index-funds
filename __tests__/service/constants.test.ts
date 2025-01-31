@@ -6,7 +6,7 @@ describe('Constants', () => {
   });
 
   test('BASEURL should be correct', () => {
-    expect(BASEURL).toBe('https:/localhost:3000');
+    expect(BASEURL).toBe('https://localhost:3000');
   });
 
   describe('isDev', () => {

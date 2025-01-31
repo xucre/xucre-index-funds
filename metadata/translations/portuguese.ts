@@ -53,6 +53,17 @@ const values : TranslationType  = {
     withdraw_to_wallet: 'Retirar para carteira',
     exit_position: 'Sair da posição',
   },
+  OrganizationEdit: {
+    organization_settings: 'Configurações da Organização',
+    match_type: 'Tipo de Contribuição',
+    types: {
+      none: 'Nenhum',
+      fixed: 'Fixo',
+      percentage: 'Porcentagem',
+    },
+    employer_contribution: 'Contribuição do Empregador',
+    save: 'Salvar'
+  },
   Edit: {
     image_upload: 'Carregar imagem',
     porfolio_section: 'Seção de portfólio',
@@ -164,6 +175,7 @@ const values : TranslationType  = {
     detail_table_column_first: 'Primeiro',
     detail_table_column_last: 'Ãšltimo',
     detail_table_column_amount: 'Quantidade',
+    detail_table_column_amount_employer: 'Valor de Contrapartida',
     detail_table_column_wallet: 'Carteira',
     status_paid: 'Pago',
     status_new: 'Novo',
@@ -292,6 +304,7 @@ const values : TranslationType  = {
     view_indentification: 'Identificação',
     view_privacy: 'Privacidade',
     view_profile: 'Perfil',
+    view_organization_setting: 'Configuração da organização',
   },
   SelectLanguage : {
     en: 'InglÃªs',

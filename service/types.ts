@@ -102,7 +102,9 @@ export type InvoiceMember = OrganizationMembership & {
   firstName: string;
   lastName: string;
   active: boolean;
+  riskTolerance: ToleranceLevels;
   salaryContribution: number;
+  organizationContribution: number;
   safeWalletAddress: string;
 };
 
@@ -212,4 +214,10 @@ export interface Token {
 
 export type TokenListResponse = {
   tokens: Token[];
+}
+
+export type OrganizationSettings = {
+  organizationId: string;
+  matchType: 'none' | 'fixed' | 'percentage';
+  employerContribution: number;
 }
