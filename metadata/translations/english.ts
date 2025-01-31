@@ -40,6 +40,17 @@ const values : TranslationType = {
     withdraw_to_wallet: 'Withdraw to Wallet',
     exit_position: 'Exit Position',
   },
+  OrganizationEdit: {
+    organization_settings: 'Organization Settings',
+    match_type: 'Match Type',
+    types: {
+      none: 'None',
+      fixed: 'Fixed',
+      percentage: 'Percentage',
+    },
+    employer_contribution: 'Employer Contribution',
+    save: 'Save'
+  },
   Edit: {
     image_upload: 'Upload Image',
     porfolio_section: 'Portfolio Allocation',
@@ -152,6 +163,7 @@ const values : TranslationType = {
     detail_table_column_first: 'First',
     detail_table_column_last: 'Last',
     detail_table_column_amount: 'Amount',
+    detail_table_column_amount_employer: 'Match Amount',
     detail_table_column_wallet: 'Safe Wallet Address',
     status_paid: 'Paid',
     status_new: 'New',

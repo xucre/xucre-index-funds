@@ -102,7 +102,9 @@ export type InvoiceMember = OrganizationMembership & {
   firstName: string;
   lastName: string;
   active: boolean;
+  riskTolerance: ToleranceLevels;
   salaryContribution: number;
+  organizationContribution: number;
   safeWalletAddress: string;
 };
 

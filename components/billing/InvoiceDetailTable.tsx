@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getOrganizationMembers } from '@/service/clerk';
-import { getUserDetails, getSafeAddress } from '@/service/db';
+import { getUserDetails, getSafeAddress, getOrganizationSettings } from '@/service/db';
 import { OrganizationMembership } from '@clerk/backend';
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { Box, Chip, Fade, Stack, Typography } from '@mui/material';
-import { InvoiceMember } from '@/service/types';
+import { InvoiceMember, ToleranceLevels } from '@/service/types';
 import languageData from '@/metadata/translations'
 import { useLanguage } from '@/hooks/useLanguage';
 import SaveIcon from '@mui/icons-material/Save';
@@ -27,7 +27,7 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
   const fetchMembers = async () => {
     if (!organization) return;
     const organizationMembers = (await getOrganizationMembers(organization.id)).data;
-   
+    const organizationSetting = await getOrganizationSettings(organization.id);
     const membersData = await organizationMembers.reduce(async (accumulator: InvoiceMember[], member: OrganizationMembership) => {
       if (!member.publicUserData) {
         return await accumulator;
@@ -36,12 +36,17 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
       if (!userDetails) {
         return await accumulator;
       }
+      const organizationContribution = (organizationSetting && organizationSetting.matchType === 'fixed') ? organizationSetting.employerContribution : 0;
       const salaryContribution = userDetails?.salaryContribution || 0;
       const firstName = userDetails?.firstName || '';
       const lastName = userDetails?.lastName || '';
       const email = userDetails?.userEmail || '';
       const id = userDetails?.userId || '';
+      const riskTolerance = userDetails?.riskTolerance || ToleranceLevels.Moderate;
       const safeWalletAddress = await getSafeAddress(member.publicUserData.userId);
+      if (!safeWalletAddress || safeWalletAddress.length === 0) {
+        return await accumulator;
+      }
       const _accumulator = await accumulator;
       return [..._accumulator, {
         ...member,
@@ -51,6 +56,8 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
         lastName,
         salaryContribution,
         safeWalletAddress,
+        organizationContribution,
+        riskTolerance,
       } as InvoiceMember]
     }, []);
     return membersData;
@@ -127,6 +134,7 @@ const InvoiceDetailTable = ({existingMembers, saveMembers, showButtons} : Invoic
           { field: 'firstName', headerName: languageData[language].Invoice.detail_table_column_first, flex:1, headerClassName: 'primaryBackground--header' },
           { field: 'lastName', headerName: languageData[language].Invoice.detail_table_column_last, flex:1, headerClassName: 'primaryBackground--header' },
           { field: 'salaryContribution', headerName: languageData[language].Invoice.detail_table_column_amount, flex:0.5, editable: true, headerClassName: 'primaryBackground--header' },
+          { field: 'organizationContribution', headerName: languageData[language].Invoice.detail_table_column_amount_employer, flex:0.5, editable: true, headerClassName: 'primaryBackground--header' },
           { field: 'safeWalletAddress', headerName: languageData[language].Invoice.detail_table_column_wallet, flex:2, headerClassName: 'primaryBackground--header' },
         ]}        
         processRowUpdate={(params) => {

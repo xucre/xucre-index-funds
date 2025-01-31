@@ -81,7 +81,7 @@ const EditOrganizationSettings: React.FC<EditOrganizationSettingsProps> = ({
 
   const isSettingsComplete = modifiedSettings && !isNull(modifiedSettings.matchType) && !isNull(modifiedSettings.employerContribution);
 
-  if (loading || !modifiedSettings) return <Skeleton variant="rounded" width="100%" height={200} />;
+  if (!modifiedSettings) return <Skeleton variant="rounded" width="100%" height={200} />;
 
   return (
     <Stack
@@ -98,7 +98,7 @@ const EditOrganizationSettings: React.FC<EditOrganizationSettingsProps> = ({
     >
       <>
         <Typography fontWeight={'bold'} color={textColor}>
-          {languageData[language].Edit?.organization_settings || 'Organization Settings'}
+          {languageData[language].OrganizationEdit?.organization_settings || 'Organization Settings'}
         </Typography>
         <Stack
           direction={direction}
@@ -109,23 +109,23 @@ const EditOrganizationSettings: React.FC<EditOrganizationSettingsProps> = ({
           width="100%"
         >
           <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel id="match-type-label">Match Type</InputLabel>
+            <InputLabel id="match-type-label">{languageData[language].OrganizationEdit.match_type}</InputLabel>
             <Select
               labelId="match-type-label"
-              label="Match Type"
-              value={modifiedSettings.matchType}
+              label={languageData[language].OrganizationEdit.match_type}
+              value={modifiedSettings?.matchType}
               onChange={(e) => handleChange('matchType', e.target.value)}
             >
-              <MenuItem value="none">None</MenuItem>
-              <MenuItem value="fixed">Fixed</MenuItem>
-              <MenuItem value="percentage">Percentage</MenuItem>
+              <MenuItem value="none">{languageData[language].OrganizationEdit.types['none']}</MenuItem>
+              <MenuItem value="fixed">{languageData[language].OrganizationEdit.types['fixed']}</MenuItem>
+              {/* <MenuItem value="percentage">{languageData[language].OrganizationEdit.types['percentage']}</MenuItem> */}
             </Select>
           </FormControl>
 
           <TextField
-            label="Employer Contribution"
+            label={languageData[language].OrganizationEdit.employer_contribution}
             type="number"
-            value={modifiedSettings.employerContribution}
+            value={modifiedSettings?.employerContribution}
             onChange={(e) => handleChange('employerContribution', Number(e.target.value))}
             sx={{ width: 200 }}
           />
@@ -156,7 +156,7 @@ const EditOrganizationSettings: React.FC<EditOrganizationSettingsProps> = ({
         <Chip
           label={
             saveType === 'save'
-              ? languageData[language].Edit?.save || 'Save'
+              ? languageData[language].OrganizationEdit?.save || 'Save'
               : languageData[language].ui?.next || 'Next'
           }
           onClick={handleSaveSettings}

@@ -46,6 +46,17 @@ const values : TranslationType = {
     withdraw_to_wallet: 'Retirar a la billetera',
     exit_position: 'Salir de la posición',
   },
+  OrganizationEdit: {
+    organization_settings: 'Configuraciones de la Organización',
+    match_type: 'Tipo de Contribución',
+    types: {
+      none: 'Ninguno',
+      fixed: 'Fijo',
+      percentage: 'Porcentaje',
+    },
+    employer_contribution: 'Contribución del Empleador',
+    save: 'Guardar',
+  },
   Edit: {
     image_upload: 'Subir imagen',
     porfolio_section: 'Información de la cartera',
@@ -165,6 +176,7 @@ const values : TranslationType = {
     detail_table_column_first: 'Nombre',
     detail_table_column_last: 'Apellido',
     detail_table_column_amount: 'Monto',
+    detail_table_column_amount_employer: 'Monto de Contrapartida',
     detail_table_column_wallet: 'Cartera',
     status_paid: 'Pagado',
     status_new: 'Nuevo',
