@@ -114,13 +114,13 @@ const AppMenu = () => {
     () => [
       {
         items: [
-          {
-            icon: <HomeOutlinedIcon />,
-            name: 'Home',
-            apiName: 'dashboard',
-            path: '/dashboard',
-            ref: React.createRef<HTMLButtonElement>(),
-          },
+          // {
+          //   icon: <HomeOutlinedIcon />,
+          //   name: 'Home',
+          //   apiName: 'dashboard',
+          //   path: '/dashboard',
+          //   ref: React.createRef<HTMLButtonElement>(),
+          // },
           {
             icon: <BusinessOutlinedIcon />,
             name: 'Organization',
