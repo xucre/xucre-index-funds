@@ -68,7 +68,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
                     paymentTransction: transactionHash,
                     updatedAt: new Date().toISOString()
                 }
-                //await setInvoiceDetails(organization.id, _invoice.id, _invoice);
+                await setInvoiceDetails(organization.id, _invoice.id, _invoice);
                 
                 //setTimeout(() => {
                 setSteps(prev => ({ ...prev, disbursing: 'success' }));
