@@ -37,7 +37,7 @@
     "@reown/appkit-ui": "^1.1.2",
     "@safe-global/api-kit": "^2.5.7",
     "@safe-global/protocol-kit": "^5.2.0",
-    "@safe-global/relay-kit": "^3.4.0",
+    "@safe-global/relay-kit": "^3.4.3",
     "@safe-global/sdk-starter-kit": "^1.1.2",
     "@safe-global/types-kit": "^1.0.1",
     "@stripe/crypto": "^0.0.4",
