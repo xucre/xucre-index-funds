@@ -701,6 +701,7 @@ export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: s
     await createUserSpotExecution(member, rpcUrl, chainid, fundMap);
   } catch (err2) {
     console.log('error executing spot for member', member.safeWalletAddress);
+    console.log(err2);
     await createFailureLog(member.organization.id, invoiceId, member.id, 'error executing spot for member');
   }
 }
