@@ -30,6 +30,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
     if (response && response.userEmail) {
       setSfdcUser({
         ...response, 
+        organizationId: response.organizationId ? response.organizationId : user.organizationMemberships.length > 0 ? user.organizationMemberships[0].organization.id : '',
         beneficiaries: response.beneficiaries || [],
       });
     } else {
@@ -39,7 +40,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
         userEmail: user.emailAddresses[0].emailAddress,
         userId: user.id,
         role: 'User',
-        organizationId: user.organizationMemberships[0].organization.id,
+        organizationId: user.organizationMemberships.length > 0 ? user.organizationMemberships[0].organization.id : '',
         status: 'Active',
         wallets: [],
         firstName: user.firstName || '',
