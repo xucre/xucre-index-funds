@@ -57,14 +57,15 @@ export default function OnboardigNavigation({step, setStep} : {step: number, set
       <List sx={{minWidth: '20rem', pt:2}} >
         {
           navigationList.map((item, index) => (
-            <ListItemButton key={index} onClick={() => setStep(index)} >
+            // <ListItemButton key={index} onClick={() => setStep(index)} >
+            <ListItem key={index} >
               <ListItemIcon>
                   {index < step ? <CheckCircleIcon /> : index === step ? <TonalityIcon /> : <CircleOutlinedIcon />}
               </ListItemIcon>
               <ListItemText
                 primary={item.label}
               />
-            </ListItemButton>
+            </ListItem>
           ))
         }
       </List>
