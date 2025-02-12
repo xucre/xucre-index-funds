@@ -65,7 +65,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
       setSfdcUser(newUser);
       
     }
-    setIsLoaded(true);
+    console.log('setIsLoaded');
   }
 
   const updateUser = async (user2: SFDCUserData) => {
@@ -89,6 +89,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
     if (!user) return;
     try {
       console.log('refreshing sfdc data');
+      setIsLoaded(true);
       refresh();
     } catch (err) {
       console.error(err);
