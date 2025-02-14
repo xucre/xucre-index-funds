@@ -117,7 +117,9 @@ export function useConnectedFund({ portfolio, sourceToken, fees }: { portfolio: 
       const _tokenAllocations = distributeWeights(_portfolio);
       //console.log(tokenAllocations);
       const tokenAddresses = _portfolio.map((item) => getAddress(item.address) as `0x${string}`);
-      const tokenAllocations = _tokenAllocations.map((item) => BigInt(item.weight));
+      const tokenAllocations = _tokenAllocations.map((item) => {
+        return BigInt(item);
+      });
       const tokenPoolFees = _portfolio.reduce((acc, item) => {
         if (item.fee) {
           return [...acc, item.fee]
@@ -155,6 +157,7 @@ export function useConnectedFund({ portfolio, sourceToken, fees }: { portfolio: 
       setConfirmationHash(result);
       setIsLoading(false);
     } catch (err) {
+      console.log(err);
       setIsLoading(false);
       if (err instanceof Error) {
         enqueueSnackbar(err.message, { variant: 'error', autoHideDuration: 2000 });

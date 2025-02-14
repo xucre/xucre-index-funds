@@ -6,14 +6,15 @@ import React, { useState } from "react";
 import { useAccount } from "wagmi";
 import Snackbar from '@mui/material/Snackbar';
 import LoadingComponent from "@/components/ui/loadingComponent";
-import ResultsList from "./resultsList";
+import ResultsList2 from "./resultsList2";
 import { SourceList } from "@/service/types";
 import OpaqueCard from "@/components/ui/OpaqueCard";
-import { polygonCoins } from '@/data';
+import { polygonCoins, validatedPoolsPolygon } from '@/data';
+import AccountButton from "../accountButton";
 
 const ETFBuilder: React.FC = () => {
   const [tabValue, setTabValue] = React.useState('loading' as 'loading' | 'results' | 'walletHistory' | 'tokenHistory');
-  const {address} = useAccount();
+  const {address, isConnected} = useAccount();
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [summary, setSummary] = useState("");
   const [error, setError] = useState("");
@@ -45,30 +46,36 @@ const ETFBuilder: React.FC = () => {
   }
 
   return (
-    <Box width={'55vw'}>
-        {status !== 'draft' && 
-          <OpaqueCard sx={{mt:2}} >
-              {/* {generatedData.length === 0 && 
-                <Box>
-                <Typography variant={'h6'} textAlign={'center'} sx={{pb:2}}>{loadingText}</Typography>
-                <LoadingComponent />
-                </Box>
-              } */}
-              { 
-                <Box>
-                  <ResultsList refresh={handleRefresh} source={{tokens:polygonCoins} as SourceList}/>
-                </Box>            
-              }
-          </OpaqueCard>
-        }
+    <Box maxWidth={'80vw'}>
+      {!isConnected &&
+        <Stack direction={'column'} spacing={2} alignItems={'center'} justifyContent={'center'} p={4}>
+          <AccountButton />
+        </Stack>
+      }
+      { isConnected && 
+        <OpaqueCard sx={{mt:2}} >
+            {/* {generatedData.length === 0 && 
+              <Box>
+              <Typography variant={'h6'} textAlign={'center'} sx={{pb:2}}>{loadingText}</Typography>
+              <LoadingComponent />
+              </Box>
+            } */}
+            { 
+              <Box>
+                <ResultsList2 refresh={handleRefresh} source={validatedPoolsPolygon} />
+                {/* <ResultsList refresh={handleRefresh} source={{tokens:polygonCoins} as SourceList}/> */}
+              </Box>            
+            }
+        </OpaqueCard>
+      }
 
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-          message="Error"
-          action={error}
-        />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message="Error"
+        action={error}
+      />
     </Box>
     
   );

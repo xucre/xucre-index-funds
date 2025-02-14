@@ -246,3 +246,11 @@ export type Pool = {
   poolData: PoolData;
   chainId: number;
 };
+
+
+export interface ValidatedPool {
+  sourceToken: Token;
+  targetToken: Token;
+  poolData: PoolData; // Replace 'any' with a more specific type if available
+  chainId: 137;
+}

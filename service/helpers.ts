@@ -21,6 +21,7 @@ export function distributeWeights(items: any[]): any[] {
   // Confirm that all weights are integers
   result.forEach(item => {
     if (!Number.isInteger(item.weight)) {
+      
       throw new Error(`Weight is not an integer: ${item.weight}`);
     }
   });

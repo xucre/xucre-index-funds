@@ -11,6 +11,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "script:tokenList:polygon": "tsx --env-file=.env scripts/generateValidatedTokenList",
+    "script:tokenList:csv": "tsx --env-file=.env scripts/convertToCsv",
     "script:invoices": "tsx --env-file=.env script/createMonthlyInvoices"
   },
   "dependencies": {
