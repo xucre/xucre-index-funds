@@ -34,7 +34,20 @@ export const ThemeSwitcherProvider = ({ children }: { children: any }) => {
                 backgroundColor: mode === 'dark' ? '#010101' : '#ffffff', // '#1b6756'
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
-                backgroundImage: mode === 'dark' ? 'radial-gradient(at left top, #010101, #084D3E)' : 'radial-gradient(at left top, #C2EB96, #084D3E, #C2EB96)',
+                backgroundImage: mode === 'dark' ? 'radial-gradient(at left top, #010101, #084D3E)' : 'transparent', // radial-gradient(at left top, #C2EB96, #084D3E, #C2EB96)
+                '&:before': mode === 'light' ? { 
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundSize: '20px 20px',
+                  pointerEvents: 'none',
+                  zIndex: -1,
+                  backgroundRepeat: 'repeat',
+                  backgroundImage: 'radial-gradient(rgba(37, 165, 137, 0.5) 1px, transparent 1px)' 
+                } : {}
               },
             },
           },

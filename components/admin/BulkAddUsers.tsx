@@ -85,7 +85,7 @@ const BulkAddUsers: React.FC<BulkAddUsersProps> = ({ organizationId }) => {
           }}
         >
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Typography variant="h6">Add Users</Typography>
+            <Typography variant="h6">Bulk Add Users</Typography>
             <IconButton onClick={handleClose}>
               <CloseIcon />
             </IconButton>

@@ -74,6 +74,7 @@ export default function Billing() {
     if (hasEscrowAddress && organization) {
       //handleCheckSafeOwnership();
     }
+    console.log(walletLoading)
   }, [walletLoading])
 
   const hasLoaded = organization !== null && !walletLoading;

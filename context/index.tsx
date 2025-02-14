@@ -80,7 +80,7 @@ export function ContextProvider({
             publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
             localization={activeLanguage}
             touchSession={true}
-            polling={true}
+            //polling={false}
           >
             <SnackbarProvider maxSnack={3} >
             {/* <ClerkLoaded> */}

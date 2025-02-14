@@ -24,7 +24,6 @@ export const SFDCProvider = ({ children }: { children: any }) => {
 
   const refresh = async () => {
     if (!user) return;
-    console.log('refreshing sfdc data');
     //const org = user?.organizationMemberships?.length > 0 ? user?.organizationMemberships[0].id : '';
     const response = await getUserDetails(user.id);
     if (response && response.userEmail) {
@@ -65,7 +64,6 @@ export const SFDCProvider = ({ children }: { children: any }) => {
       setSfdcUser(newUser);
       
     }
-    console.log('setIsLoaded');
   }
 
   const updateUser = async (user2: SFDCUserData) => {
@@ -88,7 +86,6 @@ export const SFDCProvider = ({ children }: { children: any }) => {
   useEffect(() => {
     if (!user) return;
     try {
-      console.log('refreshing sfdc data');
       setIsLoaded(true);
       refresh();
     } catch (err) {

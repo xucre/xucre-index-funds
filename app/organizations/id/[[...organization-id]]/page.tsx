@@ -101,7 +101,7 @@ const OrganizationDetails: React.FC = () => {
   ];
 
   return (
-    <Box>
+    <Box maxWidth={'80vw'} m={4}>
       {organization && (
         <OpaqueCard>
           <Stack direction="row" spacing={2} alignItems="center" justifyContent={'space-between'}>
