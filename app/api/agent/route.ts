@@ -25,12 +25,5 @@ export async function POST(
   
 }
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '5mb',
-    },
-  },
-  // Specifies the maximum allowed duration for this function to execute (in seconds)
-  maxDuration: 300,
-}
+
+export const maxDuration = 300;
