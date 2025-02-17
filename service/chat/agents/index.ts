@@ -8,6 +8,7 @@ import type { ChatCompletionMessageParam } from "openai/resources/chat/completio
 import { z } from "zod";
 import { webSearchTool } from "../tools/search";
 import { modelConfig } from "../config";
+import { AgentConfig, AgentConfigBuilder } from "../types";
 
 const tools = {
   //tokensList: getTokenListTool,
@@ -56,4 +57,22 @@ export const markdownFormatterConfig = (apiKey: string) => {
     description: "You are an agent that assists users by summarizing the responses of other agents in a readable format.",
     tools: {},
   };
+}
+
+export const generalistAgentConfig = (apiKey: string, config: AgentConfig) => {
+    const _tools = config.toolList.reduce((acc, toolName) => {
+        if (tools[toolName]) {
+            acc[toolName] = tools[toolName];
+        }
+        return acc;
+    }, {});
+    return {
+      name: config.name,
+      model: {...modelConfig, temperature: 1, apiKey},
+      instructions: [
+        ...config.instructions
+      ],
+      description: config.description,
+      tools: _tools,
+    };
 }

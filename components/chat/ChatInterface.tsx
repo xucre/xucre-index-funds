@@ -7,9 +7,10 @@ import remarkGfm from 'remark-gfm';
 import styles from "../chat/chat.module.css";
 import { Avatar, Box, Button, CircularProgress, Divider, Drawer, IconButton, Input, Skeleton, Stack, Typography } from '@mui/material';
 import { Thread } from 'openai/resources/beta/threads/threads.mjs';
-import {sendMessage} from '@/service/api'
+import {sendDatabaseMessage, sendMessage} from '@/service/api'
 import Bubbles from './bubbles';
 import Emoji from '../ui/Emoji';
+import { AgentConfig } from '@/service/chat/types';
 
 
 // Simple Markdown component for rendering output blocks
@@ -28,9 +29,9 @@ const TextWithLineBreaks = ({text}: {text: string}) => {
     ));
   
     return <div>{textWithBreaks}</div>;
-  }
+}
 
-const ChatInterface = () => {
+const ChatInterface = ({agent} :{agent?: AgentConfig}) => {
     const [currentThread, setCurrentThread] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -52,7 +53,7 @@ const ChatInterface = () => {
         const trimmedHistory = newMessages.slice(Math.max(newMessages.length - 5, 0));
 
         try {
-            const response = await sendMessage(JSON.stringify(trimmedHistory));
+            const response = await sendDatabaseMessage(JSON.stringify(trimmedHistory), JSON.stringify(agent));
             const respText = typeof response === 'string' ? response : JSON.stringify(response);
             const newAssistantMessage: ChatCompletionMessageParam = { role: 'assistant', content: respText };
             setMessages([...newMessages, newAssistantMessage]);

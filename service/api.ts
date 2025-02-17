@@ -20,3 +20,19 @@ export async function sendMessage (
   return sendMessage.data;
 }
 
+export async function sendDatabaseMessage (
+  text: string,
+  agent: string
+) {
+  const sendMessage = await axios({
+    url: `/api/agent`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    data: JSON.stringify({ text, type: 'database', agent: agent }),
+    timeout      
+  });
+
+  return sendMessage.data;
+}
