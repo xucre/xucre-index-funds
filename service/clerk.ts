@@ -71,3 +71,18 @@ export const bulkInviteUsers = async (organizationId: string, emailAddresses:str
     return null;
   }
 }
+
+export const inviteUser = async (organizationId: string, email: string, role: string) => {
+  try {
+    const response = await superagent.post(`https://api.clerk.com/v1/organizations/${organizationId}/invitations`).send({
+      "email_address": email,
+      "role": role,
+      "public_metadata": { },
+      "private_metadata": { }
+    }).set('Authorization', `Bearer ${process.env.CLERK_SECRET_KEY}`).withCredentials();
+    return response.body;
+  } catch (error) {
+    //console.error('Error inviting user:', error);
+    return null;
+  }
+}

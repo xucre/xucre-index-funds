@@ -20,6 +20,7 @@ import EditOrganization from "@/components/admin/EditOrganization";
 import { Organization } from "@clerk/backend";
 import { getUserDetails } from "@/service/db";
 import BulkAddUsers from "@/components/admin/BulkAddUsers";
+import AddUser from "@/components/admin/AddUser";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 const OrganizationDetails: React.FC = () => {
@@ -100,7 +101,7 @@ const OrganizationDetails: React.FC = () => {
   ];
 
   return (
-    <Box>
+    <Box maxWidth={'80vw'} m={4}>
       {organization && (
         <OpaqueCard>
           <Stack direction="row" spacing={2} alignItems="center" justifyContent={'space-between'}>
@@ -129,6 +130,7 @@ const OrganizationDetails: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               Organization Members
             </Typography>
+            <AddUser organizationId={organizationId} />
             <BulkAddUsers organizationId={organizationId} />
           </Stack>
           <Box sx={{ height: 600, width: '100%' }}>

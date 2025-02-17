@@ -1,7 +1,7 @@
 //import { getAppMetadata } from "@walletconnect/utils";
 
-if (!process.env.NEXT_PUBLIC_PROJECT_ID)
-  throw new Error("`NEXT_PUBLIC_PROJECT_ID` env variable is missing.");
+// if (!process.env.NEXT_PUBLIC_PROJECT_ID)
+//   throw new Error("`NEXT_PUBLIC_PROJECT_ID` env variable is missing.");
 
 export const DEFAULT_MAIN_CHAINS = [
   // mainnets

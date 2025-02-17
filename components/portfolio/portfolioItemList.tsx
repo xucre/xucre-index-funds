@@ -21,6 +21,7 @@ export default function PortfolioItemList({ portfolioItems, priceMap }: { portfo
   const openItem = (item: PortfolioItem) => () => {
     window.open(`https://polygonscan.com/address/${item.address}`, '_blank');
   }
+  console.log(priceMap);
   return (
     <List sx={{
       maxWidth: 360,
@@ -58,7 +59,7 @@ export default function PortfolioItemList({ portfolioItems, priceMap }: { portfo
                       variant="body1"
                       sx={{ color: 'text.primary', display: 'inline', pl: 1 }}
                     >
-                      ({price && price.items[0].price ? `$${rounder(price.items[0].price)}` : 'N/A'})
+                      ({price ?  price.items[0] && price.items[0].price ? `$${rounder(price.items[0].price)}` : price.items[1] && price.items[1].price ? `${rounder(price.items[1].price)}` : 'N/A' : 'N/A'})
                     </Typography>
                   </React.Fragment>
                 }

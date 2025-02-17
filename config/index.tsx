@@ -5,11 +5,9 @@ import { mainnet, celo, base,bsc, type AppKitNetwork } from '@reown/appkit/netwo
 import { defineChain, http } from 'viem';
 
 // Get projectId at https://cloud.walletconnect.com
-export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
+export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string;
 
-if (!projectId) throw new Error('Project ID is not defined')
-
-
+//if (!projectId) throw new Error('Project ID is not defined')
 
 const customChain = defineChain({
   id: 19819,
@@ -106,6 +104,12 @@ export const wagmiAdapter = new WagmiAdapter({
   networks,
   transports: {
     [base.id]: http(), 
+    [mainnet.id]: http(),
+    [polygon2.id]: http(),
+    [celo.id]: http(),
+    [bsc.id]: http(),
+    [ethereumDev.id]: http(),
+    [hardhat.id]: http(),
   },
 })
 

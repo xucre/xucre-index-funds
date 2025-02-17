@@ -234,6 +234,8 @@ function Header() {
                             organizationProfileMode='navigation'
                             organizationProfileUrl='/organization'
                             hidePersonal={false}
+                            afterSelectOrganizationUrl={'/billing'}
+                            afterSelectPersonalUrl={'/dashboard'}
                           />
                         }
                         {user &&
@@ -281,6 +283,8 @@ function Header() {
                               organizationProfileMode='navigation'
                               organizationProfileUrl='/organization'
                               hidePersonal={false}
+                              afterSelectOrganizationUrl={'/billing'}
+                              afterSelectPersonalUrl={'/dashboard'}
                             />
                           }
                           <NotificationIconButton

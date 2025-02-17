@@ -12,6 +12,7 @@ import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import TransferSafeWallet from "@/components/onboarding/TransferSafeWallet";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import { useClerkUser } from "@/hooks/useClerkUser";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useSFDC } from "@/hooks/useSFDC";
 import { Box, Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material"
 import { useRouter } from "next/navigation";
@@ -28,17 +29,22 @@ export default function DashboardLayout({
   const theme = useTheme();
   const isSignedUp = false;
   const { sfdcUser, isLoaded, hasOnboarded, refresh } = useSFDC();
-  const { address, chainId, isConnected } = useAccount();
+  const { isAdmin } = useIsAdmin();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   //const signer = useWalletClient({ chainId })
   const router = useRouter();
-  const { user, safeWallet, refreshSafeWallet: syncSafeWallet } = useClerkUser();
 
   const disclosureSigned = sfdcUser && sfdcUser.riskDisclosureSigned;
   const profileFilled = isLoaded && sfdcUser && sfdcUser.status === 'Active' && hasOnboarded;
   const openOnboarding = () => {
     router.push('/onboarding');
   }
+
+  useEffect(() => {
+    if (isAdmin) {
+      router.push('/billing');
+    }
+  }, [isAdmin])
 
   if (!isLoaded) return (
     <Box width={'full'} px={5} py={4}>

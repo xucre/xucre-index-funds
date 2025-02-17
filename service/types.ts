@@ -210,6 +210,9 @@ export interface Token {
   name: string;
   symbol: string;
   logo?: string;
+  description?: string;
+  fee?: number;
+  id?: string;
 }
 
 export type TokenListResponse = {
@@ -220,4 +223,34 @@ export type OrganizationSettings = {
   organizationId: string;
   matchType: 'none' | 'fixed' | 'percentage';
   employerContribution: number;
+}
+
+export type SourceList = {
+  walletAddress: string;
+  tolerance: string;
+  tokens: Token[];
+}
+
+export interface Token2 {
+  address: string;
+  chainId: number;
+  decimals: number;
+  name: string;
+  symbol: string;
+  logo?: string;
+}
+
+export type Pool = {
+  sourceToken: Token;
+  targetToken: Token;
+  poolData: PoolData;
+  chainId: number;
+};
+
+
+export interface ValidatedPool {
+  sourceToken: Token;
+  targetToken: Token;
+  poolData: PoolData; // Replace 'any' with a more specific type if available
+  chainId: 137;
 }

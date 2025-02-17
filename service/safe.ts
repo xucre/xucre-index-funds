@@ -39,34 +39,9 @@ import { IndexFund, Invoice, InvoiceMember } from './types';
 import { createFailureLog, getUserDetails } from './db';
 import SafeApiKit, { AddSafeDelegateProps } from '@safe-global/api-kit';
 
-const buildbear = defineChain({
-  id: 19819,
-  name: 'Test Sandbox',
-  nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-  rpcUrls: {
-    default: {
-      http: ['https://rpc.buildbear.io/vicious-goose-bfec7fbe'],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: 'PolygonScan',
-      url: 'https://explorer.buildbear.io/vicious-goose-bfec7fbe/',
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: '0xca11bde05977b3631167028862be2a173976ca11',
-      blockCreated: 25770160,
-    },
-  },
-  testnet: true,
-})
-
 const chainIdToChain = {
   11155111 : sepolia,
-  137: polygon,
-  19819: buildbear,
+  137: polygon
 };
 
 const contractAddressMap = {
@@ -701,6 +676,7 @@ export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: s
     await createUserSpotExecution(member, rpcUrl, chainid, fundMap);
   } catch (err2) {
     console.log('error executing spot for member', member.safeWalletAddress);
+    console.log(err2);
     await createFailureLog(member.organization.id, invoiceId, member.id, 'error executing spot for member');
   }
 }
@@ -815,9 +791,9 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   //const memberDetails = await getUserDetails(member.id);
   //console.log(memberDetails);
   //if (memberDetails === null) return;
-  const selectedFund = fundMap[member.riskTolerance] || DEMO_PORTFOLIO;
+  const selectedFund = fundMap[member.riskTolerance] || fundMap['Moderate'];
   //console.log('building portfolio for user', member.safeWalletAddress);
-  //console.log(memberDetails.riskTolerance, selectedFund);
+  console.log(member.riskTolerance, selectedFund);
   const safeAccountConfig = {
     safeAddress: member.safeWalletAddress,
   };
@@ -851,10 +827,11 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
     console.log('member salary contribution too low', member.safeWalletAddress);
     return;
   }
+  const nonce = await safe4337Pack.protocolKit.getNonce();
   console.log('building portfolio for user', member.safeWalletAddress);
   const portfolio = selectedFund.portfolio;
   const activeItems = portfolio.filter((item) => item.active);
-  const tokenAllocations = portfolio.map((item) => item.weight);
+  const tokenAllocations = activeItems.map((item) => item.weight);
   //const tokenAllocations = distributeWeights(activeItems);
   const tokenAddresses = activeItems.map((item) => getAddress(item.address));
   const tokenPoolFees = activeItems.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
@@ -871,7 +848,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
       memberContribution
     ],
   }
-  
+  console.log(unencodedData)
   //console.log('unencodedData', unencodedData);
   const rawDisbursmentData = encodeFunctionData(unencodedData);
   //console.log('rawDisbursmentData', rawDisbursmentData);
@@ -886,7 +863,10 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   const userDisbursementTransactionData = {
     transactions: [
       userDisbursementTransactions
-    ]
+    ],
+    options: {
+      nonce: nonce
+    }
   } as CreateTransactionProps;
   console.log('UserDisbursementTransactionData');
   let secondTransaction;

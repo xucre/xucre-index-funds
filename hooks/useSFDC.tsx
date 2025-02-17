@@ -24,12 +24,12 @@ export const SFDCProvider = ({ children }: { children: any }) => {
 
   const refresh = async () => {
     if (!user) return;
-    console.log('refreshing sfdc data');
     //const org = user?.organizationMemberships?.length > 0 ? user?.organizationMemberships[0].id : '';
     const response = await getUserDetails(user.id);
     if (response && response.userEmail) {
       setSfdcUser({
         ...response, 
+        organizationId: response.organizationId ? response.organizationId : user.organizationMemberships.length > 0 ? user.organizationMemberships[0].organization.id : '',
         beneficiaries: response.beneficiaries || [],
       });
     } else {
@@ -39,7 +39,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
         userEmail: user.emailAddresses[0].emailAddress,
         userId: user.id,
         role: 'User',
-        organizationId: user.organizationMemberships[0].organization.id,
+        organizationId: user.organizationMemberships.length > 0 ? user.organizationMemberships[0].organization.id : '',
         status: 'Active',
         wallets: [],
         firstName: user.firstName || '',
@@ -64,7 +64,6 @@ export const SFDCProvider = ({ children }: { children: any }) => {
       setSfdcUser(newUser);
       
     }
-    setIsLoaded(true);
   }
 
   const updateUser = async (user2: SFDCUserData) => {
@@ -87,7 +86,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
   useEffect(() => {
     if (!user) return;
     try {
-      console.log('refreshing sfdc data');
+      setIsLoaded(true);
       refresh();
     } catch (err) {
       console.error(err);

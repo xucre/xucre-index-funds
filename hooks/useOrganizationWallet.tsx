@@ -26,7 +26,7 @@ export function useOrganizationWallet() {
         if (organization) {
             refresh();
         }
-    }, [])
+    }, [organization])
 
     const hasEscrowAddress = !!escrowAddress;
     const hasSelfAddress = !!selfAddress;

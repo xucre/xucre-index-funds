@@ -114,13 +114,13 @@ const AppMenu = () => {
     () => [
       {
         items: [
-          {
-            icon: <HomeOutlinedIcon />,
-            name: 'Home',
-            apiName: 'dashboard',
-            path: '/dashboard',
-            ref: React.createRef<HTMLButtonElement>(),
-          },
+          // {
+          //   icon: <HomeOutlinedIcon />,
+          //   name: 'Home',
+          //   apiName: 'dashboard',
+          //   path: '/dashboard',
+          //   ref: React.createRef<HTMLButtonElement>(),
+          // },
           {
             icon: <BusinessOutlinedIcon />,
             name: 'Organization',
@@ -289,15 +289,10 @@ const AppMenu = () => {
       setIsOpen(true);
       const _isOnboardingComplete = !isNull(sfdcUser.lastName) && !isNull(sfdcUser.firstName) && !isNull(sfdcUser.street) && !isNull(sfdcUser.riskTolerance) && !isNull(sfdcUser.salaryContribution)
       setIsOnboardingComplete(_isOnboardingComplete);
-    } else {
-      setIsOpen(false);
-    }    
+    } 
   }, [sfdcUser, isLoaded]);
 
-  useEffect(() => {
-    //setIsOpen(true);
-  }, []);
-  if (!isLoaded) return null;
+
   return (
     <>
       { isOpen && 

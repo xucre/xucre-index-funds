@@ -35,7 +35,7 @@ export default function InvoicePage() {
 
   const saveMembers = async (members: InvoiceMember[]) => {
     if (!invoiceDetails || !organization) return;
-    const total = members.reduce((acc, member) => acc + member.salaryContribution + member.organizationContribution, 0);
+    const total = members.reduce((acc, member) => acc + Number(member.salaryContribution) + Number(member.organizationContribution), 0);
     const _invoice = {
       ...invoiceDetails,
       members,

@@ -5,7 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { IndexFund, Invoice, InvoiceStatuses } from '@/service/types';
 import { globalChainId, isDev } from '@/service/constants';
-import { CreateInvoiceOptions, createInvoiceTransaction, createInvoiceTransactionV2, executeUserSpotExecution } from '@/service/safe';
+import { CreateInvoiceOptions, createInvoiceTransaction, executeUserSpotExecution } from '@/service/safe';
 import { getAllFunds, getFundDetails, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useClerkOrganization } from '@/hooks/useClerkOrganization';
@@ -97,6 +97,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
                 acc[fund.toleranceLevels[0]] = fund;
                 return acc;
             }, {} as {[key: string]: IndexFund});
+            console.log('fundMap', fundMap);
             
             // Execute user transactions and update currentCount
             await Promise.all(invoice.members.map(async (member) => {

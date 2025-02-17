@@ -45,7 +45,7 @@ export default function BillingHeader({ portalSession, openPortal, hasSignedUp, 
       {<Typography color={theme.palette.mode === 'dark' ? 'white' : 'gray'} variant={'h5'}>{(languageData[language].Menu.billing as string)}</Typography>}
       <Chip color={'primary'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={createNewDisbursement} label={'New Disbursement'} />
       {false && <Chip color={'error'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={clearSafewallet} label={'Clear Escrow Wallet'} /> }
-      {!isManualBilling ? 
+      {!isManualBilling && false ? 
         <>
           {hasSignedUp ?
             <Chip color={'primary'} sx={{fontWeight: 'bold', px: 3, py: 1}} onClick={openStripePortal} label={languageData[language].Billing.manage_subscription} /> : 
