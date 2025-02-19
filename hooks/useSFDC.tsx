@@ -14,7 +14,7 @@ const SFDCContext = React.createContext(defaultContext);
 export const useSFDC = () => React.useContext(SFDCContext);
 
 export const SFDCProvider = ({ children }: { children: any }) => {
-  const { user } = useClerkUser();
+  const { user, organization } = useClerkUser();
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { language } = useLanguage();
@@ -70,7 +70,7 @@ export const SFDCProvider = ({ children }: { children: any }) => {
     try {
       //console.log('updating user');
       setIsLoaded(false);
-      await upsertUserDetails(user2);
+      await upsertUserDetails({...user2, organizationName: organization?.name || ''});
       await setUserDetails(user2.userId, user2);
       enqueueSnackbar(`${languageData[language].ui.profile_saved}`, { variant: 'success', autoHideDuration: 2000 });
       setSfdcUser((prev) => ({ ...prev, ...user2 }));

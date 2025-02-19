@@ -21,17 +21,28 @@ export function useIsAdmin() {
           setIsAdmin(false);
         }
 
-        const hasSuperAdmin = user.organizationMemberships.find((mem) => mem.organization.id === organization?.id)?.permissions.find((permission) => permission === 'org:superadmin:true'); 
-        if (hasSuperAdmin) {
-          setIsSuperAdmin(true);
-        } else {
-          setIsSuperAdmin(false);
-        }
+        // const hasSuperAdmin = user.organizationMemberships.find((mem) => mem.organization.id === organization?.id)?.permissions.find((permission) => permission === 'org:superadmin:true'); 
+        // if (hasSuperAdmin) {
+        //   setIsSuperAdmin(true);
+        // } else {
+        //   setIsSuperAdmin(false);
+        // }
       }
     }
-
+    
+    const runAsync2 = async () => {
+      try {
+        const _isSuperAdmin = await fetch('/api/is-super-admin');
+        if (_isSuperAdmin.status === 200) {
+          setIsSuperAdmin(true);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
     if (user) {
       runAsync();
+      runAsync2();
     }
   }, [user, organization])
 

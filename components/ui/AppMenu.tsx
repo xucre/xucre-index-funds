@@ -19,6 +19,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import CasesOutlinedIcon from '@mui/icons-material/CasesOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
 import anime from 'animejs';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -194,6 +195,13 @@ const AppMenu = () => {
             name: 'Index Manager',
             apiName: 'index_manager',
             path: '/index-manager',
+            ref: React.createRef<HTMLButtonElement>(),
+          },
+          {
+            icon: <FeaturedPlayListIcon />,
+            name: 'Features',
+            apiName: 'features',
+            path: '/features',
             ref: React.createRef<HTMLButtonElement>(),
           }
         ],

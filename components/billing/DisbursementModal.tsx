@@ -14,10 +14,10 @@ interface DisbursementModalProps {
     invoice: Invoice;
     open: boolean;
     closeFunction: any;
+    organizationId: string;
 }
-const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, closeFunction }) => {
+const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, organizationId, open, closeFunction }) => {
     const {language, languageData} = useLanguage();
-    const {organization} = useClerkOrganization();
     // ...existing code...
     const [steps, setSteps] = useState({
         disbursing: 'pending',
@@ -45,7 +45,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
     }
 
     const handleDisburseFunds = async () => {
-        if (!organization) {
+        if (!organizationId) {
             setSteps(prev => ({ ...prev, disbursing: 'error' }));
             setIsCloseEnabled(true);
             return;
@@ -56,7 +56,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
                 rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
                 owner: '',
                 chainid: isDev ? 1155111: globalChainId,
-                id: organization.id,
+                id: organizationId,
                 invoice,
                 safeAddress: invoice.escrowWallet
             } as CreateInvoiceOptions;
@@ -68,7 +68,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, open, cl
                     paymentTransction: transactionHash,
                     updatedAt: new Date().toISOString()
                 }
-                await setInvoiceDetails(organization.id, _invoice.id, _invoice);
+                await setInvoiceDetails(organizationId, _invoice.id, _invoice);
                 
                 //setTimeout(() => {
                 setSteps(prev => ({ ...prev, disbursing: 'success' }));
