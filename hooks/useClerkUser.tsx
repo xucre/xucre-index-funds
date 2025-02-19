@@ -1,9 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useState, useEffect, useMemo, use } from 'react';
+import { useOrganization, useUser } from '@clerk/nextjs';
 import { getSafeAddress } from '@/service/db';
 
 export function useClerkUser() {
   const {user: clerkUser, isSignedIn} = useUser();
+  const {organization} = useOrganization();
   const [user, setUser] = useState(clerkUser);
   const [safeWallet, setSafeWallet] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -39,12 +40,13 @@ export function useClerkUser() {
 
   const memoizedValue = useMemo(() => ({
     user,
+    organization,
     isSignedIn,
     safeWallet,
     loading,
     refresh: () => syncUser(),
     refreshSafeWallet: () => syncSafeWallet(),
-  }), [user, isSignedIn, safeWallet, loading]);
+  }), [user, isSignedIn, safeWallet, loading, organization]);
 
   return memoizedValue;
 }

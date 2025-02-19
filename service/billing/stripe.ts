@@ -3,6 +3,7 @@
 
 import Stripe from 'stripe';
 import superagent from 'superagent';
+import { InvoiceMember } from '../types';
 
 const STRIPE_API_URL = 'https://api.stripe.com/v1';
 
@@ -117,29 +118,43 @@ export async function createCheckout (organzationId: string) {
   }
 };
 
-export async function createInvoice (customer: string, amount: number) {
+export async function createInvoice (customer: string, invoiceId: string, members: InvoiceMember[], total: number) {
     try {
         const invoice = await stripe.invoices.create({
             customer,
             collection_method: 'send_invoice',
-            days_until_due: 30
+            days_until_due: 30,
+            metadata: {
+                organization: members[0].organization.id,
+                invoiceId: invoiceId
+            }
         });
-
-        const item = await stripe.invoices.addLines(invoice.id, {
+        await stripe.invoices.addLines(invoice.id, {
             lines: [
-              {
-                description: 'Disbursement For Users',
-                amount: amount * 100,
-                quantity: 1
-              },
+             ...members.filter((member) => ((member.salaryContribution+member.organizationContribution)*100) > 0).map(member => ({
+                description: `${member.firstName} ${member.lastName} - ${member.email}`,
+                amount: (member.salaryContribution+member.organizationContribution)*10
+              })),
               {
                 description: 'Transaction Fees',
-                amount: (amount*100)*0.05,
-                quantity: 1
+                amount: Math.max((total*100) * 0.05, 1)
               }
             ]
         }) ;
-        return invoice;
+        await stripe.invoices.finalizeInvoice(invoice.id);
+        return;
+    } catch (err) {
+        console.log(err);
+        return;
+    }
+}
+
+export async function getInvoice (invoiceId: string) {
+    try {
+        const invoice = await stripe.invoices.search({
+            query: "metadata['invoiceId']:'" + invoiceId + "'"
+        });
+        return invoice.data[0];
     } catch (err) {
         console.log(err);
         return null;

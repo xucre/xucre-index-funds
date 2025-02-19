@@ -77,7 +77,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, rel
                     {canDisburse && loading && <Chip color={'primary'} sx={{fontWeight: 'bold'}} label={languageData[language].Invoice.executing_label} />}
                 </Box>
             </OpaqueCard>
-            <DisbursementModal open={openDisbursement} closeFunction={handleDisburseClose} invoice={invoice} />
+            <DisbursementModal open={openDisbursement} closeFunction={handleDisburseClose} invoice={invoice} organizationId={organization?.id || ''}/>
         </>
     );
 };

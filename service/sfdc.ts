@@ -82,7 +82,11 @@ export async function updateSafeWalletDetails(userId: string, safeAddress: strin
 }
 }
 
-export async function upsertUserDetails(user: SFDCUserData) {
+interface SFDCUserData2 extends SFDCUserData {
+  organizationName: string;
+}
+
+export async function upsertUserDetails(user: SFDCUserData2) {
   try {
       const conn = await createConnection();
       //const requestType = new URL(req.url).searchParams.get('type');
