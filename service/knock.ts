@@ -1,4 +1,5 @@
 'use server'
+import { user } from "@covalenthq/ai-agent-sdk/dist/core/base";
 import { Knock } from "@knocklabs/node";
 
 const knockClient = new Knock(process.env.KNOCK_API_KEY);
@@ -27,5 +28,17 @@ export const syncKnock = async (userId: string, userName: string, userEmail: str
             // data payload to send through
             data: {},
         });
+    }
+}
+
+export const sendInAppNotification = async (userId: string, workflow: string, data: any) => {
+    try {
+        await knockClient.workflows.trigger(workflow, {
+            actor: 'Xucre',
+            recipients: [userId],
+            data: data,
+        });
+    } catch (e) {
+        console.error(e);
     }
 }
