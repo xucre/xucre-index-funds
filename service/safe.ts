@@ -673,11 +673,12 @@ export async function executeTokenWithdrawalToWallet({to, tokenAddress, amount, 
 
 export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: string, chainid: number, invoiceId: string, fundMap: {[key: string]: IndexFund}) {
   try {
-    await createUserSpotExecution(member, rpcUrl, chainid, fundMap);
+    return await createUserSpotExecution(member, rpcUrl, chainid, fundMap);
   } catch (err2) {
     console.log('error executing spot for member', member.safeWalletAddress);
     console.log(err2);
     await createFailureLog(member.organization.id, invoiceId, member.id, 'error executing spot for member');
+    return;
   }
 }
 
@@ -896,8 +897,8 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
     const userOperationResult = await safe4337Pack.getUserOperationReceipt(userOperationHash);
     isOperationSuccess = userOperationResult !== null && userOperationResult.success;
   } 
-  
-  return ''//finalHash;
+  const txResult = await safe4337Pack.getUserOperationByHash(userOperationHash);
+  return txResult.transactionHash//finalHash;
 }
 
 async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
