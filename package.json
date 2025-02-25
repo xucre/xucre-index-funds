@@ -40,6 +40,7 @@
     "@mui/material": "^6.1.8",
     "@mui/x-charts": "^7.16.0",
     "@mui/x-data-grid": "^7.22.1",
+    "@pocketflow/core": "^0.2.1",
     "@reown/appkit": "^1.1.2",
     "@reown/appkit-adapter-wagmi": "^1.1.2",
     "@reown/appkit-ui": "^1.1.2",
