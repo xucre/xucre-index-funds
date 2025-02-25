@@ -1,18 +1,13 @@
 
-import { Agent, createTool, NFTBalancesTool, TokenBalancesTool, TransactionsTool, ZeeWorkflow } from "@covalenthq/ai-agent-sdk";
-import {ZeeWorkflowState} from "@covalenthq/ai-agent-sdk/dist/core/state";
-import { user, assistant } from "@covalenthq/ai-agent-sdk/dist/core/base";
-import type { ParsedFunctionToolCall } from "openai/resources/beta/chat/completions";
-import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
-//import "dotenv/config";
-import { z } from "zod";
 import { webSearchTool } from "../tools/search";
 import { modelConfig } from "../config";
 import { AgentConfig, AgentConfigBuilder } from "../types";
+import { vectorSearchTool } from "../tools/vectorSearch";
 
 const tools = {
   //tokensList: getTokenListTool,
   webSearch: webSearchTool,
+  vectorSearch: vectorSearchTool
   //liquidityValidator: checkUniswapPoolTool
 };
 
@@ -60,15 +55,17 @@ export const markdownFormatterConfig = (apiKey: string) => {
 }
 
 export const generalistAgentConfig = (apiKey: string, config: AgentConfig) => {
+    //console.log(config.toolList)
     const _tools = config.toolList.reduce((acc, toolName) => {
         if (tools[toolName]) {
             acc[toolName] = tools[toolName];
         }
         return acc;
     }, {});
+    //console.log(_tools);
     return {
       name: config.name,
-      model: {...modelConfig, temperature: 1, apiKey},
+      model: {...modelConfig, temperature: config.temperature || 0.7, apiKey},
       instructions: [
         ...config.instructions
       ],

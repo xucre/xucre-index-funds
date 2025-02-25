@@ -53,10 +53,12 @@ const ChatInterface = ({agent} :{agent?: AgentConfig}) => {
         const trimmedHistory = newMessages.slice(Math.max(newMessages.length - 5, 0));
 
         try {
+            console.log('calling sendDataBaseMessage');
             const response = await sendDatabaseMessage(JSON.stringify(trimmedHistory), JSON.stringify(agent));
+            console.log(response);
             const respText = typeof response === 'string' ? response : JSON.stringify(response);
-            const newAssistantMessage: ChatCompletionMessageParam = { role: 'assistant', content: respText };
-            setMessages([...newMessages, newAssistantMessage]);
+            //const newAssistantMessage: ChatCompletionMessageParam = { role: 'assistant', content: respText };
+            setMessages([...newMessages, ...response as ChatCompletionMessageParam[]]);
         } catch (error) {
             console.log(error);
             const errorMessage: ChatCompletionMessageParam = { role: 'assistant', content: 'Error processing message.' };

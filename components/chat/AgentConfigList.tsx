@@ -41,16 +41,18 @@ const AgentConfigList: React.FC = () => {
   };
 
   return (
-    <Box p={4}>
+    <Box p={4} maxWidth={'80vw'}>
         <OpaqueCard sx={{padding: 4}}>
         <Stack direction="row" spacing={2} justifyContent={'space-between'} alignItems={'center'}>
             <Typography variant="h5" pb={3}>Agent Configurations</Typography>
             <Button variant="contained" color="primary" onClick={handleNew}>New Agent Config</Button>
         </Stack>
-        <List>
+        <List >
             {configs.map((config) => (
             <ListItem key={config.name} style={{ margin: '10px 0' }}>
-                <ListItemText primary={config.name} secondary={config.description} />
+                <ListItemText primary={config.name} secondary={config.description} secondaryTypographyProps={{
+                  noWrap: true
+                }} />
                 <Button variant="contained" color="primary" onClick={() => handleEdit(config)}>
                 Edit
                 </Button>

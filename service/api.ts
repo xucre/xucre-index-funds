@@ -8,7 +8,7 @@ export async function sendMessage (
   text: string,
 ) {
   const sendMessage = await axios({
-    url: `/api/agent`,
+    url: `/api/chat`,
     headers: {
       "Content-Type": "application/json",
     },
@@ -24,15 +24,18 @@ export async function sendDatabaseMessage (
   text: string,
   agent: string
 ) {
-  const sendMessage = await axios({
-    url: `/api/agent`,
+  const payload = { text, type: 'database', agent };
+  const sendMessage = await fetch(`/api/chat-agent`,{
     headers: {
-      "Content-Type": "application/json",
+      "content-type": "application/json",
     },
     method: "POST",
-    data: JSON.stringify({ text, type: 'database', agent: agent }),
-    timeout      
+    body: JSON.stringify(payload)      
   });
 
-  return sendMessage.data;
+  if (!sendMessage.ok) {
+    throw new Error('Network response was not ok');
+  }
+  
+  return await sendMessage.json();
 }
