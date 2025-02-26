@@ -30,7 +30,6 @@ export async function queryVector(tbl: VectorDB, query: string) {
     // });
     //const results = await tbl.query(vector.data[0].embedding, 1);
     const results = await tbl.queryText(query, 1);
-    console.log(results[0]);
     if (results && results.length > 0) {
         return results[0].document.metadata.text;
     } else {

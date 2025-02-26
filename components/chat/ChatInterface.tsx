@@ -11,6 +11,7 @@ import {sendDatabaseMessage, sendMessage} from '@/service/api'
 import Bubbles from './bubbles';
 import Emoji from '../ui/Emoji';
 import { AgentConfig } from '@/service/chat/types';
+import {useChat} from '@ai-sdk/react';
 
 
 // Simple Markdown component for rendering output blocks
@@ -39,31 +40,50 @@ const ChatInterface = ({agent} :{agent?: AgentConfig}) => {
     const messageListRef = useRef<HTMLDivElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     // Use an array to store message history
-    const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([{role: 'assistant', content: 'Hello! How can I help you today?'}]);
-    const [input, setInput] = useState('');
-
+    //const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([{role: 'assistant', content: 'Hello! How can I help you today?'}]);
+    //const [input, setInput] = useState('');
+    const { handleSubmit: sendInput, setInput, input, messages } = useChat({
+        api: '/api/chat-agent',
+        experimental_prepareRequestBody: (input) => {
+            const trimmedHistory = input.messages.length <= 5 ? input.messages : input.messages.slice(-5);
+            const parsedHistory = trimmedHistory.map((message) => {
+                return {
+                    role: message.role,
+                    content: message.content
+                } as ChatCompletionMessageParam;
+            });
+            const payload = { text: JSON.stringify(parsedHistory), type: 'database', agent: JSON.stringify(agent) };
+            return JSON.stringify(payload);
+        }
+    });
     const handleSendMessage = async () => {
         if (!input.trim()) return;
-        const newUserMessage: ChatCompletionMessageParam = { role: 'user', content: input };
-        const newMessages = [...messages, newUserMessage];
-        setMessages(newMessages);
         setInput('');
+        sendInput();
+        // const newUserMessage: ChatCompletionMessageParam = { role: 'user', content: input };
+        // const newMessages = [...messages, newUserMessage];
+        // setMessages(newMessages);
+        
 
         // Trim history to last 5 messages
-        const trimmedHistory = newMessages.slice(Math.max(newMessages.length - 5, 0));
+        // const trimmedHistory = newMessages.length <= 5 ? newMessages : newMessages.slice(-5);
 
-        try {
-            console.log('calling sendDataBaseMessage');
-            const response = await sendDatabaseMessage(JSON.stringify(trimmedHistory), JSON.stringify(agent));
-            console.log(response);
-            const respText = typeof response === 'string' ? response : JSON.stringify(response);
-            //const newAssistantMessage: ChatCompletionMessageParam = { role: 'assistant', content: respText };
-            setMessages([...newMessages, ...response as ChatCompletionMessageParam[]]);
-        } catch (error) {
-            console.log(error);
-            const errorMessage: ChatCompletionMessageParam = { role: 'assistant', content: 'Error processing message.' };
-            setMessages([...newMessages, errorMessage]);
-        }
+        // try {
+        //     console.log('calling sendDataBaseMessage');
+        //     const result = await sendDatabaseMessage(JSON.stringify(trimmedHistory), JSON.stringify(agent));
+        //     console.log(result);
+        //     //const respText = typeof response === 'string' ? response : JSON.stringify(response);
+        //     //const newAssistantMessage: ChatCompletionMessageParam = { role: 'assistant', content: respText };
+        //     // setMessages((prevMessages) => [...prevMessages, {
+        //     //     role: 'assistant',
+        //     //     content: result.response
+        //     // } as ChatCompletionMessageParam]);
+        //     //setMessages([...newMessages, ...response as ChatCompletionMessageParam[]]);
+        // } catch (error) {
+        //     console.log(error);
+        //     const errorMessage: ChatCompletionMessageParam = { role: 'assistant', content: 'Error processing message.' };
+        //     setMessages([...newMessages, errorMessage]);
+        // }
     };
 
     const handleSubmit = async (e: FormEvent) => {

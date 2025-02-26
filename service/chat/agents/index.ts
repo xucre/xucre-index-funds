@@ -2,7 +2,7 @@ import { webSearchTool } from "../tools/search";
 import { modelConfig } from "../config";
 import { AgentConfig } from "../types";
 import { vectorSearchTool } from "../tools/vectorSearch";
-import { BaseNode, Flow, DEFAULT_ACTION } from "packages/pocketflow/src/pocket";
+import { BaseNode, Flow } from "@pocketflow/core";
 
 const tools = {
   webSearch: webSearchTool,

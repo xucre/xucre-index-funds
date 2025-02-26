@@ -36,6 +36,9 @@ export async function sendDatabaseMessage (
   if (!sendMessage.ok) {
     throw new Error('Network response was not ok');
   }
-  
-  return await sendMessage.json();
+  const reader = sendMessage.body?.getReader();
+  if (!reader) {
+    throw new Error('Failed to get reader');
+  }
+  return reader;
 }

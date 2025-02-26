@@ -1,5 +1,5 @@
-'use server'
-import { generateDatabaseResponse, generateResponse, generateWorkflowResponse } from "@/service/chat";
+
+import { generateDatabaseResponse, generateResponse, generateWorkflowResponse, handleQuery } from "@/service/chat";
 import { listAgentConfigs } from "@/service/chat/db";
 import { AgentConfig } from "@/service/chat/types";
 import { ChatCompletionMessageParam } from "openai/resources";
@@ -14,20 +14,22 @@ export async function GET() {
 export async function POST(
   req: Request
 ) {
-  const body = await req.json()
+  const body = JSON.parse(await req.json());
   // console.log('api/chat-agent POST', body);
+  console.log(body)
   if (!body.type || !body.text) {
-    return new NextResponse('Invalid route or message type.', {
+    return new NextResponse(`Missing required fields ${body.type} ${body.text}`, {
       status: 401,
     });    
   } else if (body.type === 'database') {
     const chatParams = JSON.parse(body.text) as ChatCompletionMessageParam[];
     const agentConfig = JSON.parse(body.agent) as AgentConfig;
     //console.log(chatParams, agentConfig);
-    const result = await generateWorkflowResponse(chatParams, agentConfig);
-    if (result === "Error") return new NextResponse('Failed to generate response.');
+    //const result = await generateWorkflowResponse(chatParams, agentConfig);
+    const result = await handleQuery(chatParams, agentConfig);
+    //if (result === "Error") return new NextResponse('Failed to generate response.');
     //const formattedResult = await generateResponse(result.messages, 'markdownFormatter');
-    return NextResponse.json(result.messages)
+    return result.response.toDataStreamResponse();
   } else if (body.type === 'tokenResearcher') {
     const result = await generateResponse(JSON.parse(body.text) as ChatCompletionMessageParam[], 'tokenResearcher');
     const formattedResult = await generateResponse([{role: 'assistant', content: result}], 'markdownFormatter');
@@ -37,7 +39,7 @@ export async function POST(
     const formattedResult = await generateResponse([{role: 'assistant', content: result}], 'markdownFormatter');
     return NextResponse.json(formattedResult)
   } else {
-    return new NextResponse('Invalid route or message type.', {
+    return new NextResponse('Invalid message type.', {
       status: 401,
     });
   }
@@ -78,3 +80,4 @@ export async function POST(
 
 
 //export const maxDuration = 300;
+export const maxDuration = 30;
