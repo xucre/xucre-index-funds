@@ -141,8 +141,8 @@ export async function createInvoice (customer: string, invoiceId: string, member
               }
             ]
         }) ;
-        await stripe.invoices.finalizeInvoice(invoice.id);
-        return;
+        
+        return await stripe.invoices.finalizeInvoice(invoice.id);
     } catch (err) {
         console.log(err);
         return;
