@@ -1,5 +1,6 @@
 'use server';
 import lmstudio from "../providers/lmstudio";
+import {openai} from '@ai-sdk/openai'
 import { generateObject, generateText, streamText } from 'ai';
 import { z } from 'zod';
 import { ai_vectorSearchTool } from "../tools/vectorSearch";
@@ -18,7 +19,7 @@ export async function handleCustomerQuery(input: ChatCompletionMessageParam[], a
     const currentMessage = input.pop();
     const query = currentMessage?.content as string;
     console.log('user query:', query);
-    const model = lmstudio('granite-3.1-8b-instruct');
+    const model = openai('gpt-4o-mini') //lmstudio('granite-3.1-8b-instruct');
 
     // First step: Classify the query type
     const { object: classification } = await generateObject({
@@ -42,8 +43,8 @@ export async function handleCustomerQuery(input: ChatCompletionMessageParam[], a
     const textStream = streamText({
             model:
             classification.complexity === 'simple'
-                ? lmstudio('granite-3.1-8b-instruct')
-                : lmstudio('granite-3.1-8b-instruct'),
+                ? model
+                : model,
             system: {
             general: agentMap['Generalist'].description || `You are a knowledgeable representative of Xucre Investments—a next-generation, blockchain-powered retirement planning platform designed for Latin American tech professionals. Emphasize that Xucre empowers users with transparent, secure, and cost-efficient solutions through features like self-custody wallet integration, diversified index funds, advanced investment tools, and seamless employee onboarding, all built on a modern tech stack (TypeScript, Next.js, MongoDB, AWS Lambda) that ensures scalability and reliability. When addressing user inquiries, focus on Xucre’s unique value proposition: providing accessible and innovative retirement solutions that bridge the gap left by traditional financial products. Highlight the benefits of blockchain transparency, robust security measures, personalized subscription tiers, and comprehensive customer support, ensuring that users understand how Xucre enables them to take full control of their financial future in a secure and user-friendly digital environment.`,
             application:

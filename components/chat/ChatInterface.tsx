@@ -44,6 +44,7 @@ const ChatInterface = ({agent} :{agent?: AgentConfig}) => {
     //const [input, setInput] = useState('');
     const { handleSubmit: sendInput, setInput, input, messages } = useChat({
         api: '/api/chat-agent',
+        maxSteps: 8,
         experimental_prepareRequestBody: (input) => {
             const trimmedHistory = input.messages.length <= 5 ? input.messages : input.messages.slice(-5);
             const parsedHistory = trimmedHistory.map((message) => {
@@ -54,7 +55,7 @@ const ChatInterface = ({agent} :{agent?: AgentConfig}) => {
             });
             const payload = { text: JSON.stringify(parsedHistory), type: 'database', agent: JSON.stringify(agent) };
             return JSON.stringify(payload);
-        }
+        },
     });
     const handleSendMessage = async () => {
         if (!input.trim()) return;
