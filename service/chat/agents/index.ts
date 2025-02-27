@@ -1,19 +1,12 @@
-
-import { Agent, createTool, NFTBalancesTool, TokenBalancesTool, TransactionsTool, ZeeWorkflow } from "@covalenthq/ai-agent-sdk";
-import {ZeeWorkflowState} from "@covalenthq/ai-agent-sdk/dist/core/state";
-import { user, assistant } from "@covalenthq/ai-agent-sdk/dist/core/base";
-import type { ParsedFunctionToolCall } from "openai/resources/beta/chat/completions";
-import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
-//import "dotenv/config";
-import { z } from "zod";
 import { webSearchTool } from "../tools/search";
 import { modelConfig } from "../config";
-import { AgentConfig, AgentConfigBuilder } from "../types";
+import { AgentConfig } from "../types";
+import { vectorSearchTool } from "../tools/vectorSearch";
+import { BaseNode, Flow } from "@pocketflow/core";
 
 const tools = {
-  //tokensList: getTokenListTool,
   webSearch: webSearchTool,
-  //liquidityValidator: checkUniswapPoolTool
+  vectorSearch: vectorSearchTool
 };
 
 export const tokenResearcherConfig = (apiKey: string) => {
@@ -23,11 +16,9 @@ export const tokenResearcherConfig = (apiKey: string) => {
     instructions: [
       "You have access to a variety of tools that can help you answer questions about Xucre Investments and crypto in general.",
       "You can use the webSearch tool to look up information on the internet.",
-      //"Using the liquidityValidator tool, validate that token list against the available liquidity for each token given a source token.",
-      // "Prune the list of tokens to provide a well-balanced mix of tokens. The list should have at least 10 tokens in it.",
     ],
     description: "You are an agent that assists users in learning about cryptocurrencies.",
-    tools: {},
+    tools: tools,
   };
 }
 
@@ -37,7 +28,6 @@ export const historySummarizerConfig = (apiKey: string) => {
     model: {...modelConfig, temperature: 1, apiKey},
     instructions: [
       "Using the tokensList tool, build a list of tokens that match the user's risk tolerance, which should be in the initial input.",
-      //"Using the liquidityValidator tool, validate that token list against the available liquidity for each token given a source token.",
       "Prune the list of tokens to provide a well-balanced mix of tokens. The list should have at least 10 tokens in it.",
     ],
     description: "You are an investment advisor that creates lists of tokens on the matic-mainnet chain that adheres to a specified investment philosophy and risk tolerance. Important: Always use the token addresses exactly as provided by the function call. Do not generate, modify, or add any token addresses that are not returned by the verified function output.",
@@ -51,11 +41,9 @@ export const markdownFormatterConfig = (apiKey: string) => {
     model: {...modelConfig, temperature: 1, apiKey},
     instructions: [
       "Format the text provided using markdown syntax to make it easier to read.",
-      //"Using the liquidityValidator tool, validate that token list against the available liquidity for each token given a source token.",
-      // "Prune the list of tokens to provide a well-balanced mix of tokens. The list should have at least 10 tokens in it.",
     ],
     description: "You are an agent that assists users by summarizing the responses of other agents in a readable format.",
-    tools: {},
+    tools: tools,
   };
 }
 
@@ -68,7 +56,7 @@ export const generalistAgentConfig = (apiKey: string, config: AgentConfig) => {
     }, {});
     return {
       name: config.name,
-      model: {...modelConfig, temperature: 1, apiKey},
+      model: {...modelConfig, temperature: config.temperature || 0.7, apiKey},
       instructions: [
         ...config.instructions
       ],

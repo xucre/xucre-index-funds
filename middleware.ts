@@ -8,10 +8,10 @@ const isInternalRoute = createRouteMatcher(['/organizations(.*)', '/index-manage
 export const adminUserList = (process.env.ADMIN_USER_LIST as string).split(',');
 
 export default clerkMiddleware(async (auth, req) => {
+  
   const _auth = await auth();
   if (isPublicRoute(req)) return;
   if (!_auth.userId) {
-    // Add custom logic to run before redirecting
     return _auth.redirectToSignIn()
   } else if (isInternalRoute(req)) {
     auth.protect((has) => {

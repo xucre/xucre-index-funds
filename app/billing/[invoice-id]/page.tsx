@@ -91,7 +91,7 @@ export default function InvoicePage() {
   }, [invoiceId, organization])
 
   const showButtons = (invoiceDetails && (invoiceDetails.status === InvoiceStatuses.Draft || invoiceDetails.status === InvoiceStatuses.New)) as boolean;
-
+ 
   return (
     <Suspense>
       {invoiceDetails && 

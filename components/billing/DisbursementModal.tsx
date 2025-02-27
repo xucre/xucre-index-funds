@@ -9,6 +9,7 @@ import { CreateInvoiceOptions, createInvoiceTransaction, executeUserSpotExecutio
 import { getAllFunds, getFundDetails, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useClerkOrganization } from '@/hooks/useClerkOrganization';
+import { sendInAppNotification } from '@/service/knock';
 
 interface DisbursementModalProps {
     invoice: Invoice;
@@ -107,7 +108,11 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, organiza
                         setCurrentCount(prev => prev + 1);
                         return;
                     }
-                    await executeUserSpotExecution(member, process.env.NEXT_PUBLIC_SAFE_RPC_URL as string, isDev ? 1155111: globalChainId, invoice.id, fundMap);
+                    const tx = await executeUserSpotExecution(member, process.env.NEXT_PUBLIC_SAFE_RPC_URL as string, isDev ? 1155111 : globalChainId, invoice.id, fundMap);
+                    if (tx) {
+                        console.log('Transaction executed for member:', member.safeWalletAddress, 'Transaction:', tx);
+                        await sendInAppNotification(member.id, 'disbursement-notification', { transactionLink: `https://polygonscan.com/tx/${tx}` });
+                    }
                     setCurrentCount(prev => prev + 1);
                     return;
                 } catch (err) {
