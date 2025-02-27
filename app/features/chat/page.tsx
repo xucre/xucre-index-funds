@@ -31,6 +31,8 @@ export default function Feature() {
     return <Campfire setIsLocked={setIsLocked} />;
   }
   return (
-    <ChatContainer />
+    <Box mx={3}>
+      <ChatContainer />
+    </Box>
   );
 };

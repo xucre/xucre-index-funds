@@ -157,7 +157,7 @@ export async function createCase(subject: string, description: string, contactEm
       const conn = await createConnection();
       //const requestType = new URL(req.url).searchParams.get('type');
       if (subject.length > 0) {
-        await conn.create('Case', { Subject: subject, Description: description, SuppliedEmail: contactEmail });
+        return await conn.create('Case', { Subject: subject, Description: description, SuppliedEmail: contactEmail });
       } else {
         throw new Error('Subject is required');
       }

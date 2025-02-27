@@ -12,8 +12,9 @@ export async function saveAgentConfig(agentConfig: AgentConfig): Promise<void> {
 export async function getAgentConfig(name: string): Promise<AgentConfig | null> {
   const key = `agentConfig:${name}`;
   const data = await kv.hget(key, 'data');
+  console.log(data);
   if (data) {
-    return JSON.parse(data as string) as AgentConfig;
+    return data as AgentConfig;
   }
   return null;
 }

@@ -20,6 +20,7 @@ export interface AgentConfig {
   description: string;
   toolList: string[];
   tools?: Record<string, AgentTool>;
+  temperature?: number;
 }
 
 export type AgentConfigBuilder = (
