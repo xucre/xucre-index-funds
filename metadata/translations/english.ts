@@ -15,6 +15,9 @@ const values : TranslationType = {
     cta_1: "Download Xucre Wallet on",
     cta_2: "Android in the PlayStore!",
   },
+  Agent: {
+    introduction: 'Hello! How can I help you today?',
+  },
   Buttons_Header: {
     buy: "Buy",
     connect: "Connect",

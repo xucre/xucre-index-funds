@@ -13,7 +13,7 @@ const ChatContainer = () => {
       <Stack>
         <ChatHeader onAgentSelected={setAgentConfig}/>
         {agentConfig &&
-          <ChatInterface agent={agentConfig}/>
+          <ChatInterface agent={agentConfig} size={'full'}/>
         }
       </Stack>
     </OpaqueCard>

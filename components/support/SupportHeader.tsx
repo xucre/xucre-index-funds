@@ -25,22 +25,21 @@ const SupportHeader = ({ }) => {
     }
   }, []);
   return (
-    <Stack direction={'column'} justifyContent={'start'} alignItems={'start'} borderRadius={8} bgcolor={'#00872a'} width={'full'} py={4} px={4} >
-        
-            <Collapse in={checked} collapsedSize={elementHeight as number || 0}>
-                <Box ref={elementRef}>
-                    <Typography variant={'h5'} sx={{fontWeight: 'bold'}} color={textColor}>{languageData[language].FAQPage.title}</Typography>
-                    <Typography variant={'body1'} color={textColor}>{languageData[language].FAQPage.header1}</Typography>
-                    {!checked && <Stack onClick={() => setChecked(!checked)} sx={{}} direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'}><Typography color={'textDisabled'}>{languageData[language].SupportPage.header_button}</Typography><ArrowForwardIosIcon color={'disabled'} /></Stack>}
-                </Box>
-                <List>
-                    {languageData[language].FAQPage.headerList1.map((item, index) => {
-                    return <ListItem key={index} color={textColor} sx={{color: 'white !important'}}>{item}</ListItem>
-                    })}
-                </List>
-                <Typography variant={'body1'} color={textColor}>{languageData[language].FAQPage.headerSecondary}</Typography>
-                {checked && <Stack onClick={() => setChecked(!checked)} sx={{}} direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'}><ArrowUpwardIcon color={'disabled'} /></Stack>}
-            </Collapse>
+    <Stack direction={'column'} justifyContent={'start'} alignItems={'start'} borderRadius={8} bgcolor={'#00872a'} py={4} px={4} >
+      <Collapse in={checked} collapsedSize={elementHeight as number || 0}>
+          <Box ref={elementRef}>
+              <Typography variant={'h5'} sx={{fontWeight: 'bold'}} color={textColor}>{languageData[language].FAQPage.title}</Typography>
+              <Typography variant={'body1'} color={textColor}>{languageData[language].FAQPage.header1}</Typography>
+              {!checked && <Stack onClick={() => setChecked(!checked)} sx={{}} direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'}><Typography color={'textDisabled'}>{languageData[language].SupportPage.header_button}</Typography><ArrowForwardIosIcon color={'disabled'} /></Stack>}
+          </Box>
+          <List>
+              {languageData[language].FAQPage.headerList1.map((item, index) => {
+              return <ListItem key={index} color={textColor} sx={{color: 'white !important'}}>{item}</ListItem>
+              })}
+          </List>
+          <Typography variant={'body1'} color={textColor}>{languageData[language].FAQPage.headerSecondary}</Typography>
+          {checked && <Stack onClick={() => setChecked(!checked)} sx={{}} direction={'row'} spacing={2} justifyContent={'end'} alignItems={'center'}><ArrowUpwardIcon color={'disabled'} /></Stack>}
+      </Collapse>
        
     </Stack>
   )

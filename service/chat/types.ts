@@ -19,6 +19,7 @@ export interface AgentConfig {
   instructions: string[];
   description: string;
   toolList: string[];
+  introduction?: string;
   tools?: Record<string, AgentTool>;
   temperature?: number;
 }
