@@ -16,6 +16,7 @@ import { normalizeDevChains } from '../../service/helpers';
 import { IndexFund } from "@/service/types";
 import { setFundDetails } from "@/service/db";
 import { useSFDC } from "@/hooks/useSFDC";
+import FundHeader from "@/components/fund/FundSelector";
 
 // components/LoadingIndicator.tsx
 export default function IndexFunds() {

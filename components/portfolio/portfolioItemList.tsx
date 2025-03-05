@@ -24,7 +24,7 @@ export default function PortfolioItemList({ portfolioItems, priceMap }: { portfo
   console.log(priceMap);
   return (
     <List sx={{
-      maxWidth: 360,
+      
       bgcolor: '',
       my: 4,
       //maxHeight: { xs: null, sm: 400 },

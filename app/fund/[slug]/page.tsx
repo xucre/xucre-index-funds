@@ -22,11 +22,10 @@ import demoPortfolio from "@/public/demoPortfolio.json";
 import { getAllFunds, getFundDetails } from "@/service/db";
 import { globalChainId, isDev } from "@/service/constants";
 import { useClerkUser } from "@/hooks/useClerkUser";
-//import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
+import FundBlock from "@/components/fund/FundBlock";
+import FundItemList from "@/components/fund/FundItemList";
+import FundHeader from "@/components/fund/FundSelector";
 
-
-
-// components/LoadingIndicator.tsx
 export default function IndexFundItem({ params }: { params: { slug: string } }) {
   const theme = useTheme();
   const { language } = useLanguage();
@@ -108,43 +107,35 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
   }, [slugString]);
 
   const PortfolioDescription = () => (
-    <Stack direction={'column'} spacing={2}>
-      <Typography variant={'h5'} color={textColor} textAlign={'center'}>{_indexFund ? _indexFund.name[language] : ''}</Typography>
+    <Stack direction={'column'} spacing={2} mx={2}>
+      {/* <Typography variant={'h5'} color={textColor} textAlign={'center'}>{_indexFund ? _indexFund.name[language] : ''}</Typography> */}
       <Typography variant={'body1'} color={textColor} textAlign={'justify'}>{_indexFund ? _indexFund.description[language] : ''}</Typography>
     </Stack>
   )
 
   if (_indexFund === undefined) return <></>;
   return (
-    <Box mt={{ xs: 0, sm: 4 }} pb={4}>
-
-      <Stack direction={'row'} mt={2} mx={2} spacing={2} justifyContent={'space-evenly'} alignItems={'start'} sx={{ display: { md: 'flex', xs: 'none' } }}>
-        <OpaqueCard sx={{p: 4}}>
-          <Stack maxWidth={'50vw'} direction={'column'} justifyContent={'center'} alignItems={'center'}>
-            <PortfolioDescription />
-            <PortfolioItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
-          </Stack>
-        </OpaqueCard>
-        {!isSignedIn && false &&
-          <Box maxWidth={'50vw'}>
-            <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
-          </Box>
-        }
-
-      </Stack>
-
-      <Stack direction={'column'} m={2} spacing={4} justifyContent={'center'} alignItems={'center'} sx={{ display: { md: 'none', xs: 'flex' } }}>
-        <OpaqueCard>
+    <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+      <Box mt={{ xs: 0 }} pb={4} mx={2}>
+        <Stack direction={'row'} sx={{py: 4}} spacing={2} justifyContent={'start'} alignItems={'center'} >
+          <FundBlock header={_indexFund.name[language]} subheader={`${languageData[language].Edit.risk_tolerance_label}: ${_indexFund?.toleranceLevels ? _indexFund.toleranceLevels[0] : ''}`} />
+        </Stack>
+        
+        <Box>
           <PortfolioDescription />
-          <PortfolioItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
-        </OpaqueCard>
-        <Divider sx={{ color: textColor, width: '80vw' }} />
+        </Box>
 
-        {/**BUY ITEM  */}
-        {!isSignedIn && false &&
-          <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
-        }
-      </Stack>
-    </Box>
+        <Box my={1}>
+          <FundItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
+          {!isSignedIn && false &&
+            <Box maxWidth={'50vw'}>
+              <BuyItem isNativeToken={isNativeToken} confirmationHash={confirmationHash} status={status} portfolio={_indexFund} sourceToken={sourceToken} sourceTokens={sourceTokens} setSourceToken={setSourceToken} balance={balance} allowance={allowance} rawAmount={rawAmount} handleAmountUpdate={handleAmountUpdate} amount={amount} handleApproval={handleApproval} loading={loading} allowanceAmount={allowanceAmount} handleSpot={handleSpot} />
+            </Box>
+          }
+        </Box>
+      </Box>
+      <Box minWidth={'20vw'}>
+      </Box>
+    </Stack>
   );
-};
+};  

@@ -13,8 +13,10 @@ import OpaqueCard from "../ui/OpaqueCard";
 import { getTextColor } from "@/service/theme";
 import isoWeek from 'dayjs/plugin/isoWeek';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 dayjs.extend(relativeTime)
 dayjs.extend(isoWeek);
+dayjs.extend(localizedFormat);
 
 
 type TransactionGroup = {
@@ -26,7 +28,7 @@ const groupTransactionsByWeek = (transactions: CovalentTransactionV3[]): Transac
   const groupedTransactions: { [key: string]: CovalentTransactionV3[] } = {};
 
   transactions.forEach((transaction) => {
-    const weekStart = dayjs(transaction.block_signed_at).startOf('isoWeek').format('YYYY-MM-DD');
+    const weekStart = dayjs(transaction.block_signed_at).format('L')//.startOf('isoWeek').format('YYYY-MM-DD');
     if (!groupedTransactions[weekStart]) {
       groupedTransactions[weekStart] = [];
     }

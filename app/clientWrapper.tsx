@@ -25,6 +25,9 @@ import {
 } from "@knocklabs/react";
 import { useClerkUser } from '@/hooks/useClerkUser';
 import PrivacyFooterPopup from '@/components/support/PrivacyFooterPopup';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/es';
 
 export default function Wrapper({
   children
@@ -34,11 +37,11 @@ export default function Wrapper({
   const {user} = useClerkUser();
   const pathname = usePathname();
   const hasUser = user !== null;
-  const hideMenu = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || pathname === '/privacy' || ( !hasUser && pathname.includes('/fund')) || pathname === '/onboarding'
+  const hideMenu = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || pathname === '/privacy' || pathname === '/onboarding'
   
   return (
     <Box>
-      
+       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'es'}>
           <MixpanelProvider>
             <ThemeSwitcherProvider>
                   <CssBaseline enableColorScheme />
@@ -69,6 +72,7 @@ export default function Wrapper({
                   </Stack>
             </ThemeSwitcherProvider>
           </MixpanelProvider>
+        </LocalizationProvider>
     </Box>
   );
 }

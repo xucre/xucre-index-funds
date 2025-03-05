@@ -58,14 +58,20 @@ const WalletManagement: React.FC = () => {
         safeWallet: safeWallet
       }
       console.log('handleCheckSafeProposer', params);
-      const delegates = await getSafeProposer(params);
-      console.log('delegates', delegates);
-      if (delegates.count === 0) {
-        setNeedsToSetProposer(true);
-      } else {
+      try {
+        const delegates = await getSafeProposer(params);
+        console.log('delegates', delegates);
+        if (delegates.count === 0) {
+          setNeedsToSetProposer(true);
+        } else {
+          setNeedsToSetProposer(false);
+        }
+        setHasCheckedProposer(true);
+      } catch (error) {
+        console.error('Error fetching safe proposer:', error);
+        setHasCheckedProposer(true);
         setNeedsToSetProposer(false);
       }
-      setHasCheckedProposer(true);
   }
 
   const hasSafe = safeWallet ? safeWallet.length > 0 : false;
