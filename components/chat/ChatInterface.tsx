@@ -12,6 +12,8 @@ import Bubbles from './bubbles';
 import Emoji from '../ui/Emoji';
 import { AgentConfig } from '@/service/chat/types';
 import {useChat} from '@ai-sdk/react';
+import { v4 as uuidv4 } from 'uuid';
+import { useLanguage } from '@/hooks/useLanguage';
 
 
 // Simple Markdown component for rendering output blocks
@@ -32,10 +34,10 @@ const TextWithLineBreaks = ({text}: {text: string}) => {
     return <div>{textWithBreaks}</div>;
 }
 
-const ChatInterface = ({agent} :{agent?: AgentConfig}) => {
+const ChatInterface = ({agent, size} :{agent?: AgentConfig, size: 'sm' | 'md' | 'full'}) => {
     const [currentThread, setCurrentThread] = useState("");
     const [loading, setLoading] = useState(false);
-
+    const {language, languageData} = useLanguage();
     const [threadList, setThreadList] = useState([] as Thread[]);
     const messageListRef = useRef<HTMLDivElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -56,6 +58,10 @@ const ChatInterface = ({agent} :{agent?: AgentConfig}) => {
             const payload = { text: JSON.stringify(parsedHistory), type: 'database', agent: JSON.stringify(agent) };
             return JSON.stringify(payload);
         },
+        initialMessages: [{
+            role: 'assistant', content: agent?.introduction || languageData[language].Agent.introduction,
+            id: uuidv4(10)
+        }]
     });
     const handleSendMessage = async () => {
         if (!input.trim()) return;
@@ -154,7 +160,7 @@ const ChatInterface = ({agent} :{agent?: AgentConfig}) => {
                 }
                 </div>
             </div>
-            <div className={styles.center}>
+            <div className={styles.fullwidth}>
                 <div className={styles.cloudform}>
                 <form onSubmit={handleSubmit}>
                     <textarea

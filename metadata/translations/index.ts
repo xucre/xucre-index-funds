@@ -10,6 +10,7 @@ export enum Language {
 export const languages = [Language.EN, Language.ES, Language.PT];
 export interface TranslationType {
   App: any,
+  Agent: any,
   Buttons_Header: any,
   Billing: any,
   Dashboard: any,

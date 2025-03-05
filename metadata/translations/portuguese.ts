@@ -14,6 +14,9 @@ const values : TranslationType  = {
     cta_1: "Baixe a Carteira Xucre no",
     cta_2: "Android na PlayStore!",
   },
+  Agent: {
+    introduction: 'Olá! Como posso ajudar você hoje?',
+  },
   Buttons_Header: { 
     buy: "Comprar", 
     connect: "ConexÃ£o",
