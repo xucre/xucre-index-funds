@@ -1136,17 +1136,25 @@ export interface GetProposerOptions {
 
 export async function getSafeProposer (options: GetProposerOptions) {
   const { chainid, safeWallet } = options;
-  const signer = createWalletClient({
-    account: CORP_ACCOUNT,
-    chain: chainIdToChain[chainid],
-    transport: http(),
-  });
-  const apiKit = new SafeApiKit({ chainId: BigInt(chainid || globalChainId)})
+  // const signer = createWalletClient({
+  //   account: CORP_ACCOUNT,
+  //   chain: chainIdToChain[chainid],
+  //   transport: http(),
+  // });
+  console.log('chainid', chainid);
+  console.log('safeWallet', safeWallet);
+  const config = { chainId: BigInt(chainid), txServiceUrl: 'https://safe-transaction-polygon.safe.global'};
+  console.log(config);
+  const apiKit = new SafeApiKit(config);
+  console.log('apiKit created');
+  const test = await apiKit.getServiceInfo()
+  console.log('service info retrieved', test);
   const conf = {
     safeAddress: safeWallet
   }
   
   const delegates = await apiKit.getSafeDelegates(conf);
+  console.log('delegates', delegates);
   return delegates;
 }
 

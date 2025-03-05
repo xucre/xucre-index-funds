@@ -1,5 +1,5 @@
 'use client'
-import FundHeader from "@/components/fund/FundHeader";
+import FundHeader from "@/components/fund/FundSelector";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/material"
 import { Suspense, useEffect, useState } from "react";
 //import '@covalenthq/goldrush-kit/styles.css'
@@ -14,11 +14,11 @@ export default function FundLayout({
 
   return (
     <Suspense>
-      <Box width={'full'} px={5} py={4}>
-        <Stack direction={'column'} spacing={2} flexGrow={2}>
+      <Box px={5}>
+         <Box mt={{ xs: 0 }} mx={2}>
             <FundHeader />
-            {children}
-        </Stack>           
+          </Box>
+          {children}   
       </Box>
     </Suspense>
   );

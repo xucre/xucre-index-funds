@@ -10,8 +10,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { formatEther, formatUnits, transactionType } from 'viem';
 import { TokenDetails } from '@/service/types';
 import { useLanguage } from "@/hooks/useLanguage";
-import WithdrawTokenToWallet from '../fund/WithdrawTokenToWallet';
-import WithdrawTokenToSource from '../fund/WithdrawTokenToSource';
+import WithdrawTokenToWallet from './WithdrawTokenToWallet';
+import WithdrawTokenToSource from './WithdrawTokenToSource';
 dayjs.extend(relativeTime)
 
 interface DashboardBalanceItemProps {

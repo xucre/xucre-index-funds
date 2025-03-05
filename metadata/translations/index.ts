@@ -15,6 +15,7 @@ export interface TranslationType {
   Dashboard: any,
   LanguagePage: any,
   FAQPage: any,
+  FundPage: any,
   Home: any,
   Invoice: any,
   Menu: any,

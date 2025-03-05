@@ -6,7 +6,6 @@ import AccountButton from '@/components/accountButton';
 import languageData from '@/metadata/translations'
 import { coinIconNames, getDashboardBorderColor } from "@/service/helpers";
 import { useWalletData } from "@/hooks/useWalletData";
-import truncateEthAddress from "truncate-eth-address";
 import dayjs from 'dayjs'
 import DashboardTransaction from "./DashboardTransaction";
 import OpaqueCard from "../ui/OpaqueCard";

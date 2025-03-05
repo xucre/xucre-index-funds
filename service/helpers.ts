@@ -102,3 +102,11 @@ export function encodeStringToBigInt(str: string): bigint {
 export const isNull = (value: any) => {
   return value === null || value === undefined || value === '';
 }
+
+export function truncateString(str: string, num: number): string {
+  if (str.length > num) {
+    return str.slice(0, num) + "...";
+  } else {
+    return str;
+  }
+}

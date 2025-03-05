@@ -11,9 +11,12 @@ import AddIcon from '@mui/icons-material/Add';
 import { isNull } from '@/service/helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import router from 'next/router';
 import BeneficiaryModal from './BeneficiaryModal';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 // Import additional necessary components and libraries
 interface KYCFormData {
@@ -59,6 +62,13 @@ const KYC = ({user, updateUser, selectedTab, setSelectedTab} : {user: SFDCUserDa
         [name]: value,
       }));
     }
+  };
+
+  const handleDateChange = (date: dayjs.Dayjs | null, context: {name: string}) => {
+    updateUser((prevData) => ({
+      ...prevData,
+      [context.name]: date ? date.toDate().getTime() : null,
+    }));
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -292,7 +302,7 @@ const KYC = ({user, updateUser, selectedTab, setSelectedTab} : {user: SFDCUserDa
             />
           </Grid>
           <Grid size={6}>
-            <TextField
+            {/* <TextField
               label={languageData[language].Edit.idIssueDate_label}
               name="idIssueDate"
               type="date"
@@ -300,6 +310,13 @@ const KYC = ({user, updateUser, selectedTab, setSelectedTab} : {user: SFDCUserDa
               slotProps={{ inputLabel: { shrink: true } }}
               value={user.idIssueDate || ''}
               onChange={handleChange}
+            /> */}
+  
+            <DatePicker 
+              label={languageData[language].Edit.idIssueDate_label}
+              sx={{width: '100%'}}
+              value={dayjs(user.idIssueDate)}
+              onChange={(date) => handleDateChange(date, {name: 'idIssueDate'})}
             />
           </Grid>
           <Grid size={6}>
@@ -319,7 +336,7 @@ const KYC = ({user, updateUser, selectedTab, setSelectedTab} : {user: SFDCUserDa
             </FormControl>
           </Grid>
           <Grid size={6}>
-            <TextField
+            {/* <TextField
               error={user.idExpirationDate !== null && new Date(user.idExpirationDate).getTime() <= new Date().getTime()}
               label={languageData[language].Edit.idExpiration_label}
               name="idExpirationDate"
@@ -328,6 +345,15 @@ const KYC = ({user, updateUser, selectedTab, setSelectedTab} : {user: SFDCUserDa
               slotProps={{ inputLabel: { shrink: true } }}
               value={user.idExpirationDate || ''}
               onChange={handleChange}
+            /> */}
+            <DatePicker 
+              label={languageData[language].Edit.idExpiration_label}
+              sx={{width: '100%'}}
+              disablePast
+            
+              value={dayjs(user.idExpirationDate)}
+              onChange={(date) => handleDateChange(date, {name: 'idExpirationDate'})}
+              
             />
           </Grid>
           <Grid size={12}>
@@ -355,7 +381,7 @@ const KYC = ({user, updateUser, selectedTab, setSelectedTab} : {user: SFDCUserDa
         <Grid container spacing={2}>
           <Grid size={12}>
             <Stack direction={'row'} spacing={2} sx={{py:0}} alignItems="center" justifyContent={'start'}>
-              <Button onClick={handleNewBeneficiary}>Add Beneficiary</Button>
+              <Button onClick={handleNewBeneficiary}>{languageData[language].Edit.add_beneficiary_button}</Button>
             </Stack>
           </Grid>
           <Grid size={12}>

@@ -348,7 +348,7 @@ const AppMenu = () => {
                   FabProps={{
                     sx: {
                       padding: theme.spacing(1),
-                      color: (!pathname.startsWith('/organizations') && pathname === item.path || (item.path === '/settings' && pathname.includes(item.path))) || (staticRef === item.ref)
+                      color: (!pathname.startsWith('/organizations') && pathname === item.path || (item.path === '/fund' && pathname.includes(item.path)) || (item.path === '/settings' && pathname.includes(item.path))) || (staticRef === item.ref)
                         ? theme.palette.success.main
                         : 'default',
                       backgroundColor: 'transparent',
