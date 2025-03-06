@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { use, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import {
   Badge,
@@ -27,10 +27,12 @@ import languageData, { Language } from '@/metadata/translations';
 import { useSFDC } from '@/hooks/useSFDC';
 import { isNull } from '@/service/helpers';
 import { SignOutButton, useAuth } from '@clerk/nextjs';
+import useWindowSize from '@/hooks/useWindowSize';
 
 const AppMenu = () => {
   const {language} = useLanguage();
   const {isAdmin, isSuperAdmin} = useIsAdmin();
+  const [width, height] = useWindowSize();
   const {signOut} = useAuth();
   //const isAdmin = false;
   const [isOpen, setIsOpen] = React.useState(false);
@@ -280,17 +282,7 @@ const AppMenu = () => {
 
   useEffect(() => {
     computeHighlightPosition();
-  }, [pathname, isAdmin, isSuperAdmin, isOpen]);
-  
-  useEffect(() => {
-    // const id = setInterval(() => {
-    //   computeHighlightPosition();
-    // }, 2000)
-
-    // return () => {
-    //   clearInterval(id)
-    // }
-  }, []) 
+  }, [pathname, isAdmin, isSuperAdmin, isOpen, width, height]);
   
   useEffect(() => {
     if (isLoaded) {

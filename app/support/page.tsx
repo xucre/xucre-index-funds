@@ -48,8 +48,11 @@ export default function AboutUs() {
     }, []);
 
   return (
-    <Stack direction={matches ? 'row' : 'column'} spacing={4} justifyContent={'space-evenly'} alignItems={'start'} px={5} pb={10}>
-      <Stack direction={'column'} maxWidth={600} spacing={2} mt={4} sx={{mt: '2rem !important'}} alignItems={'center'} justifyContent={'center'}>
+    <Stack direction={ {md : 'row', xs: 'column'}} spacing={4} justifyContent={'space-evenly'} alignItems={{md: 'start', xs: 'center'}} px={5} pb={10}>
+      <Box minWidth={{md:'35vw', sm: '85vw'}} flexGrow={2}>
+        {<ChatInterface agent={agentConfig} size="md"/>}
+      </Box>
+      <Stack direction={'column'} spacing={2} mt={4} sx={{mt: '2rem !important'}} alignItems={'center'} justifyContent={'center'}>
         <SupportHeader />
         <Stack justifyContent={'start'} alignItems={'center'} spacing={2}>
           {
@@ -66,10 +69,6 @@ export default function AboutUs() {
           }
         </Stack>
       </Stack>
-      <Box width={'100%'} >
-        {sfdcUser && false && <CreateCase userName={sfdcUser.firstName} userEmail={sfdcUser.userEmail} />}
-        {sfdcUser && <ChatInterface agent={agentConfig} size="md"/>}
-      </Box>
     </Stack>
   );
 };

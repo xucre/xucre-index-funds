@@ -7,11 +7,13 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import useWindowSize from "@/hooks/useWindowSize";
 
 const SupportHeader = ({ }) => {
   const theme = useTheme();
   const borderColor = getDashboardBorderColor(theme);
   const { language } = useLanguage();
+  const [width, height] = useWindowSize();
   //const textColor = getTextColor(theme);
   const textColor = 'white';
   const [checked, setChecked] = useState(false);
@@ -23,7 +25,13 @@ const SupportHeader = ({ }) => {
       // Get the height of the element
       setElementHeight(elementRef.current.offsetHeight);
     }
-  }, []);
+  }, [elementRef, elementRef.current?.offsetHeight]);
+  useEffect(() => {
+    if (elementRef.current) {
+      // Get the height of the element
+      setElementHeight(elementRef.current.offsetHeight);
+    }
+  }, [width, height]);
   return (
     <Stack direction={'column'} justifyContent={'start'} alignItems={'start'} borderRadius={8} bgcolor={'#00872a'} py={4} px={4} >
       <Collapse in={checked} collapsedSize={elementHeight as number || 0}>

@@ -21,6 +21,7 @@ import {useOrganizationWallet} from '@/hooks/useOrganizationWallet';
 import { KnockFeedProvider, KnockI18nProvider, KnockProvider, NotificationFeedPopover, NotificationIconButton, I18nContent, Translations } from '@knocklabs/react';
 import { syncKnock } from '@/service/knock';
 import { useClerkUser } from '@/hooks/useClerkUser';
+import AppMenu from '@/components/ui/AppMenu';
 
 
 const drawerWidth = 240;
@@ -144,20 +145,9 @@ function Header() {
         <AccountButton />
       </Stack>*/}
         <SignedIn>
-          {isAdmin &&
-            <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-              {adminNavItems.map((item) => (
-                <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
-              ))}
-            </ButtonGroup>
-          }
-          {!isAdmin &&
-            <ButtonGroup variant="text" size="large" color={'inherit'} aria-label="Basic button group" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center' }}>
-              {navItems.map((item) => (
-                <Button onClick={() => navigateTo(item)} key={item} variant={'text'} sx={{ textTransform: 'capitalize', letterSpacing: 2 }}>{item}</Button>
-              ))}
-            </ButtonGroup>
-          }
+          <Box minWidth={200} justifyItems={'center'}>
+            <AppMenu />
+          </Box>
         </SignedIn>
       </Box>
       <Stack direction={'column'} spacing={2} width={'100%'} alignItems={'center'}>
@@ -219,40 +209,6 @@ function Header() {
                   <Stack direction={'row'} sx={{}} alignContent={'end'} justifyContent={'end'}>
                     <Box sx={{}}>
                     </Box>
-                    <Box sx={{ mr: 4, mt: 1, display: { xs: 'block', sm: 'none' } }}>
-                      <SignedIn>
-                        {
-                          <OrganizationSwitcher
-                            appearance={{
-                              baseTheme: isDarkTheme ? dark : undefined,
-                            }}
-                            organizationProfileProps={{
-                              appearance: {
-                                baseTheme: isDarkTheme ? dark : undefined,
-                              }
-                            }}
-                            organizationProfileMode='navigation'
-                            organizationProfileUrl='/organization'
-                            hidePersonal={false}
-                            afterSelectOrganizationUrl={'/billing'}
-                            afterSelectPersonalUrl={'/dashboard'}
-                          />
-                        }
-                        {user &&
-                          <UserButton
-                            appearance={{
-                              baseTheme: isDarkTheme ? dark : undefined,
-                            }}
-                            userProfileProps={{
-                              appearance: {
-                                baseTheme: isDarkTheme ? dark : undefined,
-                              }
-                            }}
-                            userProfileMode='modal'
-                          />
-                        }
-                      </SignedIn>
-                    </Box>
                     <IconButton
                       color={theme.palette.mode === 'dark' ? 'default' : 'default'}
                       aria-label="open drawer"
@@ -269,7 +225,7 @@ function Header() {
                       }
 
                       <SignedIn>
-                        <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'}>
+                        <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'} sx={{ display: { xs: 'none', md: 'flex' } }}>
                           {
                             <OrganizationSwitcher
                               appearance={{
@@ -317,7 +273,7 @@ function Header() {
                         aria-label="open drawer"
                         edge="start"
                         onClick={handleMenuOpen}
-                        sx={{ ml: 2, display: { xs: 'block', sm: 'none' }, }}
+                        sx={{ ml: 2, display: { xs: 'block', md: 'none' }, }}
                       >
                         <MenuIcon />
                       </IconButton>
