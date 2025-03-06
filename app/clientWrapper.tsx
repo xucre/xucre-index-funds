@@ -37,39 +37,38 @@ export default function Wrapper({
   const {user} = useClerkUser();
   const pathname = usePathname();
   const hasUser = user !== null;
-  const hideMenu = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || pathname === '/privacy' || pathname === '/onboarding'
-  
+  const hideMenu = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || pathname === '/privacy' || pathname === '/onboarding' || pathname.includes('indexes')
+  const hideHeader = pathname.includes('indexes')
   return (
     <Box>
        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'es'}>
           <MixpanelProvider>
             <ThemeSwitcherProvider>
-                  <CssBaseline enableColorScheme />
-                  <Stack direction={'column'} justifyContent={'space-between'} minHeight={'100dvh'}>
-                    <Stack direction={'column'} justifyContent={'flex-start'}>
-                      <Header />
-                      <Stack direction={'column'} justifyContent={'start'}>
-                        <Stack spacing={2} direction="row" width={'full'} alignItems={'top'}>
-                          <SignedIn>
-                            {!hideMenu && 
-                              <Box minWidth={200}>
-                                <AppMenu />
-                              </Box>
-                            }
-                            
-                          </SignedIn>
-                          <Box flexGrow={1}>
-                            {children}
+              <CssBaseline enableColorScheme />
+              <Stack direction={'column'} justifyContent={'space-between'} minHeight={'100dvh'}>
+                <Stack direction={'column'} justifyContent={'flex-start'}>
+                  {!hideHeader && <Header />}
+                  <Stack direction={'column'} justifyContent={'start'}>
+                    <Stack spacing={2} direction="row" width={'full'} alignItems={'top'}>
+                      <SignedIn>
+                        {!hideMenu &&                         
+                          <Box minWidth={200} sx={{ display: { md: 'block', xs: 'none' } }}>
+                            <AppMenu />
                           </Box>
-                        </Stack>              
-                        {/* <CTA type={'main'} /> */}
-                      </Stack>
-                    </Stack>
-                    <Stack direction={'column'}> 
-                      { <Footer /> }
-                      <PrivacyFooterPopup />
-                    </Stack>
+                        }
+                      </SignedIn>
+                      <Box flexGrow={1}>
+                        {children}
+                      </Box>
+                    </Stack>              
+                    {/* <CTA type={'main'} /> */}
                   </Stack>
+                </Stack>
+                <Stack direction={'column'}> 
+                  { <Footer /> }
+                  <PrivacyFooterPopup />
+                </Stack>
+              </Stack>
             </ThemeSwitcherProvider>
           </MixpanelProvider>
         </LocalizationProvider>

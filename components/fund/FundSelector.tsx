@@ -11,12 +11,14 @@ import { getTextColor } from "@/service/helpers";
 import { toTitleCase } from '../../service/helpers';
 import { useSFDC } from "@/hooks/useSFDC";
 import { ToleranceLevels } from "@/service/types";
+import { useClerkUser } from "@/hooks/useClerkUser";
 // components/LoadingIndicator.tsx
 
-export default function FundSelector() {
+export default function FundSelector({showSave = true}: {showSave?: boolean}) {
     const theme = useTheme();
     const router = useRouter();
     const textColor = getTextColor(theme);
+    const { user} = useClerkUser();
     const { language, languageData } = useLanguage();
     const {sfdcUser, updateUser, isLoaded, refresh} = useSFDC();
     const pathname = usePathname();
@@ -28,7 +30,8 @@ export default function FundSelector() {
 
     const selectComponent = (type: ToleranceLevels) => {
         setTolerance(type);
-        router.push(`/fund/${type.toString()}`);
+        if (user) router.push(`/fund/${type.toString()}`);
+        if (!user) router.push(`/indexes/${type.toString()}`);
     }
 
     useEffect(() => {
@@ -54,7 +57,7 @@ export default function FundSelector() {
                 <Chip label={languageData[language].Edit.risk_conservative} onClick={() => {selectComponent(ToleranceLevels.Conservative)}} sx={{ bgcolor: isConservative ? '#00872a' : '', fontSize: isConservative ? 18 : 16, fontWeight: isConservative ? 'bold' : '', py: 2, px: 1 }} />
                 <Chip label={languageData[language].Edit.risk_moderate} onClick={() => {selectComponent(ToleranceLevels.Moderate)}} sx={{ bgcolor: isModerate ? '#00872a' : '', fontSize: isModerate ? 18 : 14, fontWeight: isModerate ? 'bold' : '', py: 2, px: 1 }} />
                 <Chip label={languageData[language].Edit.risk_aggressive} onClick={() => {selectComponent(ToleranceLevels.Aggressive)}} sx={{ bgcolor: isAggressive ? '#00872a' : '', fontSize: isAggressive ? 18 : 16, fontWeight: isAggressive ? 'bold' : '', py: 2, px: 1 }} />
-                {!toleranceMatch && tolerance && <IconButton onClick={() => updateUser({ ...sfdcUser, riskTolerance: tolerance.toString() })} sx={{ bgcolor: '#00872a', color: 'white' }}><SaveIcon /></IconButton>}
+                {!toleranceMatch && tolerance && showSave && <IconButton onClick={() => updateUser({ ...sfdcUser, riskTolerance: tolerance.toString() })} sx={{ bgcolor: '#00872a', color: 'white' }}><SaveIcon /></IconButton>}
             </Stack>
         </Stack>
         
