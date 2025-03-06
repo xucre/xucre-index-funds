@@ -38,7 +38,7 @@ export default function Wrapper({
   const pathname = usePathname();
   const hasUser = user !== null;
   const hideMenu = pathname === '/' || pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/forgot-password' || pathname === '/reset-password' || pathname === '/verify-email' || pathname === '/privacy' || pathname === '/onboarding' || pathname.includes('indexes')
-  const hideHeader = pathname.includes('indexes')
+  const hideHeaderAndFooter = pathname.includes('indexes')
   return (
     <Box>
        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'es'}>
@@ -47,7 +47,7 @@ export default function Wrapper({
               <CssBaseline enableColorScheme />
               <Stack direction={'column'} justifyContent={'space-between'} minHeight={'100dvh'}>
                 <Stack direction={'column'} justifyContent={'flex-start'}>
-                  {!hideHeader && <Header />}
+                  {!hideHeaderAndFooter && <Header />}
                   <Stack direction={'column'} justifyContent={'start'}>
                     <Stack spacing={2} direction="row" width={'full'} alignItems={'top'}>
                       <SignedIn>
@@ -65,7 +65,7 @@ export default function Wrapper({
                   </Stack>
                 </Stack>
                 <Stack direction={'column'}> 
-                  { <Footer /> }
+                  {!hideHeaderAndFooter && <Footer /> }
                   <PrivacyFooterPopup />
                 </Stack>
               </Stack>
