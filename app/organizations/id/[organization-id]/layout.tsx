@@ -18,10 +18,13 @@ import { OrganizationUserData, SFDCUserData } from "@/service/types";
 import UserDetails from "@/components/admin/UserDetails";
 import EditOrganization from "@/components/admin/EditOrganization";
 import { Organization } from "@clerk/backend";
-import { getUserDetails } from "@/service/db";
+import { getOrganizationSafeAddress, getUserDetails } from "@/service/db";
 import BulkAddUsers from "@/components/admin/BulkAddUsers";
 import AddUser from "@/components/admin/AddUser";
 import OrganizationInvoiceTable from "@/components/admin/OrganizationInvoiceTable";
+import { convertUsdcToUsdt } from "@/service/safe";
+import { useSnackbar } from "notistack";
+import { LoadingButton } from "@mui/lab";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";
 
 const OrganizationDetails: React.FC = ({
@@ -31,8 +34,10 @@ const OrganizationDetails: React.FC = ({
   }) => {
   const router = useRouter();
   const params = useParams();
+  const { enqueueSnackbar } = useSnackbar();
   const organizationId = params['organization-id'] as string;
   const [organization, setOrganization] = useState(null as Organization | null);
+  const [transferLoading, setTransferLoading] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -40,6 +45,23 @@ const OrganizationDetails: React.FC = ({
       setOrganization(org);
     } catch (error) {
       console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleUsdcConversion = async () => {
+    try {
+      setTransferLoading(true);
+      // Convert USDC to USDT
+      console.log('Converting USDC to USDT');
+      const safeAddress = await getOrganizationSafeAddress(organizationId, 'escrow');
+      const result = await convertUsdcToUsdt({safeAddress, rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL as string, chainid: 137});
+      //console.log('Conversion Result:', result);
+      setTransferLoading(false);
+      enqueueSnackbar('USDC converted to USDT', { variant: 'success' });
+    } catch (error) {
+      console.error('Error converting USDC to USDT:', error);
+      setTransferLoading(false);
+      enqueueSnackbar('Error converting USDC to USDT', { variant: 'error' });
     }
   };
 
@@ -58,9 +80,7 @@ const OrganizationDetails: React.FC = ({
             <Stack direction="row" spacing={2} alignItems="center" justifyContent={'space-between'}>
               <Typography variant="h5">{organization.name}</Typography>
               <Typography variant="body1">ID: {organization.id}</Typography>
-              <Typography variant="body1">
-                Max Members: {organization.maxAllowedMemberships}
-              </Typography>
+              <LoadingButton loading={transferLoading}  onClick={handleUsdcConversion}>Convert USDC to USDT</LoadingButton>
             </Stack>
             <EditOrganization
               publicMetadata={JSON.stringify(organization.publicMetadata)}

@@ -30,14 +30,17 @@ import {
 } from "viem/account-abstraction"
 import { toSafeSmartAccount } from "permissionless/accounts"
 //const kzg = setupKzg(cKzg, mainnetTrustedSetupPath)
+import ISWAPROUTER_ABI from '@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json';
 import ERC20_ABI from '../public/erc20.json'; // Ensure you have the ERC20 ABI JSON file
 import XUCREINDEXFUNDS_ABI from '../public/XucreETF.json'; // Ensure you have the ERC20 ABI JSON file
 import DEMO_PORTFOLIO from '../public/demoPortfolio.json'; // Ensure you have the ERC20 ABI JSON file
 import { writeContract } from 'viem/actions';
 import { distributeWeights, encodeStringToBigInt } from './helpers';
-import { IndexFund, Invoice, InvoiceMember } from './types';
+import { IndexFund, Invoice, InvoiceMember, Token2 } from './types';
 import { createFailureLog, getUserDetails } from './db';
 import SafeApiKit, { AddSafeDelegateProps } from '@safe-global/api-kit';
+import { constructSingleTrade } from './uniswap/index';
+import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from './uniswap/constants';
 
 const chainIdToChain = {
   11155111 : sepolia,
@@ -148,6 +151,7 @@ interface CreateSafeOptions {
   chainid: number;
   safe4337Pack: Safe4337Pack;
 }
+
 async function executeSafeCreation(options: CreateSafeOptions) {
   const { safeAddress, rpcUrl, chainid, safe4337Pack } = options;
   const pubClient = publicClient(chainid || 11155111);
@@ -179,63 +183,6 @@ async function executeSafeCreation(options: CreateSafeOptions) {
   } 
 
 }
-
-// export async function createAccountV2(options: CreateAccountOptions): Promise<string> {
-//   const { owner, threshold, rpcUrl, singleOwner, chainid, id } = options;
-//   console.log('createSafe',owner, threshold, rpcUrl);
-//   const safeAccountConfig = singleOwner || owner === '' ? {
-//     owners: [CORP_SIGNER_SAFE as `0x${string}`],
-//     threshold: 1,
-//     saltNonce: encodeStringToBigInt(id).toString()
-//   } :{
-//     owners: [owner, CORP_SIGNER_SAFE as `0x${string}`],
-//     threshold: 1,
-//     saltNonce: encodeStringToBigInt(id).toString()
-//   };
-//   const packData = {
-//       provider: rpcUrl,
-//       signer : process.env.DEVACCOUNTKEY,
-//       bundlerUrl: bundlerUrl(chainid || 11155111),
-//       options: safeAccountConfig,
-//       paymasterOptions: {
-//           isSponsored: true,
-//           paymasterUrl: paymasterUrl(chainid || 11155111),
-//       }
-//   } as Safe4337InitOptions;
-//   const safe4337Pack = await Safe4337Pack.init(packData);
-//   const safeAddress = await safe4337Pack.protocolKit.getAddress();
-  
-//   const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-//   console.log('IsSafeDeployed', isSafeDeployed)
-//   if (!isSafeDeployed) {
-//     const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-//     const pubClient = publicClient(chainid || 11155111);
-//     if (!client) return '';
-//     const deploymentTransaction = await safe4337Pack.protocolKit.createSafeDeploymentTransaction()
-//     const transactionHash = await client.sendTransaction({
-//       to: deploymentTransaction.to,
-//       value: BigInt(deploymentTransaction.value),
-//       data: deploymentTransaction.data as `0x${string}`,
-//       account: CORP_ACCOUNT,
-//       chain: chainIdToChain[chainid ? chainid : 11155111],
-//       kzg: undefined
-//     });
-//     console.log('transactionHash', transactionHash);
-//     const deploymentReceipt = await pubClient.waitForTransactionReceipt( 
-//       { hash: transactionHash }
-//     )
-//     console.log('deploymentReceipt found');
-//   }
-
-//   const allowance = await getCurrentERC20Allowance(chainid || globalChainId, safeAddress);
-//   if (allowance < BigInt(MAX_UINT256)) {
-//     await createERC20ApprovalV2(chainid || globalChainId, rpcUrl, safeAddress);
-//   } 
-  
-//   console.log('safeAddress', safeAddress);
-  
-//   return safeAddress;
-// }
 
 export interface TransferSignerOwnershipOptions {
   chainid: number;
@@ -393,13 +340,6 @@ export async function createInvoiceTransaction(options: CreateInvoiceOptions): P
     isOperationSuccess = userOperationResult !== null && userOperationResult.success;
   }  
   console.log('disbursement of source to users successful');
-  // const submittedTransactions = await options.invoice.members.map(async (member) => {
-  //   try {
-  //     await createUserSpotExecution(member, rpcUrl, chainid || 11155111);
-  //   } catch (err) {console.log('error executing spot for memeber', member.safeWalletAddress)}
-  //   return;
-  // })
-  // console.log('disbursement complete');
   return safeAddress;
 }
 
@@ -486,18 +426,11 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
     if (result === null) return acc;
     return [...acc, result];
   }, [] as Safe4337CreateTransactionProps['transactions']);
-
   
   console.log('controlling safe transaction signed');
   const secondTransactionData = {
     transactions: [...invoiceTransactions]
   } as Safe4337CreateTransactionProps;
-
-  // const secondTransaction = await safe4337Pack.createTransaction(secondTransactionData);
-  // console.log('sending safe transaction created');
-  // const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
-  //   safeOperation: secondTransaction
-  // })
 
   const controllingSafe = await safe4337Pack.protocolKit.connect({
     provider: rpcUrl,
@@ -517,17 +450,7 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
     Array.from(signedTransaction.signatures.values()),
     CORP_SIGNER_SAFE as `0x${string}`,
   )
-  //console.log('sending safe transaction gas estimated');
-  // const signature = signedTransaction.getSignature(CORP_PUBLIC_ADDRESS as `0x${string}`);
-  // if (!signature) {
-  //   console.log(signedTransaction.signatures);
-  //   console.log('signature not found');
-  //   return '';
-  // }
-  //await identifiedSafeOperation.addSignature(signatureSafe);
   console.log('getting transaction hash');
-  //console.log('signing safe transaction');
-  //const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
   // Deterministic hash based on transaction parameters
   const safeTxHash = await controllingSafe.getTransactionHash(trans)
 
@@ -558,12 +481,6 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
   const proposedTransaction = pendingTransactions.find((tx) => tx.safeTxHash === safeTransactionHash);
   if (!proposedTransaction) throw new Error('Transaction not found');
   console.log('confirming transaction w/ apikit');
-  // const signatureConfirmation = await apiKit.confirmTransaction(
-  //   safeTransactionHash,
-  //   buildSignatureBytes([signatureSafe])
-  // )
-
-  //const userOperation = await apiKit.getTransaction(safeTxHash)
   
   console.log('sending safe transaction signed');
   
@@ -575,14 +492,6 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
   // @ts-ignore
   const receipt = await userOperation.transactionResponse?.wait();
   console.log('receipt', receipt);
-  // console.log('disbursement of source to users successful');
-  // const submittedTransactions = await options.invoice.members.map(async (member) => {
-  //   try {
-  //     await createUserSpotExecution(member, rpcUrl, chainid || 11155111);
-  //   } catch (err) {console.log('error executing spot for memeber', member.safeWalletAddress)}
-  //   return;
-  // })
-  // console.log('disbursement complete');
   return safeAddress || '';
 }
 
@@ -901,98 +810,6 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   return txResult.transactionHash//finalHash;
 }
 
-async function createUserSpotExecutionV2(member: InvoiceMember, rpcUrl: string, chainid: number, fundMap: {[key: string]: IndexFund}) {
-  const memberDetails = await getUserDetails(member.id);
-  if (memberDetails === null) return;
-  const selectedFund = fundMap[memberDetails.riskTolerance] || DEMO_PORTFOLIO;
-  const safeAccountConfig = {
-    safeAddress: member.safeWalletAddress,
-  };
-
-  const packData = {
-      provider: rpcUrl,
-      signer : process.env.DEVACCOUNTKEY,
-      bundlerUrl: bundlerUrl(chainid || 11155111),
-      options: safeAccountConfig,
-      paymasterOptions: {
-          isSponsored: true,
-          paymasterUrl: paymasterUrl(chainid || 11155111),
-      }
-  } as Safe4337InitOptions;
-  const safe4337Pack = await Safe4337Pack.init(packData);
-  const safeAddress = await safe4337Pack.protocolKit.getAddress();
-  
-  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-  const pubClient = publicClient(chainid || 11155111);
-  if (!client) {
-    console.log('client not found');
-    return;
-  }
-  
-  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-  console.log('IsUserSafeDeployed', isSafeDeployed);
-  
-  const memberContribution = parseUnits(member.salaryContribution.toString(), 6);
-  
-  console.log('building portfolio for user', member.safeWalletAddress);
-  const portfolio = selectedFund.portfolio;
-  const tokenAllocations = distributeWeights(portfolio);
-  const tokenAddresses = portfolio.map((item) => getAddress(item.address));
-  const tokenPoolFees = portfolio.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
-
-  const unencodedData = {
-    abi: XUCREINDEXFUNDS_ABI.abi,
-    functionName: 'spotExecution',
-    args: [
-      safeAddress,
-      tokenAddresses,
-      tokenAllocations,
-      tokenPoolFees,
-      getAddress(USDT_ADDRESS),
-      memberContribution
-    ],
-  }
-  //console.log('unencodedData', unencodedData);
-  const rawDisbursmentData = encodeFunctionData(unencodedData);
-  //console.log('rawDisbursmentData', rawDisbursmentData);
-  const userDisbursementTransactions = {
-    to: getAddress(contractAddressMap[chainid || globalChainId]),
-    data: rawDisbursmentData,
-    value: '0',
-  }
-
-  const userDisbursementTransactionData = {
-    transactions: [
-      userDisbursementTransactions
-    ]
-  } as CreateTransactionProps;
-  console.log('UserDisbursementTransactionData');
-  const userDisbursementTransaction = await safe4337Pack.protocolKit.createTransaction({
-    transactions: userDisbursementTransactionData.transactions,
-  });   
-  
-  //console.log('UserDisbursementTransaction');
-  // const userDisbursementSafeOperation = await safe4337Pack.getEstimateFee({
-  //   safeOperation: userDisbursementTransaction
-  // })
-  console.log('UserDisbursementSafeOperation');
-  const signedUserDisbursementSafeOperation = await safe4337Pack.protocolKit.signTransaction(userDisbursementTransaction)
-  let finalHash = '';
-  try {
-    const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
-    console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
-    finalHash = userDisbursementOperationHash.hash;
-  } catch (err) {
-    console.log('error executing spot for member', member.safeWalletAddress);
-    console.log('retrying disbursement');
-    const userDisbursementOperationHash = await safe4337Pack.protocolKit.executeTransaction(signedUserDisbursementSafeOperation)
-    console.log('UserDisbursementOperationHash', userDisbursementOperationHash.hash);
-    finalHash = userDisbursementOperationHash.hash;    
-  }
-  
-  return finalHash;
-}
-
 async function validateCurrentERC20Allowance (chainid: number, safeAddress: string, memberContribution: bigint, safe4337Pack: Safe4337Pack, tokenAddress: string = getAddress(USDT_ADDRESS)) {
   const _allowance = await getCurrentERC20Allowance(chainid, safeAddress, tokenAddress);
   //console.log(_allowance, memberContribution, _allowance < memberContribution);
@@ -1002,13 +819,26 @@ async function validateCurrentERC20Allowance (chainid: number, safeAddress: stri
 }
 
 async function getCurrentERC20Allowance (chainid: number, safeAddress: string, tokenAddress: string = getAddress(USDT_ADDRESS)) {
+  // const pubCli = publicClient(chainid);
+  
+  // const _allowance = await pubCli.readContract({
+  //   address: tokenAddress,
+  //   abi: ERC20_ABI,
+  //   functionName: 'allowance',
+  //   args: [safeAddress, contractAddressMap[chainid || globalChainId]]
+  // })
+  // return _allowance as bigint;
+  return getCurrentERC20AllowanceRaw(chainid, safeAddress, tokenAddress, contractAddressMap[chainid || globalChainId]);
+}
+
+async function getCurrentERC20AllowanceRaw(chainid: number, safeAddress: string, tokenAddress: string = getAddress(USDT_ADDRESS), contractAddress: string) {
   const pubCli = publicClient(chainid);
   
   const _allowance = await pubCli.readContract({
     address: tokenAddress,
     abi: ERC20_ABI,
     functionName: 'allowance',
-    args: [safeAddress, contractAddressMap[chainid || globalChainId]]
+    args: [safeAddress, contractAddress]
   })
   return _allowance as bigint;
 
@@ -1052,70 +882,6 @@ async function createERC20Approval (chainid: number, rpcUrl: string, safe4337Pac
   } 
 
 }
-
-// async function createERC20ApprovalV2 (chainid: number, rpcUrl: string, safeAddress: string) {
-//   const safeAccountConfig = {
-//     safeAddress: CORP_SIGNER_SAFE as `0x${string}`,
-//   };
-//   const packData = {
-//       provider: rpcUrl,
-//       signer : process.env.DEVACCOUNTKEY,
-//       bundlerUrl: bundlerUrl(chainid || 11155111),
-//       options: safeAccountConfig,
-//       paymasterOptions: {
-//           isSponsored: true,
-//           paymasterUrl: paymasterUrl(chainid || 11155111),
-//       }
-//   } as Safe4337InitOptions;
-//   const safe4337Pack = await Safe4337Pack.init(packData);
-
-//   const rawApprovalData = encodeFunctionData({
-//     abi: ERC20_ABI,
-//     functionName: 'approve',
-//     args: [contractAddressMap[chainid || globalChainId], MAX_UINT256],
-//   });
-//   const transaction = {
-//     to: getAddress(USDT_ADDRESS),
-//     data: rawApprovalData,
-//     value: '0',
-//   };
-
-//   const controllingSafe = await safe4337Pack.protocolKit.connect({
-//     provider: rpcUrl,
-//     signer: process.env.DEVACCOUNTKEY,
-//     safeAddress: CORP_SIGNER_SAFE
-//   });
-
-//   const trans = await controllingSafe.createTransaction({transactions: [transaction], onlyCalls: true});
-
-//   const signedTransaction =  await controllingSafe.signTransaction(
-//     trans,
-//     SigningMethod.SAFE_SIGNATURE,
-//     CORP_SIGNER_SAFE // Parent Safe address
-//   )
-
-//   const secondTransactionData = {
-//     transactions: [
-//       {
-//         to: signedTransaction.data.to,
-//         data: signedTransaction.data.data,
-//         value: signedTransaction.data.value
-//       }
-//     ]
-//   } as CreateTransactionProps;
-
-//   const secondTransaction = await safe4337Pack.createTransaction({
-//     transactions: secondTransactionData.transactions,
-//   });
-
-//   const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
-//     safeOperation: secondTransaction
-//   })
-//   const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
-//   const userOperationHash = await safe4337Pack.executeTransaction({
-//     executable: signedSafeOperation
-//   })
-// }
 
 export async function getSafeOwner (chainid: number, safeAddress: string) {
   const pubCli = publicClient(chainid);
@@ -1235,4 +1001,223 @@ async function signDelegate(walletClient : {signTypedData: Function}, delegateAd
       primaryType: 'Delegate',
       message: { delegateAddress, totp }
   });
+}
+
+export interface ConvertUsdcToUsdtOptions {
+  safeAddress: string;
+  rpcUrl: string;
+  chainid: number;
+}
+
+export async function convertUsdcToUsdt({safeAddress, rpcUrl, chainid}: ConvertUsdcToUsdtOptions): Promise<string> {
+  console.log('Converting USDC to USDT for safe wallet', safeAddress);
+  
+  // Get contract address for the current chain
+  const contractAddress = getAddress('0xE592427A0AEce92De3Edee1F18E0157C05861564');
+  //const contractAddress = UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V2_0, chainid);
+  // Initialize Safe4337Pack with the safe wallet
+  const safeAccountConfig = {
+    safeAddress: safeAddress,
+  };
+
+  const packData = {
+    provider: rpcUrl || process.env.NEXT_PUBLIC_SAFE_RPC_URL,
+    signer: process.env.DEVACCOUNTKEY,
+    bundlerUrl: bundlerUrl(chainid || 11155111),
+    options: safeAccountConfig,
+    paymasterOptions: {
+      isSponsored: true,
+      paymasterUrl: paymasterUrl(chainid || 11155111),
+    }
+  } as Safe4337InitOptions;
+
+  const safe4337Pack = await Safe4337Pack.init(packData);
+  const pubClient = publicClient(chainid || globalChainId);
+  
+  // Check if safe is deployed
+  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
+  if (!isSafeDeployed) {
+    console.log('Safe wallet not deployed, cannot convert USDC to USDT');
+    return '';
+  }
+
+  // Get current USDC balance
+  const usdcBalance = await pubClient.readContract({
+    address: getAddress(USDC_ADDRESS),
+    abi: ERC20_ABI,
+    functionName: 'balanceOf',
+    args: [safeAddress]
+  }) as bigint;
+
+  console.log('Current USDC balance:', usdcBalance.toString());
+  
+  // If balance is 0 or too small, return early
+  if (usdcBalance <= BigInt(0)) {
+    console.log('No USDC to convert');
+    return '';
+  }
+
+  // Check if contract already has approval to spend USDC
+  const currentAllowance = await getCurrentERC20AllowanceRaw(
+    chainid || globalChainId, 
+    safeAddress, 
+    getAddress(USDC_ADDRESS),
+    contractAddress
+  );
+
+  // If allowance is insufficient, approve first
+  if (currentAllowance < usdcBalance) {
+    console.log('Approving USDC for spending');
+    const rawApprovalData = encodeFunctionData({
+      abi: ERC20_ABI,
+      functionName: 'approve',
+      args: [contractAddress, MAX_UINT256],
+    });
+    
+    const approvalTransactionData = {
+      transactions: [
+        {
+          to: getAddress(USDC_ADDRESS),
+          data: rawApprovalData,
+          value: '0',
+        }
+      ]
+    } as CreateTransactionProps;
+
+    const approvalTransaction = await safe4337Pack.createTransaction({
+      transactions: approvalTransactionData.transactions,
+    });
+
+    const identifiedApprovalOperation = await safe4337Pack.getEstimateFee({
+      safeOperation: approvalTransaction
+    });
+    
+    const signedApprovalOperation = await safe4337Pack.signSafeOperation(identifiedApprovalOperation);
+    const approvalOpHash = await safe4337Pack.executeTransaction({
+      executable: signedApprovalOperation
+    });
+    
+    console.log('USDC approval operation hash:', approvalOpHash);
+    
+    // Wait for approval to complete
+    let isApprovalComplete = false;
+    while (!isApprovalComplete) {
+      const operationResult = await safe4337Pack.getUserOperationReceipt(approvalOpHash);
+      isApprovalComplete = operationResult !== null && operationResult.success;
+      if (!isApprovalComplete) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before checking again
+      }
+    }
+  }
+  const params = {
+    tokenIn: getAddress(USDC_ADDRESS),  // USDC on mainnet
+    tokenOut: getAddress(USDT_ADDRESS), // WETH on mainnet
+    fee: 3000,                                             // 0.3% fee tier
+    recipient: safeAddress,                        // Your wallet address
+    deadline: Math.floor(Date.now() / 1000) + 60 * 20,       // 20 minutes from now
+    amountIn: usdcBalance,                                    // 1 USDC (USDC has 6 decimals: 1 * 10^6)
+    amountOutMinimum: 1n,                                  // Set a minimum acceptable amount out
+    sqrtPriceLimitX96: 0n                                  // No price limit; set to 0
+  };
+  
+  const swapData2 = {
+    abi: ISWAPROUTER_ABI.abi,
+    functionName: 'exactInputSingle',
+    args: [params],
+  }
+  //console.log(swapData2);
+  // Create swap transaction using the contract's swap function
+  const swapData = encodeFunctionData(swapData2);
+  const swapTransactionData = {
+    transactions: [
+      {
+        to: contractAddress,
+        data: swapData,
+        value: '0',
+      }
+    ]
+  } as CreateTransactionProps;
+  const USDC = {
+    chainId: chainid || 11155111,
+    address: getAddress(USDC_ADDRESS),
+    decimals: 6,
+    symbol: 'USDC',
+    name: 'USD Coin',
+  } as Token2;
+
+  const USDT = {
+    chainId: chainid || 11155111,
+    address: getAddress(USDT_ADDRESS),
+    decimals: 6,
+    symbol: 'USDT',
+    name: 'Tether USD',
+  } as Token2;
+
+  // const swapData = await constructSingleTrade({
+  //   chainId: (chainid ? chainid : globalChainId) as 1 | 10 | 56 | 137 | 8453 | 43114 | 42161,
+  //   recipient: safeAddress,
+  //   sourceToken: USDC,
+  //   targetToken: USDT,
+  //   amount: usdcBalance,
+  //   slippageTolerance: 3000
+  // });
+  // const swapTransactionData = {
+  //   transactions: [
+  //     {
+  //       to: swapData?.to,
+  //       data: swapData?.calldata,
+  //       value: swapData?.value || '0',
+  //     }
+  //   ]
+  // } as CreateTransactionProps;
+  //console.log('creating swap transaction', swapTransactionData);
+  const swapTransaction = await safe4337Pack.createTransaction({
+    transactions: swapTransactionData.transactions
+  });
+  console.log('swap transaction created');
+  const identifiedSwapOperation = await safe4337Pack.getEstimateFee({
+    safeOperation: swapTransaction
+  });
+  console.log('identified swap operation');
+  const signedSwapOperation = await safe4337Pack.signSafeOperation(identifiedSwapOperation);
+  const swapOpHash = await safe4337Pack.executeTransaction({
+    executable: signedSwapOperation
+  });
+  
+  console.log('USDC to USDT swap operation hash:', swapOpHash);
+  
+  // Wait for the operation to complete
+  let isOperationSuccess = false;
+  let maxAttempts = 10;
+  let attempts = 0;
+  
+  while (!isOperationSuccess && attempts < maxAttempts) {
+    attempts++;
+    try {
+      const userOperationResult = await safe4337Pack.getUserOperationReceipt(swapOpHash);
+      isOperationSuccess = userOperationResult !== null && userOperationResult.success;
+      if (isOperationSuccess) {
+        console.log('USDC to USDT swap completed successfully');
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before checking again
+      }
+    } catch (error) {
+      console.error('Error checking operation status:', error);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  }
+  
+  // Verify the new USDT balance
+  if (isOperationSuccess) {
+    const newUsdtBalance = await pubClient.readContract({
+      address: getAddress(USDT_ADDRESS),
+      abi: ERC20_ABI,
+      functionName: 'balanceOf',
+      args: [safeAddress]
+    }) as bigint;
+    
+    console.log('New USDT balance after swap:', newUsdtBalance.toString());
+  }
+  
+  return swapOpHash;
 }

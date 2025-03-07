@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { Avatar, Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { Token, Token2 } from '@/service/types';
-import { queryPools } from '@/service/uniswap';
+import { queryPools } from '@/service/uniswap/index';
 import { formatGwei } from 'viem'
 import { Delete } from '@mui/icons-material';
 import './resultItem.css';

@@ -5,7 +5,7 @@ import { Invoice, InvoiceStatuses, Pool, Token, Token2 } from "@/service/types";
 import { polygonCoins } from '@/data';
 import { uid } from "uid-promise";
 import dayjs from "dayjs";
-import { queryPools } from "@/service/uniswap";
+import { queryPools } from "@/service/uniswap/index";
 import fs from 'fs/promises';
 
 const sourceTokens: Token[] = [
