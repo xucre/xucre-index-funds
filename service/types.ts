@@ -201,6 +201,8 @@ export interface PoolData {
   targetToken: Token;
   feeTier: number;
   liquidity: string;
+  sqrtPriceX96?: string;
+  tick?: string;
 }
 
 export interface Token {
