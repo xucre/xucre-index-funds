@@ -84,7 +84,7 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
   }, [confirmationHash]);
 
   useEffect(() => { setIsLoading(false) }, []);
-
+  const isValidBalance = balance && BigInt(balance) >= BigInt(amount);
   if (!sourceToken) return null;
   return (
     <Stack justifyContent={'center'} alignItems={'center'} spacing={2} >
@@ -130,10 +130,10 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
             {/*<Typography color='text.primary'> Balance: {balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}</Typography>
             <Typography color='text.primary'> Allowance: {allowanceAmount ? '0' : formatUnits(allowance as bigint, sourceToken.decimals)}</Typography>*/}
             {
-              BigInt(balance) === BigInt(0) &&
+              !isValidBalance &&
               <Typography variant={'body2'} fontWeight={'bold'}>{languageData[language].ui.use_onramp}</Typography>
             }
-            {balance && BigInt(balance) > BigInt(0) && 
+            {isValidBalance && 
               <TextField
                 label={languageData[language].ui.amount}
                 slotProps={{
@@ -173,13 +173,13 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
           {!isConnected &&
             <AccountButton />
           }
-          {isConnected && BigInt(balance) > BigInt(0) &&
+          {isConnected && isValidBalance &&
             <LoadingButton variant="contained" fullWidth disabled={!isReadyToApprove} onClick={executeCombinedFlow} loading={isLoading} loadingIndicator={languageData[language].ui.executing}>
               {isReadyToBuy ? languageData[language].Buttons_Header.buy : languageData[language].ui.approve_and_buy}
             </LoadingButton>
           }
           
-          {isConnected && BigInt(balance) === BigInt(0) && 
+          {isConnected && !isValidBalance && 
             <Button variant={'contained'} fullWidth color={'primary'} onClick={handleOnRampClick} sx={{borderRadius: 25}}>{languageData[language].Settings.onramp_button}</Button>
           }
         </CardActions>
