@@ -33,14 +33,8 @@ export default function IndexFunds() {
 
 
   useEffect(() => {
-    if (sfdcUser && sfdcUser.riskTolerance && user) { // if selectedFund is not null      
-      router.push(`/fund/${sfdcUser.riskTolerance}`);
-    } else if (user) {
-      router.push(`/fund/Moderate`);
-    } else {
-      router.push('/indexes/Moderate')
-    }
-  }, [sfdcUser])
+    router.push('/indexes/Moderate')
+  }, [])
 
 
   useEffect(() => {
