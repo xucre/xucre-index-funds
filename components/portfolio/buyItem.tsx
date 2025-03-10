@@ -1,6 +1,6 @@
 'use client'
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Stack, ButtonBase, Avatar, Typography, Menu, MenuItem, TextField, Card, CardActions, CardContent, CardMedia, Collapse, Stepper, StepLabel, Step } from "@mui/material";
+import { Stack, ButtonBase, Avatar, Typography, Menu, MenuItem, TextField, Card, CardActions, CardContent, CardMedia, Collapse, Stepper, StepLabel, Step, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { formatUnits } from "viem";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -10,16 +10,11 @@ import { useMixpanel } from "@/hooks/useMixpanel";
 import OpaqueCard from "../ui/OpaqueCard";
 import { useAccount } from "wagmi";
 import AccountButton from "../accountButton";
+import { useAppKit } from "@reown/appkit/react";
 
 export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, sourceToken, sourceTokens, setSourceToken, balance, rawAmount, handleAmountUpdate, amount, handleApproval, loading, allowance, allowanceAmount, handleSpot }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const { open: appKitOpen } = useAppKit()
   const mixpanel = useMixpanel();
   const { language } = useLanguage();
   const { isConnected, address, chainId, chain } = useAccount();
@@ -28,8 +23,20 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
   const isReadyToApprove = amount > BigInt(0);
   const isReadyToBuy = isReadyToApprove && ((allowance && BigInt(allowance) >= BigInt(amount)) || (isNativeToken && BigInt(balance) >= BigInt(amount)));
   const step = isReadyToBuy ? 1 : 0;
+  const open = Boolean(anchorEl);
 
-  useEffect(() => { setIsLoading(false) }, []);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOnRampClick= () => {
+    //setShowButton(!showButton);
+    appKitOpen({ view: 'OnRampProviders' });
+  }
+
   const executeCombinedFlow = async () => {
     setIsLoading(true)
     try {
@@ -76,6 +83,8 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
     }
   }, [confirmationHash]);
 
+  useEffect(() => { setIsLoading(false) }, []);
+
   if (!sourceToken) return null;
   return (
     <Stack justifyContent={'center'} alignItems={'center'} spacing={2} >
@@ -120,18 +129,25 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
             </Menu>
             {/*<Typography color='text.primary'> Balance: {balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}</Typography>
             <Typography color='text.primary'> Allowance: {allowanceAmount ? '0' : formatUnits(allowance as bigint, sourceToken.decimals)}</Typography>*/}
-            <TextField
-              label={languageData[language].ui.amount}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-              value={rawAmount}
-              color={'success'}
-              helperText={`${languageData[language].ui.balance}: ${balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}`}
-              onChange={handleAmountUpdate}
-            />
+            {
+              BigInt(balance) === BigInt(0) &&
+              <Typography variant={'body2'} fontWeight={'bold'}>{languageData[language].ui.use_onramp}</Typography>
+            }
+            {balance && BigInt(balance) > BigInt(0) && 
+              <TextField
+                label={languageData[language].ui.amount}
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                value={rawAmount}
+                color={'success'}
+                helperText={`${languageData[language].ui.balance}: ${balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}`}
+                onChange={handleAmountUpdate}
+              />
+            }
+            
             <Collapse in={isReadyToApprove} sx={{}}>
               <Stepper activeStep={step} orientation="vertical" sx={{ paddingY: 2, alignItems: 'center', display: 'block' }}>
                 <Step>
@@ -157,12 +173,15 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
           {!isConnected &&
             <AccountButton />
           }
-          {isConnected && 
+          {isConnected && BigInt(balance) > BigInt(0) &&
             <LoadingButton variant="contained" fullWidth disabled={!isReadyToApprove} onClick={executeCombinedFlow} loading={isLoading} loadingIndicator={languageData[language].ui.executing}>
               {isReadyToBuy ? languageData[language].Buttons_Header.buy : languageData[language].ui.approve_and_buy}
             </LoadingButton>
           }
           
+          {isConnected && BigInt(balance) === BigInt(0) && 
+            <Button variant={'contained'} fullWidth color={'primary'} onClick={handleOnRampClick} sx={{borderRadius: 25}}>{languageData[language].Settings.onramp_button}</Button>
+          }
         </CardActions>
       </OpaqueCard>
     </Stack>
