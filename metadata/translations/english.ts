@@ -312,6 +312,7 @@ const values : TranslationType = {
     view_privacy: 'Privacy Policy',
     view_profile: 'Profile',
     view_organization_setting: 'Organization Settings',
+    onramp_button: 'On-Ramp',
   },
   SelectLanguage: {
     en: "English",
@@ -386,6 +387,7 @@ const values : TranslationType = {
     withdraw_title: 'Withdraw Token',
     transaction_error: "Transaction Failed",
     success: "Success",
+    use_onramp: "Please use the on-ramp feature to deposit funds.",
   },
   IndexBuilder: {
     successfulAddition: "Successfully added to the index fund",

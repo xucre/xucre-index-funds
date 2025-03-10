@@ -314,6 +314,7 @@ const values : TranslationType = {
     view_privacy: 'Privacidad',
     view_profile: 'Perfil',
     view_organization_setting: 'Configuración de la organización',
+    onramp_button: 'Rampa de entrada',
   },
   SelectLanguage: {
     en: "Inglés",
@@ -388,6 +389,7 @@ const values : TranslationType = {
     withdraw_title: 'Retirar Token',
     transaction_error: "Transacción Fallida",
     success: "Éxito",
+    use_onramp: "Utilice la función de rampa de acceso para depositar fondos.",
   },
   IndexBuilder: {
     successfulAddition: "Agregado con éxito al fondo de índice",
