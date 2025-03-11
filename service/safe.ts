@@ -582,6 +582,7 @@ export async function executeTokenWithdrawalToWallet({to, tokenAddress, amount, 
 
 export async function executeUserSpotExecution (member: InvoiceMember, rpcUrl: string, chainid: number, invoiceId: string, fundMap: {[key: string]: IndexFund}) {
   try {
+    console.log(member);
     return await createUserSpotExecution(member, rpcUrl, chainid, fundMap);
   } catch (err2) {
     console.log('error executing spot for member', member.safeWalletAddress);
@@ -746,6 +747,9 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   const tokenAddresses = activeItems.map((item) => getAddress(item.address));
   const tokenPoolFees = activeItems.map((item) => item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee);
 
+
+  // 500000000
+  // 296659812
   const unencodedData = {
     abi: XUCREINDEXFUNDS_ABI.abi,
     functionName: 'spotExecution',
