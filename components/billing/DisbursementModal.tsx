@@ -135,7 +135,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, organiza
         if (status === 'error') return <ErrorIcon color="error" />;
         return null;
     };
-
+    console.log('invoice', invoice)
     return (
         <Dialog open={open} onClose={(event, reason) => {}} fullWidth={true} maxWidth={'md'} >
             <DialogTitle>{languageData[language].Billing.disbursement_modal_title}</DialogTitle>
