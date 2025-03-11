@@ -507,10 +507,10 @@ export interface InvoiceTransactionOptions {
 
 function createUserSourceTransfer(member: InvoiceMember) {
   const recipientAddress = getAddress(member.safeWalletAddress);
-  const contributionTotal = member.salaryContribution + member.organizationContribution;
+  const contributionTotal = Number(member.salaryContribution) + Number(member.organizationContribution);
   const amount = parseUnits(contributionTotal.toString(), 6);
 
-  if (contributionTotal < .01) return null;
+  if (contributionTotal < 0.01) return null;
 
   const rawTransferData = encodeFunctionData({
     abi: ERC20_ABI,
@@ -732,9 +732,10 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
   console.log('IsUserSafeDeployed', isSafeDeployed);
   
-  const memberContribution = parseUnits(member.salaryContribution.toString(), 6);
+  const contributionTotal = Number(member.salaryContribution) + Number(member.organizationContribution);
+  const memberContribution = parseUnits(contributionTotal.toString(), 6);
   await validateCurrentERC20Allowance(chainid || globalChainId, safeAddress, memberContribution, safe4337Pack);
-  if (member.salaryContribution < .01) {
+  if (contributionTotal < .01) {
     console.log('member salary contribution too low', member.safeWalletAddress);
     return;
   }
