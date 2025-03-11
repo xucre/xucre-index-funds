@@ -103,7 +103,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, organiza
             // Execute user transactions and update currentCount
             await Promise.all(invoice.members.map(async (member) => {
                 try {
-                  const contributionTotal = member.salaryContribution + member.organizationContribution;
+                  const contributionTotal = Number(member.salaryContribution) + Number(member.organizationContribution);
                     if (contributionTotal < .1) {
                         setCurrentCount(prev => prev + 1);
                         return;
