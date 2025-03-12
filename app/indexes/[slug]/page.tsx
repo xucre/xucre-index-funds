@@ -25,8 +25,10 @@ import { useClerkUser } from "@/hooks/useClerkUser";
 import FundBlock from "@/components/fund/FundBlock";
 import FundItemList from "@/components/fund/FundItemList";
 import FundHeader from "@/components/fund/FundSelector";
+import IndexBlock from "@/components/fund/FundBlock";
+import IndexItemList from "@/components/indexes/IndexItemList";
 
-export default function IndexFundItem({ params }: { params: { slug: string } }) {
+export default function IndexFundPortfolio({ params }: { params: { slug: string } }) {
   const theme = useTheme();
   const { language } = useLanguage();
   const mixpanel = useMixpanel();
@@ -90,12 +92,12 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
         return await getFundDetails(isDev ? 1155111: globalChainId, fund);
     }));
     const fund = fundDetailList.reduce((acc, fund) => {
-        if (!fund.toleranceLevels || fund.toleranceLevels.length === 0) {
+        if (!fund.public) {
           return acc;
         }
-        if (fund.toleranceLevels[0] === slugString) return fund;
+        if (fund.id === slugString) return fund;
         return acc;
-    }, fundDetailList[0] as IndexFund);
+    }, fundDetailList[0] as IndexFund | undefined);
     setIndexFund(fund);
   }
 
@@ -118,7 +120,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
     <Stack direction={'row'} spacing={4} justifyContent={'space-between'} alignItems={'start'} sx={{px:4}}>
       <Box mt={{ xs: 0 }} pb={4} mx={2} p={2}>
         <Stack direction={'row'} sx={{py: 4}} spacing={2} justifyContent={'start'} alignItems={'center'} >
-          <FundBlock header={_indexFund.name[language]} subheader={`${languageData[language].Edit.risk_tolerance_label}: ${_indexFund?.toleranceLevels ? _indexFund.toleranceLevels[0] : ''}`} />
+          <IndexBlock header={_indexFund.name[language]} subheader={`${languageData[language].Edit.risk_tolerance_label}: ${_indexFund?.toleranceLevels ? _indexFund.toleranceLevels[0] : ''}`} />
         </Stack>
         
         <Box>
@@ -126,7 +128,7 @@ export default function IndexFundItem({ params }: { params: { slug: string } }) 
         </Box>
 
         <Box my={1}>
-          <FundItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
+          <IndexItemList portfolioItems={_indexFund.portfolio} priceMap={priceMap} />
         </Box>
       </Box>
       <Box minWidth={'20vw'}>

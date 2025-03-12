@@ -17,7 +17,7 @@ export default function OrganizationBalances() {
   }, [organization]);
 
   // Choose which wallet to display (escrow is preferred if available)
-  const walletToDisplay = escrowAddress || selfAddress;
+  const walletToDisplay = selfAddress;
 
   if (!walletToDisplay) return null;
   

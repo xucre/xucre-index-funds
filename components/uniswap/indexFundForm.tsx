@@ -16,7 +16,9 @@ import {
   OutlinedInput,
   Grid2 as Grid,
   Modal,
-  Dialog
+  Dialog,
+  FormControlLabel,
+  FormGroup
 } from '@mui/material';
 import UniswapPoolChecker from '@/components/uniswap/poolChecker';
 import { Language } from '@/metadata/translations';
@@ -61,6 +63,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
     toleranceLevels: [],
     custom: true,
     sourceToken: undefined,
+    public: false
   });
   const [currentLanguage, setCurrentLanguage] = useState<Language>(Language.EN);
   const [toleranceLevels, setToleranceLevels] = useState<string[]>([]);
@@ -108,6 +111,14 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
   const handleChange =
     (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
+      if (field === 'public') {
+        setFund({
+          ...fund,
+          [field]: event.target.checked,
+        });
+        return;
+      }
+
       setFund({
         ...fund,
         [field]: value,
@@ -442,6 +453,10 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
             error={Boolean(colorError)}
             helperText={colorError}
           />
+
+          <FormGroup sx={{display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
+            <FormControlLabel labelPlacement={'start'} control={<Checkbox  checked={fund.public} onChange={handleChange('public')} />} label="Is Public Fund?" />
+          </FormGroup>
           {!id && 
             <Button
               variant="contained"

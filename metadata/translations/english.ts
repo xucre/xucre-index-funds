@@ -230,6 +230,10 @@ const values : TranslationType = {
     transactions: 'Transactions',
     balance: 'Token Balances',
   },
+  CompanyDashboard: {
+    no_corporate_dashboard_access: 'This organization does not have access to the corporate dashboard',
+    no_organization_found: 'Please select an organization to view the dashboard',
+  },
   Notifications: {
     notifications: "Notifications",
     markAllAsRead: "Mark all as read!",
@@ -253,6 +257,9 @@ const values : TranslationType = {
     empty_escrow: 'No Escrow Safe found',
     empty_escrow_description: 'It looks like you haven\'t created your Escrow Safe smart wallet yet. Let\'s set it up to finish onboarding!',
     create_escrow: 'Create Safe',
+    empty_corp_safe: 'No Corporate Safe found',
+    empty_corp_safe_description: 'It looks like you haven\'t created your Corporate Safe smart wallet yet. Let\'s set it up to start contributing!',
+    create_corp_safe: 'Create Safe',
     transfer_escrow: 'Transfer Safe',
     transfer_escrow_description: 'It looks like you need to transfer ownership of your Escrow Safe to complete onboarding. Let\'s get started!',
     transfer_escrow_button: 'Transfer',

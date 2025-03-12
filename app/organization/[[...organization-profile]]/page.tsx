@@ -4,8 +4,6 @@ import { Box, Chip, Stack, Typography, useTheme } from "@mui/material"
 import router from "next/router";
 import { dark } from "@clerk/themes";
 import React, { useEffect } from "react";
-import EmptyOrganization from "@/components/organization/EmptyOrganization";
-import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
 import OrganizationMembersTable from "@/components/organization/OrganizationMembersTable";
 import CreateUserModal from "@/components/organization/CreateUserModal";
 import OpaqueCard from "@/components/ui/OpaqueCard";
