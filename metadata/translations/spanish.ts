@@ -214,7 +214,7 @@ const values : TranslationType = {
     requests_button: 'Solicitudes',
     wallet_button: "Billetera",
     faq: "Ayuda",
-    settings: "Configurações",
+    settings: "Configuración",
     support: "Suporte",
     terms: "Termos e Condições",
     privacy: "Privacidade",
