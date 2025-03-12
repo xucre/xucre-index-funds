@@ -69,6 +69,9 @@ export async function handleCustomerQuery(input: ChatCompletionMessageParam[], a
                     caseCreate: ai_caseCreateTool
                 },
             }[classification.type],
+            onError: (error) => {
+                console.error('Error in textStream', error)
+            }
     });
     console.log('textStream generated', textStream.request, textStream.reasoningDetails)
     // const { text: response } = await generateText({
