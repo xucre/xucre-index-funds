@@ -38,6 +38,7 @@ export async function handleCustomerQuery(input: ChatCompletionMessageParam[], a
         3. Brief reasoning for classification`,
     });
 
+    console.log('object generated', classification)
     // Route based on classification
     // Set model and system prompt based on query type and complexity
     const textStream = streamText({
@@ -69,7 +70,7 @@ export async function handleCustomerQuery(input: ChatCompletionMessageParam[], a
                 },
             }[classification.type],
     });
-    
+    console.log('textStream generated', textStream.request, textStream.reasoningDetails)
     // const { text: response } = await generateText({
     //     model:
     //     classification.complexity === 'simple'
