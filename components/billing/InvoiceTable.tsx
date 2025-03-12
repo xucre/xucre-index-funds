@@ -49,7 +49,7 @@ const InvoiceTable = () => {
           // ...existing code...
           { field: 'id', headerName: languageData[language].Invoice.table_header_id, flex: 2, headerClassName: 'primaryBackground--header' },
           { field: 'status', headerName: languageData[language].Invoice.table_header_status, flex: 1, headerClassName: 'primaryBackground--header' },
-          { field: 'dueDate', headerName: languageData[language].Invoice.table_header_due_date, flex: 1, headerClassName: 'primaryBackground--header' },
+          //{ field: 'dueDate', headerName: languageData[language].Invoice.table_header_due_date, flex: 1, headerClassName: 'primaryBackground--header' },
           { field: 'totalDue', headerName: languageData[language].Invoice.table_header_total_due, flex: 1, headerClassName: 'primaryBackground--header' },
           { field: 'createdAt', headerName: languageData[language].Invoice.table_header_created_at, flex: 1, headerClassName: 'primaryBackground--header',
 

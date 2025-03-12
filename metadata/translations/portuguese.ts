@@ -32,6 +32,7 @@ const values : TranslationType  = {
     disbursement_modal_title: 'Processamento de dispersão',
     disbursement_modal_disbursing: 'Dispersando USDT para usuários',
     disbursement_modal_executing: 'Executando transações de usuários',
+    new_disbursement_button: 'Novo desembolso',
   },
   Home: {
     title_1: 'Bem-vindo a',
