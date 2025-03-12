@@ -9,7 +9,8 @@ const execute = async (params) => {
     //const results = '{"test": "test"}';
     const results = await queryVector(tbl, text);
     if (!results || results.length === 0) {
-      throw new Error("No results found.");
+      //throw new Error("No results found.");
+      return JSON.stringify([]);
     }
     return JSON.stringify(results);
 };

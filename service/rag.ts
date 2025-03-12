@@ -11,7 +11,7 @@ const db = new VectorDB();
 
 export const getTable = async (name: string) => {
     try {
-        db.loadFile('data/vectorDB/vectorDB.json');
+        db.loadFile('../data/vectorDB/vectorDB.json');
     }catch(err){
         console.error("Error loading vector database:", err);
     }
