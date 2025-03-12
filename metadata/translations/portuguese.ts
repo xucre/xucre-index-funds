@@ -213,7 +213,7 @@ const values : TranslationType  = {
     requests_button: 'Solicitações',
     wallet_button: 'Carteira',
     faq: "Ajuda",
-    settings: "Configuraciones",
+    settings: "Configurações",
     support: "Suporte",
     terms: "Termos e Condições",
     privacy: "Privacidade",
