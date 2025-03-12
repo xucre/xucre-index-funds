@@ -146,9 +146,15 @@ const ChatInterface = ({agent, size} :{agent?: AgentConfig, size: 'sm' | 'md' | 
             <div className={styles.cloud}>
                 <div ref={messageListRef} className={styles.messagelist}>
                 {messages.filter((message) => typeof message.content === 'string').map((message, index) => {
+                    let messageContent = '';
+                    try {
+                        messageContent = decodeURI(message.content.replaceAll('"',''));
+                    } catch (e) {
+                        console.log(e);   
+                    } 
                     return (
                         <div key={index} className={`${styles.messageContainer} ${message.role === 'user' ? styles.userMessage : styles.assistantMessage}`}>
-                            <div className={styles.messageContent} style={{whiteSpace: 'pre'}}>{typeof message.content === 'string' ? <TextWithLineBreaks text={decodeURI(message.content.replaceAll('"',''))} /> : ''}</div>
+                            <div className={styles.messageContent} style={{whiteSpace: 'pre'}}>{typeof message.content === 'string' ? <TextWithLineBreaks text={messageContent} /> : ''}</div>
                             {/* <div className={styles.messageRole}>{message.role === 'user' ? 'You' : 'Assistant'}</div> */}
                         </div>
                     );
