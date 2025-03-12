@@ -55,7 +55,7 @@ export async function handleCustomerQuery(input: ChatCompletionMessageParam[], a
             prompt: `Respond to this customer query : ${query}
                 Use the following message history to contextualize your response: ${JSON.stringify(input)}
             `,
-            maxSteps: 8,
+            maxSteps: 20,
             tools: {
                 general: {
                     vectorSearch: ai_vectorSearchTool
