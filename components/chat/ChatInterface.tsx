@@ -151,6 +151,7 @@ const ChatInterface = ({agent, size} :{agent?: AgentConfig, size: 'sm' | 'md' | 
                         messageContent = decodeURI(message.content.replaceAll('"',''));
                     } catch (e) {
                         console.log(e);   
+                        messageContent = message.content as string;
                     } 
                     return (
                         <div key={index} className={`${styles.messageContainer} ${message.role === 'user' ? styles.userMessage : styles.assistantMessage}`}>
