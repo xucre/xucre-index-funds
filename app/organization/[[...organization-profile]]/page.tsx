@@ -37,7 +37,7 @@ export default function Organization() {
   }, [organization, userMemberships])
   
   return (
-    <Box alignItems={'center'} display={'flex'} justifyContent={'center'} width={'full'} mx={5} my={1} pb={10}>
+    <Box alignItems={'center'} display={'flex'} justifyContent={'center'} width={'full'} mx={5} my={5} pb={10}>
       {isLoaded && false && 
         <Protect permission={'org:sys_memberships:manage'}>
           <OpaqueCard sx={{px:2}}>

@@ -197,6 +197,7 @@ const values : TranslationType = {
     disbursement_modal_title: 'Processing Disbursement',
     disbursement_modal_disbursing: 'Disbursing USDT to users',
     disbursement_modal_executing: 'Executing user transactions',
+    new_disbursement_button: 'New Disbursement',
   },
   Home: {
     title_1: 'Welcome to',

@@ -95,7 +95,7 @@ export default function InvoicePage() {
   return (
     <Suspense>
       {invoiceDetails && 
-        <Stack direction={'column'} spacing={2} mx={2}>
+        <Stack direction={'column'} spacing={2} m={5}>
           <InvoiceDetail invoice={invoiceDetails} usdcBalance={usdcBalance} reload={fetchInvoiceDetails}/>
           <InvoiceDetailTable
             saveMembers={saveMembers}
