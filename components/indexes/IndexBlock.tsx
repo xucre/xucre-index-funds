@@ -3,7 +3,7 @@ import { getDashboardBorderColor } from "@/service/helpers";
 import { Stack, Typography, Chip, useTheme, Skeleton } from "@mui/material";
 
 
-const IndexBlock = ({header, subheader}) => {
+const FundBlock = ({header, subheader}) => {
   const theme = useTheme();
   const borderColor = getDashboardBorderColor(theme);
   const { language, languageData } = useLanguage();
@@ -19,4 +19,4 @@ const IndexBlock = ({header, subheader}) => {
   )
 }
 
-export default IndexBlock;
+export default FundBlock;

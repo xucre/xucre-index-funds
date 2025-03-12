@@ -231,6 +231,10 @@ const values : TranslationType  = {
     transactions: 'Transações',
     balance: 'Saldos de Tokens',
   },
+  CompanyDashboard: {
+    no_corporate_dashboard_access: 'Você não tem acesso ao painel corporativo',
+    no_organization_found: 'Nenhuma organização encontrada',
+  },
   Notifications: {
     notifications: "Notificações",
     markAllAsRead: "Marcar tudo como lido",
@@ -254,6 +258,9 @@ const values : TranslationType  = {
     empty_escrow: 'Escrow não encontrado',
     empty_escrow_description: 'Parece que você ainda não criou sua carteira de garantia. Vamos configurá-la para começar!',
     create_escrow: 'Criar escrow seguro',
+    empty_corp_safe: 'Safe corporativo não encontrado',
+    empty_corp_safe_description: 'Parece que você ainda não criou seu seguro corporativo. Vamos configurá-lo para começar!',
+    create_corp_safe: 'Criar seguro',
     transfer_escrow: 'Transferir Escrow',
     transfer_escrow_description: 'Parece que você ainda não transferiu a propriedade do Escrow. Vamos configurá-lo para começar!',
     transfer_escrow_button: 'Transferir Escrow',

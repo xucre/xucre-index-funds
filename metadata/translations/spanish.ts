@@ -232,6 +232,10 @@ const values : TranslationType = {
     transactions: 'Transacciones',
     balance: 'Saldos de tokens',
   },
+  CompanyDashboard: {
+    no_corporate_dashboard_access: 'No tienes acceso al panel de control corporativo',
+    no_organization_found: 'No se encontró la organización',
+  },
   Notifications: {
     notifications: "Notificaciones",
     markAllAsRead: "Marcar todo como leído",
@@ -255,6 +259,9 @@ const values : TranslationType = {
     empty_escrow: 'No se encontró Escrow Safe',
     empty_escrow_description: 'Parece que aún no has creado tu Escrow Safe wallet. ¡Vamos a configurarlo para comenzar!',
     create_escrow: 'Crear Escrow Safe',
+    empty_corp_safe: 'No se encontró Corporate Safe',
+    empty_corp_safe_description: 'Parece que aún no has creado tu Corporate Safe wallet. ¡Vamos a configurarlo para comenzar!',
+    create_corp_safe: 'Crear Corporate Safe',
     transfer_escrow: 'Transferir Escrow Safe',
     transfer_escrow_description: 'Parece que aún no has transferido la propiedad de tu Escrow Safe wallet. ¡Vamos a configurarlo para comenzar!',
     transfer_escrow_button: 'Transferir',

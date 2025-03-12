@@ -34,18 +34,10 @@ export default function OrganizationDashboard() {
   }
 
   // If no organization wallet exists, show a message
-  if (!escrowAddress && !selfAddress) {
-    return (
-      <OpaqueCard>
-        <Typography variant="h6">No organization wallet found</Typography>
-        <Typography variant="body1">Please create an organization wallet to view the dashboard.</Typography>
-      </OpaqueCard>
-    );
-  }
+  
 
   // Choose which wallet to display (escrow is preferred if available)
-  const walletToDisplay = escrowAddress || selfAddress;
-
+  const walletToDisplay = selfAddress;
   return (
     <OrganizationDashboardContainer address={walletToDisplay as string} />
   );

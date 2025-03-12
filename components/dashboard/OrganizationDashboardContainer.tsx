@@ -20,23 +20,22 @@ export default function OrganizationDashboardContainer({ address }: { address: s
 
   return (
     <Stack direction={'column'} spacing={2}>
-      <OpaqueCard>
-        <Typography variant="h6">Organization Wallet</Typography>
-        <Typography variant="body2">
+      {/* <OpaqueCard> */}
+        {/* <Typography variant="body2">
           {organization?.name} - {truncateEthAddress(address)}
         </Typography>
-        <Divider sx={{ my: 2 }} />
+        <Divider sx={{ my: 2 }} /> */}
         
         {hasHistory && <BalanceBlock balance={balance} change={change} address={address} loaded={loaded} />}
         {!hasHistory && <BalanceBlock balance={0} change={0} address={address} loaded={loaded} />}
-      </OpaqueCard>
+      {/* </OpaqueCard> */}
 
-      <OpaqueCard>
-        <Typography variant="h6">Organization Transactions</Typography>
-        <Divider sx={{ my: 2 }} />
+      {/* <OpaqueCard> */}
+        {/* <Typography variant="h6">Organization Transactions</Typography>
+        <Divider sx={{ my: 2 }} /> */}
         
         {<DashboardTransactionList address={address} transactions={transactions} />}
-      </OpaqueCard>
+      {/* </OpaqueCard> */}
     </Stack>
   );
 }

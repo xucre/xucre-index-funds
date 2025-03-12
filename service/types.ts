@@ -166,7 +166,8 @@ export type IndexFund = {
   chainId: number;
   custom: boolean | undefined;
   sourceToken: PortfolioItem | undefined;
-  portfolio: PortfolioItem[]
+  portfolio: PortfolioItem[],
+  public?: boolean;
 };
 
 export type PortfolioItem = {

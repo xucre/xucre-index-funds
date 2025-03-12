@@ -13,6 +13,7 @@ export interface TranslationType {
   Agent: any,
   Buttons_Header: any,
   Billing: any,
+  CompanyDashboard: any,
   Dashboard: any,
   LanguagePage: any,
   FAQPage: any,
