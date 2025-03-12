@@ -2,6 +2,7 @@
 import { VectorDB } from 'imvectordb';
 import path from 'path';
 import { OpenAI } from 'openai';
+import vectordb from '../data/vectorDB/vectorDB.json';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -11,7 +12,11 @@ const db = new VectorDB();
 
 export const getTable = async (name: string) => {
     try {
-        db.loadFile('../data/vectorDB/vectorDB.json');
+        const documents = vectordb;
+        for (let doc of documents) {
+            db.add(doc)
+        }
+        //db.loadFile('../data/vectorDB/vectorDB.json');
     }catch(err){
         console.error("Error loading vector database:", err);
     }
