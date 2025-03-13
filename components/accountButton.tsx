@@ -8,7 +8,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
 import truncateEthAddress from 'truncate-eth-address';
 
-const AccountButton = ({ showBalance = true }) => {
+const AccountButton = ({ showBalance = true, fullWidth = false }) => {
   const {language} = useLanguage();
   const [showButton, setShowButton] = useState(false);
   const { isConnected, address } = useAccount();
@@ -27,11 +27,11 @@ const AccountButton = ({ showBalance = true }) => {
     open();
   }
   return (
-    <Box>
+    <Box sx={{width: '-webkit-fill-available'}}>
       {/* <w3m-button balance={showBalance ? 'show' : 'hide'} /> */}
       {isConnected ? 
-        <Button variant={'contained'} color={'primary'} onClick={handleClick} sx={{borderRadius:2}}>{`${truncateEthAddress(address as string)}`}</Button> :
-        <Button variant={'contained'} color={'primary'} onClick={handleClick} sx={{borderRadius: 25}}>{languageData[language].Settings.connect_wallet}</Button>
+        <Button variant={'contained'} color={'primary'} fullWidth onClick={handleClick} sx={{borderRadius:2}}>{`${truncateEthAddress(address as string)}`}</Button> :
+        <Button variant={'contained'} color={'primary'} fullWidth onClick={handleClick} sx={{borderRadius: 25}}>{languageData[language].Settings.connect_wallet}</Button>
       }
       
     </Box>
