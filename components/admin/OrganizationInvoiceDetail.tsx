@@ -103,7 +103,7 @@ const OrganizationInvoiceDetail: React.FC<OrganizationInvoiceDetailProps> = ({ i
                 </Stack>
                 
             </OpaqueCard>
-            <DisbursementModal open={openDisbursement} closeFunction={handleDisburseClose} invoice={invoice} organizationId={organizationId ? organizationId : ''} />
+            <DisbursementModal adminUsers={[]} open={openDisbursement} closeFunction={handleDisburseClose} invoice={invoice} organizationId={organizationId ? organizationId : ''} />
         </>
     );
 };

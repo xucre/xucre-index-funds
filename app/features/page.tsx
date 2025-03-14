@@ -12,6 +12,8 @@ import { chainValidation } from "@/service/helpers";
 import { globalChainId } from "@/service/constants";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { Grid } from "react-loader-spinner";
+import { useClerkUser } from "@/hooks/useClerkUser";
+import { sendInAppNotification } from "@/service/knock";
 
 interface FeatureItem {
   name: string;
@@ -44,12 +46,18 @@ export default function Feature() {
   const { language } = useLanguage();
   const [isLocked, setIsLocked] = useState(true);
   const { isSuperAdmin } = useIsAdmin();
+  const {user} = useClerkUser();
 
   useEffect(() => {
     if (isSuperAdmin) {
       setIsLocked(false);
     }
   }, [isSuperAdmin]);
+
+  const testDisbursementNotification = async () => {
+    if (!user) return;
+    await sendInAppNotification(user.id, 'disbursement-notification', { transactionLink: `https://polygonscan.com/tx/${1234}` });
+  }
 
   if (isLocked) {
     return <Campfire setIsLocked={(locked) => {return}} />;

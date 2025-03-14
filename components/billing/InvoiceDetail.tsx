@@ -21,7 +21,7 @@ interface InvoiceDetailProps {
 
 const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, reload }) => {
     const router = useRouter();
-    const {organization} = useClerkOrganization();
+    const {organization, userMemberships} = useClerkOrganization();
     const {language} = useLanguage();
     const [loading, setLoading] = useState(false);
     const [openDisbursement, setOpenDisbursement] = useState(false);
@@ -77,7 +77,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, rel
                     {canDisburse && loading && <Chip color={'primary'} sx={{fontWeight: 'bold'}} label={languageData[language].Invoice.executing_label} />}
                 </Box>
             </OpaqueCard>
-            <DisbursementModal open={openDisbursement} closeFunction={handleDisburseClose} invoice={invoice} organizationId={organization?.id || ''}/>
+            <DisbursementModal adminUsers={userMemberships} open={openDisbursement} closeFunction={handleDisburseClose} invoice={invoice} organizationId={organization?.id || ''}/>
         </>
     );
 };

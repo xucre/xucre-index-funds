@@ -34,9 +34,10 @@ export function useClerkOrganization() {
 
   const memoizedValue = useMemo(() => ({
     organization,
+    userMemberships: userMemberships.data || [],
     isLoaded,
     refresh: () => syncOrganization(),
-  }), [organization, isLoaded]);
+  }), [organization, userMemberships, isLoaded]);
 
   return memoizedValue;
 }
