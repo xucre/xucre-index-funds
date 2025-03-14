@@ -1,11 +1,10 @@
 "use client";
 import { useRouter } from "next/navigation";
-import {  IconButton } from "@mui/material";
-import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import {  Box, Button, IconButton } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-// OrganizationsTable.tsx
+// Mui DataGrid Imports
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import { getAllOrganizations } from "@/service/clerk";
@@ -72,7 +71,12 @@ const OrganizationsTable: React.FC = () => {
 
   return (
     <OpaqueCard>
-      {}
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Button variant="contained" onClick={() => router.push("/organizations/create")}>
+          Create Organization
+        </Button>
+      </Box>
+
       <Box sx={{ height: 600, width: "100%" }}>
         <DataGrid
           rows={organizations}
