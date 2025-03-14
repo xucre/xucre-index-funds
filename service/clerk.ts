@@ -1,5 +1,6 @@
 'use server'
 import { createClerkClient } from '@clerk/backend'
+import { auth } from '@clerk/nextjs/server';
 import { Roles } from './types'
 import superagent from 'superagent';
 
@@ -9,6 +10,23 @@ export async function updateOrganizationLicenses(organizationId: string, seatCou
   await clerkClient.organizations.updateOrganization(organizationId, { 
     maxAllowedMemberships: seatCount
    })
+}
+
+/**
+ * Create a new organization
+ * @param {string} name - The name of the organization
+ * @param {string} slug - The slug of the organization
+ * @param {number} maxAllowedMemberships - The maximum number of memberships allowed in the organization
+ * @returns {Organization} The newly created organization
+ */
+export async function createOrganization({name, slug, maxAllowedMemberships}: { name: string; slug: string; maxAllowedMemberships:number}){
+  const {userId} = await auth();
+  if(!userId){
+    throw new Error('User not authenticated.');
+  }
+  const newOrg = await clerkClient.organizations.createOrganization({name, slug, createdBy: userId, maxAllowedMemberships});
+
+  return JSON.parse(JSON.stringify(newOrg));
 }
 
 export async function getOrganization(organizationId: string) {
