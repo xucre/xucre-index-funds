@@ -117,10 +117,10 @@ export default function IndexFundPortfolio({ params }: { params: { slug: string 
   if (_indexFund === undefined) return <></>;
 
   return (
-    <Stack direction={'row'} spacing={4} justifyContent={'space-between'} alignItems={'start'} sx={{px:4}}>
+    <Stack direction={{md : 'row', xs: 'column'}} spacing={5} justifyContent={'space-between'} alignItems={{md: 'start', xs: 'center'}} sx={{px:4}}>
       <Box mt={{ xs: 0 }} pb={4} mx={2} p={2}>
         <Stack direction={'row'} sx={{py: 4}} spacing={2} justifyContent={'start'} alignItems={'center'} >
-          <IndexBlock header={_indexFund.name[language]} subheader={`${languageData[language].Edit.risk_tolerance_label}: ${_indexFund?.toleranceLevels ? _indexFund.toleranceLevels[0] : ''}`} />
+          <IndexBlock header={_indexFund.name[language]} subheader={_indexFund ? _indexFund.cardSubtitle[language] : ''} />
         </Stack>
         
         <Box>

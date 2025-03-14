@@ -88,10 +88,10 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
   if (!sourceToken) return null;
   return (
     <Stack justifyContent={'center'} alignItems={'center'} spacing={2} >
-      <OpaqueCard sx={{ maxWidth: 500 }}>
+      <OpaqueCard sx={{ /*maxWidth: 500*/ }}>
         <Collapse in={!isReadyToApprove}>
           <CardMedia
-            sx={{ height: 340, width: 350, display: { xs: 'none', sm: 'block' } }}
+            sx={{ height: '20vw', width: '25vw', display: { xs: 'none', md: 'block' } }}
             image={portfolio.imageSmall}
             title={portfolio.name[language]}
           />
@@ -171,7 +171,7 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
             Approve
           </LoadingButton>*/}
           {!isConnected &&
-            <AccountButton />
+            <AccountButton fullWidth={true}/>
           }
           {isConnected && isValidBalance &&
             <LoadingButton variant="contained" fullWidth disabled={!isReadyToApprove} onClick={executeCombinedFlow} loading={isLoading} loadingIndicator={languageData[language].ui.executing}>

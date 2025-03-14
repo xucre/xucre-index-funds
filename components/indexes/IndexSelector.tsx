@@ -34,12 +34,15 @@ export default function IndexSelector({fundList}: {fundList: IndexFund[]}) {
         if (pathname && fundList) {
             const id = pathname.split('/').pop();
             console.log('pathid',id);
-            if (id) {
+            if (id && id !== 'indexes') {
                 const fund = fundList.find((fund) => fund.id === id);
                 console.log(fund);
                 if (!fund) setSelectedFund(fundList[0]);
                 if (fund) setSelectedFund(fund);
-            } 
+            } else if (fundList && fundList.length > 0 && fundList[0].id) {
+                router.push(`/indexes/${fundList[0].id.toString()}`);
+            }
+
 
         }
     }, [pathname, fundList]);

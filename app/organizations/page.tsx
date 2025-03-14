@@ -91,11 +91,11 @@ const OrganizationsTable: React.FC = () => {
   ];
 
   return (
-    <OpaqueCard>
+    <OpaqueCard sx={{m: 5}}>
       {/* <LoadingButton variant="contained" fullWidth onClick={handleCreateManualSafe} loading={processing} loadingIndicator={'Executing'} sx={{display: 'flex',my: 2}}>
       Create Manual Safe
       </LoadingButton> */}
-      <Box sx={{ height: 600, width: '100%' }}>
+      <Box sx={{ height: 600 }}>
         <DataGrid
           rows={organizations}
           columns={columns}
@@ -109,6 +109,7 @@ const OrganizationsTable: React.FC = () => {
           pageSizeOptions={[10, 25]}
           getRowId={(row) => row.id}
           sx={{    
+            width: '80vw',
             '& .primaryBackground--header': {
               backgroundColor: 'rgb(5,46,37)',
               '--DataGrid-containerBackground' : 'rgb(5,46,37)',

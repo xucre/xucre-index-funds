@@ -54,7 +54,7 @@ const FundList = () => {
     }, []);
 
     return (
-      <Box sx={{ height: 600, width: '100%' }}>
+      <Box sx={{ height: 600, minWidth: '75vw' }}>
         <DataGrid
           rows={funds}
           columns={columns}

@@ -704,7 +704,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   //if (memberDetails === null) return;
   const selectedFund = fundMap[member.riskTolerance] || fundMap['Moderate'];
   //console.log('building portfolio for user', member.safeWalletAddress);
-  console.log(member.riskTolerance, selectedFund);
+  //console.log(member.riskTolerance, selectedFund);
   const safeAccountConfig = {
     safeAddress: member.safeWalletAddress,
   };
@@ -763,7 +763,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
       memberContribution
     ],
   }
-  console.log(unencodedData)
+  //console.log(unencodedData)
   //console.log('unencodedData', unencodedData);
   const rawDisbursmentData = encodeFunctionData(unencodedData);
   //console.log('rawDisbursmentData', rawDisbursmentData);

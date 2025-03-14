@@ -33,7 +33,6 @@ export default function IndexFunds() {
 
 
   useEffect(() => {
-    router.push('/indexes/Moderate')
   }, [])
 
 
