@@ -43,6 +43,7 @@ export default function IndexSelector({fundList}: {fundList: IndexFund[]}) {
                 router.push(`/indexes/${fundList[0].id.toString()}`);
             }
 
+
         }
     }, [pathname, fundList]);
     return (
