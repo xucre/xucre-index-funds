@@ -70,14 +70,14 @@ const OrganizationsTable: React.FC = () => {
   ];
 
   return (
-    <OpaqueCard>
+    <OpaqueCard sx={{m: 5}}>
       <Box display="flex" justifyContent="flex-end" mb={2}>
         <Button variant="contained" onClick={() => router.push("/organizations/create")}>
           Create Organization
         </Button>
       </Box>
 
-      <Box sx={{ height: 600, width: "100%" }}>
+      <Box sx={{ height: 600 }}>
         <DataGrid
           rows={organizations}
           columns={columns}
@@ -90,11 +90,12 @@ const OrganizationsTable: React.FC = () => {
           }}
           pageSizeOptions={[10, 25]}
           getRowId={(row) => row.id}
-          sx={{
-            "& .primaryBackground--header": {
-              backgroundColor: "rgb(5,46,37)",
-              "--DataGrid-containerBackground": "rgb(5,46,37)",
-              "--DataGrid-pinnedBackground": "rgb(5,46,37)",
+          sx={{    
+            width: '80vw',
+            '& .primaryBackground--header': {
+              backgroundColor: 'rgb(5,46,37)',
+              '--DataGrid-containerBackground' : 'rgb(5,46,37)',
+              '--DataGrid-pinnedBackground' : 'rgb(5,46,37)'
             },
           }}
         />

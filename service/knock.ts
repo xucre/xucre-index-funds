@@ -33,11 +33,14 @@ export const syncKnock = async (userId: string, userName: string, userEmail: str
 
 export const sendInAppNotification = async (userId: string, workflow: string, data: any) => {
     try {
+        console.log('sending in app notification');
+        console.log(`User ID: ${userId}, Workflow: ${workflow}, Data: ${JSON.stringify(data)}`);
         await knockClient.workflows.trigger(workflow, {
             actor: 'Xucre',
             recipients: [userId],
             data: data,
         });
+        console.log('Notification sent successfully');
     } catch (e) {
         console.error(e);
     }
