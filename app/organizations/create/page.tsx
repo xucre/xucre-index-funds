@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { createOrganization } from "@/service/clerk";
 
@@ -21,12 +21,15 @@ export default function CreateOrganizationPage() {
     e.preventDefault();
 
     try {
-      // Call the createOrganization function with the form input values
-      await createOrganization({
-        name,
-        slug,
-        maxAllowedMemberships: maxMembers,
+      const response = await fetch("/api/organizations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, slug, maxAllowedMemberships: maxMembers }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to create organization");
+      }
 
       // Navigate to the organizations page after successful creation
       router.push("/organizations");
