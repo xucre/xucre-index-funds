@@ -3,7 +3,6 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { createOrganization } from "@/service/clerk";
 
 export default function CreateOrganizationPage() {
   // State variables to hold form input values
