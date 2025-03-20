@@ -53,10 +53,11 @@ const EditProfile = ({direction = 'column', showOpaqueCard = false, saveType = '
 
   useEffect(() => {
       if (!sfdcUser) return;
-      console.log('setmodifyuser',sfdcUser.riskTolerance);
-      if (modifiedUser === null) {
+      console.log('setmodifyuser',sfdcUser);
+      //if (modifiedUser === null) {
         setModifiedUser({...sfdcUser, riskTolerance: sfdcUser.riskTolerance || 'Moderate', salaryContribution: sfdcUser.salaryContribution || 0});
-      }
+        //console.log(sfdcUser);
+      //}
     }, [sfdcUser])
 
   const handleSaveProfile = async () => {
@@ -190,7 +191,7 @@ const EditProfile = ({direction = 'column', showOpaqueCard = false, saveType = '
         
         <>
         <Typography fontWeight={'bold'}>{languageData[language].Edit.porfolio_section}</Typography>
-        <Stack direction={direction} spacing={direction === 'column' ? 2: 5} justifyContent={direction === 'column' ? 'space-between' : 'space-between'} alignItems={'center'} my={direction === 'column' ? 2 : 5}>
+        <Stack direction={direction} spacing={direction === 'column' ? 4: 5} justifyContent={direction === 'column' ? 'space-between' : 'space-between'} alignItems={'center'} my={direction === 'column' ? 2 : 5}>
           <TextField
             sx={{maxWidth: 300, flexGrow: 2}}
             select
@@ -214,31 +215,26 @@ const EditProfile = ({direction = 'column', showOpaqueCard = false, saveType = '
               </MenuItem>
             ))}
           </TextField>
-          <Stack direction={'column'} spacing={2} flexGrow={1}>
-            <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
-              <Typography color={'text.secondary'} variant={'caption'}>{languageData[language].Edit.salary_label}</Typography>
-              <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
-                <SalaryContributionHelpText />
-              </ReusableModal>
-            </Stack>
-            <Slider
-              aria-label={languageData[language].Edit.salary_label}
+          <TextField
+              sx={{maxWidth: 300, flexGrow: 2}}
+              name="salaryContribution"
+              label={
+                <>
+                  <Stack direction={'row'} spacing={2} justifyContent={'flex-start'} alignItems={'center'} >
+                    <Typography color={'text.secondary'} variant={'caption'}>{languageData[language].Edit.salary_label}</Typography>
+                    <ReusableModal icon={<HelpOutlineIcon color={'disabled'} />} >
+                      <SalaryContributionHelpText />
+                    </ReusableModal>
+                  </Stack>
+                </>
+              }
+              fullWidth
               value={modifiedUser.salaryContribution}
-              getAriaValueText={(value) => `$${value}`}
-              step={10}
-              marks={[100,200,300,400,500].map((value) => ({value, label: `$${value}`}))}
-              min={0}
-              max={500}
-              valueLabelDisplay="auto"
-              onChange={(e, value) => {
-                if (!modifiedUser) return;
-                setModifiedUser({
-                  ...modifiedUser,
-                  salaryContribution: value as number,
-                });
-              }}
+              slotProps={{ inputLabel: { shrink: true } }}
+              type={'number'}
+              prefix='$'
+              onChange={handleChange}
             />
-          </Stack>
         </Stack>
         </>
         <Stack direction={'row'} spacing={2} justifyContent={showPrevious ? 'space-between' : 'flex-end'} alignItems={'center'} mt={5}>
