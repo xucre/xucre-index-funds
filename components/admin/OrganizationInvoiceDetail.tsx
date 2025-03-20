@@ -16,6 +16,7 @@ import OrganizationInvoiceDetailTable from './OrganizationInvoiceDetailTable';
 import { createCustomer, createInvoice, getCustomer, getInvoice } from '@/service/billing/stripe';
 import { getOrganization, getOrganizationMembers } from '@/service/clerk';
 import { Organization } from '@clerk/backend';
+import { useSnackbar } from 'notistack';
 
 interface OrganizationInvoiceDetailProps {
   invoice: Invoice;
@@ -31,6 +32,7 @@ const OrganizationInvoiceDetail: React.FC<OrganizationInvoiceDetailProps> = ({ i
     const [openDisbursement, setOpenDisbursement] = useState(false);
     const [organization, setOrganization] = useState(null as Organization | null);
     const [invoiceCreated, setInvoiceCreated] = useState(false);
+    const {enqueueSnackbar} = useSnackbar();
 
     const fetchData = async () => {
         try {
@@ -50,21 +52,27 @@ const OrganizationInvoiceDetail: React.FC<OrganizationInvoiceDetailProps> = ({ i
     };
 
     const handleStripeInvoiceClick = async () => {
-        if (!organization) return;
+       try {
+            if (!organization) throw new Error('Organization not found');
 
-        setLoading(true);
-        const customer = await getCustomer(organizationId);
-        let customerId;
-        if (!customer) {
-            const orgMembers = await getOrganizationMembers(organizationId);
-            const owner = orgMembers.data.find(m => m.role === 'org:admin');
-            customerId = await createCustomer(organization.name, owner.email, organizationId);
-        } else {
-            customerId = customer.id;
-        }
-        await createInvoice(customerId, invoice.id, invoice.members, invoice.totalDue);
-        setLoading(false);
-        fetchData();
+            setLoading(true);
+            const customer = await getCustomer(organizationId);
+            let customerId;
+            if (!customer) {
+                const orgMembers = await getOrganizationMembers(organizationId);
+                const owner = orgMembers.data.find(m => m.role === 'org:admin');
+                customerId = await createCustomer(organization.name, owner.email, organizationId);
+            } else {
+                customerId = customer.id;
+            }
+            await createInvoice(customerId, invoice.id, invoice.members, invoice.totalDue);
+            setLoading(false);
+            fetchData();
+            enqueueSnackbar('Invoice created successfully!', { variant: 'success' });
+       } catch (error) {
+              console.error('Error creating invoice:', error);
+              enqueueSnackbar('Failed to create invoice', { variant: 'error' });
+       }
     }
 
     const handleDisburseClick = async () => {
