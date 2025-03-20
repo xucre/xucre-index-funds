@@ -12,6 +12,7 @@ import { toTitleCase } from '../../service/helpers';
 import { useSFDC } from "@/hooks/useSFDC";
 import { IndexFund, ToleranceLevels } from "@/service/types";
 import { useClerkUser } from "@/hooks/useClerkUser";
+import { useAppKit } from "@reown/appkit/react";
 // components/LoadingIndicator.tsx
 
 export default function IndexSelector({fundList}: {fundList: IndexFund[]}) {
@@ -21,7 +22,7 @@ export default function IndexSelector({fundList}: {fundList: IndexFund[]}) {
     const { user} = useClerkUser();
     const { language, languageData } = useLanguage();
     const [selectedFund, setSelectedFund] = useState<IndexFund | undefined>(undefined);
-
+    const {open} = useAppKit();
     const pathname = usePathname();
 
     const selectComponent = (id: string) => {
@@ -47,7 +48,7 @@ export default function IndexSelector({fundList}: {fundList: IndexFund[]}) {
         }
     }, [pathname, fundList]);
     return (
-        <Stack direction={'row'} spacing={5} mt={4} mx={5}>
+        <Stack direction={'row'} spacing={5} mt={4} mx={5} justifyContent={'space-between'} alignItems={'center'}>
             <Select value={selectedFund?.id || ''} onChange={(e) => selectComponent(e.target.value)}>
                 {fundList.map((fund) => (
                     <MenuItem key={fund.id} value={fund.id}>
@@ -55,6 +56,11 @@ export default function IndexSelector({fundList}: {fundList: IndexFund[]}) {
                     </MenuItem>
                 ))}
             </Select>
+            <IconButton onClick={() => open({
+                view: 'Networks'
+            })}>
+                <SettingsIcon />
+            </IconButton>
         </Stack>
         
     );
