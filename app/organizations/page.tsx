@@ -76,7 +76,6 @@ const OrganizationsTable: React.FC = () => {
           Create Organization
         </Button>
       </Box>
-
       <Box sx={{ height: 600 }}>
         <DataGrid
           rows={organizations}
