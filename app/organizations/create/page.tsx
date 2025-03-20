@@ -3,12 +3,14 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 export default function CreateOrganizationPage() {
   // State variables to hold form input values
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [maxMembers, setMaxMembers] = useState(10);
+  const {enqueueSnackbar} = useSnackbar()
 
   const router = useRouter(); // Initializing the router for navigation
 
@@ -27,8 +29,12 @@ export default function CreateOrganizationPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create organization");
+        enqueueSnackbar("Error creating organization", { variant: "error" });
+        return;
+        //throw new Error("Failed to create organization");
       }
+
+      enqueueSnackbar("Organization created successfully!", { variant: "success" });
 
       // Navigate to the organizations page after successful creation
       router.push("/organizations");
