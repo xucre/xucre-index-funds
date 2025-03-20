@@ -48,7 +48,7 @@ export default function IndexSelector({fundList}: {fundList: IndexFund[]}) {
         }
     }, [pathname, fundList]);
     return (
-        <Stack direction={'row'} spacing={5} mt={4} mx={5} justifyContent={'space-between'} alignItems={'center'}>
+        <Stack direction={'row'} spacing={5} my={4} mx={5} justifyContent={'space-between'} alignItems={'center'}>
             <Select value={selectedFund?.id || ''} onChange={(e) => selectComponent(e.target.value)}>
                 {fundList.map((fund) => (
                     <MenuItem key={fund.id} value={fund.id}>
