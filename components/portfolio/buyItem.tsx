@@ -86,6 +86,7 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
   useEffect(() => { setIsLoading(false) }, []);
   const isValidBalance = balance && BigInt(balance) >= BigInt(amount);
   if (!sourceToken) return null;
+
   return (
     <Stack justifyContent={'center'} alignItems={'center'} spacing={2} >
       <OpaqueCard sx={{ /*maxWidth: 500*/ }}>
@@ -96,76 +97,84 @@ export const BuyItem = ({ status, isNativeToken, confirmationHash, portfolio, so
             title={portfolio.name[language]}
           />
         </Collapse>
-        <CardContent>
-          <Stack direction={'column'} spacing={2}>
-            <Stack direction={'row'} spacing={2} justifyContent={'center'} alignItems={'center'}>
-              <ButtonBase aria-label="Change funding source." id="basic-button" onClick={handleClick} sx={{}}>
-                <Stack direction={'row'} spacing={2} sx={{}}>
-                  <Avatar src={sourceToken.logo} sx={{ width: 24, height: 24 }} />
-                  <Typography color='text.primary'>{sourceToken.name}</Typography>
-                  <ArrowDropDownIcon />
-                </Stack>
-              </ButtonBase>
-            </Stack>
-
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-            >
-              {sourceTokens.filter((token) => token.active).map((token) => (
-                <MenuItem key={token.address} onClick={() => { setSourceToken(token); handleClose(); }}>
-                  <Stack direction={'row'} spacing={2}>
-                    <Avatar src={token.logo} sx={{ width: 24, height: 24 }} />
-                    <Typography color='text.primary'>{token.name}</Typography>
+        {chainId !== 137 && 
+          <CardContent>
+            <Typography variant={'body2'} fontWeight={'bold'}>{languageData[language].ui.wrong_network}</Typography>
+          </CardContent>
+        }
+        {chainId === 137 && 
+          <CardContent>
+            <Stack direction={'column'} spacing={2}>
+              <Stack direction={'row'} spacing={2} justifyContent={'center'} alignItems={'center'}>
+                <ButtonBase aria-label="Change funding source." id="basic-button" onClick={handleClick} sx={{}}>
+                  <Stack direction={'row'} spacing={2} sx={{}}>
+                    <Avatar src={sourceToken.logo} sx={{ width: 24, height: 24 }} />
+                    <Typography color='text.primary'>{sourceToken.name}</Typography>
+                    <ArrowDropDownIcon />
                   </Stack>
+                </ButtonBase>
+              </Stack>
 
-                </MenuItem>
-              ))}
-            </Menu>
-            {/*<Typography color='text.primary'> Balance: {balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}</Typography>
-            <Typography color='text.primary'> Allowance: {allowanceAmount ? '0' : formatUnits(allowance as bigint, sourceToken.decimals)}</Typography>*/}
-            {
-              !isValidBalance &&
-              <Typography variant={'body2'} fontWeight={'bold'}>{languageData[language].ui.use_onramp}</Typography>
-            }
-            {isValidBalance && 
-              <TextField
-                label={languageData[language].ui.amount}
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
                 }}
-                value={rawAmount}
-                color={'success'}
-                helperText={`${languageData[language].ui.balance}: ${balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}`}
-                onChange={handleAmountUpdate}
-              />
-            }
-            
-            <Collapse in={isReadyToApprove} sx={{}}>
-              <Stepper activeStep={step} orientation="vertical" sx={{ paddingY: 2, alignItems: 'center', display: 'block' }}>
-                <Step>
-                  <StepLabel>
-                    {languageData[language].ui.approve_in_wallet}
-                  </StepLabel>
-                </Step>
-                <Step>
-                  <StepLabel>
-                    {languageData[language].ui.confirm_swap}
-                  </StepLabel>
-                </Step>
-              </Stepper>
+              >
+                {sourceTokens.filter((token) => token.active).map((token) => (
+                  <MenuItem key={token.address} onClick={() => { setSourceToken(token); handleClose(); }}>
+                    <Stack direction={'row'} spacing={2}>
+                      <Avatar src={token.logo} sx={{ width: 24, height: 24 }} />
+                      <Typography color='text.primary'>{token.name}</Typography>
+                    </Stack>
+
+                  </MenuItem>
+                ))}
+              </Menu>
+              {/*<Typography color='text.primary'> Balance: {balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}</Typography>
+              <Typography color='text.primary'> Allowance: {allowanceAmount ? '0' : formatUnits(allowance as bigint, sourceToken.decimals)}</Typography>*/}
+              {
+                !isValidBalance &&
+                <Typography variant={'body2'} fontWeight={'bold'}>{languageData[language].ui.use_onramp}</Typography>
+              }
+              {isValidBalance && 
+                <TextField
+                  label={languageData[language].ui.amount}
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  value={rawAmount}
+                  color={'success'}
+                  helperText={`${languageData[language].ui.balance}: ${balance ? formatUnits(balance as bigint, sourceToken.decimals) : 0}`}
+                  onChange={handleAmountUpdate}
+                />
+              }
+              
+              <Collapse in={isReadyToApprove} sx={{}}>
+                <Stepper activeStep={step} orientation="vertical" sx={{ paddingY: 2, alignItems: 'center', display: 'block' }}>
+                  <Step>
+                    <StepLabel>
+                      {languageData[language].ui.approve_in_wallet}
+                    </StepLabel>
+                  </Step>
+                  <Step>
+                    <StepLabel>
+                      {languageData[language].ui.confirm_swap}
+                    </StepLabel>
+                  </Step>
+                </Stepper>
 
 
-            </Collapse>
-          </Stack>
-        </CardContent>
+              </Collapse>
+            </Stack>
+          </CardContent>
+        }
+        
         <CardActions>
           {/*<LoadingButton variant="contained" fullWidth disabled={amount === BigInt(0)} onClick={handleApproval} loading={loading} loadingIndicator="Approve">
             Approve
