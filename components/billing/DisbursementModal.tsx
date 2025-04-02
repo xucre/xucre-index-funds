@@ -5,9 +5,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { IndexFund, Invoice, InvoiceStatuses } from '@/service/types';
 import { globalChainId, isDev } from '@/service/constants';
-import { CreateInvoiceOptions, createInvoiceTransaction, executeUserSpotExecution } from '@/service/safe/safe';
-//import { createInvoiceTransactionV2 as createInvoiceTransaction } from '@/service/safe/safev2';
-
+import { CreateInvoiceOptions, executeUserSpotExecution } from '@/service/safe/safe';
+import { createInvoiceTransactionV2 as createInvoiceTransaction } from '@/service/safe/safev2';
 import { getAllFunds, getFundDetails, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useClerkOrganization } from '@/hooks/useClerkOrganization';
