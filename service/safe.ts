@@ -1,5 +1,5 @@
 'use server';
-import Safe, { buildContractSignature, buildSignatureBytes, ContractNetworksConfig, CreateTransactionProps, ExternalClient, ExternalSigner, PredictedSafeProps, SafeAccountConfig, SafeDeploymentConfig, SigningMethod } from '@safe-global/protocol-kit';
+import Safe, { buildContractSignature, buildSignatureBytes, ContractNetworksConfig, CreateTransactionProps, ExternalClient, ExternalSigner, PredictedSafeProps, SafeAccountConfig, SafeDeploymentConfig } from '@safe-global/protocol-kit';
 import {
   EthSafeOperation,
   Safe4337CreateTransactionProps,
@@ -443,7 +443,7 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
   // console.log('controlling safe transaction created');
   const signedTransaction =  await controllingSafe.signTransaction(
     trans,
-    SigningMethod.SAFE_SIGNATURE,
+    'safe_sign',
     PARENT_SAFE // Parent Safe address
   )
   const signatureSafe = await buildContractSignature(
