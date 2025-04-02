@@ -22,7 +22,7 @@ import { getOrganizationSafeAddress, getUserDetails } from "@/service/db";
 import BulkAddUsers from "@/components/admin/BulkAddUsers";
 import AddUser from "@/components/admin/AddUser";
 import OrganizationInvoiceTable from "@/components/admin/OrganizationInvoiceTable";
-import { convertUsdcToUsdt } from "@/service/safe";
+import { convertUsdcToUsdt } from "@/service/safe/safe";
 import { useSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
 //import { usePaidPlanCheck } from "@/hooks/usePaidPlanCheck";

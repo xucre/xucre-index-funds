@@ -6,7 +6,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
 import { useAccount } from 'wagmi';
 import AccountButton from '../accountButton';
-import { addProposer, AddProposerOptions, createAccount, CreateAccountOptions, getSafeProposer } from '@/service/safe';
+import { addProposer, AddProposerOptions, createAccount, CreateAccountOptions, getSafeProposer } from '@/service/safe/safe';
 import { updateSafeWalletDetails } from '@/service/sfdc';
 import { setSafeAddress } from '@/service/db';
 import { useRouter } from 'next/navigation';

@@ -1,4 +1,4 @@
-import { transferSignerOwnership } from "@/service/safe";
+import { transferSignerOwnership } from "@/service/safe/safe";
 import { getOrganizationMembers, getAllOrganizations } from "@/service/clerk";
 import { getSafeAddress, getOrganizationSafeAddress } from "@/service/db";
 import { globalChainId } from "@/service/constants";

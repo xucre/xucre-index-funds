@@ -29,6 +29,7 @@ const groupTransactionsByWeek = (transactions: CovalentTransactionV3[]): Transac
 
   transactions.forEach((transaction) => {
     const weekStart = dayjs(transaction.block_signed_at).format('L')//.startOf('isoWeek').format('YYYY-MM-DD');
+    console.log(weekStart);
     if (!groupedTransactions[weekStart]) {
       groupedTransactions[weekStart] = [];
     }

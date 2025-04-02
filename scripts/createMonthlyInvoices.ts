@@ -1,4 +1,4 @@
-import { transferSignerOwnership } from "@/service/safe";
+
 import { getOrganizationMembers, getAllOrganizations } from "@/service/clerk";
 import { getSafeAddress, getOrganizationSafeAddress, setInvoiceDetails } from "@/service/db";
 import { Invoice, InvoiceStatuses } from "@/service/types";
@@ -6,7 +6,6 @@ import { uid } from "uid-promise";
 import dayjs from "dayjs";
 
 const main = async () => {
-  //const ownershipresult = await transferSignerOwnership({});
 const organizations = await getAllOrganizations();
 
 for (const organization of organizations) {

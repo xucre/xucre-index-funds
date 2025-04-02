@@ -5,9 +5,6 @@ import OpaqueCard from '../ui/OpaqueCard';
 import { Invoice, InvoiceStatuses } from '@/service/types';
 import InvoiceStatus from './InvoiceStatus';
 import { useRouter } from 'next/navigation';
-import { CreateInvoiceOptions, createInvoiceTransaction } from '@/service/safe';
-import { isDev } from '@/service/constants';
-import { setInvoiceDetails } from '@/service/db';
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
 import DisbursementModal from './DisbursementModal';
@@ -30,31 +27,7 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice, usdcBalance, rel
     };
     const handleDisburseClick = async () => {
         if (!organization) return;
-        setOpenDisbursement(true);
-        // setLoading(true);
-        // try {
-        //     const txDetails = {
-        //         rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
-        //         owner: '',
-        //         chainid: isDev ? 1155111: globalChainId,
-        //         id: organization.id,
-        //         invoice
-        //     } as CreateInvoiceOptions;
-        //     const transactionHash = await createInvoiceTransaction(txDetails);
-        //     if (transactionHash !== '') {
-        //         const _invoice = {
-        //             ...invoice,
-        //             status: InvoiceStatuses.Disbursed,
-        //             paymentTransction: transactionHash,
-        //             updatedAt: new Date().toISOString()
-        //         }
-        //         await setInvoiceDetails(organization.id, _invoice.id, _invoice);
-        //         reload();
-        //     }
-        // } catch (err) {
-        // }
-        // setLoading(false);
-        
+        setOpenDisbursement(true);        
     }
 
     const handleDisburseClose = () => {setOpenDisbursement(false); reload();};

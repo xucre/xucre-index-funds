@@ -5,7 +5,6 @@ import OpaqueCard from '../ui/OpaqueCard';
 import { Invoice, InvoiceStatuses } from '@/service/types';
 import InvoiceStatus from '../billing/InvoiceStatus';
 import { useRouter } from 'next/navigation';
-import { CreateInvoiceOptions, createInvoiceTransaction } from '@/service/safe';
 import { isDev } from '@/service/constants';
 import { setInvoiceDetails } from '@/service/db';
 import languageData, { Language } from '@/metadata/translations';
