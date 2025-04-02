@@ -25,7 +25,7 @@ export const getWalletHistory = async (wallet: string, chainName: string, hardRe
 
 export const getWalletTransactions = async (wallet: string, chainName: any) => {
   try {
-    const response = await superagent.get(`${BASEURL}transactions?chainName=${chainName}&wallet=${wallet.toLowerCase()}`).withCredentials();
+    const response = await superagent.get(`${BASEURL}transactions?chainName=${chainName}&wallet=${wallet.toLowerCase()}&hard=false`).withCredentials();
     return response.body;
   } catch (error) {
     return null;

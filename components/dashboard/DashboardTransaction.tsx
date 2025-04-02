@@ -51,7 +51,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
     const cachedTransfers = await getValue(`transactions`,`transaction:${address}:${transaction.tx_hash}:transfers`);
     if (cachedTransfers) {
       const transferList = cachedTransfers.transfers as TransferExtended[];
-      setTransfers(transferList);;
+      setTransfers(transferList);
       return;
     }
     const transferList = await Promise.all(transactionDetails.erc20Transfers.map(async (transfer) => {
@@ -73,7 +73,7 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
   }
 
   useEffect(() => {
-    //console.log('transactionDetails', transactionDetails);
+    console.log('transactionDetails', transactionDetails);
     if (transactionDetails && transactionType !== languageData[language].Dashboard.unknown && transactionDetails.erc20Transfers.length <= 25) {
       enrichTransfers();
     } else if (transactionDetails && transactionType !== languageData[language].Dashboard.unknown && transactionDetails.erc20Transfers.length > 25) {
@@ -108,13 +108,14 @@ const DashboardTransaction: React.FC<DashboardTransactionProps> = ({ transaction
   const isInvestment = transactionType === languageData[language].Dashboard.investment;
   const hasTransfers = transfers.length > 0;
   const isSpam = transactionDetails.erc20Transfers.length > 25;
+  const matchedTransfers = transfers.filter((transfer) => transfer.to === address || transfer.from === address);
   const BasicEntry = () => {
     return (
       <Stack direction={'row'} spacing={1} justifyContent={'space-between'} alignItems={'center'} width={'100%'} >
         <a href={`https://polygonscan.com/tx/${transaction.tx_hash}`} target={'_blank'} ><Typography>{transactionType} tx ({truncateEthAddress(transaction.tx_hash)})</Typography></a>
         <Stack direction={'row'} spacing={1} alignItems={'center'}>
-          <Typography fontWeight={'bold'}>{`${direction}${ hasTransfers ? formatUnits(BigInt(transfers[0].value), transfers[0].tokenMetadata.decimals) : 0} ${hasTransfers ? transfers[0].tokenMetadata.symbol : ''}`}</Typography>
-          {hasTransfers && transfers[0].tokenMetadata.logo && <img src={transfers[0].tokenMetadata.logo} alt={transfers[0].tokenMetadata.symbol} style={{width: '20px', height: '20px'}} />}
+          <Typography fontWeight={'bold'}>{`${direction}${ hasTransfers ? formatUnits(BigInt(matchedTransfers[0].value), matchedTransfers[0].tokenMetadata.decimals) : 0} ${hasTransfers ? matchedTransfers[0].tokenMetadata.symbol : ''}`}</Typography>
+          {hasTransfers && matchedTransfers[0].tokenMetadata.logo && <img src={matchedTransfers[0].tokenMetadata.logo} alt={matchedTransfers[0].tokenMetadata.symbol} style={{width: '20px', height: '20px'}} />}
         </Stack>
         
        </Stack>

@@ -20,7 +20,7 @@ dayjs.extend(localizedFormat);
 
 
 type TransactionGroup = {
-  weekStart: string;
+  groupLabel: string;
   transactions: CovalentTransactionV3[];
 };
 
@@ -28,16 +28,23 @@ const groupTransactionsByWeek = (transactions: CovalentTransactionV3[]): Transac
   const groupedTransactions: { [key: string]: CovalentTransactionV3[] } = {};
 
   transactions.forEach((transaction) => {
-    const weekStart = dayjs(transaction.block_signed_at).format('L')//.startOf('isoWeek').format('YYYY-MM-DD');
-    console.log(weekStart);
-    if (!groupedTransactions[weekStart]) {
-      groupedTransactions[weekStart] = [];
+    const dayStart = dayjs(transaction.block_signed_at).format('L')//.startOf('isoWeek').format('YYYY-MM-DD');
+    if (dayjs(dayStart).isSame(dayjs(), 'day')) {
+      const todayLabel = dayjs(transaction.block_signed_at).format('LLL');
+      if (!groupedTransactions[todayLabel]) {
+        groupedTransactions[todayLabel] = [];
+      }
+      groupedTransactions[todayLabel].push(transaction);
+    } else {
+      if (!groupedTransactions[dayStart]) {
+        groupedTransactions[dayStart] = [];
+      }
+      groupedTransactions[dayStart].push(transaction);
     }
-    groupedTransactions[weekStart].push(transaction);
   });
-  return Object.keys(groupedTransactions).map((weekStart) => ({
-    weekStart,
-    transactions: groupedTransactions[weekStart],
+  return Object.keys(groupedTransactions).map((groupLabel) => ({
+    groupLabel,
+    transactions: groupedTransactions[groupLabel],
   } as TransactionGroup));
 };
 
@@ -68,7 +75,7 @@ export default function DashboardTransactionList({ address, truncate = true, tra
           {true && groupedTransactions.map((tx, index) => {
             return (
               <Box key={index} width={'100%'}>
-                <Typography fontSize={14} fontWeight={'normal'} color="text.secondary" >{dayjs(tx.weekStart).fromNow()}</Typography>
+                <Typography fontSize={14} fontWeight={'normal'} color="text.secondary" >{dayjs(tx.groupLabel).fromNow()}</Typography>
                 {tx.transactions.map((transaction, index2) => {
                   return (
                     <DashboardTransaction key={index2} transaction={transaction} address={address} />
