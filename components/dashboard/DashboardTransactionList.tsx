@@ -57,12 +57,11 @@ export default function DashboardTransactionList({ address, truncate = true, tra
   const textColor = getTextColor(theme);
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const _address = '0x358eB621894B55805CE16225b2504523d421d3A6';
-  const _transactions = transactions && truncate ? transactions.length > 5 ? transactions.slice(0, 5) : transactions : transactions;
+  const _transactions = transactions && truncate ? transactions.length > 8 ? transactions.slice(0, 8) : transactions : transactions;
   const [groupedTransactions, setGroupedTransactions] = useState<TransactionGroup[]>([]);
   
   useEffect(() => {
     if (_transactions.length > 0) {
-      console.log('grouping transactions');
       setGroupedTransactions(groupTransactionsByWeek(_transactions));
     }
   }, [transactions])

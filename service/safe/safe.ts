@@ -1,97 +1,25 @@
 'use server';
-import Safe, { buildContractSignature, buildSignatureBytes, ContractNetworksConfig, CreateTransactionProps, ExternalClient, ExternalSigner, PredictedSafeProps, SafeAccountConfig, SafeDeploymentConfig } from '@safe-global/protocol-kit';
+import { buildContractSignature, buildSignatureBytes, ContractNetworksConfig, CreateTransactionProps } from '@safe-global/protocol-kit';
 import {
-  EthSafeOperation,
   Safe4337CreateTransactionProps,
   Safe4337InitOptions,
   Safe4337Pack
 } from '@safe-global/relay-kit'
 import {
-  createSafeClient,
-  safeOperations,
-  BundlerOptions
-} from '@safe-global/sdk-starter-kit'
-import { SafeSignature } from '@safe-global/types-kit'
-import superagent from 'superagent';
-import { globalChainId, isDev } from './constants';
-import { polygon, sepolia } from 'viem/chains'
-import { ByteArray, Chain, Client, ClientConfig, defineChain, EIP1193RequestFn, encodeFunctionData, getAddress, parseUnits, TransportConfig } from 'viem';
-import { mainnetTrustedSetupPath } from 'viem/node'
-import { privateKeyToAccount } from 'viem/accounts';
-import { createSmartAccountClient,  } from "permissionless"
-import { createPublicClient, createWalletClient, getContract, http, parseEther } from "viem"
-import { createPimlicoClient } from 'permissionless/clients/pimlico'
-import type { ToSafeSmartAccountParameters } from 'permissionless/accounts'
-import {
-	createBundlerClient,
-	entryPoint07Address,
-	UserOperation,
-	type EntryPointVersion,
-} from "viem/account-abstraction"
-import { toSafeSmartAccount } from "permissionless/accounts"
+  createSafeClient} from '@safe-global/sdk-starter-kit'
+import { globalChainId } from '../constants';
+import { encodeFunctionData, getAddress, parseUnits } from 'viem';
+import { createWalletClient } from "viem"
 //const kzg = setupKzg(cKzg, mainnetTrustedSetupPath)
 import ISWAPROUTER_ABI from '@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json';
-import ERC20_ABI from '../public/erc20.json'; // Ensure you have the ERC20 ABI JSON file
-import XUCREINDEXFUNDS_ABI from '../public/XucreETF.json'; // Ensure you have the ERC20 ABI JSON file
-import DEMO_PORTFOLIO from '../public/demoPortfolio.json'; // Ensure you have the ERC20 ABI JSON file
-import { writeContract } from 'viem/actions';
-import { distributeWeights, encodeStringToBigInt } from './helpers';
-import { IndexFund, Invoice, InvoiceMember, Token2 } from './types';
-import { createFailureLog, getUserDetails } from './db';
+import ERC20_ABI from '../../public/erc20.json'; // Ensure you have the ERC20 ABI JSON file
+import XUCREINDEXFUNDS_ABI from '../../public/XucreETF.json'; // Ensure you have the ERC20 ABI JSON file
+import { encodeStringToBigInt } from '../helpers';
+import { IndexFund, Invoice, InvoiceMember, Token2 } from '../types';
+import { createFailureLog, getUserDetails } from '../db';
 import SafeApiKit, { AddSafeDelegateProps } from '@safe-global/api-kit';
-import { constructSingleTrade } from './uniswap/index';
-import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from './uniswap/constants';
+import { CORP_PUBLIC_ADDRESS, bundlerUrl, paymasterUrl, publicClient, CORP_ACCOUNT, chainIdToChain, MAX_UINT256, CORP_SIGNER_SAFE, contractAddressMap, USDT_ADDRESS, publicTransport, USDC_ADDRESS } from './helpers';
 
-const chainIdToChain = {
-  11155111 : sepolia,
-  137: polygon
-};
-
-const contractAddressMap = {
-  1: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_ETH,
-  137: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
-  8453: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS_BASE,
-  31337 : '0xCBBe2A5c3A22BE749D5DDF24e9534f98951983e2'
-};
-
-const USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS as string;
-const USDT_ADDRESS = process.env.NEXT_PUBLIC_USDT_ADDRESS as string;
-const MAX_UINT256 = `0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`;
-const CORP_PUBLIC_ADDRESS = process.env.NEXT_PUBLIC_DEVACCOUNTADDRESS;
-const CORP_SIGNER_SAFE = process.env.NEXT_PUBLIC_SIGNER_SAFE_ADDRESS_POLYGON;
-//const corpAccount = parseAccount(CORP_PUBLIC_ADDRESS) as LocalAccount;
-const CORP_ACCOUNT = privateKeyToAccount(process.env.DEVACCOUNTKEY as `0x${string}`);
-const transport = (chainid) => {
-  return http(`https://api.pimlico.io/v2/${chainid ? chainid : '11155111'}/rpc?apikey=${process.env.PIMELCO_API_KEY}`)
-}
-
-const publicTransport = () => {
-  return http(process.env.NEXT_PUBLIC_SAFE_RPC_URL)
-}
-const publicClient = (chainid : number) => {
-  return createPublicClient({
-    chain: chainIdToChain[chainid ? chainid : 11155111],
-    transport: publicTransport(),
-  })
-}
-
-const paymasterClient = (chainid : number) => {
-  return createPimlicoClient({
-    transport: transport(chainid),
-    entryPoint: {
-      address: entryPoint07Address,
-      version: "0.7",
-    },
-  })
-} 
-
-const bundlerUrl = (chainid : number) => {
- return `https://api.pimlico.io/v2/${chainid ? chainid : '11155111'}/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
-}
-
-const paymasterUrl = (chainid : number) => {
-  return `https://api.pimlico.io/v2/${chainid ? chainid : '11155111'}/rpc?apikey=${process.env.PIMELCO_API_KEY}`;
-}
 
 export interface CreateAccountOptions {
   //ownerPrivateKey: string;
@@ -152,14 +80,12 @@ interface CreateSafeOptions {
   safe4337Pack: Safe4337Pack;
 }
 
-async function executeSafeCreation(options: CreateSafeOptions) {
-  const { safeAddress, rpcUrl, chainid, safe4337Pack } = options;
-  const pubClient = publicClient(chainid || 11155111);
-
-  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-  console.log('IsSafeDeployed', isSafeDeployed, safeAddress)
+export async function deploySafe(safe4337Pack: Safe4337Pack, chainid: number) {
   const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
+  const pubClient = publicClient(chainid || 11155111);
   if (!client) return '';
+  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
+  console.log('IsSafeDeployed', isSafeDeployed)
   if (!isSafeDeployed) {
     const deploymentTransaction = await safe4337Pack.protocolKit.createSafeDeploymentTransaction()
     const transactionHash = await client.sendTransaction({
@@ -176,17 +102,26 @@ async function executeSafeCreation(options: CreateSafeOptions) {
     )
     console.log('deploymentReceipt found');
   }
+
+  return;
+}
+
+async function executeSafeCreation(options: CreateSafeOptions) {
+  const { safeAddress, rpcUrl, chainid, safe4337Pack } = options;
+  const pubClient = publicClient(chainid || 11155111);
+  await deploySafe(safe4337Pack, chainid || 11155111);
+  
   const allowance = await getCurrentERC20Allowance(chainid || globalChainId, safeAddress);
   if (allowance < BigInt(MAX_UINT256)) {
     console.log('running allowance creation');
     await createERC20Approval(chainid || globalChainId, rpcUrl, safe4337Pack);
   } 
-
 }
 
 export interface TransferSignerOwnershipOptions {
   chainid: number;
   safeWallet: string;
+  
 }
 
 export async function transferSignerOwnership(options: TransferSignerOwnershipOptions): Promise<void> {
@@ -264,53 +199,7 @@ export async function createInvoiceTransaction(options: CreateInvoiceOptions): P
   const safe4337Pack = await Safe4337Pack.init(packData);
   const safeAddress = await safe4337Pack.protocolKit.getAddress();
   
-  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-  const pubClient = publicClient(chainid || 11155111);
-  if (!client) return '';
-  
-  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-  console.log('IsSafeDeployed', isSafeDeployed)
-  if (!isSafeDeployed) {
-    const deploymentTransaction = await safe4337Pack.protocolKit.createSafeDeploymentTransaction()
-    const transactionHash = await client.sendTransaction({
-      to: deploymentTransaction.to,
-      value: BigInt(deploymentTransaction.value),
-      data: deploymentTransaction.data as `0x${string}`,
-      account: CORP_ACCOUNT,
-      chain: chainIdToChain[chainid ? chainid : 11155111],
-      kzg: undefined
-    });
-    console.log('transactionHash', transactionHash);
-    const deploymentReceipt = await pubClient.waitForTransactionReceipt( 
-      { hash: transactionHash }
-    )
-    console.log('deploymentReceipt found');
-    const rawApprovalData = encodeFunctionData({
-      abi: ERC20_ABI,
-      functionName: 'approve',
-      args: [contractAddressMap[chainid || globalChainId], MAX_UINT256],
-    });
-    const secondTransactionData = {
-      transactions: [
-        {
-          to: getAddress(USDT_ADDRESS),
-          data: rawApprovalData,
-          value: '0',
-        }
-      ]
-    } as CreateTransactionProps;
-    const secondTransaction = await safe4337Pack.createTransaction({
-      transactions: secondTransactionData.transactions,
-    });
-    const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
-      safeOperation: secondTransaction
-    })
-    const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
-    const userOperationHash = await safe4337Pack.executeTransaction({
-      executable: signedSafeOperation
-    })
-    console.log('userOperationHash', userOperationHash);
-  }
+  await deploySafe(safe4337Pack, chainid || 11155111);
 
   const invoiceTransactions = options.invoice.members.reduce((acc, member) => {
     const result = createUserSourceTransfer(member);
@@ -357,7 +246,6 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
     saltNonce: encodeStringToBigInt(id).toString()
   };
 
-  
   const packData = {
       provider: rpcUrl,
       signer : process.env.DEVACCOUNTKEY,
@@ -373,53 +261,7 @@ export async function createInvoiceTransactionV2(options: CreateInvoiceOptions):
   const PARENT_SAFE = await safe4337Pack.protocolKit.getAddress();
   const nonce = await safe4337Pack.protocolKit.getNonce();
   
-  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-  const pubClient = publicClient(chainid || 11155111);
-  if (!client) return '';
-  
-  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-  console.log('IsSafeDeployed', isSafeDeployed)
-  if (!isSafeDeployed) {
-    const deploymentTransaction = await safe4337Pack.protocolKit.createSafeDeploymentTransaction()
-    const transactionHash = await client.sendTransaction({
-      to: deploymentTransaction.to,
-      value: BigInt(deploymentTransaction.value),
-      data: deploymentTransaction.data as `0x${string}`,
-      account: CORP_ACCOUNT,
-      chain: chainIdToChain[chainid ? chainid : 11155111],
-      kzg: undefined
-    });
-    console.log('transactionHash', transactionHash);
-    const deploymentReceipt = await pubClient.waitForTransactionReceipt( 
-      { hash: transactionHash }
-    )
-    console.log('deploymentReceipt found');
-    const rawApprovalData = encodeFunctionData({
-      abi: ERC20_ABI,
-      functionName: 'approve',
-      args: [contractAddressMap[chainid || globalChainId], MAX_UINT256],
-    });
-    const secondTransactionData = {
-      transactions: [
-        {
-          to: getAddress(USDT_ADDRESS),
-          data: rawApprovalData,
-          value: '0',
-        }
-      ]
-    } as CreateTransactionProps;
-    const secondTransaction = await safe4337Pack.createTransaction({
-      transactions: secondTransactionData.transactions,
-    });
-    const identifiedSafeOperation = await safe4337Pack.getEstimateFee({
-      safeOperation: secondTransaction
-    })
-    const signedSafeOperation = await safe4337Pack.signSafeOperation(identifiedSafeOperation)
-    const userOperationHash = await safe4337Pack.executeTransaction({
-      executable: signedSafeOperation
-    })
-    console.log('userOperationHash', userOperationHash);
-  }
+  await deploySafe(safe4337Pack, chainid || 11155111);
 
   const invoiceTransactions = options.invoice.members.reduce((acc, member) => {
     const result = createUserSourceTransfer(member);
@@ -615,14 +457,7 @@ export async function executeTokenWithdrawalToSource(userId: string, safeWalletA
   
   const safe4337Pack = await Safe4337Pack.init(packData);
   const safeAddress = await safe4337Pack.protocolKit.getAddress();
-  
-  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-  if (!client) {
-    console.log('client not found');
-    return;
-  }
-  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-  console.log('IsUserSafeDeployed', isSafeDeployed);
+  await deploySafe(safe4337Pack, chainid || 11155111);
   
   const memberContribution = parseUnits(amount.toString(), decimals);
   await validateCurrentERC20Allowance(chainid || globalChainId, safeAddress, memberContribution, safe4337Pack, getAddress(tokenAddress));
@@ -722,15 +557,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   
   const safe4337Pack = await Safe4337Pack.init(packData);
   const safeAddress = await safe4337Pack.protocolKit.getAddress();
-  
-  const client = await safe4337Pack.protocolKit.getSafeProvider().getExternalSigner()
-  const pubClient = publicClient(chainid || 11155111);
-  if (!client) {
-    console.log('client not found');
-    return;
-  }
-  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-  console.log('IsUserSafeDeployed', isSafeDeployed);
+  await deploySafe(safe4337Pack, chainid || 11155111);
   
   const contributionTotal = Number(member.salaryContribution) + Number(member.organizationContribution);
   const memberContribution = parseUnits(contributionTotal.toString(), 6);
@@ -824,15 +651,6 @@ async function validateCurrentERC20Allowance (chainid: number, safeAddress: stri
 }
 
 async function getCurrentERC20Allowance (chainid: number, safeAddress: string, tokenAddress: string = getAddress(USDT_ADDRESS)) {
-  // const pubCli = publicClient(chainid);
-  
-  // const _allowance = await pubCli.readContract({
-  //   address: tokenAddress,
-  //   abi: ERC20_ABI,
-  //   functionName: 'allowance',
-  //   args: [safeAddress, contractAddressMap[chainid || globalChainId]]
-  // })
-  // return _allowance as bigint;
   return getCurrentERC20AllowanceRaw(chainid, safeAddress, tokenAddress, contractAddressMap[chainid || globalChainId]);
 }
 
@@ -846,7 +664,6 @@ async function getCurrentERC20AllowanceRaw(chainid: number, safeAddress: string,
     args: [safeAddress, contractAddress]
   })
   return _allowance as bigint;
-
 }
 
 async function createERC20Approval (chainid: number, rpcUrl: string, safe4337Pack: Safe4337Pack, tokenAddress: string = getAddress(USDT_ADDRESS)) {
@@ -955,27 +772,11 @@ export async function addProposer(options: AddProposerOptions): Promise<{success
   }
   
   try {
-    // const data = await signDelegate(signer, conf.delegateAddress, _chainid);
-    // const result = await superagent.post('https://safe-transaction-polygon.safe.global/api/v2/delegates/') // Replace with actual endpoint
-    //   .set('Content-Type', 'application/json')
-    //   .send({
-    //     safe: safeWallet,
-    //     delegate: conf.delegateAddress,
-    //     signature: data,
-    //     delegator: CORP_PUBLIC_ADDRESS as `0x${string}`,
-    //     label: name,
-    //   })
-    //   console.log(result);
-    await apiKit.addSafeDelegate(conf)
-    // .catch((err) => {
-    //   console.log('error adding proposer', err.success, err.message, conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label, signer.account.address);
-    //   return {success: false, message: err.message};
-    // });
+    await apiKit.addSafeDelegate(conf);
   } catch (err) {
     console.log('error adding proposer', JSON.stringify(err), conf.safeAddress, conf.delegateAddress, conf.delegatorAddress, conf.label, signer.account.address);
     return {success: false, message: JSON.stringify(err)};
   }
-  //await apiKit.addSafeDelegate(conf);
   return {
     success: true,
     message: ''
@@ -1039,12 +840,7 @@ export async function convertUsdcToUsdt({safeAddress, rpcUrl, chainid}: ConvertU
   const safe4337Pack = await Safe4337Pack.init(packData);
   const pubClient = publicClient(chainid || globalChainId);
   
-  // Check if safe is deployed
-  const isSafeDeployed = await safe4337Pack.protocolKit.isSafeDeployed();
-  if (!isSafeDeployed) {
-    console.log('Safe wallet not deployed, cannot convert USDC to USDT');
-    return '';
-  }
+  await deploySafe(safe4337Pack, chainid || globalChainId);
 
   // Get current USDC balance
   const usdcBalance = await pubClient.readContract({

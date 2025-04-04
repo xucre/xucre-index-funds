@@ -84,7 +84,7 @@ describe('lambda functions', () => {
 
       const result = await getWalletTransactions(wallet, chainName);
 
-      expect(superagent.get).toHaveBeenCalledWith(`https://pgoh3ugkwf7bg4avrcwe5yts7e0epnon.lambda-url.sa-east-1.on.aws/transactions?chainName=${chainName}&wallet=${wallet.toLowerCase()}`);
+      expect(superagent.get).toHaveBeenCalledWith(`https://pgoh3ugkwf7bg4avrcwe5yts7e0epnon.lambda-url.sa-east-1.on.aws/transactions?chainName=${chainName}&wallet=${wallet.toLowerCase()}&hard=false`);
       expect(result).toEqual(mockResponse);
     });
 

@@ -14,9 +14,10 @@ import { useOrganizationWallet } from "@/hooks/useOrganizationWallet";
 import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
-import { getSafeOwner, transferSignerOwnership } from "@/service/safe";
+import { getSafeOwner, transferSignerOwnership } from "@/service/safe/safe";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import { globalChainId } from "@/service/constants";
+import { useClerkUser } from "@/hooks/useClerkUser";
 
 // components/LoadingIndicator.tsx
 export default function Billing() {
@@ -28,6 +29,7 @@ export default function Billing() {
   const { escrowAddress, hasEscrowAddress, createEscrowAddress, loading: walletLoading, refresh } = useOrganizationWallet();
   const { language } = useLanguage();
   const [needsToTransfer, setNeedsToTransfer] = useState(false);
+    const { safeWallet } = useClerkUser();
   //const billingOnboarded = false;
 
   const handleCheckoutComplete = async (sessionId) => {
@@ -48,9 +50,10 @@ export default function Billing() {
 
   const handeTransferOwnership = async () => {
     if (!escrowAddress) return;
+    if (!safeWallet) return;
     await transferSignerOwnership({
       chainid: globalChainId,
-      safeWallet: ''//
+      safeWallet: safeWallet
     });
     setNeedsToTransfer(false);
     refresh();
@@ -83,7 +86,7 @@ export default function Billing() {
     <Suspense>
       {hasLoaded && 
         <Box m={5}>
-          {/* <Button onClick={handeTransferOwnership} variant="contained" color="primary">Manual Ownership Transfer</Button> */}
+          {<Button onClick={handeTransferOwnership} variant="contained" color="primary">Add Safe Signer</Button>}
           {!hasSignedUp && false && 
             <StripePricingTable />
           }

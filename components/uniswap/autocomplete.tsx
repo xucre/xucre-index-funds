@@ -16,22 +16,23 @@ import { globalChainId } from '@/service/constants';
 
 interface AutocompleteProps {
   onSelect: (token: Token | null) => void;
+  isSourceToken?: boolean;
 }
 
 // TODO: add token logos
 
-const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
+const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect, isSourceToken }) => {
   const { chainId, chain } = useAccount();
   const [query, setQuery] = useState('');
   const [additionalToken, setAdditionalToken] = useState<Token | null>(null);
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
   const sourceToken = {
-    address: zeroAddress,
+    address: process.env.NEXT_PUBLIC_USDT_ADDRESS as string,
     chainId,
-    decimals: chain?.nativeCurrency.decimals,
-    name: chain?.nativeCurrency.name,
-    symbol: chain?.nativeCurrency.symbol,
-  } as Token;
+    decimals: 6,
+    name: "Tether USD",
+    symbol: "USDT"
+  }  as Token;
   const initialFilteredTokens = [sourceToken] as Token[];
   //const [initialFilteredTokens, seInitialFilteredTokens] = useState<Token[]>([]);
   
@@ -105,6 +106,19 @@ const TokenAutocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
       debouncedFetch.clear();
     };
   }, [query, chainId]);
+  
+  useEffect(() => {
+    // if (isSourceToken && chainId) {
+    //   const _source = {
+    //     address: process.env.NEXT_PUBLIC_USDT_ADDRESS as string,
+    //     chainId: 137,
+    //     decimals: 6,
+    //     name: "Tether USD",
+    //     symbol: "USDT",
+    //   } as Token;
+    //   onSelect(_source);
+    // }
+  }, [chainId]);
 
   return (
     <Autocomplete
