@@ -375,7 +375,7 @@ const IndexFundForm = ({id = null} : {id: string|null}) => {
       <OpaqueCard sx={{ flex: 1 }}>
         <Stack spacing={2}>
           {/* Left side: Form fields */}
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={{my:2}}>
             <InputLabel id="language-select-label">Language</InputLabel>
             <Select
               labelId="language-select-label"
