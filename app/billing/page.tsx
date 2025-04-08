@@ -86,7 +86,7 @@ export default function Billing() {
     <Suspense>
       {hasLoaded && 
         <Box m={5}>
-          {<Button onClick={handeTransferOwnership} variant="contained" color="primary">Add Safe Signer</Button>}
+          {/* {<Button onClick={handeTransferOwnership} variant="contained" color="primary">Add Safe Signer</Button>} */}
           {!hasSignedUp && false && 
             <StripePricingTable />
           }
