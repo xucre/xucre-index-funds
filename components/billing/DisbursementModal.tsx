@@ -6,7 +6,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { IndexFund, Invoice, InvoiceStatuses } from '@/service/types';
 import { globalChainId, isDev } from '@/service/constants';
 import { CreateInvoiceOptions, createInvoiceTransaction, executeUserSpotExecution } from '@/service/safe/safe';
-//import { createInvoiceTransactionV2 as createInvoiceTransaction } from '@/service/safe/safev2';
+import { createInvoiceTransactionV2 } from '@/service/safe/safev2';
 
 import { getAllFunds, getFundDetails, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -66,7 +66,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, organiza
                 invoice,
                 safeAddress: invoice.escrowWallet
             } as CreateInvoiceOptions;
-            const transactionHash = await createInvoiceTransaction(txDetails);
+            const transactionHash = await createInvoiceTransactionV2(txDetails);
             if (transactionHash !== '') {
                 const _invoice = {
                     ...invoice,

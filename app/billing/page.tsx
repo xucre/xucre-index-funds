@@ -18,6 +18,8 @@ import { getSafeOwner, transferSignerOwnership } from "@/service/safe/safe";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import { globalChainId } from "@/service/constants";
 import { useClerkUser } from "@/hooks/useClerkUser";
+import { enqueueSnackbar } from "notistack";
+import { addSignerOwnership } from "@/service/safe/safev2";
 
 // components/LoadingIndicator.tsx
 export default function Billing() {
@@ -51,10 +53,16 @@ export default function Billing() {
   const handeTransferOwnership = async () => {
     if (!escrowAddress) return;
     if (!safeWallet) return;
-    await transferSignerOwnership({
+    // const hash = await transferSignerOwnership({
+    //   chainid: globalChainId,
+    //   safeWallet: escrowAddress
+    // });
+    const hash = await addSignerOwnership({
       chainid: globalChainId,
-      safeWallet: safeWallet
+      safeWallet: escrowAddress
     });
+    console.log('Transfer ownership successful, transaction hash:', hash);
+    enqueueSnackbar(`Transfer ownership successful: ${hash}`, {variant: 'success', autoHideDuration: 3000})
     setNeedsToTransfer(false);
     refresh();
   }

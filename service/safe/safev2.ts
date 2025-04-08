@@ -158,11 +158,11 @@ export interface AddOwnerOptions {
 export interface AddSignerOwnershipOptions {
   chainid: number;
   safeWallet: string;
-  
 }
 
 export async function addSignerOwnership(options: AddSignerOwnershipOptions): Promise<void> {
   const { chainid, safeWallet } = options;
+  console.log('addSignerOwnership', chainid, safeWallet, CORP_PUBLIC_ADDRESS);
   const packData = {
     provider: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
     signer : process.env.DEVACCOUNTKEY,
@@ -177,9 +177,10 @@ export async function addSignerOwnership(options: AddSignerOwnershipOptions): Pr
     }
   } as Safe4337InitOptions;
   const safe4337Pack = await Safe4337Pack.init(packData);
-
+  const address = await safe4337Pack.protocolKit.getAddress();
+  console.log('safe address', address);
   const transaction = await safe4337Pack.protocolKit.createAddOwnerTx({
-    ownerAddress: CORP_PUBLIC_ADDRESS as `0x${string}`,
+    ownerAddress: CORP_SIGNER_SAFE as `0x${string}`,
     threshold: 1,
   })  
   // createSwapOwnerTx({
