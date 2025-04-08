@@ -124,7 +124,7 @@ export interface TransferSignerOwnershipOptions {
   
 }
 
-export async function transferSignerOwnership(options: TransferSignerOwnershipOptions): Promise<void> {
+export async function transferSignerOwnership(options: TransferSignerOwnershipOptions): Promise<string> {
   const { chainid, safeWallet } = options;
   const packData = {
     provider: process.env.NEXT_PUBLIC_SAFE_RPC_URL,
@@ -140,7 +140,10 @@ export async function transferSignerOwnership(options: TransferSignerOwnershipOp
     }
   } as Safe4337InitOptions;
   const safe4337Pack = await Safe4337Pack.init(packData);
-
+  // await safe4337Pack.protocolKit.createAddOwnerTx({
+  //   ownerAddress: CORP_PUBLIC_ADDRESS as `0x${string}`,
+  //   threshold: 1,
+  // })
   const transaction = await safe4337Pack.protocolKit.createSwapOwnerTx({
     oldOwnerAddress: CORP_PUBLIC_ADDRESS as `0x${string}`,
     newOwnerAddress: '' as `0x${string}`,
@@ -160,7 +163,7 @@ export async function transferSignerOwnership(options: TransferSignerOwnershipOp
     executable: signedSafeOperation
   })
   console.log('transfer successful', userOperationHash);
-  return;
+  return userOperationHash;
 }
 
 export interface CreateInvoiceOptions {
