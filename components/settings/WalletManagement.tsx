@@ -10,7 +10,7 @@ import truncateEthAddress from 'truncate-eth-address';
 import WalletQRCode from './WalletQRCode';
 import { globalChainId } from '@/service/constants';
 import { useClerkUser } from '@/hooks/useClerkUser';
-import { addProposer, AddProposerOptions, getSafeProposer } from '@/service/safe/safe';
+import { addProposer, AddProposerOptions, getSafeProposer } from '@/service/safe/safev2';
 import { useAccount } from 'wagmi';
 import { enqueueSnackbar } from 'notistack';
 
