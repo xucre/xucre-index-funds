@@ -7,7 +7,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { IndexFund, Invoice, InvoiceStatuses, TokenDetails } from '@/service/types';
 import truncateEthAddress from 'truncate-eth-address';
 import { globalChainId, isDev } from '@/service/constants';
-import { executeTokenWithdrawalToWallet, executeUserSpotExecution } from '@/service/safe/safe';
+import { executeTokenWithdrawalToWallet } from '@/service/safe/safev2';
 import { getAllFunds, getFundDetails, saveWithdrawalLog, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Item } from '@/hooks/useWalletData';
