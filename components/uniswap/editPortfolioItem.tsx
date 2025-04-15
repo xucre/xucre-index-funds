@@ -155,7 +155,7 @@ const EditPortfolioItem: React.FC<EditPortfolioItemProps> = ({ open, onClose, po
       <DialogTitle>Edit Portfolio Item</DialogTitle>
       <DialogContent>
           <Stack spacing={2}>
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{my:2}}>
               <InputLabel id="language-select-label">Language</InputLabel>
               <Select
                 labelId="language-select-label"

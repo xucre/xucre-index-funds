@@ -1,19 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, Skeleton, Chip, Dialog, DialogContent, DialogTitle, MenuItem, Select, Stack, TextField, useTheme } from '@mui/material';
+import { Box, Typography, Button, Skeleton, Dialog, DialogContent, Stack, useTheme } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useLanguage } from '@/hooks/useLanguage';
 import languageData, { Language } from '@/metadata/translations';
-import { useAccount } from 'wagmi';
-import AccountButton from '../accountButton';
-import { createAccount, CreateAccountOptions } from '@/service/safe';
-import { updateSafeWalletDetails } from '@/service/sfdc';
-import { setSafeAddress } from '@/service/db';
 import { useRouter } from 'next/navigation';
-import { globalChainId } from '@/service/constants';
-import { Roles } from '@/service/types';
 import { DocusealForm } from '@docuseal/react'
-import { getTextColor } from '@/service/helpers';
 import { useSFDC } from '@/hooks/useSFDC';
 import dayjs from 'dayjs';
 import { useClerkUser } from '@/hooks/useClerkUser';

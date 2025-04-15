@@ -19,6 +19,7 @@ import { config } from '@/config';
 import { getAddress, zeroAddress } from 'viem';
 import { normalizeDevChains } from '@/service/helpers';
 import { PoolData, Token } from '@/service/types';
+import { USDT_ADDRESS } from '@/service/safe/helpers';
 
 
 
@@ -41,6 +42,7 @@ const nativeTokens = {
   56: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
   10: '0x4200000000000000000000000000000000000006'
 }
+
 
 const feeTiers = [FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH];
 const UniswapPoolChecker = ({ registerPortfolioItem }: { registerPortfolioItem: (pool: PoolData) => void }) => {
@@ -117,7 +119,9 @@ const UniswapPoolChecker = ({ registerPortfolioItem }: { registerPortfolioItem: 
     setAnchorEl(null);
   };
 
-  useEffect(() => { setLoading(false) }, []);
+  useEffect(() => { 
+    setLoading(false); 
+  }, []);
 
   const invalidPortfolioItem = loading || !sourceToken || !targetToken || fee === 0;
 

@@ -1,32 +1,20 @@
 'use client'
-import DashboardContainer from "@/components/dashboard/DashboardContainer";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import DashboardNavigation from "@/components/dashboard/DashboardNavigation";
-import DashboardNews from "@/components/dashboard/DashboardNews";
 import AdditionalInfoContainer from "@/components/onboarding/AdditionalInfoContainer";
-import CreateDelegateContainer from "@/components/onboarding/CreateDelegateContainer";
 import CreateSafeContainer from "@/components/onboarding/CreateSafeContainer";
-import EmptyDelegateOnSafe from "@/components/onboarding/EmptyDelegateOnSafe";
-import EmptyProfileState from "@/components/onboarding/EmptyProfile";
-import EmptySafeWallet from "@/components/onboarding/EmptySafeWallet";
-import IncompleteOnboarding from "@/components/onboarding/IncompleteOnboarding";
 import IntroductionContainer from "@/components/onboarding/IntroductionContainer";
 import OnboardingNavigation from "@/components/onboarding/OnboardingNavigation";
 import SignRiskDisclosure from "@/components/onboarding/SignRiskDisclosure";
-import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
-import TransferSafeWallet from "@/components/onboarding/TransferSafeWallet";
 import EditUserPortfolio from "@/components/settings/EditUserPortfolio";
 import EditUserProfile from "@/components/settings/EditUserProfile";
 import OpaqueCard from "@/components/ui/OpaqueCard";
 import { useClerkUser } from "@/hooks/useClerkUser";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useSFDC } from "@/hooks/useSFDC";
-import { globalChainId, isDev } from "@/service/constants";
-import { getSafeOwner, transferSignerOwnership, getSafeProposer } from "@/service/safe";
-import { updateSafeWalletDetails } from "@/service/sfdc";
-import { Box, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { globalChainId } from "@/service/constants";
+import { getSafeProposer } from "@/service/safe/safev2";
+import { Box, Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material"
 import { useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 

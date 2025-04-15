@@ -252,7 +252,6 @@ const AppMenu = () => {
       });
     }
     if (currentItemRef && !currentItemRef.current) {
-      console.log('No current item ref found');
       if (isAdmin) {
         currentItemRef = adminMenuGroups[0].items[0].ref;
       } else {

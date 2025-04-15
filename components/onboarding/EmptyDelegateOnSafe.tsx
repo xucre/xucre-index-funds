@@ -1,14 +1,11 @@
 'use client'
 import React, { useState } from 'react';
 import { Box, Typography, Button, Skeleton } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useLanguage } from '@/hooks/useLanguage';
-import languageData, { Language } from '@/metadata/translations';
+import languageData from '@/metadata/translations';
 import { useAccount } from 'wagmi';
 import AccountButton from '../accountButton';
-import { addProposer, AddProposerOptions, createAccount, CreateAccountOptions } from '@/service/safe';
-import { updateSafeWalletDetails } from '@/service/sfdc';
-import { setSafeAddress } from '@/service/db';
+import { addProposer, AddProposerOptions } from '@/service/safe/safev2';
 import { useRouter } from 'next/navigation';
 import { globalChainId } from '@/service/constants';
 import { useClerkUser } from '@/hooks/useClerkUser';

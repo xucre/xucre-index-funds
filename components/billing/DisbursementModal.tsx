@@ -5,7 +5,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { IndexFund, Invoice, InvoiceStatuses } from '@/service/types';
 import { globalChainId, isDev } from '@/service/constants';
-import { CreateInvoiceOptions, createInvoiceTransaction, executeUserSpotExecution } from '@/service/safe';
+import { createInvoiceTransactionV2, CreateInvoiceOptions, executeUserSpotExecution } from '@/service/safe/safev2';
+
 import { getAllFunds, getFundDetails, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useClerkOrganization } from '@/hooks/useClerkOrganization';
@@ -64,7 +65,7 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, organiza
                 invoice,
                 safeAddress: invoice.escrowWallet
             } as CreateInvoiceOptions;
-            const transactionHash = await createInvoiceTransaction(txDetails);
+            const transactionHash = await createInvoiceTransactionV2(txDetails);
             if (transactionHash !== '') {
                 const _invoice = {
                     ...invoice,
@@ -147,7 +148,6 @@ const DisbursementModal: React.FC<DisbursementModalProps> = ({ invoice, organiza
         if (status === 'error') return <ErrorIcon color="error" />;
         return null;
     };
-    console.log('invoice', invoice)
     return (
         <Dialog open={open} onClose={(event, reason) => {}} fullWidth={true} maxWidth={'md'} >
             <DialogTitle>{languageData[language].Billing.disbursement_modal_title}</DialogTitle>
