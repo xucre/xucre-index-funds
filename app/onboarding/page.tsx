@@ -47,13 +47,20 @@ export default function OnboardingPage() {
       chainid: globalChainId,
       safeWallet: safeWallet
     }
-    const delegates = await getSafeProposer(params);
-    if (delegates.count === 0) {
+    try {
+      const delegates = await getSafeProposer(params);
+      if (delegates.count === 0) {
+        setNeedsToSetProposer(true);
+      } else {
+        setNeedsToSetProposer(false);
+      }
+      setHasCheckedProposer(true);
+    } catch (err) {
+      console.log('error getting safe proposer', err);
       setNeedsToSetProposer(true);
-    } else {
-      setNeedsToSetProposer(false);
+      setHasCheckedProposer(true);
     }
-    setHasCheckedProposer(true);
+    
   }
 
   useEffect(() => {
