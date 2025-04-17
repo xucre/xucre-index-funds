@@ -1,7 +1,7 @@
 export const maxDuration = 60; // Applies to the action
 import { useEffect, useMemo, useState } from 'react';
 import { getOrganizationSafeAddress, setOrganizationSafeAddress } from '@/service/db';
-import { createAccount, CreateAccountOptions} from '@/service/safe/safe';
+import { createAccount, CreateAccountOptions} from '@/service/safe/safev2';
 import { globalChainId, isDev } from '@/service/constants';
 import { useClerkOrganization } from './useClerkOrganization';
 

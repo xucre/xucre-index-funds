@@ -7,7 +7,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { IndexFund, Invoice, InvoiceStatuses, TokenDetails } from '@/service/types';
 import truncateEthAddress from 'truncate-eth-address';
 import { globalChainId, isDev } from '@/service/constants';
-import { executeTokenWithdrawalToSource } from '@/service/safe/safe';
+import { executeTokenWithdrawalToSource } from '@/service/safe/safev2';
 import { getAllFunds, getFundDetails, saveWithdrawalLog, setInvoiceDetails } from '@/service/db';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Item } from '@/hooks/useWalletData';
@@ -61,16 +61,16 @@ const WithdrawTokenToSource: React.FC<WithdrawTokenToSourceProps> = ({ details, 
       if (!user || !wcAddress || !safeWallet) return;
       try {
         await saveWithdrawalLog(user.id,details.contract_address,signedMessage);
-        await executeTokenWithdrawalToSource(
-          user.id,
-          safeWallet,
-          process.env.NEXT_PUBLIC_SAFE_RPC_URL as string,
-          globalChainId,
+        await executeTokenWithdrawalToSource({
+          userId: user.id,
+          safeWalletAddress: safeWallet,
+          rpcUrl: process.env.NEXT_PUBLIC_SAFE_RPC_URL as string,
+          chainid: globalChainId,
           amount,
-          metadata.decimals,
-          fee,
-          details.contract_address,
-        );
+          decimals: metadata.decimals,
+          poolFee: fee,
+          tokenAddress: details.contract_address,
+        });
         enqueueSnackbar(languageData[language].ui.transaction_successful, {
           variant: 'success',
           autoHideDuration: 1000,

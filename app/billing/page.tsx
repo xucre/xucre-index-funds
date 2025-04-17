@@ -14,10 +14,12 @@ import { useOrganizationWallet } from "@/hooks/useOrganizationWallet";
 import EmptyEscrowWallet from "@/components/onboarding/EmptyEscrowWallet";
 import languageData, { Language } from '@/metadata/translations';
 import { useLanguage } from "@/hooks/useLanguage";
-import { getSafeOwner, transferSignerOwnership } from "@/service/safe/safe";
 import TransferEscrowWallet from "@/components/onboarding/TransferEscrowWallet";
 import { globalChainId } from "@/service/constants";
 import { useClerkUser } from "@/hooks/useClerkUser";
+import { enqueueSnackbar } from "notistack";
+import { getSafeOwner, transferSignerOwnership } from "@/service/safe/safev2";
+import { CORP_PUBLIC_ADDRESS } from "@/service/safe/helpers";
 
 // components/LoadingIndicator.tsx
 export default function Billing() {
@@ -28,8 +30,9 @@ export default function Billing() {
   const [trigger, setTrigger] = useState(false);
   const { escrowAddress, hasEscrowAddress, createEscrowAddress, loading: walletLoading, refresh } = useOrganizationWallet();
   const { language } = useLanguage();
+
   const [needsToTransfer, setNeedsToTransfer] = useState(false);
-    const { safeWallet } = useClerkUser();
+  const { safeWallet } = useClerkUser();
   //const billingOnboarded = false;
 
   const handleCheckoutComplete = async (sessionId) => {
@@ -41,20 +44,31 @@ export default function Billing() {
   const handleCheckSafeOwnership = async () => {
     if (!escrowAddress) return;
     const owners = await getSafeOwner(globalChainId, escrowAddress);
-    const hasCorrectOwner = owners.includes(process.env.NEXT_PUBLIC_SIGNER_SAFE_ADDRESS_POLYGON as string);
-    if (!hasCorrectOwner) {
+    console.log('owners',owners, escrowAddress)
+    const hasEOAOwner = owners.includes(process.env.NEXT_PUBLIC_DEVACCOUNTADDRESS as string);
+    if (hasEOAOwner) {
       setNeedsToTransfer(true);
+      handeTransferOwnership();
       //createEscrowAddress();
+    } else {
+      setNeedsToTransfer(false);
     }
   }
 
   const handeTransferOwnership = async () => {
     if (!escrowAddress) return;
-    if (!safeWallet) return;
-    await transferSignerOwnership({
+    //if (!safeWallet) return;
+    const hash = await transferSignerOwnership({
       chainid: globalChainId,
-      safeWallet: safeWallet
+      safeWallet: escrowAddress
     });
+    // addSignerOwnership
+    // const hash = await removeSignerOwnership({
+    //   chainid: globalChainId,
+    //   safeWallet: escrowAddress
+    // });
+    console.log('Transfer ownership successful, transaction hash:', hash);
+    enqueueSnackbar(`Transfer ownership successful: ${hash}`, {variant: 'success', autoHideDuration: 3000})
     setNeedsToTransfer(false);
     refresh();
   }
@@ -75,7 +89,7 @@ export default function Billing() {
 
   useEffect(() => {
     if (hasEscrowAddress && organization) {
-      //handleCheckSafeOwnership();
+      handleCheckSafeOwnership();
     }
     console.log(walletLoading)
   }, [walletLoading])
@@ -86,12 +100,12 @@ export default function Billing() {
     <Suspense>
       {hasLoaded && 
         <Box m={5}>
-          {/* {<Button onClick={handeTransferOwnership} variant="contained" color="primary">Add Safe Signer</Button>} */}
+          {hasEscrowAddress && false && needsToTransfer && <Button onClick={handeTransferOwnership} variant="contained" color="primary">Move Signer</Button>}
           {!hasSignedUp && false && 
             <StripePricingTable />
           }
 
-          {hasLoaded && true && true && !hasEscrowAddress && !needsToTransfer &&
+          {!hasEscrowAddress && !needsToTransfer &&
             <EmptyEscrowWallet onCreateSafe={createEscrowAddress} />
           }
           
@@ -99,7 +113,7 @@ export default function Billing() {
             <TransferEscrowWallet onTransferSafe={handeTransferOwnership} />
           } */}
 
-          {hasLoaded && true && true && hasEscrowAddress && !needsToTransfer &&
+          {hasEscrowAddress && !needsToTransfer &&
             <>
               <BillingHeader portalSession={portalSession} openPortal={openPortal} hasSignedUp={hasSignedUp} isManualBilling={isManualBilling}/>
               <InvoiceTable />
