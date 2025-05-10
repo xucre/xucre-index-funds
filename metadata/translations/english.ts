@@ -42,6 +42,7 @@ const values : TranslationType = {
     no_transactions: 'No transactions found',
     withdraw_to_wallet: 'Withdraw to Wallet',
     exit_position: 'Exit Position',
+    staking: 'Staking',
   },
   OrganizationEdit: {
     organization_settings: 'Organization Settings',

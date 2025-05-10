@@ -49,6 +49,7 @@ const values : TranslationType = {
     no_transactions: 'No se encontraron transacciones',
     withdraw_to_wallet: 'Retirar a la billetera',
     exit_position: 'Salir de la posición',
+    staking: 'Estaca',
   },
   OrganizationEdit: {
     organization_settings: 'Configuraciones de la Organización',

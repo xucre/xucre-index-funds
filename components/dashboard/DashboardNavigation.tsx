@@ -19,6 +19,7 @@ export default function DashboardNavigation() {
   const isHome = pathname === '/dashboard';
   const isBalance = pathname === '/dashboard/balances';
   const isTransactions = pathname === '/dashboard/transactions';
+  const isStaking = pathname === '/dashboard/staking';
 
   const handleNavigation = (endpoint) => {
     router.push(endpoint);
@@ -29,6 +30,7 @@ export default function DashboardNavigation() {
       <Chip label={languageData[language].Dashboard.home} onClick={() => { handleNavigation('/dashboard') }} sx={{ bgcolor: isHome ? '#00872a' : '', fontSize: isHome ? 18 : 14, fontWeight: isHome ? 'bold' : '', py: 2, px: 1 }} />
       <Chip label={languageData[language].Dashboard.balances} onClick={() => { handleNavigation('/dashboard/balances') }} sx={{ bgcolor: isBalance ? '#00872a' : '', fontSize: isBalance ? 18 : 16, fontWeight: isBalance ? 'bold' : '', py: 2, px: 1 }} />
       <Chip label={languageData[language].Dashboard.transactions} onClick={() => { handleNavigation('/dashboard/transactions') }} sx={{ bgcolor: isTransactions ? '#00872a' : '', fontSize: isTransactions ? 18 : 16, fontWeight: isTransactions ? 'bold' : '', py: 2, px: 1 }} />
+      <Chip label={languageData[language].Dashboard.staking} onClick={() => { handleNavigation('/dashboard/staking') }} sx={{ bgcolor: isStaking ? '#00872a' : '', fontSize: isStaking ? 18 : 16, fontWeight: isStaking ? 'bold' : '', py: 2, px: 1 }} />
       {/*<Chip label="Deposit" variant="outlined" onClick={handleNavigation} />*/}
     </Stack>
   );

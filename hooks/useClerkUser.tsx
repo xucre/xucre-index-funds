@@ -15,7 +15,7 @@ export function useClerkUser() {
   const handleCheckSafeOwnership = async () => {
       if (!safeWallet) return;
       const owners = await getSafeOwner(globalChainId, safeWallet);
-      console.log('owners',owners, safeWallet)
+      //console.log('owners',owners, safeWallet)
       const hasEOAOwner = owners.includes(process.env.NEXT_PUBLIC_DEVACCOUNTADDRESS as string);
       if (hasEOAOwner) {
         handeTransferOwnership();

@@ -190,11 +190,12 @@ export function useWalletData({ address }: { address?: string } = {}) {
   const refresh = async (hard: boolean = false) => {
     setLoaded(false);
     if (!address) return;
+    console.log('getting wallet data for', address);
     const result = (await getWalletTransactions(address, 'matic-mainnet'));
     console.log(result);
     if (result && result.covalent) setTransactions(result.covalent.items as CovalentTransactionV3[]);
     const result2 = await getWalletHistory(address, 'matic-mainnet', hard);
-    //console.log('has history', result2);
+    console.log('has history', result2);
     if (result2) {
       setHasHistory(true);
       setHistory(result2 as WalletHistory);
