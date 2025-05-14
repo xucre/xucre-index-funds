@@ -2,7 +2,7 @@
 import { Safe4337CreateTransactionProps, Safe4337InitOptions, Safe4337Pack } from "@safe-global/relay-kit";
 import { encodeFunctionData, getAddress } from "viem";
 import { globalChainId } from "../../constants";
-import { publicClient, contractAddressMap, USDT_ADDRESS, CORP_SIGNER_SAFE, MAX_UINT256, paymasterUrl, bundlerUrl } from "../helpers";
+import { publicClient, contractAddressMap, USDT_ADDRESS, CORP_SIGNER_SAFE, MAX_UINT256, paymasterUrl, bundlerUrl, USDC_ADDRESS } from "../helpers";
 import ERC20_ABI from '../../../public/erc20.json'; // Ensure you have the ERC20 ABI JSON file
 import { buildContractSignature, buildSignatureBytes } from "@safe-global/protocol-kit";
 import SafeApiKit from "@safe-global/api-kit";
@@ -15,7 +15,7 @@ export interface CreateERC20ApprovalOptions {
     tokenAddress?: string;
 }
   
-export async function createERC20Approval({safeAddress, rpcUrl, chainid, tokenAddress = getAddress(USDT_ADDRESS)}: CreateERC20ApprovalOptions): Promise<string> {
+export async function createERC20Approval({safeAddress, rpcUrl, chainid, tokenAddress = getAddress(USDC_ADDRESS)}: CreateERC20ApprovalOptions): Promise<string> {
     console.log('Creating ERC20 Approval for safe wallet', safeAddress);
     
     // Initialize Safe4337Pack with the safe wallet
@@ -109,7 +109,7 @@ export async function createERC20Approval({safeAddress, rpcUrl, chainid, tokenAd
 }
   
 
-export async function validateCurrentERC20Allowance (chainid: number, safeAddress: string, memberContribution: bigint, safe4337Pack: Safe4337Pack, tokenAddress: string = getAddress(USDT_ADDRESS)) {
+export async function validateCurrentERC20Allowance (chainid: number, safeAddress: string, memberContribution: bigint, safe4337Pack: Safe4337Pack, tokenAddress: string = getAddress(USDC_ADDRESS)) {
   const _allowance = await getCurrentERC20Allowance(chainid, safeAddress, tokenAddress);
   //console.log(_allowance, memberContribution, _allowance < memberContribution);
   if (_allowance < memberContribution) {
@@ -118,12 +118,12 @@ export async function validateCurrentERC20Allowance (chainid: number, safeAddres
   }
 }
 
-  
-export async function getCurrentERC20Allowance (chainid: number, safeAddress: string, tokenAddress: string = getAddress(USDT_ADDRESS)) {
+
+export async function getCurrentERC20Allowance (chainid: number, safeAddress: string, tokenAddress: string = getAddress(USDC_ADDRESS)) {
     return getCurrentERC20AllowanceRaw(chainid, safeAddress, tokenAddress, contractAddressMap[chainid || globalChainId]);
 }
   
-export async function getCurrentERC20AllowanceRaw(chainid: number, safeAddress: string, tokenAddress: string = getAddress(USDT_ADDRESS), contractAddress: string) {
+export async function getCurrentERC20AllowanceRaw(chainid: number, safeAddress: string, tokenAddress: string = getAddress(USDC_ADDRESS), contractAddress: string) {
     const pubCli = publicClient(chainid);
     
     const _allowance = await pubCli.readContract({

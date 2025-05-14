@@ -4,7 +4,7 @@ import { Safe4337InitOptions, Safe4337Pack, Safe4337CreateTransactionProps } fro
 import { encodeFunctionData, getAddress, parseUnits } from "viem";
 import { globalChainId } from "../../constants";
 import { InvoiceMember, IndexFund } from "../../types";
-import { bundlerUrl, paymasterUrl, contractAddressMap, USDT_ADDRESS, CORP_SIGNER_SAFE } from "../helpers";
+import { bundlerUrl, paymasterUrl, contractAddressMap, USDT_ADDRESS, CORP_SIGNER_SAFE, USDC_ADDRESS } from "../helpers";
 import XUCREINDEXFUNDS_ABI from '../../../public/XucreETF.json'; // Ensure you have the ERC20 ABI JSON file
 import SafeApiKit from "@safe-global/api-kit";
 import { createFailureLog } from "../../db";
@@ -48,7 +48,6 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   
   const safe4337Pack = await Safe4337Pack.init(packData);
   const PARENT_SAFE = await safe4337Pack.protocolKit.getAddress();
-  const nonce = await safe4337Pack.protocolKit.getNonce();
   
   await deploySafe(safe4337Pack, chainid || 11155111);
   
@@ -62,6 +61,8 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   const memberContribution = parseUnits(contributionTotal.toString(), 6);
   await validateCurrentERC20Allowance(chainid || globalChainId, PARENT_SAFE, memberContribution, safe4337Pack);
   
+
+  const nonce = await safe4337Pack.protocolKit.getNonce();
   // Prepare portfolio allocation data
   console.log('Building portfolio for user', member.safeWalletAddress);
   const portfolio = selectedFund.portfolio;
@@ -69,7 +70,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
   const tokenAllocations = activeItems.map(item => item.weight);
   const tokenAddresses = activeItems.map(item => getAddress(item.address));
   const tokenPoolFees = activeItems.map(item => 
-    item.sourceFees[USDT_ADDRESS] ? item.sourceFees[USDT_ADDRESS] : item.poolFee
+    item.sourceFees[USDC_ADDRESS] ? item.sourceFees[USDC_ADDRESS] : item.poolFee
   );
 
   // Create spot execution transaction data
@@ -81,7 +82,7 @@ async function createUserSpotExecution(member: InvoiceMember, rpcUrl: string, ch
       tokenAddresses,
       tokenAllocations,
       tokenPoolFees,
-      getAddress(USDT_ADDRESS),
+      getAddress(USDC_ADDRESS),
       memberContribution
     ],
   };

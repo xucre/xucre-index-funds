@@ -5,7 +5,7 @@ import { encodeFunctionData, getAddress, parseUnits } from "viem";
 import { globalChainId } from "../../constants";
 import { encodeStringToBigInt } from "../../helpers";
 import { Invoice, InvoiceMember } from "../../types";
-import { bundlerUrl, paymasterUrl, USDT_ADDRESS, CORP_SIGNER_SAFE } from "../helpers";
+import { bundlerUrl, paymasterUrl, USDT_ADDRESS, CORP_SIGNER_SAFE, USDC_ADDRESS } from "../helpers";
 import ERC20_ABI from '../../../public/erc20.json'; // Ensure you have the ERC20 ABI JSON file
 import SafeApiKit from "@safe-global/api-kit";
 import { addProposer as _addProposer, AddProposerOptions as _AddProposerOptions, GetProposerOptions as _GetProposerOptions, getSafeProposer as _getSafeProposer } from "./proposers";
@@ -141,7 +141,7 @@ function createUserSourceTransfer(member: InvoiceMember) {
       args: [recipientAddress, amount],
     });
     return {
-      to: getAddress(USDT_ADDRESS),
+      to: getAddress(USDC_ADDRESS),
       data: rawTransferData,
       value: '0'
     };
